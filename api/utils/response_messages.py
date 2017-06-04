@@ -1,0 +1,2 @@
+MESSAGE_KEY = 'message'
+MESSAGE_OK = {MESSAGE_KEY: 'ok'}

@@ -1,0 +1,15 @@
+<!Doctype html>
+<html>
+<head>
+    <title>{% block title %}App{% endblock %}</title>
+    {% load static %}
+    {% block css %}{% endblock %}
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=1400, initial-scale=1">
+    {% block meta %}{% endblock %}
+</head>
+<body class="{% block body_css_class %}{% endblock %}">
+{% block body %}{% endblock %}
+{% block js %}{% endblock %}
+</body>
+</html>

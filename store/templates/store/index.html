@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block css %}
+{% endblock %}
+
+{% block body %}
+    {% load static %}
+    <div id="root"></div>
+{% endblock %}
+
+{% block js %}
+{#    <script src="{% static 'js/bundle/bundle.js' %}"></script>#}
+    <script src="http://localhost:3000/static/js/bundle.js"></script>
+{% endblock %}
