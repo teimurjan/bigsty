@@ -1,6 +1,6 @@
 import {getUserGroup} from "../utils";
 
 export function requireAdmin(nextState, replace) {
-    const isAdmin = getUserGroup() === 'reader';
+    const isAdmin = getUserGroup() === 'admin';
     if (!isAdmin) replace('/');
 }

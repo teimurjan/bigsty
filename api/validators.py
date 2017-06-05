@@ -1,19 +1,19 @@
 import abc
 
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
+from django.core.validators import validate_email as validate_email_format
 
-from api.utils.error_messages import *
+from api.utils.error_constants import *
 from store.models import User, Category
 
 
-def validate_email_(email):
+def validate_email(email):
   errors = []
   if not email:
     errors.append(NO_EMAIL_ERR)
   else:
     try:
-      validate_email(email)
+      validate_email_format(email)
     except ValidationError:
       errors.append(NOT_VALID_EMAIL_ERR)
   return errors
@@ -57,7 +57,7 @@ class RegistrationFormValidator(Validator):
     }
 
   def validate(self):
-    self.errors['email'] = validate_email_(self.email)
+    self.errors['email'] = validate_email(self.email)
     self.errors['password'] = validate_password(self.password)
     self.errors['name'] = validate_name(self.name)
 
@@ -79,7 +79,7 @@ class LoginFormValidator(Validator):
     }
 
   def validate(self):
-    self.errors['email'] = validate_email_(self.email)
+    self.errors['email'] = validate_email(self.email)
     try:
       User.objects.get(email=self.email)
     except User.DoesNotExist:

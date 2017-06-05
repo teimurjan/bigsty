@@ -33,7 +33,6 @@ class AdminUsers extends React.Component {
                         </thead>
                         <tbody>
                         {this.props.users.map((user, index) => {
-                            console.log(user.id);
                             return (
                                 <tr key={`user-row-${index}`} className={`footable-${index % 2 === 0 ? 'even' : 'odd'}`}>
                                     <td className="footable-visible">

@@ -1,0 +1,7 @@
+ID_FIELD = 'id'
+NAME_FIELD = 'name'
+EMAIL_FIELD = 'email'
+PASSWORD_FIELD = 'password'
+PRICE_FIELD = 'price'
+MAIN_IMAGE_FIELD = 'main_image'
+CATEGORY_FIELD = 'category'

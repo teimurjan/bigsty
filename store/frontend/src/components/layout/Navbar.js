@@ -40,7 +40,7 @@ export default class Navbar extends React.Component {
                             </li>
                         </ul>
                         <ul className="nav navbar-top-links navbar-right">
-                            {this.props.userGroup === 'reader' &&
+                            {this.props.userGroup === 'admin' &&
                             <Link to="/admin">
                                 <li>
                                     <button type="button" className="btn btn-w-m btn-primary">
