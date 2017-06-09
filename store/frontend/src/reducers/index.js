@@ -8,6 +8,8 @@ import login from "./login";
 import adminMain from "./admin-main";
 import adminUsers from "./admin-users";
 import adminProducts from "./admin-products";
+import adminCategories from "./admin-categories";
+import adminCategoryCreation from "./admin-category-creation";
 import adminProductCreation from "./admin-product-creation";
 
 export default combineReducers({
@@ -20,5 +22,7 @@ export default combineReducers({
     adminMain,
     adminUsers,
     adminProducts,
-    adminProductCreation
+    adminProductCreation,
+    adminCategories,
+    adminCategoryCreation
 });

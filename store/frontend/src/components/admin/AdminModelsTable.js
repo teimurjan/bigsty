@@ -13,7 +13,6 @@ class AdminModelsTable extends React.Component {
         models: PropTypes.arrayOf(PropTypes.object).isRequired,
         modelActions: PropTypes.shape({
             fetch: PropTypes.func,
-            edit: PropTypes.func,
             delete: PropTypes.func,
         }).isRequired
     };
@@ -59,9 +58,9 @@ class AdminModelsTable extends React.Component {
                         })}
                         <td className="footable-visible text-right">
                             <div className="btn-group">
-                                <button className="btn btn-white btn-xs"
-                                        onClick={() => modelActions.edit(model.id)}>Edit
-                                </button>
+                                <Link to={`${window.location.pathname}/edit`}>
+                                    <button className="btn btn-white btn-xs">Edit</button>
+                                </Link>
                                 <button className="btn btn-danger btn-xs"
                                         onClick={() => modelActions.delete(model.id)}>Delete
                                 </button>
@@ -84,8 +83,10 @@ class AdminModelsTable extends React.Component {
                         {this.renderTableHeader()}
                         {this.renderTableBody()}
                     </table>
-                    <Link to="/admin/products/add"><button className="btn btn-primary btn-w-m">Add new
-                    </button></Link>
+                    <Link to={`${window.location.pathname}/add`}>
+                        <button className="btn btn-primary btn-w-m">Add new
+                        </button>
+                    </Link>
                 </div>
             </div>
         );

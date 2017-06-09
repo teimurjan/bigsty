@@ -20,8 +20,9 @@ class Index extends React.Component {
                                 <ul className="nav metismenu">
                                     <li className="nav-header">
                                         <div className="profile-element">
-                                            <strong
-                                                className="font-bold text-info">{`Welcome, ${this.props.admin.name}!`}</strong>
+                                            <strong className="font-bold text-info">
+                                                {`Welcome, ${this.props.admin.name}!`}
+                                            </strong>
                                         </div>
                                     </li>
                                     <li>
@@ -34,6 +35,12 @@ class Index extends React.Component {
                                         <Link to="/admin/products">
                                             <i className="fa fa-th"/>
                                             <span className="nav-label m-l-xs">Products</span>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/admin/categories">
+                                            <i className="fa fa-th"/>
+                                            <span className="nav-label m-l-xs">Categories</span>
                                         </Link>
                                     </li>
                                     <li className="bg-info">

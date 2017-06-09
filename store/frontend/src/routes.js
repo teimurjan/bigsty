@@ -11,6 +11,8 @@ import {requireAdmin} from "./actions/admin-main";
 import AdminUsers from "./containers/admin/AdminUsers";
 import AdminProducts from "./containers/admin/AdminProducts";
 import AdminProductCreation from "./containers/admin/AdminProductCreation";
+import AdminCategories from "./containers/admin/AdminCategories";
+import AdminCategoryCreation from "./containers/admin/AdminCategoryCreation";
 
 export default (
     <Route component={App}>
@@ -24,6 +26,8 @@ export default (
             <Route path="users" component={AdminUsers}/>
             <Route path="products" component={AdminProducts}/>
             <Route path="products/add" component={AdminProductCreation}/>
+            <Route path="categories" component={AdminCategories}/>
+            <Route path="categories/add" component={AdminCategoryCreation}/>
         </Route>
     </Route>
 )

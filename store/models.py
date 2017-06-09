@@ -36,7 +36,7 @@ class User(models.Model):
 
 
 class Category(models.Model):
-  name = models.CharField(max_length=255)
+  name = models.CharField(unique=True, max_length=255)
 
   def to_dict(self):
     return {'id': self.pk, 'name': self.name}

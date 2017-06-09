@@ -29,7 +29,7 @@ const INITIAL_STATE = {
     category: {},
     categories: [],
     errors: INITIAL_ERRORS_STATE,
-    is_loading: false
+    isLoading: false
 };
 
 export default createReducer({
@@ -55,24 +55,24 @@ export default createReducer({
         category: action.category
     }),
     [FETCH_CATEGORIES]: (state, action) => merge(state, {
-        is_loading: true
+        isLoading: true
     }),
     [FETCH_CATEGORIES_SUCCESS]: (state, action) => merge(state, {
         categories: action.categories,
         category: action.categories[0],
-        is_loading: false
+        isLoading: false
     }),
     [FETCH_CATEGORIES_FAILURE]: (state, action) => merge(state, {
-        is_loading: false,
+        isLoading: false,
         errors: action.errors
     }),
     [CREATE_PRODUCT]: (state, action) => merge(state, {
         errors: INITIAL_ERRORS_STATE,
-        is_loading: true
+        isLoading: true
     }),
     [CREATE_PRODUCT_FAILURE]: (state, action) => merge(state, {
         errors: action.errors,
-        is_loading: false
+        isLoading: false
     }),
     [CREATE_PRODUCT_SUCCESS]: (state, action) => merge(state, INITIAL_STATE)
 }, INITIAL_STATE)

@@ -47,6 +47,16 @@ class CategoryListView(View):
     serializer = CategoryListSerializer()
     return serializer.read()
 
+  def post(self, request):
+    json_data = request.body.decode()
+    data = json.loads(json_data)
+    validator = CategoryFormValidator(data)
+    validator.validate()
+    if validator.has_errors():
+      return JsonResponse(validator.errors, status=411)
+    serializer = CategoryListSerializer(data)
+    return serializer.create()
+
 
 class CategoryView(View):
   def get(self, request, category_id):
@@ -62,15 +72,6 @@ class ProductListView(View):
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
-    data = {
-      'name': data['name'],
-      'description': data['description'],
-      'price': data['price'],
-      'category': data['category'],
-      'image': data['image'],
-      'discount': data['discount'],
-      'quantity': data['quantity']
-    }
     validator = ProductFormValidator(data)
     validator.validate()
     if validator.has_errors():

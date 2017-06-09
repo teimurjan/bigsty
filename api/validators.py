@@ -44,6 +44,12 @@ class Validator:
   def validate(self):
     return
 
+  def has_errors(self):
+    for field_name in self.errors:
+      if len(self.errors[field_name]) > 0:
+        return True
+    return False
+
 
 class RegistrationFormValidator(Validator):
   def __init__(self, data):
@@ -61,12 +67,6 @@ class RegistrationFormValidator(Validator):
     self.errors['email'] = validate_email(self.email)
     self.errors['password'] = validate_password(self.password)
     self.errors['name'] = validate_name(self.name)
-
-  def has_errors(self):
-    for field_name in self.errors:
-      if len(self.errors[field_name]) > 0:
-        return True
-    return False
 
 
 class LoginFormValidator(Validator):
@@ -86,12 +86,6 @@ class LoginFormValidator(Validator):
     except User.DoesNotExist:
       self.errors['email'].append(NO_SUCH_USER_ERR)
     self.errors['password'] = validate_password(self.password)
-
-  def has_errors(self):
-    for field_name in self.errors:
-      if len(self.errors[field_name]) > 0:
-        return True
-    return False
 
 
 class ProductFormValidator(Validator):
@@ -172,8 +166,13 @@ class ProductFormValidator(Validator):
       except ValueError:
         self.errors['discount'].append(DISCOUNT_NOT_INT_ERR)
 
-  def has_errors(self):
-    for field_name in self.errors:
-      if len(self.errors[field_name]) > 0:
-        return True
-    return False
+
+class CategoryFormValidator(Validator):
+  def __init__(self, data):
+    self.name = data[NAME_FIELD]
+    self.errors = {
+      'name': []
+    }
+
+  def validate(self):
+    self.errors['name'] = validate_name(self.name)

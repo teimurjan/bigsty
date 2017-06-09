@@ -57,10 +57,10 @@ class AuthSerializer(BaseSerializer):
     password = self.data[PASSWORD_FIELD]
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     group, created = Group.objects.get_or_create(name='reader')
-    user, created = User.objects.get_or_create(name=name, email=email, password=hashed_password, group=group)
-    if created:
+    try:
+      user = User.objects.create(name=name, email=email, password=hashed_password, group=group)
       return JsonResponse({TOKEN_JSON_KEY: generate_token(user)})
-    else:
+    except IntegrityError:
       return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=411)
 
   def login(self):
@@ -122,7 +122,12 @@ class CategoryListSerializer(Serializer):
     pass
 
   def create(self):
-    pass
+    name = self.data['name']
+    try:
+      category = Category.objects.create(name=name)
+      return JsonResponse(category.to_dict())
+    except IntegrityError:
+      return JsonResponse({NAME_FIELD: [SAME_GROUP_NAME_ERR]}, status=411)
 
   def delete(self):
     pass

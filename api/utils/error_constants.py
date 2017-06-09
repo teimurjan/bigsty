@@ -4,6 +4,7 @@ GLOBAL_ERR_KEY = 'global'
 NOT_VALID_EMAIL_ERR = 'Enter a valid email address'
 NO_EMAIL_ERR = 'Email field cannot be empty'
 SAME_EMAIL_ERR = 'User with such email already exists'
+SAME_GROUP_NAME_ERR = 'Group with such name already exists'
 NOT_VALID_PASSWORD_ERR = 'Enter a password which will contain both uppercase and ' \
                          'lowercase letters, at least one digit and special character ' \
                          '(@#$%^&+=),'

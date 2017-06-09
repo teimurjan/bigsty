@@ -13,6 +13,7 @@ class AdminProductCreation extends React.Component {
         category: PropTypes.object,
         categories: PropTypes.array.isRequired,
         errors: PropTypes.object.isRequired,
+        isLoading: PropTypes.bool.isRequired,
         actions: PropTypes.shape({
             createProduct: PropTypes.func.isRequired,
             fetchCategories: PropTypes.func.isRequired,
@@ -23,10 +24,10 @@ class AdminProductCreation extends React.Component {
             changeDiscount: PropTypes.func.isRequired,
             changeQuantity: PropTypes.func.isRequired,
             changeCategory: PropTypes.func.isRequired
-        })
+        }).isRequired
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.props.actions.fetchCategories();
     }
 
@@ -39,7 +40,7 @@ class AdminProductCreation extends React.Component {
     handleChangeQuantity = (e) => this.props.actions.changeQuantity(e.target.value);
     handleChangeCategory = (e) => this.props.actions.changeCategory(this.props.categories[e.target.value]);
 
-    handleFormSubmit = (e) => {
+    handleSubmitForm = (e) => {
         e.preventDefault();
         this.props.actions.createProduct();
     };
@@ -53,11 +54,10 @@ class AdminProductCreation extends React.Component {
             discount,
             errors,
         } = this.props;
-        console.log(errors);
         const formGroupClassName = 'form-group p-sm';
         return (
             <div className="ibox-content">
-                <form className="white-bg form-horizontal" onSubmit={this.handleFormSubmit}>
+                <form className="white-bg form-horizontal" onSubmit={this.handleSubmitForm}>
                     <div className={formGroupClassName}>
                         <label className="col-sm-1 control-label">Name</label>
                         <div className="col-sm-11">
@@ -118,8 +118,8 @@ class AdminProductCreation extends React.Component {
                             <select className="form-control m-b" onChange={this.handleChangeCategory}>
                                 {this.props.categories.map((category, index) =>
                                     <option key={`category-${index}`} value={index}>
-                                    {category.name}
-                                </option>)}
+                                        {category.name}
+                                    </option>)}
                             </select>
                             {this.hasFieldsErrors('category') &&
                             <small className="text-danger help-block m-b-none">{errors.category[0]}</small>}
