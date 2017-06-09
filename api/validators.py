@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email as validate_email_format
 
 from api.utils.error_constants import *
+from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD
 from store.models import User, Category
 
 
@@ -45,10 +46,10 @@ class Validator:
 
 
 class RegistrationFormValidator(Validator):
-  def __init__(self, name, email, password):
-    self.name = name
-    self.email = email
-    self.password = password
+  def __init__(self, data):
+    self.name = data[NAME_FIELD]
+    self.email = data[EMAIL_FIELD]
+    self.password = data[PASSWORD_FIELD]
     self.errors = {
       'name': [],
       'email': [],
@@ -69,9 +70,9 @@ class RegistrationFormValidator(Validator):
 
 
 class LoginFormValidator(Validator):
-  def __init__(self, email, password):
-    self.email = email
-    self.password = password
+  def __init__(self, data):
+    self.email = data[EMAIL_FIELD]
+    self.password = data[PASSWORD_FIELD]
     self.errors = {
       'email': [],
       'password': [],
@@ -94,45 +95,82 @@ class LoginFormValidator(Validator):
 
 
 class ProductFormValidator(Validator):
-  def __init__(self, name, main_image, price, category_id):
-    self.name = name
-    self.main_image = main_image
-    self.price = price
-    self.category_id = category_id
+  def __init__(self, data):
+    self.name = data['name']
+    self.description = data['description']
+    self.price = data['price']
+    self.category = data['category']
+    self.image = data['image']
+    self.discount = data['discount']
+    self.quantity = data['quantity']
     self.errors = {
       'name': [],
-      'main_image': [],
+      'image': [],
       'price': [],
-      'category': []
+      'category': [],
+      'description': [],
+      'discount': [],
+      'quantity': [],
     }
 
   def validate(self):
     self.errors['name'] = validate_name(self.name)
-    self._validate_main_image()
+    self._validate_image()
     self._validate_price()
     self._validate_category()
+    self._validate_description()
+    self._validate_discount()
+    self._validate_quantity()
 
-  def _validate_main_image(self):
-    if not self.main_image:
-      self.errors['main_image'].append(NO_IMAGE_ERR)
+  def _validate_image(self):
+    if not self.image:
+      self.errors['image'].append(NO_IMAGE_ERR)
 
   def _validate_price(self):
     if not self.price:
       self.errors['price'].append(NO_PRICE_ERR)
     else:
       try:
-        int(self.price)
+        if int(self.price) < 0:
+          self.errors['price'].append(PRICE_VALUE_ERR)
       except ValueError:
         self.errors['price'].append(PRICE_NOT_INT_ERR)
 
   def _validate_category(self):
-    if not self.category_id:
+    if not self.category:
       self.errors['category'].append(NO_CATEGORY_ERR)
     else:
       try:
-        Category.objects.get(pk=self.category_id)
+        Category.objects.get(pk=self.category)
       except Category.DoesNotExist:
         self.errors['category'].append(NO_SUCH_CATEGORY_ERR)
+
+  def _validate_description(self):
+    if not self.description:
+      self.errors['description'].append(NO_DESCRIPTION_ERR)
+
+  def _validate_quantity(self):
+    if not self.quantity:
+      self.errors['quantity'].append(NO_QUANTITY_ERR)
+    else:
+      try:
+        if int(self.quantity) < 0:
+          self.errors['quantity'].append(QUANTITY_VALUE_ERR)
+      except ValueError:
+        self.errors['quantity'].append(QUANTITY_NOT_INT_ERR)
+
+  def _validate_discount(self):
+    if not self.discount:
+      self.errors['discount'].append(NO_DISCOUNT_ERR)
+    else:
+      try:
+        discount = int(self.discount)
+        max_discount = 100
+        min_discount = 0
+        if discount >= max_discount or discount < min_discount:
+          self.errors['discount'].append(DISCOUNT_VALUE_ERR)
+      except ValueError:
+        self.errors['discount'].append(DISCOUNT_NOT_INT_ERR)
 
   def has_errors(self):
     for field_name in self.errors:

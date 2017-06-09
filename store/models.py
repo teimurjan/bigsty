@@ -49,21 +49,21 @@ class Product(models.Model):
   name = models.CharField(max_length=255)
   description = models.CharField(max_length=1000, blank=True)
   short_description = models.CharField(max_length=100, blank=True)
-  main_image = models.FileField(upload_to="store/static/images/products/main/", null=False)
-  discount = models.IntegerField(blank=False)
+  image = models.FileField(upload_to="store/static/images/products/main/", null=False)
+  discount = models.IntegerField(default=0)
   price = models.IntegerField(null=False, blank=False)
   quantity = models.IntegerField(null=False, blank=False, default=0)
   category = models.ForeignKey(Category)
 
   def is_available(self):
-    return self.quantity > 0
+    return int(self.quantity) > 0
 
   def to_dict(self):
     return {'id': self.id, 'name': self.name,
             'description': self.description, 'short_description': self.short_description,
-            'main_image': self.main_image.url, 'discount': self.discount,
+            'image': self.image.url, 'discount': self.discount,
             'price': self.price, 'is_available': self.is_available(),
-            'category': self.category.to_dict()}
+            'category': self.category.name}
 
   def __str__(self):
     return self.name

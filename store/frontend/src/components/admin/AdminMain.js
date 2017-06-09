@@ -4,6 +4,7 @@ import {Link} from "react-router";
 
 class Index extends React.Component {
     static propTypes = {
+        admin: PropTypes.object.isRequired,
         actions: PropTypes.shape({
             logout: PropTypes.func.isRequired
         }).isRequired
@@ -17,10 +18,28 @@ class Index extends React.Component {
                         <nav className="navbar-default navbar-static-side">
                             <div className="sidebar-collapse">
                                 <ul className="nav metismenu">
+                                    <li className="nav-header">
+                                        <div className="profile-element">
+                                            <strong
+                                                className="font-bold text-info">{`Welcome, ${this.props.admin.name}!`}</strong>
+                                        </div>
+                                    </li>
                                     <li>
                                         <Link to="/admin/users">
                                             <i className="fa fa-user"/>
                                             <span className="nav-label m-l-xs">Users</span>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/admin/products">
+                                            <i className="fa fa-th"/>
+                                            <span className="nav-label m-l-xs">Products</span>
+                                        </Link>
+                                    </li>
+                                    <li className="bg-info">
+                                        <Link to="/">
+                                            <i className="text-white fa fa-backward"/>
+                                            <span className="text-white nav-label m-l-xs">Back home</span>
                                         </Link>
                                     </li>
                                 </ul>

@@ -9,6 +9,8 @@ import Login from "./containers/Login";
 import AdminMain from "./containers/admin/AdminMain";
 import {requireAdmin} from "./actions/admin-main";
 import AdminUsers from "./containers/admin/AdminUsers";
+import AdminProducts from "./containers/admin/AdminProducts";
+import AdminProductCreation from "./containers/admin/AdminProductCreation";
 
 export default (
     <Route component={App}>
@@ -20,6 +22,8 @@ export default (
         <Route path="login" component={Login}/>
         <Route path="admin" component={AdminMain} onEnter={requireAdmin}>
             <Route path="users" component={AdminUsers}/>
+            <Route path="products" component={AdminProducts}/>
+            <Route path="products/add" component={AdminProductCreation}/>
         </Route>
     </Route>
 )

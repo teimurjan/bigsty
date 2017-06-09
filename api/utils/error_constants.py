@@ -9,11 +9,20 @@ NOT_VALID_PASSWORD_ERR = 'Enter a password which will contain both uppercase and
                          '(@#$%^&+=),'
 PASSWORD_DOESNT_MATCH_ERR = 'Invalid password'
 PRICE_NOT_INT_ERR = 'Price has to be an integer'
+PRICE_VALUE_ERR = 'Price has to be greater than or equal to 0'
+QUANTITY_NOT_INT_ERR = 'Quantity has to be an integer'
+QUANTITY_VALUE_ERR = 'Quantity has to be greater than or equal to 0'
+DISCOUNT_NOT_INT_ERR = 'Discount has to be an integer'
+DISCOUNT_VALUE_ERR = 'Discount has to be in range of 0 and 100'
+NOT_VALID_IMAGE = 'Not valid image'
 
 # FIELD EMPTY ERRORS
 NO_NAME_ERR = 'Name field cannot be empty'
+NO_DESCRIPTION_ERR = 'Description field cannot be empty'
 NO_IMAGE_ERR = 'Image field cannot be empty'
 NO_PRICE_ERR = 'Price field cannot be empty'
+NO_QUANTITY_ERR = 'Quantity field cannot be empty'
+NO_DISCOUNT_ERR = 'Discount field cannot be empty'
 NO_CATEGORY_ERR = 'Category field cannot be empty'
 NO_PASSWORD_ERR = 'Password field cannot be empty'
 

@@ -7,6 +7,8 @@ import application from "./application";
 import login from "./login";
 import adminMain from "./admin-main";
 import adminUsers from "./admin-users";
+import adminProducts from "./admin-products";
+import adminProductCreation from "./admin-product-creation";
 
 export default combineReducers({
     routing,
@@ -16,5 +18,7 @@ export default combineReducers({
     registration,
     login,
     adminMain,
-    adminUsers
+    adminUsers,
+    adminProducts,
+    adminProductCreation
 });

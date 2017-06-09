@@ -22,14 +22,14 @@ const INITIAL_STATE = {
 export default createReducer({
     [LOGIN_REQUEST]: (state, action) => merge(state, {
         errors: INITIAL_ERRORS_STATE,
-        is_loading: true
+        isLoading: true
     }),
     [LOGIN_REQUEST_FAILURE]: (state, action) => merge(state, {
         errors: merge(INITIAL_ERRORS_STATE, action.errors),
-        is_loading: false
+        isLoading: false
     }),
     [LOGIN_REQUEST_SUCCESS]: (state, action) => merge(state, {
-        is_loading: false
+        isLoading: false
     }),
     [CHANGE_EMAIL]: (state, action) => merge(state, {
         email: action.email

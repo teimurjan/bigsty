@@ -1,4 +1,4 @@
-import {get, post, remove} from "./api";
+import {get, remove} from "./api";
 export const FETCH_USERS = 'ADMIN_USERS/FETCH_USERS';
 export const FETCH_USERS_SUCCESS = 'ADMIN_USERS/FETCH_USERS_SUCCESS';
 export const FETCH_USERS_FAILURE = 'ADMIN_USERS/FETCH_USERS_FAILURE';

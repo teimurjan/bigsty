@@ -21,17 +21,15 @@ export default class Layout extends React.Component {
     render() {
         return (
             <div className="site-wrapper top-navigation">
-                <div id="wrapper">
-                    <div id="page-wrapper" className="gray-bg">
+                <div id="wrapper" className="gray-bg">
+                    <div id="page-wrapper" className="no-padding">
                         <Navbar
                             userGroup={this.props.userGroup}
                             isAuthenticated={this.props.isAuthenticated}
                             handleLogout={this.props.actions.logout}
                             categories={this.props.categories}
                         />
-                        <div className="wrapper">
-                            {this.props.children}
-                        </div>
+                        {this.props.children}
                         <Footer/>
                     </div>
                 </div>

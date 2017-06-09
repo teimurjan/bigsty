@@ -7,28 +7,28 @@ import {
 
 const INITIAL_STATE = {
     users: [],
-    is_loading: false
+    isLoading: false
 };
 
 export default createReducer({
     [FETCH_USERS]: (state, action) => merge(state, {
-        is_loading: true
+        isLoading: true
     }),
     [FETCH_USERS_SUCCESS]: (state, action) => merge(state, {
-        is_loading: false,
+        isLoading: false,
         users: action.users
     }),
     [FETCH_USERS_FAILURE]: (state, action) => merge(state, {
-        is_loading: false
+        isLoading: false
     }),
     [DELETE_USER]: (state, action) => merge(state, {
-        is_loading: true
+        isLoading: true
     }),
     [DELETE_USER_SUCCESS]: (state, action) => merge(state, {
-        is_loading: false,
+        isLoading: false,
         users: state.users.filter((user) => user.id !== action.userId)
     }),
     [DELETE_USER_FAILURE]: (state, action) => merge(state, {
-        is_loading: false
+        isLoading: false
     }),
 }, INITIAL_STATE);

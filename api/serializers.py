@@ -9,14 +9,30 @@ from api.utils.response_constants import *
 from api.validators import RegistrationFormValidator, LoginFormValidator, ProductFormValidator
 from main import settings
 from store.models import *
+import jwt
+import bcrypt
 
 
-class Serializer:
+def generate_token(user):
+  payload = {ID_JSON_KEY: user.pk, NAME_JSON_KEY: user.name, GROUP_JSON_KEY: user.group.name}
+  return jwt.encode(payload, settings.SECRET_KEY).decode()
 
+
+def base64_to_image(data, file_name):
+  import base64
+  from django.core.files.base import ContentFile
+  format, img_base64 = data.split(';base64,')
+  type = format.split('/')[-1]
+  return ContentFile(base64.b64decode(img_base64), name=file_name + '.' + type)
+
+
+class BaseSerializer:
   def __init__(self, data=None):
     if data:
       self.data = data
 
+
+class Serializer(BaseSerializer):
   @abc.abstractmethod
   def create(self):
     return
@@ -34,49 +50,31 @@ class Serializer:
     return
 
 
-class UserSerializer(Serializer):
-
+class AuthSerializer(BaseSerializer):
   def register(self):
     name = self.data[NAME_FIELD]
     email = self.data[EMAIL_FIELD]
     password = self.data[PASSWORD_FIELD]
-    validator = RegistrationFormValidator(name, email, password)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=411)
-    import bcrypt
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    group = Group.objects.get(name='reader')
-    try:
-      user = User.objects.create(name=name,
-                                 email=email,
-                                 password=hashed_password,
-                                 group=group)
-      import jwt
-      payload = {ID_JSON_KEY: user.pk, NAME_JSON_KEY: user.name, GROUP_JSON_KEY: user.group.name}
-      token = jwt.encode(payload, settings.SECRET_KEY).decode()
-      return JsonResponse({TOKEN_JSON_KEY: token})
-    except IntegrityError:
+    group, created = Group.objects.get_or_create(name='reader')
+    user, created = User.objects.get_or_create(name=name, email=email, password=hashed_password, group=group)
+    if created:
+      return JsonResponse({TOKEN_JSON_KEY: generate_token(user)})
+    else:
       return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=411)
 
   def login(self):
     email = self.data[EMAIL_FIELD]
     password = self.data[PASSWORD_FIELD]
-    validator = LoginFormValidator(email, password)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=411)
     user = User.objects.get(email=email)
-    import bcrypt
     is_valid_password = bcrypt.checkpw(password.encode(), user.password.encode())
     if is_valid_password:
-      import jwt
-      payload = {ID_JSON_KEY: user.pk, NAME_JSON_KEY: user.name, GROUP_JSON_KEY: user.group.name}
-      token = jwt.encode(payload, settings.SECRET_KEY).decode()
-      return JsonResponse({TOKEN_JSON_KEY: token})
+      return JsonResponse({TOKEN_JSON_KEY: generate_token(user)})
     else:
       return JsonResponse({PASSWORD_FIELD: [PASSWORD_DOESNT_MATCH_ERR]}, status=411)
 
+
+class UserSerializer(Serializer):
   def create(self):
     pass
 
@@ -113,7 +111,6 @@ class UserListSerializer(Serializer):
 
 
 class CategoryListSerializer(Serializer):
-
   def read(self):
     response = {DATA_JSON_KEY: []}
     categories = Category.objects.all()
@@ -132,7 +129,6 @@ class CategoryListSerializer(Serializer):
 
 
 class CategorySerializer(Serializer):
-
   def delete(self):
     pass
 
@@ -152,24 +148,29 @@ class CategorySerializer(Serializer):
 
 
 class ProductListSerializer(Serializer):
-
   def delete(self):
     pass
 
   def create(self):
     name = self.data[NAME_FIELD]
-    main_image = self.data[MAIN_IMAGE_FIELD]
+    description = self.data[DESCRIPTION_FIELD]
+    discount = self.data[DISCOUNT_FIELD]
+    quantity = self.data[QUANTITY_FIELD]
+    image = self.data[IMAGE_FIELD]
     price = self.data[PRICE_FIELD]
     category_id = self.data[CATEGORY_FIELD]
-    validator = ProductFormValidator(name, main_image, price, category_id)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors)
+    try:
+      base64_to_image(image, name)
+    except Exception:
+      return JsonResponse({IMAGE_FIELD: NOT_VALID_IMAGE})
     product = Product.objects.create(
       name=name,
-      main_image=main_image,
+      image=image,
+      discount=discount,
+      description=description,
+      quantity=quantity,
       price=price,
-      category=Category.objects.get(pk=category_id)
+      category_id=category_id
     )
     return JsonResponse(product.to_dict())
 
@@ -178,7 +179,11 @@ class ProductListSerializer(Serializer):
 
   def read(self):
     response = {DATA_JSON_KEY: []}
-    products = Product.objects.filter(category_id=self.data[ID_JSON_KEY])
+    category_id = self.data[ID_JSON_KEY]
+    if category_id:
+      products = Product.objects.filter(category_id=category_id)
+    else:
+      products = Product.objects.all()
     for product in products:
       response[DATA_JSON_KEY].append(product.to_dict())
     return JsonResponse(response)

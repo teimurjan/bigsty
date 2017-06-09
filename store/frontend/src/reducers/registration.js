@@ -24,14 +24,14 @@ const INITIAL_STATE = {
 export default createReducer({
     [REGISTRATION_REQUEST]: (state, action) => merge(state, {
         errors: INITIAL_ERRORS_STATE,
-        is_loading: true
+        isLoading: true
     }),
     [REGISTRATION_REQUEST_FAILURE]: (state, action) => merge(state, {
         errors: merge(INITIAL_ERRORS_STATE, action.errors),
-        is_loading: false
+        isLoading: false
     }),
     [REGISTRATION_REQUEST_SUCCESS]: (state, action) => merge(state, {
-        is_loading: false
+        isLoading: false
     }),
     [CHANGE_NAME]: (state, action) => merge(state, {
         name: action.name

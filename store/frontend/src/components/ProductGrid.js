@@ -15,7 +15,6 @@ class ProductsGrid extends React.Component {
     }
 
     render() {
-        console.log(this.props.products);
         return (
             <div className="wrapper wrapper-content animated fadeInRight">
                 <div className="row">
@@ -26,11 +25,11 @@ class ProductsGrid extends React.Component {
                                     <div className="ibox-content product-box">
                                         <div>
                                             <img className="img-thumbnail" style={{overflow: 'hidden'}}
-                                                 src={product.main_image.replace('store', '')}/>
+                                                 src={product.image.replace('store', '')}/>
                                         </div>
                                         <div className="product-desc">
                                             <span className="product-price">{product.price}$</span>
-                                            <small className="text-muted">{product.category.name}</small>
+                                            <small className="text-muted">{product.category}</small>
                                             <a href="#" className="product-name">{product.name}</a>
                                             <div className="small m-t-xs">{product.short_description}</div>
                                             <div className="m-t">

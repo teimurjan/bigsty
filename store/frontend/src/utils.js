@@ -7,3 +7,10 @@ export function getUserGroup() {
         return jwt_decode(token).group || '';
     return ''
 }
+
+export function getUserData() {
+    const token = localStorage.getItem("token");
+    if (token)
+        return jwt_decode(token) || {};
+    return {}
+}
