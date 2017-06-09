@@ -15,6 +15,7 @@ class AdminProducts extends React.Component {
         const fields = [
             {value: 'Name'},
             {value: 'Image'},
+            {value: 'Discount'},
             {value: 'Price'},
             {value: 'Category'}
         ];

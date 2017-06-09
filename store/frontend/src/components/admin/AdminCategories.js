@@ -13,7 +13,6 @@ class AdminCategories extends React.Component {
 
     render() {
         const fields = [
-            {value: 'Id'},
             {value: 'Name'},
         ];
         return (

@@ -29,3 +29,11 @@ python3 manage.py migrate
 cd store/frontend
 yarn
 ```
+#### Run
+```sh 
+cd ../../
+python3 manage.py runserver
+cd store/frontend
+yarn start
+```
+

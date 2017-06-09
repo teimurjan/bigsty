@@ -56,13 +56,15 @@ class AdminModelsTable extends React.Component {
                                 </td>
                             )
                         })}
-                        <td className="footable-visible text-right">
-                            <div className="btn-group">
+                        <td className="footable-visible">
+                            <div className="pull-right">
                                 <Link to={`${window.location.pathname}/edit`}>
-                                    <button className="btn btn-white btn-xs">Edit</button>
+                                    <button className="btn btn-circle btn-info btn-xs">
+                                         <i className="fa fa-edit"/></button>
                                 </Link>
-                                <button className="btn btn-danger btn-xs"
-                                        onClick={() => modelActions.delete(model.id)}>Delete
+                                <button className="btn btn-circle btn-danger btn-xs m-l-xs"
+                                        onClick={() => modelActions.delete(model.id)}>
+                                     <i className="fa fa-trash-o"/>
                                 </button>
                             </div>
                         </td>
@@ -84,7 +86,7 @@ class AdminModelsTable extends React.Component {
                         {this.renderTableBody()}
                     </table>
                     <Link to={`${window.location.pathname}/add`}>
-                        <button className="btn btn-primary btn-w-m">Add new
+                        <button className="btn btn-primary btn-w-m"><i className="fa fa-plus m-r-xs"/>Add
                         </button>
                     </Link>
                 </div>
