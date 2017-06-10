@@ -5,7 +5,7 @@ from django.core.validators import validate_email as validate_email_format
 
 from api.utils.error_constants import *
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD
-from store.models import User, Category
+from api.models import User, Category
 
 
 def validate_email(email):

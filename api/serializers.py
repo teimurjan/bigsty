@@ -8,7 +8,7 @@ from api.utils.form_fields_constants import *
 from api.utils.response_constants import *
 from api.validators import RegistrationFormValidator, LoginFormValidator, ProductFormValidator
 from main import settings
-from store.models import *
+from api.models import *
 import jwt
 import bcrypt
 
@@ -61,7 +61,7 @@ class AuthSerializer(BaseSerializer):
       user = User.objects.create(name=name, email=email, password=hashed_password, group=group)
       return JsonResponse({TOKEN_JSON_KEY: generate_token(user)})
     except IntegrityError:
-      return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=411)
+      return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=400)
 
   def login(self):
     email = self.data[EMAIL_FIELD]
@@ -71,7 +71,7 @@ class AuthSerializer(BaseSerializer):
     if is_valid_password:
       return JsonResponse({TOKEN_JSON_KEY: generate_token(user)})
     else:
-      return JsonResponse({PASSWORD_FIELD: [PASSWORD_DOESNT_MATCH_ERR]}, status=411)
+      return JsonResponse({PASSWORD_FIELD: [PASSWORD_DOESNT_MATCH_ERR]}, status=400)
 
 
 class UserSerializer(Serializer):
@@ -122,12 +122,12 @@ class CategoryListSerializer(Serializer):
     pass
 
   def create(self):
-    name = self.data['name']
+    name = self.data[NAME_FIELD]
     try:
       category = Category.objects.create(name=name)
       return JsonResponse(category.to_dict())
     except IntegrityError:
-      return JsonResponse({NAME_FIELD: [SAME_GROUP_NAME_ERR]}, status=411)
+      return JsonResponse({NAME_FIELD: [SAME_GROUP_NAME_ERR]}, status=400)
 
   def delete(self):
     pass
@@ -165,7 +165,7 @@ class ProductListSerializer(Serializer):
     price = self.data[PRICE_FIELD]
     category_id = self.data[CATEGORY_FIELD]
     try:
-      base64_to_image(image, name)
+      image = base64_to_image(image, name)
     except Exception:
       return JsonResponse({IMAGE_FIELD: NOT_VALID_IMAGE})
     product = Product.objects.create(

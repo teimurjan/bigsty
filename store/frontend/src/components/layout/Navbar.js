@@ -27,9 +27,10 @@ export default class Navbar extends React.Component {
                         <ul className="nav navbar-nav">
                             <Dropdown>
                                 {this.props.categories.map((category, index) => {
-                                    return <li key={`category-${index}`}><Link
-                                        to={`/categories/${category.id}`}>{category.name}</Link>
-                                    </li>
+                                    return (
+                                        <li key={`category-${index}`}>
+                                            <Link to={`/categories/${category.id}`}>{category.name}</Link>
+                                        </li>)
                                 })}
                             </Dropdown>
                             <li>

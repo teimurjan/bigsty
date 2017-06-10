@@ -13,6 +13,9 @@ import AdminProducts from "./containers/admin/AdminProducts";
 import AdminProductCreation from "./containers/admin/AdminProductCreation";
 import AdminCategories from "./containers/admin/AdminCategories";
 import AdminCategoryCreation from "./containers/admin/AdminCategoryCreation";
+import Forbidden from "./components/Forbidden";
+import NotFound from "./components/NotFound";
+import ServerError from "./components/ServerError";
 
 export default (
     <Route component={App}>
@@ -29,5 +32,8 @@ export default (
             <Route path="categories" component={AdminCategories}/>
             <Route path="categories/add" component={AdminCategoryCreation}/>
         </Route>
+        <Route path="forbidden" component={Forbidden}/>
+        <Route path="servererror" component={ServerError}/>
+        <Route path="*" component={NotFound}/>
     </Route>
 )
