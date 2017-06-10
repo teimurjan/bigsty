@@ -3,7 +3,10 @@ import abc
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email as validate_email_format
 
-from api.utils.error_constants import *
+from api.utils.error_constants import NO_EMAIL_ERR, NOT_VALID_EMAIL_ERR, NO_PASSWORD_ERR, NOT_VALID_PASSWORD_ERR, \
+  NO_NAME_ERR, NO_SUCH_USER_ERR, NO_IMAGE_ERR, NO_PRICE_ERR, PRICE_VALUE_ERR, PRICE_NOT_INT_ERR, NO_CATEGORY_ERR, \
+  NO_SUCH_CATEGORY_ERR, NO_DESCRIPTION_ERR, NO_QUANTITY_ERR, QUANTITY_VALUE_ERR, QUANTITY_NOT_INT_ERR, NO_DISCOUNT_ERR, \
+  DISCOUNT_VALUE_ERR, DISCOUNT_NOT_INT_ERR
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD
 from api.models import User, Category
 

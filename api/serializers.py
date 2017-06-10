@@ -3,10 +3,12 @@ import abc
 from django.db import IntegrityError
 from django.http import JsonResponse
 
-from api.utils.error_constants import *
-from api.utils.form_fields_constants import *
-from api.utils.response_constants import *
-from api.validators import RegistrationFormValidator, LoginFormValidator, ProductFormValidator
+from api.utils.error_constants import SAME_EMAIL_ERR, PASSWORD_DOESNT_MATCH_ERR, GLOBAL_ERR_KEY, NO_SUCH_USER_ERR, \
+ NOT_VALID_IMAGE, SAME_GROUP_NAME_ERR, NO_SUCH_CATEGORY_ERR, NO_SUCH_PRODUCT_ERR
+from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, ID_FIELD, DESCRIPTION_FIELD, \
+  DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD
+from api.utils.response_constants import ID_JSON_KEY, NAME_JSON_KEY, GROUP_JSON_KEY, TOKEN_JSON_KEY, \
+  MESSAGE_OK, DATA_JSON_KEY
 from main import settings
 from api.models import *
 import jwt
@@ -85,7 +87,7 @@ class UserSerializer(Serializer):
     pass
 
   def delete(self):
-    user_id = self.data[ID_FIELD]
+    user_id = self.data[ID_JSON_KEY]
     try:
       User.objects.get(pk=user_id).delete()
       return JsonResponse(MESSAGE_OK)
