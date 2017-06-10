@@ -1,0 +1,13 @@
+[
+  {
+    "model": "api.User",
+    "pk": 1,
+    "fields": {
+      "name": "Test User",
+      "email": "test@test.test",
+      "password": "$2b$12$ScidzezCmHnWhB3v2AqhbOp3DyYfXxxDpShRwA4rw5VmAZDra66fa",
+      "group": "1",
+      "date_joined": "2017-06-10 10:54:07.785179"
+    }
+  }
+]

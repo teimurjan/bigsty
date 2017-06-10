@@ -31,6 +31,11 @@ class User(models.Model):
       'group': self.group.name
     }
 
+  def save(self, *args, **kwargs):
+    import bcrypt
+    self.password = bcrypt.hashpw(self.password.encode(), bcrypt.gensalt())
+    super(User, self).save(*args, **kwargs)
+
   def __str__(self):
     return self.email
 

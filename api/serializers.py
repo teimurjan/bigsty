@@ -57,10 +57,9 @@ class AuthSerializer(BaseSerializer):
     name = self.data[NAME_FIELD]
     email = self.data[EMAIL_FIELD]
     password = self.data[PASSWORD_FIELD]
-    hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     group, created = Group.objects.get_or_create(name='reader')
     try:
-      user = User.objects.create(name=name, email=email, password=hashed_password, group=group)
+      user = User.objects.create(name=name, email=email, password=password, group=group)
       return JsonResponse({TOKEN_JSON_KEY: generate_token(user)})
     except IntegrityError:
       return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=400)
@@ -68,7 +67,10 @@ class AuthSerializer(BaseSerializer):
   def login(self):
     email = self.data[EMAIL_FIELD]
     password = self.data[PASSWORD_FIELD]
-    user = User.objects.get(email=email)
+    try:
+      user = User.objects.get(email=email)
+    except User.DoesNotExist:
+      return JsonResponse({EMAIL_FIELD: [NO_SUCH_USER_ERR]}, status=404)
     is_valid_password = bcrypt.checkpw(password.encode(), user.password.encode())
     if is_valid_password:
       return JsonResponse({TOKEN_JSON_KEY: generate_token(user)})

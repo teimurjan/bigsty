@@ -6,8 +6,9 @@ from django.core.validators import validate_email as validate_email_format
 from api.utils.error_constants import NO_EMAIL_ERR, NOT_VALID_EMAIL_ERR, NO_PASSWORD_ERR, NOT_VALID_PASSWORD_ERR, \
   NO_NAME_ERR, NO_SUCH_USER_ERR, NO_IMAGE_ERR, NO_PRICE_ERR, PRICE_VALUE_ERR, PRICE_NOT_INT_ERR, NO_CATEGORY_ERR, \
   NO_SUCH_CATEGORY_ERR, NO_DESCRIPTION_ERR, NO_QUANTITY_ERR, QUANTITY_VALUE_ERR, QUANTITY_NOT_INT_ERR, NO_DISCOUNT_ERR, \
-  DISCOUNT_VALUE_ERR, DISCOUNT_NOT_INT_ERR
-from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD
+  DISCOUNT_VALUE_ERR, DISCOUNT_NOT_INT_ERR, GLOBAL_ERR_KEY
+from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DISCOUNT_FIELD, QUANTITY_FIELD, \
+  DESCRIPTION_FIELD, CATEGORY_FIELD, PRICE_FIELD, IMAGE_FIELD
 from api.models import User, Category
 
 
@@ -60,16 +61,16 @@ class RegistrationFormValidator(Validator):
     self.email = data[EMAIL_FIELD]
     self.password = data[PASSWORD_FIELD]
     self.errors = {
-      'name': [],
-      'email': [],
-      'password': [],
-      'global': []
+      NAME_FIELD: [],
+      EMAIL_FIELD: [],
+      PASSWORD_FIELD: [],
+      GLOBAL_ERR_KEY: []
     }
 
   def validate(self):
-    self.errors['email'] = validate_email(self.email)
-    self.errors['password'] = validate_password(self.password)
-    self.errors['name'] = validate_name(self.name)
+    self.errors[EMAIL_FIELD] = validate_email(self.email)
+    self.errors[PASSWORD_FIELD] = validate_password(self.password)
+    self.errors[NAME_FIELD] = validate_name(self.name)
 
 
 class LoginFormValidator(Validator):
@@ -77,41 +78,37 @@ class LoginFormValidator(Validator):
     self.email = data[EMAIL_FIELD]
     self.password = data[PASSWORD_FIELD]
     self.errors = {
-      'email': [],
-      'password': [],
-      'global': []
+      EMAIL_FIELD: [],
+      PASSWORD_FIELD: [],
+      GLOBAL_ERR_KEY: []
     }
 
   def validate(self):
-    self.errors['email'] = validate_email(self.email)
-    try:
-      User.objects.get(email=self.email)
-    except User.DoesNotExist:
-      self.errors['email'].append(NO_SUCH_USER_ERR)
-    self.errors['password'] = validate_password(self.password)
+    self.errors[EMAIL_FIELD] = validate_email(self.email)
+    self.errors[PASSWORD_FIELD] = validate_password(self.password)
 
 
 class ProductFormValidator(Validator):
   def __init__(self, data):
-    self.name = data['name']
-    self.description = data['description']
-    self.price = data['price']
-    self.category = data['category']
-    self.image = data['image']
-    self.discount = data['discount']
-    self.quantity = data['quantity']
+    self.name = data[NAME_FIELD]
+    self.description = data[DESCRIPTION_FIELD]
+    self.price = data[PRICE_FIELD]
+    self.category = data[CATEGORY_FIELD]
+    self.image = data[IMAGE_FIELD]
+    self.discount = data[DISCOUNT_FIELD]
+    self.quantity = data[QUANTITY_FIELD]
     self.errors = {
-      'name': [],
-      'image': [],
-      'price': [],
-      'category': [],
-      'description': [],
-      'discount': [],
-      'quantity': [],
+      NAME_FIELD: [],
+      IMAGE_FIELD: [],
+      PRICE_FIELD: [],
+      CATEGORY_FIELD: [],
+      DESCRIPTION_FIELD: [],
+      DISCOUNT_FIELD: [],
+      QUANTITY_FIELD: [],
     }
 
   def validate(self):
-    self.errors['name'] = validate_name(self.name)
+    self.errors[NAME_FIELD] = validate_name(self.name)
     self._validate_image()
     self._validate_price()
     self._validate_category()
@@ -121,61 +118,61 @@ class ProductFormValidator(Validator):
 
   def _validate_image(self):
     if not self.image:
-      self.errors['image'].append(NO_IMAGE_ERR)
+      self.errors[IMAGE_FIELD].append(NO_IMAGE_ERR)
 
   def _validate_price(self):
     if not self.price:
-      self.errors['price'].append(NO_PRICE_ERR)
+      self.errors[PRICE_FIELD].append(NO_PRICE_ERR)
     else:
       try:
         if int(self.price) < 0:
-          self.errors['price'].append(PRICE_VALUE_ERR)
+          self.errors[PRICE_FIELD].append(PRICE_VALUE_ERR)
       except ValueError:
-        self.errors['price'].append(PRICE_NOT_INT_ERR)
+        self.errors[PRICE_FIELD].append(PRICE_NOT_INT_ERR)
 
   def _validate_category(self):
     if not self.category:
-      self.errors['category'].append(NO_CATEGORY_ERR)
+      self.errors[CATEGORY_FIELD].append(NO_CATEGORY_ERR)
     else:
       try:
         Category.objects.get(pk=self.category)
       except Category.DoesNotExist:
-        self.errors['category'].append(NO_SUCH_CATEGORY_ERR)
+        self.errors[CATEGORY_FIELD].append(NO_SUCH_CATEGORY_ERR)
 
   def _validate_description(self):
     if not self.description:
-      self.errors['description'].append(NO_DESCRIPTION_ERR)
+      self.errors[DESCRIPTION_FIELD].append(NO_DESCRIPTION_ERR)
 
   def _validate_quantity(self):
     if not self.quantity:
-      self.errors['quantity'].append(NO_QUANTITY_ERR)
+      self.errors[QUANTITY_FIELD].append(NO_QUANTITY_ERR)
     else:
       try:
         if int(self.quantity) < 0:
-          self.errors['quantity'].append(QUANTITY_VALUE_ERR)
+          self.errors[QUANTITY_FIELD].append(QUANTITY_VALUE_ERR)
       except ValueError:
-        self.errors['quantity'].append(QUANTITY_NOT_INT_ERR)
+        self.errors[QUANTITY_FIELD].append(QUANTITY_NOT_INT_ERR)
 
   def _validate_discount(self):
     if not self.discount:
-      self.errors['discount'].append(NO_DISCOUNT_ERR)
+      self.errors[DISCOUNT_FIELD].append(NO_DISCOUNT_ERR)
     else:
       try:
         discount = int(self.discount)
         max_discount = 100
         min_discount = 0
         if discount >= max_discount or discount < min_discount:
-          self.errors['discount'].append(DISCOUNT_VALUE_ERR)
+          self.errors[DISCOUNT_FIELD].append(DISCOUNT_VALUE_ERR)
       except ValueError:
-        self.errors['discount'].append(DISCOUNT_NOT_INT_ERR)
+        self.errors[DISCOUNT_FIELD].append(DISCOUNT_NOT_INT_ERR)
 
 
 class CategoryFormValidator(Validator):
   def __init__(self, data):
     self.name = data[NAME_FIELD]
     self.errors = {
-      'name': []
+      NAME_FIELD: []
     }
 
   def validate(self):
-    self.errors['name'] = validate_name(self.name)
+    self.errors[NAME_FIELD] = validate_name(self.name)
