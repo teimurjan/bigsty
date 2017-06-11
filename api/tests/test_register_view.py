@@ -80,12 +80,11 @@ class RegisterViewTest(TestCase):
     email_errors = data[EMAIL_FIELD]
     self.assertEquals(email_errors[0], NO_EMAIL_ERR)
 
-
-def test_no_password(self):
-  response = self.send_request(name=TEST_NAME,
-                               email=VALID_EXISTING_EMAIL)
-  self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-  data = json.loads(response.content.decode())
-  self.assertIn(PASSWORD_FIELD, data)
-  password_errors = data[PASSWORD_FIELD]
-  self.assertEquals(password_errors[0], NO_PASSWORD_ERR)
+  def test_no_password(self):
+    response = self.send_request(name=TEST_NAME,
+                                 email=VALID_EXISTING_EMAIL)
+    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
+    data = json.loads(response.content.decode())
+    self.assertIn(PASSWORD_FIELD, data)
+    password_errors = data[PASSWORD_FIELD]
+    self.assertEquals(password_errors[0], NO_PASSWORD_ERR)
