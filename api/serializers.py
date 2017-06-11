@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.http import JsonResponse
 
 from api.utils.error_constants import SAME_EMAIL_ERR, PASSWORD_DOESNT_MATCH_ERR, GLOBAL_ERR_KEY, NO_SUCH_USER_ERR, \
- NOT_VALID_IMAGE, SAME_GROUP_NAME_ERR, NO_SUCH_CATEGORY_ERR, NO_SUCH_PRODUCT_ERR
+  NOT_VALID_IMAGE, SAME_GROUP_NAME_ERR, NO_SUCH_CATEGORY_ERR, NO_SUCH_PRODUCT_ERR
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, ID_FIELD, DESCRIPTION_FIELD, \
   DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD
 from api.utils.response_constants import ID_JSON_KEY, NAME_JSON_KEY, GROUP_JSON_KEY, TOKEN_JSON_KEY, \
@@ -151,7 +151,7 @@ class CategorySerializer(Serializer):
     category_id = self.data[ID_FIELD]
     try:
       category = Category.objects.get(pk=category_id)
-      return JsonResponse({ID_JSON_KEY: category.pk, NAME_JSON_KEY: category.name})
+      return JsonResponse({DATA_JSON_KEY: {ID_JSON_KEY: category.pk, NAME_JSON_KEY: category.name}})
     except Category.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [NO_SUCH_CATEGORY_ERR]}, status=NOT_FOUND_CODE)
 
@@ -181,7 +181,7 @@ class ProductListSerializer(Serializer):
       price=price,
       category_id=category_id
     )
-    return JsonResponse(product.to_dict())
+    return JsonResponse({DATA_JSON_KEY: product.to_dict()})
 
   def update(self):
     pass
@@ -212,6 +212,6 @@ class ProductSerializer(Serializer):
     product_id = self.data[ID_FIELD]
     try:
       product = Product.objects.get(pk=product_id)
-      return JsonResponse(product.to_dict())
+      return JsonResponse({DATA_JSON_KEY: product.to_dict()})
     except Product.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [NO_SUCH_PRODUCT_ERR]})

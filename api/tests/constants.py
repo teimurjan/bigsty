@@ -1,5 +1,6 @@
 LOGIN_URL = "/api/login"
 REGISTER_URL = "/api/register"
+USER_LIST_URL = "/api/users"
 
 TEST_NAME = "Test User"
 
