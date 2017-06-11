@@ -8,7 +8,7 @@ from api.utils.error_constants import SAME_EMAIL_ERR, PASSWORD_DOESNT_MATCH_ERR,
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, ID_FIELD, DESCRIPTION_FIELD, \
   DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD
 from api.utils.response_constants import ID_JSON_KEY, NAME_JSON_KEY, GROUP_JSON_KEY, TOKEN_JSON_KEY, \
-  MESSAGE_OK, DATA_JSON_KEY
+  MESSAGE_OK, DATA_JSON_KEY, NOT_FOUND_CODE, BAD_REQUEST_CODE
 from main import settings
 from api.models import *
 import jwt
@@ -62,7 +62,7 @@ class AuthSerializer(BaseSerializer):
       user = User.objects.create(name=name, email=email, password=password, group=group)
       return JsonResponse({TOKEN_JSON_KEY: generate_token(user)})
     except IntegrityError:
-      return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=400)
+      return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=BAD_REQUEST_CODE)
 
   def login(self):
     email = self.data[EMAIL_FIELD]
@@ -70,12 +70,12 @@ class AuthSerializer(BaseSerializer):
     try:
       user = User.objects.get(email=email)
     except User.DoesNotExist:
-      return JsonResponse({EMAIL_FIELD: [NO_SUCH_USER_ERR]}, status=404)
+      return JsonResponse({EMAIL_FIELD: [NO_SUCH_USER_ERR]}, status=NOT_FOUND_CODE)
     is_valid_password = bcrypt.checkpw(password.encode(), user.password.encode())
     if is_valid_password:
       return JsonResponse({TOKEN_JSON_KEY: generate_token(user)})
     else:
-      return JsonResponse({PASSWORD_FIELD: [PASSWORD_DOESNT_MATCH_ERR]}, status=400)
+      return JsonResponse({PASSWORD_FIELD: [PASSWORD_DOESNT_MATCH_ERR]}, status=BAD_REQUEST_CODE)
 
 
 class UserSerializer(Serializer):
@@ -94,7 +94,7 @@ class UserSerializer(Serializer):
       User.objects.get(pk=user_id).delete()
       return JsonResponse(MESSAGE_OK)
     except User.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [NO_SUCH_USER_ERR]}, status=404)
+      return JsonResponse({GLOBAL_ERR_KEY: [NO_SUCH_USER_ERR]}, status=NOT_FOUND_CODE)
 
 
 class UserListSerializer(Serializer):
@@ -131,7 +131,7 @@ class CategoryListSerializer(Serializer):
       category = Category.objects.create(name=name)
       return JsonResponse(category.to_dict())
     except IntegrityError:
-      return JsonResponse({NAME_FIELD: [SAME_GROUP_NAME_ERR]}, status=400)
+      return JsonResponse({NAME_FIELD: [SAME_GROUP_NAME_ERR]}, status=BAD_REQUEST_CODE)
 
   def delete(self):
     pass
@@ -153,7 +153,7 @@ class CategorySerializer(Serializer):
       category = Category.objects.get(pk=category_id)
       return JsonResponse({ID_JSON_KEY: category.pk, NAME_JSON_KEY: category.name})
     except Category.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [NO_SUCH_CATEGORY_ERR]}, status=404)
+      return JsonResponse({GLOBAL_ERR_KEY: [NO_SUCH_CATEGORY_ERR]}, status=NOT_FOUND_CODE)
 
 
 class ProductListSerializer(Serializer):

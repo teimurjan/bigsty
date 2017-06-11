@@ -7,7 +7,7 @@ from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, 
   CategorySerializer, ProductListSerializer, ProductSerializer
 import json
 
-from api.utils.response_constants import GROUP_JSON_KEY, ID_JSON_KEY
+from api.utils.response_constants import GROUP_JSON_KEY, ID_JSON_KEY, BAD_REQUEST_CODE, FORBIDDEN_CODE
 from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, ProductFormValidator
 from main import settings
 
@@ -21,7 +21,7 @@ def admin_required(func):
   def wrapper(request, *args, **kwargs):
     user = get_user_from_request(request)
     if user[GROUP_JSON_KEY] != 'admin':
-      return JsonResponse({}, status=401)
+      return JsonResponse({}, status=FORBIDDEN_CODE)
     return func(request, *args, *kwargs)
   return wrapper
 
@@ -33,7 +33,7 @@ class LoginView(View):
     validator = LoginFormValidator(data)
     validator.validate()
     if validator.has_errors():
-      return JsonResponse(validator.errors, status=400)
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = AuthSerializer(data)
     return serializer.login()
 
@@ -45,7 +45,7 @@ class RegistrationView(View):
     validator = RegistrationFormValidator(data)
     validator.validate()
     if validator.has_errors():
-      return JsonResponse(validator.errors, status=400)
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = AuthSerializer(data)
     return serializer.register()
 
@@ -76,7 +76,7 @@ class CategoryListView(View):
     validator = CategoryFormValidator(data)
     validator.validate()
     if validator.has_errors():
-      return JsonResponse(validator.errors, status=400)
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = CategoryListSerializer(data)
     return serializer.create()
 
@@ -99,7 +99,7 @@ class ProductListView(View):
     validator = ProductFormValidator(data)
     validator.validate()
     if validator.has_errors():
-      return JsonResponse(validator.errors, status=400)
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = ProductListSerializer(data)
     return serializer.create()
 
