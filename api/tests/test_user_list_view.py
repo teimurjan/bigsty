@@ -6,7 +6,7 @@ from api.models import User
 from api.serializers import generate_token
 from api.tests.constants import USER_LIST_URL
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD
-from api.utils.response_constants import DATA_JSON_KEY, GROUP_JSON_KEY
+from api.utils.response_constants import DATA_JSON_KEY, GROUP_JSON_KEY, FORBIDDEN_CODE
 
 
 class UserListViewTest(TestCase):
@@ -16,7 +16,7 @@ class UserListViewTest(TestCase):
     user = User.objects.get(pk=2)
     self.token = generate_token(user)
 
-  def test_success(self):
+  def test_get_success(self):
     response = self.client.get(USER_LIST_URL, HTTP_AUTHORIZATION='Bearer %s' % self.token)
     data = json.loads(response.content.decode())
     users = data[DATA_JSON_KEY]
@@ -33,3 +33,7 @@ class UserListViewTest(TestCase):
     self.assertEquals(first_user[EMAIL_FIELD], "test1@test.test")
     self.assertEquals(second_user[EMAIL_FIELD], "test2@test.test")
     self.assertEquals(third_user[EMAIL_FIELD], "test3@test.test")
+
+  def test_get_admin_required(self):
+    response = self.client.get(USER_LIST_URL, HTTP_AUTHORIZATION='invalid')
+    self.assertEquals(response.status_code, FORBIDDEN_CODE)

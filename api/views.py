@@ -2,6 +2,7 @@ import jwt
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.generic import View
+from jwt import DecodeError
 
 from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, CategoryListSerializer, \
   CategorySerializer, ProductListSerializer, ProductSerializer
@@ -19,10 +20,13 @@ def get_user_from_request(request):
 
 def admin_required(func):
   def wrapper(request, *args, **kwargs):
-    user = get_user_from_request(request)
+    try:
+      user = get_user_from_request(request)
+    except DecodeError:
+      return JsonResponse({}, status=FORBIDDEN_CODE)
     if user[GROUP_JSON_KEY] != 'admin':
       return JsonResponse({}, status=FORBIDDEN_CODE)
-    return func(request, *args, *kwargs)
+    return func(request, *args, **kwargs)
   return wrapper
 
 
