@@ -1,3 +1,5 @@
+import json
+
 import jwt
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
@@ -6,10 +8,10 @@ from jwt import DecodeError
 
 from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, CategoryListSerializer, \
   CategorySerializer, ProductListSerializer, ProductSerializer
-import json
-
-from api.utils.response_constants import GROUP_JSON_KEY, ID_JSON_KEY, BAD_REQUEST_CODE, FORBIDDEN_CODE
-from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, ProductFormValidator
+from api.utils.form_fields_constants import ID_FIELD, GROUP_FIELD
+from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE
+from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, ProductFormValidator, \
+  UserFormValidator
 from main import settings
 
 
@@ -24,9 +26,10 @@ def admin_required(func):
       user = get_user_from_request(request)
     except DecodeError:
       return JsonResponse({}, status=FORBIDDEN_CODE)
-    if user[GROUP_JSON_KEY] != 'admin':
+    if user[GROUP_FIELD] != 'admin':
       return JsonResponse({}, status=FORBIDDEN_CODE)
     return func(request, *args, **kwargs)
+
   return wrapper
 
 
@@ -35,7 +38,7 @@ class LoginView(View):
     json_data = request.body.decode()
     data = json.loads(json_data)
     validator = LoginFormValidator(data)
-    validator.validate()
+    validator.validate_post()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = AuthSerializer(data)
@@ -47,7 +50,7 @@ class RegistrationView(View):
     json_data = request.body.decode()
     data = json.loads(json_data)
     validator = RegistrationFormValidator(data)
-    validator.validate()
+    validator.validate_post()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = AuthSerializer(data)
@@ -60,11 +63,38 @@ class UserListView(View):
     serializer = UserListSerializer()
     return serializer.read()
 
+  @method_decorator(admin_required)
+  def post(self, request):
+    json_data = request.body.decode()
+    data = json.loads(json_data)
+    validator = UserFormValidator(data)
+    validator.validate_post()
+    if validator.has_errors():
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
+    serializer = UserListSerializer(data)
+    return serializer.create()
+
 
 class UserView(View):
   @method_decorator(admin_required)
+  def get(self, request, user_id):
+    serializer = UserSerializer(user_id)
+    return serializer.read()
+
+  @method_decorator(admin_required)
+  def put(self, request, user_id):
+    json_data = request.body.decode()
+    data = json.loads(json_data)
+    validator = UserFormValidator(data)
+    validator.validate_put()
+    if validator.has_errors():
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
+    serializer = UserSerializer(user_id, data)
+    return serializer.update()
+
+  @method_decorator(admin_required)
   def delete(self, request, user_id):
-    serializer = UserSerializer({ID_JSON_KEY: user_id})
+    serializer = UserSerializer(user_id)
     return serializer.delete()
 
 
@@ -78,7 +108,7 @@ class CategoryListView(View):
     json_data = request.body.decode()
     data = json.loads(json_data)
     validator = CategoryFormValidator(data)
-    validator.validate()
+    validator.validate_post()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = CategoryListSerializer(data)
@@ -87,13 +117,21 @@ class CategoryListView(View):
 
 class CategoryView(View):
   def get(self, request, category_id):
-    serializer = CategorySerializer({ID_JSON_KEY: category_id})
+    serializer = CategorySerializer({ID_FIELD: category_id})
     return serializer.read()
+
+  @method_decorator(admin_required)
+  def put(self, request, category_id):
+    pass
+
+  @method_decorator(admin_required)
+  def delete(self, request, category_id):
+    pass
 
 
 class ProductListView(View):
   def get(self, request, category_id=None):
-    serializer = ProductListSerializer({ID_JSON_KEY: category_id})
+    serializer = ProductListSerializer({ID_FIELD: category_id})
     return serializer.read()
 
   @method_decorator(admin_required)
@@ -101,7 +139,7 @@ class ProductListView(View):
     json_data = request.body.decode()
     data = json.loads(json_data)
     validator = ProductFormValidator(data)
-    validator.validate()
+    validator.validate_post()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = ProductListSerializer(data)
@@ -110,5 +148,12 @@ class ProductListView(View):
 
 class ProductView(View):
   def get(self, request, product_id):
-    serializer = ProductSerializer({ID_JSON_KEY: product_id})
+    serializer = ProductSerializer({ID_FIELD: product_id})
     return serializer.read()
+
+
+class FeatureTypeListView(View):
+  @admin_required
+  def post(self, request):
+    json_data = request.body.decode()
+    data = json.loads(json_data)

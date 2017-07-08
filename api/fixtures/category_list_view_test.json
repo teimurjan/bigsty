@@ -1,0 +1,24 @@
+[
+  {
+    "model": "api.Category",
+    "pk": 1,
+    "fields": {
+      "name": "Test Category 1"
+    }
+  },
+  {
+    "model": "api.Category",
+    "pk": 2,
+    "fields": {
+      "name": "Test Category 2"
+    }
+  },
+  {
+    "model": "api.FeatureType",
+    "pk": 1,
+    "fields": {
+      "name": "Test Feature Type",
+      "categories": [2]
+    }
+  }
+]
