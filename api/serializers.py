@@ -142,17 +142,14 @@ class CategoryListSerializer(ListSerializer):
     name = self.data[NAME_FIELD]
     feature_types_ids = self.data[FEATURE_TYPES_FIELD]
     try:
-      try:
-        feature_types = [FeatureType.objects.get(pk=feature_type_id) for feature_type_id in feature_types_ids]
-        category = Category()
-        category.feature_types.add(*feature_types)
-      except FeatureType.DoesNotExist:
-        return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
+      feature_types = [FeatureType.objects.get(pk=feature_type_id) for feature_type_id in feature_types_ids]
+      category = Category()
       category.name = name
       category.save()
-      return DataJsonResponse(category.to_dict())
-    except IntegrityError:
-      return JsonResponse({NAME_FIELD: [SAME_CATEGORY_NAME_ERR]}, status=BAD_REQUEST_CODE)
+      category.feature_types.add(*feature_types)
+    except FeatureType.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
+    return DataJsonResponse(category.to_dict())
 
 
 class CategorySerializer(Serializer):

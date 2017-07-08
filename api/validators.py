@@ -6,10 +6,10 @@ from django.core.validators import validate_email as validate_email_format
 from api.models import User, Category, Group
 from api.utils.errors.error_constants import NOT_VALID_EMAIL_ERR, NOT_VALID_PASSWORD_ERR, \
   PRICE_VALUE_ERR, PRICE_NOT_INT_ERR, QUANTITY_VALUE_ERR, QUANTITY_NOT_INT_ERR, DISCOUNT_VALUE_ERR, \
-  DISCOUNT_NOT_INT_ERR, GLOBAL_ERR_KEY, SAME_EMAIL_ERR
+  DISCOUNT_NOT_INT_ERR, GLOBAL_ERR_KEY, SAME_EMAIL_ERR, SAME_CATEGORY_NAME_ERR
 from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DISCOUNT_FIELD, QUANTITY_FIELD, \
-  DESCRIPTION_FIELD, CATEGORY_FIELD, PRICE_FIELD, IMAGE_FIELD, GROUP_FIELD, GROUP_FIELD
+  DESCRIPTION_FIELD, CATEGORY_FIELD, PRICE_FIELD, IMAGE_FIELD, GROUP_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD
 
 
 def validate_email(email):
@@ -218,12 +218,18 @@ class ProductFormValidator(Validator):
 class CategoryFormValidator(Validator):
   def __init__(self, data):
     super().__init__({
-      NAME_FIELD: []
+      NAME_FIELD: [],
+      FEATURE_TYPES_FIELD: []
     })
     self.name = data[NAME_FIELD]
+    self.feature_types_ids = data[FEATURE_TYPES_FIELD]
 
   def validate_post(self):
     self.errors[NAME_FIELD] = validate_name(self.name)
+    if Category.objects.filter(name=self.name).exists():
+      self.errors[NAME_FIELD].append(SAME_CATEGORY_NAME_ERR)
+    if not self.feature_types_ids:
+      self.errors[FEATURE_TYPES_FIELD].append(get_field_empty_msg(FEATURE_TYPES_FIELD))
 
 
 class FeatureFormValidator(Validator):

@@ -26,10 +26,10 @@ class UserListViewTest(TestCase):
     user = User.objects.get(pk=2)
     self.token = generate_token(user)
 
-  def send_post_request(self, user_dict):
+  def send_post_request(self, user_dict, token):
     return self.client.post(USER_LIST_URL,
                             data=json.dumps(user_dict),
-                            HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                            HTTP_AUTHORIZATION='Bearer %s' % token,
                             content_type='application/json')
 
   def test_should_get_success(self):
@@ -50,19 +50,27 @@ class UserListViewTest(TestCase):
                               email=VALID_EMAIL,
                               password=VALID_PASSWORD,
                               group_id=1)
-    response = self.send_post_request(user_dict)
+    response = self.send_post_request(user_dict, self.token)
     self.assertEquals(response.status_code, OK_CODE)
     data = json.loads(response.content.decode())[DATA_KEY]
     self.assertEquals(data[NAME_FIELD], user_dict[NAME_FIELD])
     self.assertEquals(data[EMAIL_FIELD], user_dict[EMAIL_FIELD])
     self.assertEquals(data[GROUP_FIELD], user_dict[GROUP_FIELD])
 
+  def test_should_post_admin_required(self):
+    user_dict = get_user_dict(name=TEST_NAME,
+                              email=VALID_EMAIL,
+                              password=VALID_PASSWORD,
+                              group_id=1)
+    response = self.send_post_request(user_dict, 'Invalid')
+    self.assertEquals(response.status_code, FORBIDDEN_CODE)
+
   def test_should_throw_post_user_with_email_exists(self):
     user_dict = get_user_dict(email=User.objects.all()[0].email,
                               name=TEST_NAME,
                               password=VALID_PASSWORD,
                               group_id=1)
-    response = self.send_post_request(user_dict)
+    response = self.send_post_request(user_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[EMAIL_FIELD][0], SAME_EMAIL_ERR)
@@ -72,7 +80,7 @@ class UserListViewTest(TestCase):
                               name=TEST_NAME,
                               password=VALID_PASSWORD,
                               group_id=1)
-    response = self.send_post_request(user_dict)
+    response = self.send_post_request(user_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[EMAIL_FIELD][0], NOT_VALID_EMAIL_ERR)
@@ -82,7 +90,7 @@ class UserListViewTest(TestCase):
                               email=VALID_EMAIL,
                               password=INVALID_FORMAT_PASSWORD,
                               group_id=1)
-    response = self.send_post_request(user_dict)
+    response = self.send_post_request(user_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[PASSWORD_FIELD][0], NOT_VALID_PASSWORD_ERR)
@@ -92,13 +100,13 @@ class UserListViewTest(TestCase):
                               email=VALID_EMAIL,
                               password=VALID_PASSWORD,
                               group_id=4)
-    response = self.send_post_request(user_dict)
+    response = self.send_post_request(user_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[GROUP_FIELD][0], get_not_exist_msg(Group))
 
   def test_should_throw_post_no_values(self):
-    response = self.send_post_request({})
+    response = self.send_post_request({}, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[NAME_FIELD][0], get_field_empty_msg(NAME_FIELD))
