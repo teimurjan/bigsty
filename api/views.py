@@ -24,7 +24,7 @@ def admin_required(func):
   def wrapper(request, *args, **kwargs):
     try:
       user = get_user_from_request(request)
-    except DecodeError:
+    except Exception:
       return JsonResponse({}, status=FORBIDDEN_CODE)
     if user[GROUP_FIELD] != 'admin':
       return JsonResponse({}, status=FORBIDDEN_CODE)
@@ -117,16 +117,24 @@ class CategoryListView(View):
 
 class CategoryView(View):
   def get(self, request, category_id):
-    serializer = CategorySerializer({ID_FIELD: category_id})
+    serializer = CategorySerializer(category_id)
     return serializer.read()
 
   @method_decorator(admin_required)
   def put(self, request, category_id):
-    pass
+    json_data = request.body.decode()
+    data = json.loads(json_data)
+    validator = CategoryFormValidator(data, category_id)
+    validator.validate_post()
+    if validator.has_errors():
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
+    serializer = CategorySerializer(category_id, data)
+    return serializer.update()
 
   @method_decorator(admin_required)
   def delete(self, request, category_id):
-    pass
+    serializer = CategorySerializer(category_id)
+    return serializer.delete()
 
 
 class ProductListView(View):

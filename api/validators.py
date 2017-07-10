@@ -216,18 +216,28 @@ class ProductFormValidator(Validator):
 
 
 class CategoryFormValidator(Validator):
-  def __init__(self, data):
+  def __init__(self, data, category_id=None):
     super().__init__({
       NAME_FIELD: [],
       FEATURE_TYPES_FIELD: []
     })
     self.name = data[NAME_FIELD]
     self.feature_types_ids = data[FEATURE_TYPES_FIELD]
+    self.category_id = category_id
 
   def validate_post(self):
     self.errors[NAME_FIELD] = validate_name(self.name)
     if Category.objects.filter(name=self.name).exists():
       self.errors[NAME_FIELD].append(SAME_CATEGORY_NAME_ERR)
+    self._validate_feature_types()
+
+  def validate_put(self):
+    self.errors[NAME_FIELD] = validate_name(self.name)
+    self._validate_feature_types()
+    if Category.objects.filter(name=self.name).exclude(pk=self.category_id).exists():
+      self.errors[NAME_FIELD].append(SAME_CATEGORY_NAME_ERR)
+
+  def _validate_feature_types(self):
     if not self.feature_types_ids:
       self.errors[FEATURE_TYPES_FIELD].append(get_field_empty_msg(FEATURE_TYPES_FIELD))
 

@@ -170,7 +170,7 @@ class CategorySerializer(Serializer):
       if feature_types_ids:
         try:
           feature_types = [FeatureType.objects.get(pk=feature_type_id) for feature_type_id in feature_types_ids]
-          category.feature_types.add(*feature_types)
+          category.feature_types.set(feature_types)
         except FeatureType.DoesNotExist:
           return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
       category.save()

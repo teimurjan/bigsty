@@ -1,0 +1,66 @@
+[
+  {
+    "model": "api.User",
+    "pk": 1,
+    "fields": {
+      "name": "Test User 1",
+      "email": "test1@test.test",
+      "password": "$2b$12$ScidzezCmHnWhB3v2AqhbOp3DyYfXxxDpShRwA4rw5VmAZDra66fa",
+      "group": "1",
+      "date_joined": "2017-06-10 10:54:07.785179"
+    }
+  },
+  {
+    "model": "api.User",
+    "pk": 2,
+    "fields": {
+      "name": "Test User 2",
+      "email": "test2@test.test",
+      "password": "$2b$12$ScidzezCmHnWhB3v2AqhbOp3DyYfXxxDpShRwA4rw5VmAZDra66fa",
+      "group": "3",
+      "date_joined": "2017-06-10 10:54:07.785179"
+    }
+  },
+  {
+    "model": "api.Category",
+    "pk": 1,
+    "fields": {
+      "name": "Test Category 1"
+    }
+  },
+  {
+    "model": "api.Category",
+    "pk": 2,
+    "fields": {
+      "name": "Test Category 2"
+    }
+  },
+  {
+    "model": "api.FeatureType",
+    "pk": 1,
+    "fields": {
+      "name": "Test Feature Type 1",
+      "categories": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "api.FeatureType",
+    "pk": 2,
+    "fields": {
+      "name": "Test Feature Type 2",
+      "categories": []
+    }
+  },
+  {
+    "model": "api.FeatureType",
+    "pk": 3,
+    "fields": {
+      "name": "Test Feature Type 3",
+      "categories": [
+        2
+      ]
+    }
+  }
+]
