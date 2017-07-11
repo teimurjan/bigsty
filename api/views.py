@@ -10,8 +10,9 @@ from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, 
   CategorySerializer, ProductListSerializer, ProductSerializer
 from api.utils.form_fields_constants import ID_FIELD, GROUP_FIELD
 from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE
-from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, ProductFormValidator, \
-  UserFormValidator
+from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryCreationFormValidator, \
+  ProductFormValidator, \
+  UserCreationFormValidator, UserUpdateFormValidator, CategoryUpdateFormValidator
 from main import settings
 
 
@@ -38,7 +39,7 @@ class LoginView(View):
     json_data = request.body.decode()
     data = json.loads(json_data)
     validator = LoginFormValidator(data)
-    validator.validate_post()
+    validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = AuthSerializer(data)
@@ -50,7 +51,7 @@ class RegistrationView(View):
     json_data = request.body.decode()
     data = json.loads(json_data)
     validator = RegistrationFormValidator(data)
-    validator.validate_post()
+    validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = AuthSerializer(data)
@@ -67,8 +68,8 @@ class UserListView(View):
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
-    validator = UserFormValidator(data)
-    validator.validate_post()
+    validator = UserCreationFormValidator(data)
+    validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = UserListSerializer(data)
@@ -85,8 +86,8 @@ class UserView(View):
   def put(self, request, user_id):
     json_data = request.body.decode()
     data = json.loads(json_data)
-    validator = UserFormValidator(data)
-    validator.validate_put()
+    validator = UserUpdateFormValidator(data)
+    validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = UserSerializer(user_id, data)
@@ -107,8 +108,8 @@ class CategoryListView(View):
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
-    validator = CategoryFormValidator(data)
-    validator.validate_post()
+    validator = CategoryCreationFormValidator(data)
+    validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = CategoryListSerializer(data)
@@ -124,8 +125,8 @@ class CategoryView(View):
   def put(self, request, category_id):
     json_data = request.body.decode()
     data = json.loads(json_data)
-    validator = CategoryFormValidator(data, category_id)
-    validator.validate_post()
+    validator = CategoryUpdateFormValidator(data, category_id)
+    validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = CategorySerializer(category_id, data)
@@ -147,7 +148,7 @@ class ProductListView(View):
     json_data = request.body.decode()
     data = json.loads(json_data)
     validator = ProductFormValidator(data)
-    validator.validate_post()
+    validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = ProductListSerializer(data)

@@ -83,7 +83,7 @@ class ProductType(BaseModel):
   name = models.CharField(unique=True, max_length=255)
   description = models.CharField(max_length=1000, blank=True)
   short_description = models.CharField(max_length=100, blank=True)
-  image = models.FileField(upload_to="store/static/images/products/main/", null=False)
+  image = models.FileField(upload_to="store/static/images/products/main/", null=True, blank=True)
   category = models.ForeignKey(Category, related_name="product_types",
                                related_query_name="product_type")
 
