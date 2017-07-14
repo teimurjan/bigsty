@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from api.models import *
 from api.utils.crypt import encrypt, matches
 from api.utils.errors.error_constants import PASSWORD_DOESNT_MATCH_ERR, GLOBAL_ERR_KEY, NOT_VALID_IMAGE, \
-  SAME_CATEGORY_NAME_ERR
+  SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DESCRIPTION_FIELD, \
   DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
   SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD
@@ -70,12 +70,16 @@ class DataJsonResponse(JsonResponse):
 
 class AuthSerializer(BaseSerializer):
   def register(self):
-    name = self.data[NAME_FIELD]
-    email = self.data[EMAIL_FIELD]
-    password = self.data[PASSWORD_FIELD]
-    group, created = Group.objects.get_or_create(name='reader')
-    user = User.objects.create(name=name, email=email, password=encrypt(password), group=group)
-    return JsonResponse({TOKEN_KEY: generate_token(user)})
+    try:
+      name = self.data[NAME_FIELD]
+      email = self.data[EMAIL_FIELD]
+      password = self.data[PASSWORD_FIELD]
+      group, created = Group.objects.get_or_create(name='reader')
+      user = User.objects.create(name=name, email=email, password=encrypt(password), group=group)
+      return JsonResponse({TOKEN_KEY: generate_token(user)})
+    except IntegrityError as e:
+      if 'Duplicate entry' in str(e):
+        return JsonResponse({EMAIL_FIELD: SAME_EMAIL_ERR}, BAD_REQUEST_CODE)
 
   def login(self):
     email = self.data[EMAIL_FIELD]
@@ -104,10 +108,12 @@ class UserSerializer(Serializer):
       user.name = self.data[NAME_FIELD] or user.name
       password = self.data[PASSWORD_FIELD]
       user.password = encrypt(password) or user.password
-      user.group_id = self.data[GROUP_FIELD] or user.group_id
+      user.group = Group.objects.get(pk=self.data[GROUP_FIELD]) or user.group
       return DataJsonResponse(user.to_dict())
     except User.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(User)]}, status=NOT_FOUND_CODE)
+    except Group.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Group)]}, status=NOT_FOUND_CODE)
 
   def delete(self):
     try:
@@ -119,12 +125,16 @@ class UserSerializer(Serializer):
 
 class UserListSerializer(ListSerializer):
   def create(self):
-    name = self.data[NAME_FIELD]
-    email = self.data[EMAIL_FIELD]
-    password = self.data[PASSWORD_FIELD]
-    group = self.data[GROUP_FIELD]
-    user = User.objects.create(name=name, email=email, password=password, group_id=group)
-    return DataJsonResponse(user.to_dict())
+    try:
+      group = Group.objects.get(pk=self.data[GROUP_FIELD])
+      user = User.objects.create(name=self.data[NAME_FIELD], email=self.data[EMAIL_FIELD],
+                                 password=self.data[PASSWORD_FIELD], group=group)
+      return DataJsonResponse(user.to_dict())
+    except Group.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Group)]}, status=NOT_FOUND_CODE)
+    except IntegrityError as e:
+      if 'Duplicate entry' in str(e):
+        return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=BAD_REQUEST_CODE)
 
   def read(self):
     users = []

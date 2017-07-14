@@ -5,10 +5,10 @@ from django.test import TestCase
 from api.models import User, Group
 from api.serializers import generate_token
 from api.tests.constants import USER_LIST_URL, TEST_NAME, VALID_PASSWORD, INVALID_FORMAT_PASSWORD, INVALID_EMAIL_FORMAT
-from api.utils.errors.error_constants import SAME_EMAIL_ERR, NOT_VALID_EMAIL_ERR, NOT_VALID_PASSWORD_ERR
+from api.utils.errors.error_constants import SAME_EMAIL_ERR, NOT_VALID_EMAIL_ERR, NOT_VALID_PASSWORD_ERR, GLOBAL_ERR_KEY
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, GROUP_FIELD, DATA_KEY, ID_FIELD, \
   GROUP_FIELD
-from api.utils.response_constants import FORBIDDEN_CODE, OK_CODE, BAD_REQUEST_CODE
+from api.utils.response_constants import FORBIDDEN_CODE, OK_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE
 from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
 
 
@@ -101,9 +101,9 @@ class UserListViewTest(TestCase):
                               password=VALID_PASSWORD,
                               group_id=4)
     response = self.send_post_request(user_dict, self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
+    self.assertEquals(response.status_code, NOT_FOUND_CODE)
     data = json.loads(response.content.decode())
-    self.assertEquals(data[GROUP_FIELD][0], get_not_exist_msg(Group))
+    self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(Group))
 
   def test_should_throw_post_no_values(self):
     response = self.send_post_request({}, self.token)

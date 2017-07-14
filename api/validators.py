@@ -84,8 +84,6 @@ class RegistrationFormValidator(Validator):
     if self.has_errors():
       return
     self.errors[EMAIL_FIELD] = validate_email(self.data[EMAIL_FIELD])
-    if User.objects.filter(email=self.data[EMAIL_FIELD]).exists():
-      self.errors[EMAIL_FIELD].append(SAME_EMAIL_ERR)
     self.errors[PASSWORD_FIELD] = validate_password(self.data[PASSWORD_FIELD])
 
 
@@ -115,10 +113,7 @@ class UserCreationFormValidator(Validator):
     if self.has_errors():
       return
     self.errors[EMAIL_FIELD] = validate_email(self.data[EMAIL_FIELD])
-    if User.objects.filter(email=self.data[EMAIL_FIELD]).exists():
-      self.errors[EMAIL_FIELD].append(SAME_EMAIL_ERR)
     self.errors[PASSWORD_FIELD] = validate_password(self.data[PASSWORD_FIELD])
-    self.errors[GROUP_FIELD] = validate_model_existence(Group, self.data[GROUP_FIELD])
 
 
 class UserUpdateFormValidator(Validator):
@@ -134,7 +129,6 @@ class UserUpdateFormValidator(Validator):
     if self.has_errors():
       return
     self.errors[PASSWORD_FIELD] = validate_password(self.data[PASSWORD_FIELD])
-    self.errors[GROUP_FIELD] = validate_model_existence(Group, self.data[GROUP_FIELD])
 
 
 class ProductFormValidator(Validator):
@@ -200,8 +194,6 @@ class CategoryCreationFormValidator(Validator):
     self._validate_data_integrity()
     if self.has_errors():
       return
-    if Category.objects.filter(name=self.data[NAME_FIELD]).exists():
-      self.errors[NAME_FIELD].append(SAME_CATEGORY_NAME_ERR)
 
 
 class CategoryUpdateFormValidator(Validator):
@@ -216,8 +208,6 @@ class CategoryUpdateFormValidator(Validator):
     self._validate_data_integrity()
     if self.has_errors():
       return
-    if Category.objects.filter(name=self.data[NAME_FIELD]).exclude(pk=self.category_id).exists():
-      self.errors[NAME_FIELD].append(SAME_CATEGORY_NAME_ERR)
 
 
 class ProductTypeCreationFormValidator(Validator):
@@ -234,13 +224,3 @@ class ProductTypeCreationFormValidator(Validator):
     self._validate_data_integrity()
     if self.has_errors():
       return
-    if ProductType.objects.filter(name=self.data[NAME_FIELD]).exists():
-      self.errors[NAME_FIELD].append(SAME_PRODUCT_TYPE_NAME_ERR)
-    self._validate_feature_types()
-
-  def _validate_feature_types(self):
-    category = Category.objects.get(pk=self.data[CATEGORY_FIELD])
-    for feature_type_id in self.data[FEATURE_TYPES_FIELD]:
-      if feature_type_id not in category.feature_types:
-        self.errors[FEATURE_TYPES_FIELD].append(INVALID_FEATURE_TYPE_ID_ERR)
-        break

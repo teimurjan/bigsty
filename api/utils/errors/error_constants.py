@@ -5,9 +5,11 @@ NOT_VALID_EMAIL_ERR = 'Enter a valid email address'
 SAME_EMAIL_ERR = 'User with such email already exists'
 SAME_GROUP_NAME_ERR = 'Group with such name already exists'
 SAME_CATEGORY_NAME_ERR = 'Category with such name already exists'
+SAME_PRODUCT_TYPE_NAME_ERR = 'Category with such name already exists'
 NOT_VALID_PASSWORD_ERR = 'Enter a password which will contain both uppercase and ' \
                          'lowercase letters, at least one digit and special character ' \
                          '(@#$%^&+=),'
+INVALID_FEATURE_TYPE_ID_ERR = 'Invalid feature types'
 PASSWORD_DOESNT_MATCH_ERR = 'Invalid password'
 PRICE_NOT_INT_ERR = 'Price has to be an integer'
 PRICE_VALUE_ERR = 'Price has to be greater than or equal to 0'

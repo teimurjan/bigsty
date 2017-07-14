@@ -82,7 +82,7 @@ class UserViewTest(TestCase):
     self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(User))
 
   def test_should_throw_invalid_password_format(self):
-    user_id = 10
+    user_id = 1
     user_dict = get_user_dict(name=NEW_NAME,
                               password=INVALID_FORMAT_PASSWORD,
                               group_id=3)
@@ -92,17 +92,17 @@ class UserViewTest(TestCase):
     self.assertEquals(data[PASSWORD_FIELD][0], NOT_VALID_PASSWORD_ERR)
 
   def test_should_throw_no_group_with_id(self):
-    user_id = 10
+    user_id = 1
     user_dict = get_user_dict(name=NEW_NAME,
                               password=VALID_PASSWORD,
                               group_id=22)
     response = self.send_put_request(user_id=user_id, data_dict=user_dict, token=self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
+    self.assertEquals(response.status_code, NOT_FOUND_CODE)
     data = json.loads(response.content.decode())
-    self.assertEquals(data[GROUP_FIELD][0], get_not_exist_msg(Group))
+    self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(Group))
 
   def test_should_throw_update_no_values(self):
-    user_id = 10
+    user_id = 1
     response = self.send_put_request(user_id=user_id, data_dict={}, token=self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
