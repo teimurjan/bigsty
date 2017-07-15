@@ -67,7 +67,7 @@ class CategoryListViewTest(TestCase):
   def test_should_post_no_such_feature_type(self):
     data_dict = self.get_data_dict(TEST_NAME, [23])
     response = self.send_post_request(data_dict, self.token)
-    self.assertEquals(response.status_code, NOT_FOUND_CODE)
+    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(FeatureType))
 

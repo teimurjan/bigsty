@@ -62,14 +62,14 @@ class CategoryListViewTest(TestCase):
     self.assertEquals(response.status_code, FORBIDDEN_CODE)
 
   def test_should_update_throws_same_category_name(self):
-    category_id = 3
+    category_id = 2
     data_dict = get_category_dict(Category.objects.all()[0].name, [1, 2])
     response = self.send_put_request(category_id, data_dict, self.token)
     data = json.loads(response.content.decode())
     self.assertEquals(data[NAME_FIELD][0], SAME_CATEGORY_NAME_ERR)
 
   def test_should_update_throws_no_values(self):
-    category_id = 3
+    category_id = 2
     data_dict = get_category_dict()
     response = self.send_put_request(category_id, data_dict, self.token)
     data = json.loads(response.content.decode())

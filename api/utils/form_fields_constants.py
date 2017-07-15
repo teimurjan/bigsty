@@ -12,6 +12,7 @@ QUANTITY_FIELD = 'quantity'
 DISCOUNT_FIELD = 'discount'
 GROUP_FIELD = 'group'
 FEATURE_TYPES_FIELD = 'feature_types'
+AUTH_FIELDS = 'auth'
 
 TOKEN_KEY = 'token'
 DATA_KEY = 'data'

@@ -101,7 +101,7 @@ class UserListViewTest(TestCase):
                               password=VALID_PASSWORD,
                               group_id=4)
     response = self.send_post_request(user_dict, self.token)
-    self.assertEquals(response.status_code, NOT_FOUND_CODE)
+    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(Group))
 

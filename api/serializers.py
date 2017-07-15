@@ -7,10 +7,10 @@ from django.http import JsonResponse
 from api.models import *
 from api.utils.crypt import encrypt, matches
 from api.utils.errors.error_constants import PASSWORD_DOESNT_MATCH_ERR, GLOBAL_ERR_KEY, NOT_VALID_IMAGE, \
-  SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR
+  SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR, INVALID_EMAIL_OR_PASSWORD_ERR
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DESCRIPTION_FIELD, \
   DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
-  SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD
+  SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD, AUTH_FIELDS
 from api.utils.response_constants import MESSAGE_OK, NOT_FOUND_CODE, BAD_REQUEST_CODE
 from api.utils.errors.error_messages import get_not_exist_msg
 from main import settings
@@ -79,7 +79,7 @@ class AuthSerializer(BaseSerializer):
       return JsonResponse({TOKEN_KEY: generate_token(user)})
     except IntegrityError as e:
       if 'Duplicate entry' in str(e):
-        return JsonResponse({EMAIL_FIELD: SAME_EMAIL_ERR}, BAD_REQUEST_CODE)
+        return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=BAD_REQUEST_CODE)
 
   def login(self):
     email = self.data[EMAIL_FIELD]
@@ -87,11 +87,11 @@ class AuthSerializer(BaseSerializer):
     try:
       user = User.objects.get(email=email)
     except User.DoesNotExist:
-      return JsonResponse({EMAIL_FIELD: [get_not_exist_msg(User)]}, status=NOT_FOUND_CODE)
+      return JsonResponse({AUTH_FIELDS: [INVALID_EMAIL_OR_PASSWORD_ERR]}, status=BAD_REQUEST_CODE)
     if matches(password, user.password):
       return JsonResponse({TOKEN_KEY: generate_token(user)})
     else:
-      return JsonResponse({PASSWORD_FIELD: [PASSWORD_DOESNT_MATCH_ERR]}, status=BAD_REQUEST_CODE)
+      return JsonResponse({AUTH_FIELDS: [INVALID_EMAIL_OR_PASSWORD_ERR]}, status=BAD_REQUEST_CODE)
 
 
 class UserSerializer(Serializer):
@@ -113,7 +113,7 @@ class UserSerializer(Serializer):
     except User.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(User)]}, status=NOT_FOUND_CODE)
     except Group.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Group)]}, status=NOT_FOUND_CODE)
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Group)]}, status=BAD_REQUEST_CODE)
 
   def delete(self):
     try:
@@ -131,7 +131,7 @@ class UserListSerializer(ListSerializer):
                                  password=self.data[PASSWORD_FIELD], group=group)
       return DataJsonResponse(user.to_dict())
     except Group.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Group)]}, status=NOT_FOUND_CODE)
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Group)]}, status=BAD_REQUEST_CODE)
     except IntegrityError as e:
       if 'Duplicate entry' in str(e):
         return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=BAD_REQUEST_CODE)
@@ -157,9 +157,12 @@ class CategoryListSerializer(ListSerializer):
       category.name = name
       category.save()
       category.feature_types.add(*feature_types)
+      return DataJsonResponse(category.to_dict())
     except FeatureType.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
-    return DataJsonResponse(category.to_dict())
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=BAD_REQUEST_CODE)
+    except IntegrityError as e:
+      if 'Duplicate entry' in str(e):
+        return JsonResponse({NAME_FIELD: [SAME_CATEGORY_NAME_ERR]}, status=BAD_REQUEST_CODE)
 
 
 class CategorySerializer(Serializer):
@@ -174,19 +177,19 @@ class CategorySerializer(Serializer):
     try:
       category = Category.objects.get(pk=self.model_id)
       name = self.data[NAME_FIELD]
-      if name:
-        category.name = name
+      category.name = name
       feature_types_ids = self.data[FEATURE_TYPES_FIELD]
-      if feature_types_ids:
-        try:
-          feature_types = [FeatureType.objects.get(pk=feature_type_id) for feature_type_id in feature_types_ids]
-          category.feature_types.set(feature_types)
-        except FeatureType.DoesNotExist:
-          return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
+      feature_types = [FeatureType.objects.get(pk=feature_type_id) for feature_type_id in feature_types_ids]
+      category.feature_types.set(feature_types)
       category.save()
       return DataJsonResponse(category.to_dict())
+    except FeatureType.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
     except Category.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Category)]}, status=NOT_FOUND_CODE)
+    except IntegrityError as e:
+      if 'Duplicate entry' in str(e):
+        return JsonResponse({NAME_FIELD: [SAME_CATEGORY_NAME_ERR]}, status=BAD_REQUEST_CODE)
 
   def read(self):
     try:

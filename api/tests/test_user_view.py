@@ -97,7 +97,7 @@ class UserViewTest(TestCase):
                               password=VALID_PASSWORD,
                               group_id=22)
     response = self.send_put_request(user_id=user_id, data_dict=user_dict, token=self.token)
-    self.assertEquals(response.status_code, NOT_FOUND_CODE)
+    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(Group))
 
