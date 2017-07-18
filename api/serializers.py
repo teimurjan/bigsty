@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from api.models import *
 from api.utils.crypt import encrypt, matches
 from api.utils.errors.error_constants import PASSWORD_DOESNT_MATCH_ERR, GLOBAL_ERR_KEY, NOT_VALID_IMAGE, \
-  SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR, INVALID_EMAIL_OR_PASSWORD_ERR
+  SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR, INVALID_EMAIL_OR_PASSWORD_ERR, INVALID_FEATURE_TYPE_ID_ERR
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DESCRIPTION_FIELD, \
   DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
   SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD, AUTH_FIELDS, FEATURE_VALUES_FIELD
@@ -211,9 +211,14 @@ class ProductTypeListSerializer(ListSerializer):
       description = self.data[DESCRIPTION_FIELD]
       short_description = self.data[SHORT_DESCRIPTION_FIELD]
       image = self.data[IMAGE_FIELD]
-      feature_values = [FeatureValue.objects.get(pk=feature_value_id) for feature_value_id in
-                        self.data[FEATURE_VALUES_FIELD]]
       category = Category.objects.get(pk=self.data[CATEGORY_FIELD])
+      possible_feature_values = FeatureValue.objects.filter(feature_type__categories__in=[category])
+      feature_values = list()
+      for feature_value_id in self.data[FEATURE_VALUES_FIELD]:
+        feature_value = FeatureValue.objects.get(pk=feature_value_id)
+        if feature_value not in possible_feature_values:
+          return JsonResponse({FEATURE_VALUES_FIELD: [INVALID_FEATURE_TYPE_ID_ERR]}, status=BAD_REQUEST_CODE)
+        feature_values.append(feature_value)
       image = base64_to_image(image, name)
       product_type = ProductType.objects.create(name=name,
                                                 description=description,

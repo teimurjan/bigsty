@@ -7,7 +7,7 @@ from django.test import TestCase
 from api.models import User, ProductType, FeatureValue, Category
 from api.serializers import generate_token
 from api.tests.constants import PRODUCT_TYPE_LIST_URL, CATEGORY_LIST_URL
-from api.utils.errors.error_constants import NOT_VALID_IMAGE
+from api.utils.errors.error_constants import NOT_VALID_IMAGE, INVALID_FEATURE_TYPE_ID_ERR
 from api.utils.errors.error_messages import get_field_empty_msg, get_not_exist_msg
 from api.utils.form_fields_constants import DATA_KEY, NAME_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, \
   FEATURE_VALUES_FIELD, CATEGORY_FIELD, IMAGE_FIELD
@@ -114,3 +114,13 @@ class ProductTypeListViewTest(TestCase):
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[CATEGORY_FIELD][0], get_not_exist_msg(Category))
+
+  def test_should_post_throw_invalid_feature_types(self):
+    pwd = os.path.dirname(__file__)
+    with open('%s/assets/test.jpg' % pwd, 'rb') as image:
+      base64image = 'data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode()
+    data_dict = get_product_type_dict('Name', 'Description', 'Short description', [1, 2], 2, base64image)
+    response = self.send_post_request(data_dict, self.token)
+    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
+    data = json.loads(response.content.decode())
+    self.assertEquals(data[FEATURE_VALUES_FIELD][0], INVALID_FEATURE_TYPE_ID_ERR)

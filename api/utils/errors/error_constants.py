@@ -10,8 +10,6 @@ PASSWORD_DOESNT_MATCH_ERR = 'Invalid password'
 INVALID_EMAIL_OR_PASSWORD_ERR = 'Email or password are invalid'
 
 VALUE_LENGTH_ERR = '%s\'s length must be between %s and %s'
-NAME_TOO_SHORT_ERR = 'Too short name'
-DESCRIPTION_TOO_SHORT_ERR = 'Too short name'
 
 PRICE_NOT_INT_ERR = 'Price has to be an integer'
 PRICE_VALUE_ERR = 'Price has to be greater than or equal to 0'

@@ -7,7 +7,7 @@ from api.models import User, Category, Group, ProductType
 from api.utils.errors.error_constants import NOT_VALID_EMAIL_ERR, NOT_VALID_PASSWORD_ERR, \
   PRICE_VALUE_ERR, PRICE_NOT_INT_ERR, QUANTITY_VALUE_ERR, QUANTITY_NOT_INT_ERR, DISCOUNT_VALUE_ERR, \
   DISCOUNT_NOT_INT_ERR, GLOBAL_ERR_KEY, SAME_EMAIL_ERR, SAME_CATEGORY_NAME_ERR, SAME_PRODUCT_TYPE_NAME_ERR, \
-  INVALID_FEATURE_TYPE_ID_ERR, NAME_TOO_SHORT_ERR, DESCRIPTION_TOO_SHORT_ERR, VALUE_LENGTH_ERR
+  INVALID_FEATURE_TYPE_ID_ERR, VALUE_LENGTH_ERR
 from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DISCOUNT_FIELD, QUANTITY_FIELD, \
   DESCRIPTION_FIELD, CATEGORY_FIELD, PRICE_FIELD, IMAGE_FIELD, GROUP_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
@@ -203,7 +203,7 @@ class CategoryCreationFormValidator(Validator):
     self._validate_data_integrity()
     if self.has_errors():
       return
-    self.errors[NAME_FIELD] = [] if len(self.data[NAME_FIELD]) > 0 else [NAME_TOO_SHORT_ERR]
+    self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
 
 
 class CategoryUpdateFormValidator(Validator):
