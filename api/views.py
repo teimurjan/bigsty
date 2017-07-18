@@ -7,12 +7,12 @@ from django.views.generic import View
 from jwt import DecodeError
 
 from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, CategoryListSerializer, \
-  CategorySerializer, ProductListSerializer, ProductSerializer
+  CategorySerializer, ProductListSerializer, ProductSerializer, ProductTypeListSerializer
 from api.utils.form_fields_constants import ID_FIELD, GROUP_FIELD
 from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE
 from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryCreationFormValidator, \
   ProductFormValidator, \
-  UserCreationFormValidator, UserUpdateFormValidator, CategoryUpdateFormValidator
+  UserCreationFormValidator, UserUpdateFormValidator, CategoryUpdateFormValidator, ProductTypeCreationFormValidator
 from main import settings
 
 
@@ -25,7 +25,7 @@ def admin_required(func):
   def wrapper(request, *args, **kwargs):
     try:
       user = get_user_from_request(request)
-    except Exception:
+    except Exception as e:
       return JsonResponse({}, status=FORBIDDEN_CODE)
     if user[GROUP_FIELD] != 'admin':
       return JsonResponse({}, status=FORBIDDEN_CODE)
@@ -161,8 +161,18 @@ class ProductView(View):
     return serializer.read()
 
 
-class FeatureTypeListView(View):
-  @admin_required
+class ProductTypeListView(View):
+  @method_decorator(admin_required)
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
+    validator = ProductTypeCreationFormValidator(data)
+    validator.validate()
+    if validator.has_errors():
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
+    serializer = ProductTypeListSerializer(data)
+    return serializer.create()
+
+  def get(self, request, category_id=None):
+    serializer = ProductTypeListSerializer()
+    return serializer.read(category_id=category_id)

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields.files import FieldFile
 
 
 class BaseModel(models.Model):
@@ -29,6 +30,8 @@ class BaseModel(models.Model):
       return field.name
 
   def _get_field(self, field_value):
+    if isinstance(field_value, FieldFile):
+      return field_value.url if field_value else None
     return field_value
 
   class Meta:
@@ -98,7 +101,7 @@ class Product(BaseModel):
   discount = models.IntegerField(default=0)
   price = models.IntegerField(null=False, blank=False)
   quantity = models.IntegerField(null=False, blank=False, default=0)
-  product_type = models.ForeignKey(ProductType, null=True, related_name='product_type')
+  product_type = models.ForeignKey(ProductType, null=True, related_name='products', related_query_name='product')
 
   def is_available(self):
     return int(self.quantity) > 0

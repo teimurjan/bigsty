@@ -10,7 +10,7 @@ from api.utils.errors.error_constants import PASSWORD_DOESNT_MATCH_ERR, GLOBAL_E
   SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR, INVALID_EMAIL_OR_PASSWORD_ERR
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DESCRIPTION_FIELD, \
   DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
-  SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD, AUTH_FIELDS
+  SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD, AUTH_FIELDS, FEATURE_VALUES_FIELD
 from api.utils.response_constants import MESSAGE_OK, NOT_FOUND_CODE, BAD_REQUEST_CODE
 from api.utils.errors.error_messages import get_not_exist_msg
 from main import settings
@@ -21,12 +21,21 @@ def generate_token(user):
   return jwt.encode(payload, settings.SECRET_KEY).decode()
 
 
+class ImageToBase64ConversionException(Exception):
+  pass
+
+
 def base64_to_image(data, file_name):
-  import base64
-  from django.core.files.base import ContentFile
-  format, img_base64 = data.split(';base64,')
-  type = format.split('/')[-1]
-  return ContentFile(base64.b64decode(img_base64), name=file_name + '.' + type)
+  try:
+    import base64
+    from django.core.files.base import ContentFile
+    format, img_base64 = data.split(';base64,')
+    type = format.split('/')[-1]
+    if type != 'jpg' and type != 'png':
+      raise ImageToBase64ConversionException
+    return ContentFile(base64.b64decode(img_base64), name=file_name + '.' + type)
+  except Exception:
+    raise ImageToBase64ConversionException
 
 
 class BaseSerializer:
@@ -41,7 +50,7 @@ class ListSerializer(BaseSerializer):
     return
 
   @abc.abstractmethod
-  def read(self):
+  def read(self, **kwargs):
     return
 
 
@@ -137,16 +146,12 @@ class UserListSerializer(ListSerializer):
         return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=BAD_REQUEST_CODE)
 
   def read(self):
-    users = []
-    for user in User.objects.all():
-      users.append(user.to_dict())
-    return DataJsonResponse(users)
+    return DataJsonResponse([user.to_dict() for user in User.objects.all()])
 
 
 class CategoryListSerializer(ListSerializer):
   def read(self):
-    categories = [category.to_dict() for category in Category.objects.all()]
-    return JsonResponse({DATA_KEY: categories})
+    return DataJsonResponse([category.to_dict() for category in Category.objects.all()])
 
   def create(self):
     name = self.data[NAME_FIELD]
@@ -201,42 +206,47 @@ class CategorySerializer(Serializer):
 
 class ProductTypeListSerializer(ListSerializer):
   def create(self):
-    name = self.data[NAME_FIELD]
-    description = self.data[DESCRIPTION_FIELD]
-    short_description = self.data[SHORT_DESCRIPTION_FIELD]
-    image = self.data[IMAGE_FIELD]
-    category_id = self.data[CATEGORY_FIELD]
     try:
+      name = self.data[NAME_FIELD]
+      description = self.data[DESCRIPTION_FIELD]
+      short_description = self.data[SHORT_DESCRIPTION_FIELD]
+      image = self.data[IMAGE_FIELD]
+      feature_values = [FeatureValue.objects.get(pk=feature_value_id) for feature_value_id in
+                        self.data[FEATURE_VALUES_FIELD]]
+      category = Category.objects.get(pk=self.data[CATEGORY_FIELD])
       image = base64_to_image(image, name)
-    except Exception:
-      return JsonResponse({IMAGE_FIELD: NOT_VALID_IMAGE})
-    product_type = ProductType.objects.create(name=name,
-                                              description=description,
-                                              short_description=short_description,
-                                              image=image,
-                                              category_id=category_id)
-    return DataJsonResponse(product_type.to_dict())
+      product_type = ProductType.objects.create(name=name,
+                                                description=description,
+                                                short_description=short_description,
+                                                image=image,
+                                                category=category)
+      product_type.feature_values.set(feature_values)
+      return DataJsonResponse(product_type.to_dict())
+    except FeatureValue.DoesNotExist:
+      return JsonResponse({FEATURE_VALUES_FIELD: [get_not_exist_msg(FeatureValue)]}, status=BAD_REQUEST_CODE)
+    except Category.DoesNotExist:
+      return JsonResponse({CATEGORY_FIELD: [get_not_exist_msg(Category)]}, status=BAD_REQUEST_CODE)
+    except ImageToBase64ConversionException:
+      return JsonResponse({IMAGE_FIELD: [NOT_VALID_IMAGE]}, status=BAD_REQUEST_CODE)
 
-  def read(self):
-    category_id = self.data[CATEGORY_FIELD]
-    product_types = ProductType.objects.filter(category_id=category_id) if category_id else ProductType.objects.all()
-    return JsonResponse({DATA_KEY: [product_type.to_dict() for product_type in product_types]})
+  def read(self, **kwargs):
+    filter_kwargs = {k: v for k, v in kwargs.items() if k is not None and v is not None}
+    return DataJsonResponse([product_type.to_dict() for product_type in ProductType.objects.filter(**filter_kwargs)])
 
 
 class ProductTypeSerializer(Serializer):
   def update(self):
     try:
       product_type = ProductType.objects.get(pk=self.model_id)
+      name = self.data[NAME_FIELD]
+      image = self.data[IMAGE_FIELD]
+      self.data[IMAGE_FIELD] = base64_to_image(image, name)
+      product_type.update(**self.data)
+      return DataJsonResponse(product_type.to_dict())
     except ProductType.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}, status=NOT_FOUND_CODE)
-    name = self.data[NAME_FIELD]
-    image = self.data[IMAGE_FIELD]
-    try:
-      self.data[IMAGE_FIELD] = base64_to_image(image, name)
-    except Exception:
+    except Exception as e:
       return JsonResponse({IMAGE_FIELD: NOT_VALID_IMAGE})
-    product_type.update(**self.data)
-    return DataJsonResponse(product_type.to_dict())
 
   def read(self):
     try:

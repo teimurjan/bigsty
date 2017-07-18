@@ -7,11 +7,11 @@ from api.models import User, Category, Group, ProductType
 from api.utils.errors.error_constants import NOT_VALID_EMAIL_ERR, NOT_VALID_PASSWORD_ERR, \
   PRICE_VALUE_ERR, PRICE_NOT_INT_ERR, QUANTITY_VALUE_ERR, QUANTITY_NOT_INT_ERR, DISCOUNT_VALUE_ERR, \
   DISCOUNT_NOT_INT_ERR, GLOBAL_ERR_KEY, SAME_EMAIL_ERR, SAME_CATEGORY_NAME_ERR, SAME_PRODUCT_TYPE_NAME_ERR, \
-  INVALID_FEATURE_TYPE_ID_ERR
+  INVALID_FEATURE_TYPE_ID_ERR, NAME_TOO_SHORT_ERR, DESCRIPTION_TOO_SHORT_ERR, VALUE_LENGTH_ERR
 from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DISCOUNT_FIELD, QUANTITY_FIELD, \
   DESCRIPTION_FIELD, CATEGORY_FIELD, PRICE_FIELD, IMAGE_FIELD, GROUP_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
-  SHORT_DESCRIPTION_FIELD
+  SHORT_DESCRIPTION_FIELD, FEATURE_VALUES_FIELD
 
 
 def validate_email(email):
@@ -39,6 +39,12 @@ def validate_model_existence(model, model_id):
   except model.DoesNotExist:
     errors.append(get_not_exist_msg(model))
   return errors
+
+
+def validate_length(field_name, value, min_length, max_length):
+  if len(value) < min_length or len(value) > max_length:
+    return [VALUE_LENGTH_ERR % (field_name.capitalize(), min_length, max_length)]
+  return []
 
 
 class Validator:
@@ -83,6 +89,7 @@ class RegistrationFormValidator(Validator):
     self._validate_data_integrity()
     if self.has_errors():
       return
+    self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
     self.errors[EMAIL_FIELD] = validate_email(self.data[EMAIL_FIELD])
     self.errors[PASSWORD_FIELD] = validate_password(self.data[PASSWORD_FIELD])
 
@@ -112,6 +119,7 @@ class UserCreationFormValidator(Validator):
     self._validate_data_integrity()
     if self.has_errors():
       return
+    self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
     self.errors[EMAIL_FIELD] = validate_email(self.data[EMAIL_FIELD])
     self.errors[PASSWORD_FIELD] = validate_password(self.data[PASSWORD_FIELD])
 
@@ -128,6 +136,7 @@ class UserUpdateFormValidator(Validator):
     self._validate_data_integrity()
     if self.has_errors():
       return
+    self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
     self.errors[PASSWORD_FIELD] = validate_password(self.data[PASSWORD_FIELD])
 
 
@@ -194,6 +203,7 @@ class CategoryCreationFormValidator(Validator):
     self._validate_data_integrity()
     if self.has_errors():
       return
+    self.errors[NAME_FIELD] = [] if len(self.data[NAME_FIELD]) > 0 else [NAME_TOO_SHORT_ERR]
 
 
 class CategoryUpdateFormValidator(Validator):
@@ -208,6 +218,7 @@ class CategoryUpdateFormValidator(Validator):
     self._validate_data_integrity()
     if self.has_errors():
       return
+    self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
 
 
 class ProductTypeCreationFormValidator(Validator):
@@ -216,11 +227,16 @@ class ProductTypeCreationFormValidator(Validator):
       NAME_FIELD,
       DESCRIPTION_FIELD,
       SHORT_DESCRIPTION_FIELD,
-      FEATURE_TYPES_FIELD,
-      CATEGORY_FIELD
+      FEATURE_VALUES_FIELD,
+      CATEGORY_FIELD,
+      IMAGE_FIELD
     ], data)
 
   def validate(self):
     self._validate_data_integrity()
     if self.has_errors():
       return
+    self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
+    self.errors[DESCRIPTION_FIELD] = validate_length(DESCRIPTION_FIELD, self.data[DESCRIPTION_FIELD], 1, 1000)
+    self.errors[SHORT_DESCRIPTION_FIELD] = validate_length(SHORT_DESCRIPTION_FIELD,
+                                                           self.data[SHORT_DESCRIPTION_FIELD], 1, 100)

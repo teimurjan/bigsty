@@ -2,6 +2,7 @@ LOGIN_URL = "/api/login"
 REGISTER_URL = "/api/register"
 USER_LIST_URL = "/api/users"
 CATEGORY_LIST_URL = "/api/categories"
+PRODUCT_TYPE_LIST_URL = "/api/product_types"
 
 TEST_NAME = "Test User"
 

@@ -6,7 +6,7 @@
       "name": "Test User 1",
       "email": "test1@test.test",
       "password": "$2b$12$ScidzezCmHnWhB3v2AqhbOp3DyYfXxxDpShRwA4rw5VmAZDra66fa",
-      "group": "1",
+      "group": "3",
       "date_joined": "2017-06-10 10:54:07.785179"
     }
   },
@@ -56,6 +56,16 @@
     }
   },
   {
+    "model": "api.ProductType",
+    "pk": 2,
+    "fields": {
+      "name": "Test Product Type 2",
+      "description": "Description",
+      "short_description": "Description",
+      "category": 2
+    }
+  },
+  {
     "model": "api.FeatureValue",
     "pk": 1,
     "fields": {
@@ -73,7 +83,7 @@
       "name": "Test Feature Value 2",
       "feature_type": 1,
       "product_types": [
-        1
+        1, 2
       ]
     }
   }
