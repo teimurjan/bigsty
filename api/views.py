@@ -7,12 +7,13 @@ from django.views.generic import View
 from jwt import DecodeError
 
 from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, CategoryListSerializer, \
-  CategorySerializer, ProductListSerializer, ProductSerializer, ProductTypeListSerializer
+  CategorySerializer, ProductListSerializer, ProductSerializer, ProductTypeListSerializer, ProductTypeSerializer
+from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NO_DATA_ERR
 from api.utils.form_fields_constants import ID_FIELD, GROUP_FIELD
 from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE
-from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryCreationFormValidator, \
+from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, \
   ProductFormValidator, \
-  UserCreationFormValidator, UserUpdateFormValidator, CategoryUpdateFormValidator, ProductTypeCreationFormValidator
+  UserCreationFormValidator, UserUpdateFormValidator, ProductTypeFormValidator
 from main import settings
 
 
@@ -34,10 +35,15 @@ def admin_required(func):
   return wrapper
 
 
+EMPTY_DATA_RESPONSE = JsonResponse({GLOBAL_ERR_KEY: [NO_DATA_ERR]}, status=BAD_REQUEST_CODE)
+
+
 class LoginView(View):
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
     validator = LoginFormValidator(data)
     validator.validate()
     if validator.has_errors():
@@ -50,6 +56,8 @@ class RegistrationView(View):
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
     validator = RegistrationFormValidator(data)
     validator.validate()
     if validator.has_errors():
@@ -68,6 +76,8 @@ class UserListView(View):
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
     validator = UserCreationFormValidator(data)
     validator.validate()
     if validator.has_errors():
@@ -86,6 +96,8 @@ class UserView(View):
   def put(self, request, user_id):
     json_data = request.body.decode()
     data = json.loads(json_data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
     validator = UserUpdateFormValidator(data)
     validator.validate()
     if validator.has_errors():
@@ -108,7 +120,9 @@ class CategoryListView(View):
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
-    validator = CategoryCreationFormValidator(data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
+    validator = CategoryFormValidator(data)
     validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
@@ -125,7 +139,9 @@ class CategoryView(View):
   def put(self, request, category_id):
     json_data = request.body.decode()
     data = json.loads(json_data)
-    validator = CategoryUpdateFormValidator(data, category_id)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
+    validator = CategoryFormValidator(data)
     validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
@@ -147,6 +163,8 @@ class ProductListView(View):
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
     validator = ProductFormValidator(data)
     validator.validate()
     if validator.has_errors():
@@ -155,18 +173,14 @@ class ProductListView(View):
     return serializer.create()
 
 
-class ProductView(View):
-  def get(self, request, product_id):
-    serializer = ProductSerializer({ID_FIELD: product_id})
-    return serializer.read()
-
-
 class ProductTypeListView(View):
   @method_decorator(admin_required)
   def post(self, request):
     json_data = request.body.decode()
     data = json.loads(json_data)
-    validator = ProductTypeCreationFormValidator(data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
+    validator = ProductTypeFormValidator(data)
     validator.validate()
     if validator.has_errors():
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
@@ -176,3 +190,27 @@ class ProductTypeListView(View):
   def get(self, request, category_id=None):
     serializer = ProductTypeListSerializer()
     return serializer.read(category_id=category_id)
+
+
+class ProductTypeView(View):
+  def get(self, request, product_type_id):
+    serializer = ProductTypeSerializer(product_type_id)
+    return serializer.read()
+
+  @method_decorator(admin_required)
+  def put(self, request, product_type_id):
+    json_data = request.body.decode()
+    data = json.loads(json_data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
+    validator = ProductTypeFormValidator(data)
+    validator.validate()
+    if validator.has_errors():
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
+    serializer = ProductTypeSerializer(model_id=product_type_id, data=data)
+    return serializer.update()
+
+  @method_decorator(admin_required)
+  def delete(self, request, product_type_id):
+    serializer = ProductTypeSerializer(product_type_id)
+    return serializer.delete()

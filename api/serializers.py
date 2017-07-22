@@ -7,7 +7,8 @@ from django.http import JsonResponse
 from api.models import *
 from api.utils.crypt import encrypt, matches
 from api.utils.errors.error_constants import PASSWORD_DOESNT_MATCH_ERR, GLOBAL_ERR_KEY, NOT_VALID_IMAGE, \
-  SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR, INVALID_EMAIL_OR_PASSWORD_ERR, INVALID_FEATURE_TYPE_ID_ERR
+  SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR, INVALID_EMAIL_OR_PASSWORD_ERR, INVALID_FEATURE_TYPE_ID_ERR, \
+  SAME_PRODUCT_TYPE_NAME_ERR
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DESCRIPTION_FIELD, \
   DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
   SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD, AUTH_FIELDS, FEATURE_VALUES_FIELD
@@ -114,10 +115,10 @@ class UserSerializer(Serializer):
   def update(self):
     try:
       user = User.objects.get(pk=self.model_id)
-      user.name = self.data[NAME_FIELD] or user.name
+      user.name = self.data[NAME_FIELD]
       password = self.data[PASSWORD_FIELD]
-      user.password = encrypt(password) or user.password
-      user.group = Group.objects.get(pk=self.data[GROUP_FIELD]) or user.group
+      user.password = encrypt(password)
+      user.group = Group.objects.get(pk=self.data[GROUP_FIELD])
       return DataJsonResponse(user.to_dict())
     except User.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(User)]}, status=NOT_FOUND_CODE)
@@ -210,7 +211,6 @@ class ProductTypeListSerializer(ListSerializer):
       name = self.data[NAME_FIELD]
       description = self.data[DESCRIPTION_FIELD]
       short_description = self.data[SHORT_DESCRIPTION_FIELD]
-      image = self.data[IMAGE_FIELD]
       category = Category.objects.get(pk=self.data[CATEGORY_FIELD])
       possible_feature_values = FeatureValue.objects.filter(feature_type__categories__in=[category])
       feature_values = list()
@@ -219,7 +219,7 @@ class ProductTypeListSerializer(ListSerializer):
         if feature_value not in possible_feature_values:
           return JsonResponse({FEATURE_VALUES_FIELD: [INVALID_FEATURE_TYPE_ID_ERR]}, status=BAD_REQUEST_CODE)
         feature_values.append(feature_value)
-      image = base64_to_image(image, name)
+      image = base64_to_image(self.data[IMAGE_FIELD], name)
       product_type = ProductType.objects.create(name=name,
                                                 description=description,
                                                 short_description=short_description,
@@ -244,26 +244,46 @@ class ProductTypeSerializer(Serializer):
     try:
       product_type = ProductType.objects.get(pk=self.model_id)
       name = self.data[NAME_FIELD]
-      image = self.data[IMAGE_FIELD]
-      self.data[IMAGE_FIELD] = base64_to_image(image, name)
-      product_type.update(**self.data)
+      category = Category.objects.get(pk=self.data[CATEGORY_FIELD])
+      possible_feature_values = FeatureValue.objects.filter(feature_type__categories__in=[category])
+      feature_values = list()
+      for feature_value_id in self.data[FEATURE_VALUES_FIELD]:
+        feature_value = FeatureValue.objects.get(pk=feature_value_id)
+        if feature_value not in possible_feature_values:
+          return JsonResponse({FEATURE_VALUES_FIELD: [INVALID_FEATURE_TYPE_ID_ERR]}, status=BAD_REQUEST_CODE)
+        feature_values.append(feature_value)
+      image = base64_to_image(self.data[IMAGE_FIELD], name)
+      product_type.name = name
+      product_type.description = self.data[DESCRIPTION_FIELD]
+      product_type.short_description = self.data[SHORT_DESCRIPTION_FIELD]
+      product_type.image = image
+      product_type.category = category
+      product_type.feature_values.set(feature_values)
+      product_type.save()
       return DataJsonResponse(product_type.to_dict())
     except ProductType.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}, status=NOT_FOUND_CODE)
-    except Exception as e:
-      return JsonResponse({IMAGE_FIELD: NOT_VALID_IMAGE})
+    except FeatureValue.DoesNotExist:
+      return JsonResponse({FEATURE_VALUES_FIELD: [get_not_exist_msg(FeatureValue)]}, status=BAD_REQUEST_CODE)
+    except Category.DoesNotExist:
+      return JsonResponse({CATEGORY_FIELD: [get_not_exist_msg(Category)]}, status=BAD_REQUEST_CODE)
+    except ImageToBase64ConversionException:
+      return JsonResponse({IMAGE_FIELD: [NOT_VALID_IMAGE]}, status=BAD_REQUEST_CODE)
+    except IntegrityError as e:
+      if 'Duplicate entry' in str(e):
+        return JsonResponse({NAME_FIELD: [SAME_PRODUCT_TYPE_NAME_ERR]}, status=BAD_REQUEST_CODE)
 
   def read(self):
     try:
-      return ProductType.objects.get(pk=self.model_id)
+      return DataJsonResponse(ProductType.objects.get(pk=self.model_id).to_dict())
     except ProductType.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]})
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}, status=NOT_FOUND_CODE)
 
   def delete(self):
     try:
       ProductType.objects.get(pk=self.model_id).delete()
       return JsonResponse(MESSAGE_OK)
-    except Category.DoesNotExist:
+    except ProductType.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}, status=NOT_FOUND_CODE)
 
 

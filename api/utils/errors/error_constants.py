@@ -1,4 +1,5 @@
 GLOBAL_ERR_KEY = 'global'
+NO_DATA_ERR = 'No data'
 
 # FIELD FORMAT ERRORS
 NOT_VALID_EMAIL_ERR = 'Enter a valid email address'

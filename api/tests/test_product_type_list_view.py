@@ -115,7 +115,7 @@ class ProductTypeListViewTest(TestCase):
     data = json.loads(response.content.decode())
     self.assertEquals(data[CATEGORY_FIELD][0], get_not_exist_msg(Category))
 
-  def test_should_post_throw_invalid_feature_types(self):
+  def test_should_post_throw_invalid_feature_values(self):
     pwd = os.path.dirname(__file__)
     with open('%s/assets/test.jpg' % pwd, 'rb') as image:
       base64image = 'data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode()

@@ -192,7 +192,7 @@ class ProductFormValidator(Validator):
       self.errors[DISCOUNT_FIELD].append(DISCOUNT_NOT_INT_ERR)
 
 
-class CategoryCreationFormValidator(Validator):
+class CategoryFormValidator(Validator):
   def __init__(self, data):
     super().__init__([
       NAME_FIELD,
@@ -206,22 +206,7 @@ class CategoryCreationFormValidator(Validator):
     self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
 
 
-class CategoryUpdateFormValidator(Validator):
-  def __init__(self, data, category_id):
-    super().__init__([
-      NAME_FIELD,
-      FEATURE_TYPES_FIELD
-    ], data)
-    self.category_id = category_id
-
-  def validate(self):
-    self._validate_data_integrity()
-    if self.has_errors():
-      return
-    self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
-
-
-class ProductTypeCreationFormValidator(Validator):
+class ProductTypeFormValidator(Validator):
   def __init__(self, data):
     super().__init__([
       NAME_FIELD,
@@ -240,3 +225,5 @@ class ProductTypeCreationFormValidator(Validator):
     self.errors[DESCRIPTION_FIELD] = validate_length(DESCRIPTION_FIELD, self.data[DESCRIPTION_FIELD], 1, 1000)
     self.errors[SHORT_DESCRIPTION_FIELD] = validate_length(SHORT_DESCRIPTION_FIELD,
                                                            self.data[SHORT_DESCRIPTION_FIELD], 1, 100)
+
+
