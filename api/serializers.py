@@ -6,37 +6,21 @@ from django.http import JsonResponse
 
 from api.models import *
 from api.utils.crypt import encrypt, matches
-from api.utils.errors.error_constants import PASSWORD_DOESNT_MATCH_ERR, GLOBAL_ERR_KEY, NOT_VALID_IMAGE, \
+from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NOT_VALID_IMAGE, \
   SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR, INVALID_EMAIL_OR_PASSWORD_ERR, INVALID_FEATURE_TYPE_ID_ERR, \
-  SAME_PRODUCT_TYPE_NAME_ERR
-from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DESCRIPTION_FIELD, \
-  DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
-  SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD, AUTH_FIELDS, FEATURE_VALUES_FIELD
-from api.utils.response_constants import MESSAGE_OK, NOT_FOUND_CODE, BAD_REQUEST_CODE
+  SAME_PRODUCT_TYPE_NAME_ERR, SAME_FEATURE_TYPE_NAME_ERR
 from api.utils.errors.error_messages import get_not_exist_msg
+from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DESCRIPTION_FIELD, \
+  DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD, FEATURE_TYPES_FIELD, \
+  SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD, AUTH_FIELDS, FEATURE_VALUES_FIELD
+from api.utils.image_utils import base64_to_image, ImageToBase64ConversionException
+from api.utils.response_constants import MESSAGE_OK, NOT_FOUND_CODE, BAD_REQUEST_CODE
 from main import settings
 
 
 def generate_token(user):
   payload = {ID_FIELD: user.pk, NAME_FIELD: user.name, GROUP_FIELD: user.group.name}
   return jwt.encode(payload, settings.SECRET_KEY).decode()
-
-
-class ImageToBase64ConversionException(Exception):
-  pass
-
-
-def base64_to_image(data, file_name):
-  try:
-    import base64
-    from django.core.files.base import ContentFile
-    format, img_base64 = data.split(';base64,')
-    type = format.split('/')[-1]
-    if type != 'jpg' and type != 'png':
-      raise ImageToBase64ConversionException
-    return ContentFile(base64.b64decode(img_base64), name=file_name + '.' + type)
-  except Exception:
-    raise ImageToBase64ConversionException
 
 
 class BaseSerializer:
@@ -235,8 +219,8 @@ class ProductTypeListSerializer(ListSerializer):
       return JsonResponse({IMAGE_FIELD: [NOT_VALID_IMAGE]}, status=BAD_REQUEST_CODE)
 
   def read(self, **kwargs):
-    filter_kwargs = {k: v for k, v in kwargs.items() if k is not None and v is not None}
-    return DataJsonResponse([product_type.to_dict() for product_type in ProductType.objects.filter(**filter_kwargs)])
+    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
+    return DataJsonResponse([product_type.to_dict() for product_type in ProductType.objects.filter(**filtered_kwargs)])
 
 
 class ProductTypeSerializer(Serializer):
@@ -342,22 +326,16 @@ class ProductSerializer(Serializer):
 
 class FeatureTypeListSerializer(ListSerializer):
   def create(self):
-    name = self.data[NAME_FIELD]
-    feature_type = FeatureType.objects.create(name=name)
-    return JsonResponse(feature_type.to_dict())
+    try:
+      feature_type = FeatureType.objects.create(name=self.data[NAME_FIELD])
+      return DataJsonResponse(feature_type.to_dict())
+    except IntegrityError as e:
+      if 'Duplicate entry' in str(e):
+        return JsonResponse({NAME_FIELD: [SAME_FEATURE_TYPE_NAME_ERR]}, status=BAD_REQUEST_CODE)
 
-  def read(self):
-    category_id = self.data[CATEGORY_FIELD]
-    if category_id:
-      try:
-        Category.objects.get(id=category_id)
-        feature_types = [feature_type.to_dict() for feature_type in FeatureType.objects.filter(category_id=category_id)]
-        return JsonResponse({DATA_KEY: feature_types})
-      except Category.DoesNotExist:
-        return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Category)]}, status=NOT_FOUND_CODE)
-    else:
-      feature_types = [feature_type.to_dict() for feature_type in FeatureType.objects.all()]
-      return JsonResponse({DATA_KEY: feature_types})
+  def read(self, **kwargs):
+    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
+    return DataJsonResponse([feature_type.to_dict() for feature_type in FeatureType.objects.filter(**filtered_kwargs)])
 
 
 class FeatureTypeSerializer(Serializer):

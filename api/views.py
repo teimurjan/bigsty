@@ -4,16 +4,14 @@ import jwt
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from jwt import DecodeError
 
 from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, CategoryListSerializer, \
-  CategorySerializer, ProductListSerializer, ProductSerializer, ProductTypeListSerializer, ProductTypeSerializer
-from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NO_DATA_ERR
+  CategorySerializer, ProductListSerializer, ProductTypeListSerializer, ProductTypeSerializer, FeatureTypeListSerializer
 from api.utils.form_fields_constants import ID_FIELD, GROUP_FIELD
-from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE
+from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE, EMPTY_DATA_RESPONSE
 from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, \
   ProductFormValidator, \
-  UserCreationFormValidator, UserUpdateFormValidator, ProductTypeFormValidator
+  UserCreationFormValidator, UserUpdateFormValidator, ProductTypeFormValidator, FeatureTypeFormValidator
 from main import settings
 
 
@@ -26,16 +24,13 @@ def admin_required(func):
   def wrapper(request, *args, **kwargs):
     try:
       user = get_user_from_request(request)
+      if user[GROUP_FIELD] != 'admin':
+        return JsonResponse({}, status=FORBIDDEN_CODE)
     except Exception as e:
-      return JsonResponse({}, status=FORBIDDEN_CODE)
-    if user[GROUP_FIELD] != 'admin':
       return JsonResponse({}, status=FORBIDDEN_CODE)
     return func(request, *args, **kwargs)
 
   return wrapper
-
-
-EMPTY_DATA_RESPONSE = JsonResponse({GLOBAL_ERR_KEY: [NO_DATA_ERR]}, status=BAD_REQUEST_CODE)
 
 
 class LoginView(View):
@@ -214,3 +209,22 @@ class ProductTypeView(View):
   def delete(self, request, product_type_id):
     serializer = ProductTypeSerializer(product_type_id)
     return serializer.delete()
+
+
+class FeatureTypeListView(View):
+  def get(self, request):
+    serializer = FeatureTypeListSerializer()
+    return serializer.read()
+
+  @method_decorator(admin_required)
+  def post(self, request):
+    json_data = request.body.decode()
+    data = json.loads(json_data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
+    validator = FeatureTypeFormValidator(data)
+    validator.validate()
+    if validator.has_errors():
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
+    serializer = FeatureTypeListSerializer(data)
+    return serializer.create()

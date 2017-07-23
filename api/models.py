@@ -108,7 +108,7 @@ class Product(BaseModel):
 
 
 class FeatureType(BaseModel):
-  name = models.CharField(max_length=100)
+  name = models.CharField(max_length=100, unique=True)
   categories = models.ManyToManyField(Category, related_name='feature_types',
                                       related_query_name='feature_type', db_table='api_feature_type_x_category')
 

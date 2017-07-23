@@ -227,3 +227,14 @@ class ProductTypeFormValidator(Validator):
                                                            self.data[SHORT_DESCRIPTION_FIELD], 1, 100)
 
 
+class FeatureTypeFormValidator(Validator):
+  def __init__(self, data):
+    super().__init__([
+      NAME_FIELD
+    ], data)
+
+  def validate(self):
+    self._validate_data_integrity()
+    if self.has_errors():
+      return
+    self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
