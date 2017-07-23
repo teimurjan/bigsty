@@ -271,59 +271,6 @@ class ProductTypeSerializer(Serializer):
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}, status=NOT_FOUND_CODE)
 
 
-class ProductListSerializer(ListSerializer):
-  def create(self):
-    name = self.data[NAME_FIELD]
-    description = self.data[DESCRIPTION_FIELD]
-    discount = self.data[DISCOUNT_FIELD]
-    quantity = self.data[QUANTITY_FIELD]
-    image = self.data[IMAGE_FIELD]
-    price = self.data[PRICE_FIELD]
-    category_id = self.data[CATEGORY_FIELD]
-    try:
-      image = base64_to_image(image, name)
-    except Exception:
-      return JsonResponse({IMAGE_FIELD: NOT_VALID_IMAGE})
-    product = Product.objects.create(
-      name=name,
-      image=image,
-      discount=discount,
-      description=description,
-      quantity=quantity,
-      price=price,
-      category_id=category_id
-    )
-    return JsonResponse({DATA_KEY: product.to_dict()})
-
-  def read(self):
-    response = {}
-    category_id = self.data[CATEGORY_FIELD]
-    if category_id:
-      try:
-        Category.objects.get(id=category_id)
-        response[DATA_KEY] = [product.to_dict() for product in Product.objects.filter(category_id=category_id)]
-      except Category.DoesNotExist:
-        response[GLOBAL_ERR_KEY] = [get_not_exist_msg(Category)]
-    else:
-      response[DATA_KEY] = [product.to_dict() for product in Product.objects.all()]
-    return JsonResponse(response)
-
-
-class ProductSerializer(Serializer):
-  def delete(self):
-    pass
-
-  def update(self):
-    pass
-
-  def read(self):
-    try:
-      product = Product.objects.get(pk=self.model_id)
-      return JsonResponse({DATA_KEY: product.to_dict()})
-    except Product.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Product)]}, status=NOT_FOUND_CODE)
-
-
 class FeatureTypeListSerializer(ListSerializer):
   def create(self):
     try:
@@ -340,14 +287,27 @@ class FeatureTypeListSerializer(ListSerializer):
 
 class FeatureTypeSerializer(Serializer):
   def update(self):
-    pass
+    try:
+      feature_type = FeatureType.objects.get(pk=self.model_id)
+      feature_type.name = self.data[NAME_FIELD]
+      feature_type.save()
+      return DataJsonResponse(feature_type.to_dict())
+    except IntegrityError as e:
+      if 'Duplicate entry' in str(e):
+        return JsonResponse({NAME_FIELD: [SAME_FEATURE_TYPE_NAME_ERR]}, status=BAD_REQUEST_CODE)
+    except FeatureType.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
 
   def delete(self):
-    pass
+    try:
+      FeatureType.objects.get(pk=self.model_id).delete()
+      return JsonResponse(MESSAGE_OK)
+    except FeatureType.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
 
   def read(self):
     try:
       feature_type = FeatureType.objects.get(pk=self.model_id)
-      return JsonResponse({DATA_KEY: feature_type.to_dict()})
+      return DataJsonResponse(feature_type.to_dict())
     except FeatureType.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)

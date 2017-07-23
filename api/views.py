@@ -6,7 +6,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View
 
 from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, CategoryListSerializer, \
-  CategorySerializer, ProductListSerializer, ProductTypeListSerializer, ProductTypeSerializer, FeatureTypeListSerializer
+  CategorySerializer, ProductTypeListSerializer, ProductTypeSerializer, \
+  FeatureTypeListSerializer, FeatureTypeSerializer
 from api.utils.form_fields_constants import ID_FIELD, GROUP_FIELD
 from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE, EMPTY_DATA_RESPONSE
 from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, \
@@ -228,3 +229,27 @@ class FeatureTypeListView(View):
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = FeatureTypeListSerializer(data)
     return serializer.create()
+
+
+class FeatureTypeView(View):
+  def get(self, request, feature_type_id):
+    serializer = FeatureTypeSerializer(feature_type_id)
+    return serializer.read()
+
+  @method_decorator(admin_required)
+  def delete(self, request, feature_type_id):
+    serializer = FeatureTypeSerializer(feature_type_id)
+    return serializer.delete()
+
+  @method_decorator(admin_required)
+  def put(self, request, feature_type_id):
+    json_data = request.body.decode()
+    data = json.loads(json_data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
+    validator = FeatureTypeFormValidator(data)
+    validator.validate()
+    if validator.has_errors():
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
+    serializer = FeatureTypeSerializer(feature_type_id, data)
+    return serializer.update()
