@@ -7,12 +7,12 @@ from django.views.generic import View
 
 from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, CategoryListSerializer, \
   CategorySerializer, ProductTypeListSerializer, ProductTypeSerializer, \
-  FeatureTypeListSerializer, FeatureTypeSerializer
-from api.utils.form_fields_constants import ID_FIELD, GROUP_FIELD
+  FeatureTypeListSerializer, FeatureTypeSerializer, FeatureValueListSerializer
+from api.utils.form_fields_constants import GROUP_FIELD
 from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE, EMPTY_DATA_RESPONSE
 from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, \
-  ProductFormValidator, \
-  UserCreationFormValidator, UserUpdateFormValidator, ProductTypeFormValidator, FeatureTypeFormValidator
+  UserCreationFormValidator, UserUpdateFormValidator, ProductTypeFormValidator, FeatureTypeFormValidator, \
+  FeatureValueFormValidator
 from main import settings
 
 
@@ -150,25 +150,6 @@ class CategoryView(View):
     return serializer.delete()
 
 
-class ProductListView(View):
-  def get(self, request, category_id=None):
-    serializer = ProductListSerializer({ID_FIELD: category_id})
-    return serializer.read()
-
-  @method_decorator(admin_required)
-  def post(self, request):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = ProductFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = ProductListSerializer(data)
-    return serializer.create()
-
-
 class ProductTypeListView(View):
   @method_decorator(admin_required)
   def post(self, request):
@@ -253,3 +234,22 @@ class FeatureTypeView(View):
       return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
     serializer = FeatureTypeSerializer(feature_type_id, data)
     return serializer.update()
+
+
+class FeatureValueListView(View):
+  def get(self, request):
+    serializer = FeatureValueListSerializer()
+    return serializer.read()
+
+  @method_decorator(admin_required)
+  def post(self, request):
+    json_data = request.body.decode()
+    data = json.loads(json_data)
+    if data is None:
+      return EMPTY_DATA_RESPONSE
+    validator = FeatureValueFormValidator(data)
+    validator.validate()
+    if validator.has_errors():
+      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
+    serializer = FeatureValueListSerializer(data)
+    return serializer.create()

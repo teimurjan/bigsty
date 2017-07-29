@@ -11,6 +11,7 @@ urlpatterns = [
   url(r'^product_types$', ProductTypeListView.as_view()),
   url(r'^product_types/(?P<product_type_id>\d+)$', ProductTypeView.as_view()),
   url(r'^feature_types$', FeatureTypeListView.as_view()),
+  url(r'^feature_values$', FeatureValueListView.as_view()),
   url(r'^feature_types/(?P<feature_type_id>\d+)$', FeatureTypeView.as_view()),
   url(r'^users$', UserListView.as_view()),
   url(r'^users/(?P<user_id>\d+)$', UserView.as_view()),

@@ -12,7 +12,8 @@ from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NOT_VALID_IMAGE, \
 from api.utils.errors.error_messages import get_not_exist_msg
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DESCRIPTION_FIELD, \
   DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD, FEATURE_TYPES_FIELD, \
-  SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD, AUTH_FIELDS, FEATURE_VALUES_FIELD
+  SHORT_DESCRIPTION_FIELD, TOKEN_KEY, DATA_KEY, ID_FIELD, GROUP_FIELD, AUTH_FIELDS, FEATURE_VALUES_FIELD, \
+  FEATURE_TYPE_FIELD
 from api.utils.image_utils import base64_to_image, ImageToBase64ConversionException
 from api.utils.response_constants import MESSAGE_OK, NOT_FOUND_CODE, BAD_REQUEST_CODE
 from main import settings
@@ -273,12 +274,8 @@ class ProductTypeSerializer(Serializer):
 
 class FeatureTypeListSerializer(ListSerializer):
   def create(self):
-    try:
-      feature_type = FeatureType.objects.create(name=self.data[NAME_FIELD])
-      return DataJsonResponse(feature_type.to_dict())
-    except IntegrityError as e:
-      if 'Duplicate entry' in str(e):
-        return JsonResponse({NAME_FIELD: [SAME_FEATURE_TYPE_NAME_ERR]}, status=BAD_REQUEST_CODE)
+    feature_type = FeatureType.objects.create(name=self.data[NAME_FIELD])
+    return DataJsonResponse(feature_type.to_dict())
 
   def read(self, **kwargs):
     filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
@@ -292,9 +289,6 @@ class FeatureTypeSerializer(Serializer):
       feature_type.name = self.data[NAME_FIELD]
       feature_type.save()
       return DataJsonResponse(feature_type.to_dict())
-    except IntegrityError as e:
-      if 'Duplicate entry' in str(e):
-        return JsonResponse({NAME_FIELD: [SAME_FEATURE_TYPE_NAME_ERR]}, status=BAD_REQUEST_CODE)
     except FeatureType.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
 
@@ -311,3 +305,17 @@ class FeatureTypeSerializer(Serializer):
       return DataJsonResponse(feature_type.to_dict())
     except FeatureType.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
+
+
+class FeatureValueListSerializer(ListSerializer):
+  def read(self, **kwargs):
+    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
+    return DataJsonResponse([feature_value.to_dict() for feature_value in FeatureValue.objects.filter(**filtered_kwargs)])
+
+  def create(self):
+    try:
+      feature_type = FeatureType.objects.get(pk=self.data[FEATURE_TYPE_FIELD])
+      feature_value = FeatureValue.objects.create(name=self.data[NAME_FIELD], feature_type=feature_type)
+      return DataJsonResponse(feature_value.to_dict())
+    except FeatureType.DoesNotExist:
+      return JsonResponse({FEATURE_TYPE_FIELD: [INVALID_FEATURE_TYPE_ID_ERR]}, status=BAD_REQUEST_CODE)

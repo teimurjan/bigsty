@@ -4,6 +4,7 @@ USER_LIST_URL = "/api/users"
 CATEGORY_LIST_URL = "/api/categories"
 PRODUCT_TYPE_LIST_URL = "/api/product_types"
 FEATURE_TYPE_LIST_URL = "/api/feature_types"
+FEATURE_VALUE_LIST_URL = "/api/feature_values"
 
 TEST_NAME = "Test User"
 

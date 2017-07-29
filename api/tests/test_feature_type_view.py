@@ -72,15 +72,6 @@ class FeatureTypeViewTest(TestCase):
     data = json.loads(response.content.decode())
     self.assertEquals(data[GLOBAL_ERR_KEY][0], NO_DATA_ERR)
 
-  def test_should_throws_same_name_err(self):
-    feature_type_id = 1
-    name = FeatureType.objects.get(pk=2).name
-    data_dict = {NAME_FIELD: name}
-    response = self.send_put_request(feature_type_id, data_dict, self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[NAME_FIELD][0], SAME_FEATURE_TYPE_NAME_ERR)
-
   def test_should_throws_invalid_name_length_err(self):
     feature_type_id = 1
     data_dict = {NAME_FIELD: ''}

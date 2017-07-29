@@ -5,7 +5,7 @@ from django.test import TestCase
 from api.models import User, FeatureType
 from api.serializers import generate_token
 from api.tests.constants import FEATURE_TYPE_LIST_URL
-from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NO_DATA_ERR, SAME_FEATURE_TYPE_NAME_ERR, VALUE_LENGTH_ERR
+from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NO_DATA_ERR, VALUE_LENGTH_ERR
 from api.utils.errors.error_messages import get_field_empty_msg
 from api.utils.form_fields_constants import DATA_KEY, NAME_FIELD, CATEGORIES_FIELD
 from api.utils.response_constants import OK_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
@@ -52,13 +52,6 @@ class FeatureTypeListViewTest(TestCase):
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[GLOBAL_ERR_KEY][0], NO_DATA_ERR)
-
-  def test_should_post_throws_same_name_err(self):
-    name = FeatureType.objects.all()[0].name
-    response = self.send_post_request({NAME_FIELD: name}, self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[NAME_FIELD][0], SAME_FEATURE_TYPE_NAME_ERR)
 
   def test_should_post_throws_invalid_length(self):
     response = self.send_post_request({NAME_FIELD: ''}, self.token)

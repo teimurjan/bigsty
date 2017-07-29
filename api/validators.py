@@ -11,7 +11,7 @@ from api.utils.errors.error_constants import NOT_VALID_EMAIL_ERR, NOT_VALID_PASS
 from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DISCOUNT_FIELD, QUANTITY_FIELD, \
   DESCRIPTION_FIELD, CATEGORY_FIELD, PRICE_FIELD, IMAGE_FIELD, GROUP_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
-  SHORT_DESCRIPTION_FIELD, FEATURE_VALUES_FIELD
+  SHORT_DESCRIPTION_FIELD, FEATURE_VALUES_FIELD, FEATURE_TYPE_FIELD
 
 
 def validate_email(email):
@@ -231,6 +231,20 @@ class FeatureTypeFormValidator(Validator):
   def __init__(self, data):
     super().__init__([
       NAME_FIELD
+    ], data)
+
+  def validate(self):
+    self._validate_data_integrity()
+    if self.has_errors():
+      return
+    self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
+
+
+class FeatureValueFormValidator(Validator):
+  def __init__(self, data):
+    super().__init__([
+      NAME_FIELD,
+      FEATURE_TYPE_FIELD
     ], data)
 
   def validate(self):
