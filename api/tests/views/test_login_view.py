@@ -3,7 +3,7 @@ import json
 from django.test import TestCase
 
 from api.models import User
-from api.tests.constants import VALID_PASSWORD, \
+from api.tests.views.constants import VALID_PASSWORD, \
   NOT_MATCH_PASSWORD, INVALID_EMAIL_FORMAT, LOGIN_URL, INVALID_FORMAT_PASSWORD
 from api.utils.errors.error_constants import NOT_VALID_EMAIL_ERR, \
   PASSWORD_DOESNT_MATCH_ERR, NOT_VALID_PASSWORD_ERR, INVALID_EMAIL_OR_PASSWORD_ERR

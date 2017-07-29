@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from api.models import FeatureValue
 from api.serializers import generate_token, User
-from api.tests.constants import FEATURE_VALUE_LIST_URL
+from api.tests.views.constants import FEATURE_VALUE_LIST_URL
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NO_DATA_ERR, VALUE_LENGTH_ERR, INVALID_FEATURE_TYPE_ID_ERR
 from api.utils.errors.error_messages import get_field_empty_msg
 from api.utils.form_fields_constants import DATA_KEY, NAME_FIELD, FEATURE_TYPE_FIELD

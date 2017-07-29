@@ -310,7 +310,8 @@ class FeatureTypeSerializer(Serializer):
 class FeatureValueListSerializer(ListSerializer):
   def read(self, **kwargs):
     filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
-    return DataJsonResponse([feature_value.to_dict() for feature_value in FeatureValue.objects.filter(**filtered_kwargs)])
+    return DataJsonResponse(
+      [feature_value.to_dict() for feature_value in FeatureValue.objects.filter(**filtered_kwargs)])
 
   def create(self):
     try:
@@ -319,3 +320,27 @@ class FeatureValueListSerializer(ListSerializer):
       return DataJsonResponse(feature_value.to_dict())
     except FeatureType.DoesNotExist:
       return JsonResponse({FEATURE_TYPE_FIELD: [INVALID_FEATURE_TYPE_ID_ERR]}, status=BAD_REQUEST_CODE)
+
+
+class FeatureValueSerializer(Serializer):
+  def update(self):
+    try:
+      feature_value = FeatureValue.objects.get(pk=self.model_id)
+      feature_value.name = self.data[NAME_FIELD]
+      feature_value.feature_type = FeatureType.objects.get(pk=self.data[FEATURE_TYPE_FIELD])
+      feature_value.save()
+      return DataJsonResponse(feature_value.to_dict())
+    except FeatureValue.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}, status=NOT_FOUND_CODE)
+    except FeatureType.DoesNotExist:
+      return JsonResponse({FEATURE_TYPE_FIELD: [INVALID_FEATURE_TYPE_ID_ERR]}, status=BAD_REQUEST_CODE)
+
+  def delete(self):
+    pass
+
+  def read(self):
+    try:
+      feature_value = FeatureValue.objects.get(pk=self.model_id)
+      return DataJsonResponse(feature_value.to_dict())
+    except FeatureValue.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}, status=NOT_FOUND_CODE)

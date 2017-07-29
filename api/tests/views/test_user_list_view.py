@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from api.models import User, Group
 from api.serializers import generate_token
-from api.tests.constants import USER_LIST_URL, TEST_NAME, VALID_PASSWORD, INVALID_FORMAT_PASSWORD, INVALID_EMAIL_FORMAT
+from api.tests.views.constants import USER_LIST_URL, TEST_NAME, VALID_PASSWORD, INVALID_FORMAT_PASSWORD, INVALID_EMAIL_FORMAT
 from api.utils.errors.error_constants import SAME_EMAIL_ERR, NOT_VALID_EMAIL_ERR, NOT_VALID_PASSWORD_ERR, GLOBAL_ERR_KEY
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, GROUP_FIELD, DATA_KEY, ID_FIELD, \
   GROUP_FIELD

@@ -6,7 +6,7 @@ from django.test import TestCase
 
 from api.models import User, ProductType, FeatureValue, Category
 from api.serializers import generate_token
-from api.tests.constants import PRODUCT_TYPE_LIST_URL, CATEGORY_LIST_URL
+from api.tests.views.constants import PRODUCT_TYPE_LIST_URL, CATEGORY_LIST_URL
 from api.utils.errors.error_constants import NOT_VALID_IMAGE, INVALID_FEATURE_TYPE_ID_ERR
 from api.utils.errors.error_messages import get_field_empty_msg, get_not_exist_msg
 from api.utils.form_fields_constants import DATA_KEY, NAME_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, \
