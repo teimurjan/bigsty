@@ -41,10 +41,6 @@ class ListSerializer(BaseSerializer):
 
 
 class Serializer(BaseSerializer):
-  def __init__(self, model_id, data=None):
-    super().__init__(data)
-    self.model_id = model_id
-
   @abc.abstractmethod
   def read(self):
     return
@@ -403,3 +399,12 @@ class ProductSerializer(Serializer):
       return JsonResponse(MESSAGE_OK)
     except Product.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Product)]}, status=NOT_FOUND_CODE)
+
+
+class ProductListSerializer(ListSerializer):
+  def read(self, **kwargs):
+    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
+    return DataJsonResponse([product.to_dict() for product in Product.objects.filter(**filtered_kwargs)])
+
+  def create(self):
+    pass

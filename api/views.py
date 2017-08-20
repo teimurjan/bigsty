@@ -8,8 +8,8 @@ from django.views.generic import View
 from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, CategoryListSerializer, \
   CategorySerializer, ProductTypeListSerializer, ProductTypeSerializer, \
   FeatureTypeListSerializer, FeatureTypeSerializer, FeatureValueListSerializer, FeatureValueSerializer, \
-  ProductSerializer
-from api.utils.form_fields_constants import GROUP_FIELD, CATEGORY_FIELD
+  ProductSerializer, ProductListSerializer
+from api.utils.form_fields_constants import GROUP_FIELD, DATA_KEY
 from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE, EMPTY_DATA_RESPONSE
 from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, \
   UserCreationFormValidator, UserUpdateFormValidator, ProductTypeFormValidator, FeatureTypeFormValidator, \
@@ -35,270 +35,190 @@ def admin_required(func):
   return wrapper
 
 
-class LoginView(View):
-  def post(self, request):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = LoginFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = AuthSerializer(data)
-    return serializer.login()
+def validator(Validator):
+  def validate(func):
+    def wrapper(request, *args, **kwargs):
+      json_data = request.body.decode()
+      data = json.loads(json_data)
+      if data is None:
+        return EMPTY_DATA_RESPONSE
+      validator_ = Validator(data)
+      validator_.validate()
+      if validator_.has_errors():
+        return JsonResponse(validator_.errors, status=BAD_REQUEST_CODE)
+      kwargs[DATA_KEY] = data
+      return func(request, *args, **kwargs)
+
+    return wrapper
+
+  return validate
 
 
-class RegistrationView(View):
-  def post(self, request):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = RegistrationFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = AuthSerializer(data)
-    return serializer.register()
+class BaseView(View):
+  @property
+  def serializer(self):
+    raise NotImplementedError
 
-
-class UserListView(View):
-  @method_decorator(admin_required)
-  def get(self, request):
-    serializer = UserListSerializer()
-    return serializer.read()
+  def get(self, request, model_id):
+    self.serializer.model_id = model_id
+    return self.serializer.read()
 
   @method_decorator(admin_required)
-  def post(self, request):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = UserCreationFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = UserListSerializer(data)
-    return serializer.create()
+  def delete(self, request, model_id):
+    self.serializer.model_id = model_id
+    return self.serializer.delete()
 
 
-class UserView(View):
-  @method_decorator(admin_required)
-  def get(self, request, user_id):
-    serializer = UserSerializer(user_id)
-    return serializer.read()
-
-  @method_decorator(admin_required)
-  def put(self, request, user_id):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = UserUpdateFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = UserSerializer(user_id, data)
-    return serializer.update()
-
-  @method_decorator(admin_required)
-  def delete(self, request, user_id):
-    serializer = UserSerializer(user_id)
-    return serializer.delete()
-
-
-class CategoryListView(View):
-  def get(self, request):
-    serializer = CategoryListSerializer()
-    return serializer.read()
-
-  @method_decorator(admin_required)
-  def post(self, request):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = CategoryFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = CategoryListSerializer(data)
-    return serializer.create()
-
-
-class CategoryView(View):
-  def get(self, request, category_id):
-    serializer = CategorySerializer(category_id)
-    return serializer.read()
-
-  @method_decorator(admin_required)
-  def put(self, request, category_id):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = CategoryFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = CategorySerializer(category_id, data)
-    return serializer.update()
-
-  @method_decorator(admin_required)
-  def delete(self, request, category_id):
-    serializer = CategorySerializer(category_id)
-    return serializer.delete()
-
-
-class ProductTypeListView(View):
-  @method_decorator(admin_required)
-  def post(self, request):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = ProductTypeFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = ProductTypeListSerializer(data)
-    return serializer.create()
+class ListView(View):
+  @property
+  def serializer(self):
+    raise NotImplementedError
 
   def get(self, request):
-    serializer = ProductTypeListSerializer()
-    return serializer.read(category_id=request.GET.get(CATEGORY_FIELD))
+    return self.serializer.read(**request.GET.dict())
 
 
-class ProductTypeView(View):
-  def get(self, request, product_type_id):
-    serializer = ProductTypeSerializer(product_type_id)
-    return serializer.read()
+class LoginView(BaseView):
+  serializer = AuthSerializer()
+
+  @method_decorator(validator(LoginFormValidator))
+  def post(self, request, *args, **kwargs):
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.login()
+
+
+class RegistrationView(BaseView):
+  serializer = AuthSerializer()
+
+  @method_decorator(validator(RegistrationFormValidator))
+  def post(self, request, *args, **kwargs):
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.register()
+
+
+class UserListView(ListView):
+  serializer = UserListSerializer()
 
   @method_decorator(admin_required)
-  def put(self, request, product_type_id):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = ProductTypeFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = ProductTypeSerializer(model_id=product_type_id, data=data)
-    return serializer.update()
-
-  @method_decorator(admin_required)
-  def delete(self, request, product_type_id):
-    serializer = ProductTypeSerializer(product_type_id)
-    return serializer.delete()
-
-
-class FeatureTypeListView(View):
   def get(self, request):
-    serializer = FeatureTypeListSerializer()
-    return serializer.read()
+    return super().get(request)
 
   @method_decorator(admin_required)
-  def post(self, request):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = FeatureTypeFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = FeatureTypeListSerializer(data)
-    return serializer.create()
+  @method_decorator(validator(UserCreationFormValidator))
+  def post(self, request, *args, **kwargs):
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.create()
 
 
-class FeatureTypeView(View):
-  def get(self, request, feature_type_id):
-    serializer = FeatureTypeSerializer(feature_type_id)
-    return serializer.read()
+class UserView(BaseView):
+  serializer = UserSerializer()
 
   @method_decorator(admin_required)
-  def delete(self, request, feature_type_id):
-    serializer = FeatureTypeSerializer(feature_type_id)
-    return serializer.delete()
+  def get(self, request, model_id):
+    return super().get(request, model_id)
 
   @method_decorator(admin_required)
-  def put(self, request, feature_type_id):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = FeatureTypeFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = FeatureTypeSerializer(feature_type_id, data)
-    return serializer.update()
+  @method_decorator(validator(UserUpdateFormValidator))
+  def put(self, request, model_id, *args, **kwargs):
+    self.serializer.model_id = model_id
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.update()
 
 
-class FeatureValueListView(View):
-  def get(self, request):
-    serializer = FeatureValueListSerializer()
-    return serializer.read()
+class CategoryListView(ListView):
+  serializer = CategoryListSerializer()
 
   @method_decorator(admin_required)
-  def post(self, request):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = FeatureValueFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = FeatureValueListSerializer(data)
-    return serializer.create()
+  @method_decorator(validator(CategoryFormValidator))
+  def post(self, request, *args, **kwargs):
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.create()
 
 
-class FeatureValueView(View):
-  def get(self, request, feature_value_id):
-    serializer = FeatureValueSerializer(model_id=feature_value_id)
-    return serializer.read()
+class CategoryView(BaseView):
+  serializer = CategorySerializer()
 
   @method_decorator(admin_required)
-  def put(self, request, feature_value_id):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = FeatureValueFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = FeatureValueSerializer(feature_value_id, data)
-    return serializer.update()
+  @method_decorator(validator(CategoryFormValidator))
+  def put(self, request, model_id, **kwargs):
+    self.serializer.model_id = model_id
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.update()
+
+
+class ProductTypeListView(ListView):
+  serializer = ProductTypeListSerializer()
 
   @method_decorator(admin_required)
-  def delete(self, request, feature_value_id):
-    serializer = FeatureValueSerializer(feature_value_id)
-    return serializer.delete()
+  @method_decorator(validator(ProductTypeFormValidator))
+  def post(self, request, **kwargs):
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.create()
 
 
-class ProductView(View):
-  def get(self, request, product_id):
-    serializer = ProductSerializer(product_id)
-    return serializer.read()
-
-  @method_decorator(admin_required)
-  def put(self, request, product_id):
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None:
-      return EMPTY_DATA_RESPONSE
-    validator = ProductFormValidator(data)
-    validator.validate()
-    if validator.has_errors():
-      return JsonResponse(validator.errors, status=BAD_REQUEST_CODE)
-    serializer = ProductSerializer(product_id, data)
-    return serializer.update()
+class ProductTypeView(BaseView):
+  serializer = ProductTypeSerializer()
 
   @method_decorator(admin_required)
-  def delete(self, request, product_id):
-    serializer = ProductSerializer(product_id)
-    return serializer.delete()
+  @method_decorator(validator(ProductTypeFormValidator))
+  def put(self, request, model_id, **kwargs):
+    self.serializer.model_id = model_id
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.update()
+
+
+class FeatureTypeListView(ListView):
+  serializer = FeatureTypeListSerializer()
+
+  @method_decorator(admin_required)
+  @method_decorator(validator(FeatureTypeFormValidator))
+  def post(self, request, **kwargs):
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.create()
+
+
+class FeatureTypeView(BaseView):
+  serializer = FeatureTypeSerializer()
+
+  @method_decorator(admin_required)
+  @method_decorator(validator(FeatureTypeFormValidator))
+  def put(self, request, model_id, **kwargs):
+    self.serializer.model_id = model_id
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.update()
+
+
+class FeatureValueListView(ListView):
+  serializer = FeatureValueListSerializer()
+
+  @method_decorator(admin_required)
+  @method_decorator(validator(FeatureValueFormValidator))
+  def post(self, request, **kwargs):
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.create()
+
+
+class FeatureValueView(BaseView):
+  serializer = FeatureValueSerializer()
+
+  @method_decorator(admin_required)
+  @method_decorator(validator(FeatureValueFormValidator))
+  def put(self, request, model_id, **kwargs):
+    self.serializer.data = kwargs[DATA_KEY]
+    self.serializer.model_id = model_id
+    return self.serializer.update()
+
+
+class ProductView(BaseView):
+  serializer = ProductSerializer()
+
+  @method_decorator(admin_required)
+  @method_decorator(validator(ProductFormValidator))
+  def put(self, request, model_id, **kwargs):
+    self.serializer.model_id = model_id
+    self.serializer.data = kwargs[DATA_KEY]
+    return self.serializer.update()
+
+
+class ProductListView(ListView):
+  serializer = ProductListSerializer()

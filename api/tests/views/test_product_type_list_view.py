@@ -49,7 +49,7 @@ class ProductTypeListViewTest(TestCase):
 
   def test_should_get_with_category_filter(self):
     category_id = 2
-    response = self.client.get('%s?category=%s' % (PRODUCT_TYPE_LIST_URL, category_id))
+    response = self.client.get('%s?category_id=%s' % (PRODUCT_TYPE_LIST_URL, category_id))
     self.assertEquals(response.status_code, OK_CODE)
     data = json.loads(response.content.decode())
     product_types = data[DATA_KEY]
