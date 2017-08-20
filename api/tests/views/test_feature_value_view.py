@@ -87,7 +87,21 @@ class FeatureValueViewTest(TestCase):
 
   def test_should_update_throws_not_found(self):
     feature_value_id = 11
-    data_dict = {NAME_FIELD: 'Test', FEATURE_TYPE_FIELD: 11}
+    data_dict = {NAME_FIELD: 'Test', FEATURE_TYPE_FIELD: 1}
     response = self.send_put_request(feature_value_id, data_dict, self.token)
     self.assertEqual(response.status_code, NOT_FOUND_CODE)
 
+  def test_should_delete_succees(self):
+    feature_value_id = 1
+    response = self.client.delete(url(feature_value_id), HTTP_AUTHORIZATION=self.token)
+    self.assertEqual(response.status_code, OK_CODE)
+
+  def test_should_delete_throws_admin_required(self):
+    feature_value_id = 1
+    response = self.client.delete(url(feature_value_id))
+    self.assertEqual(response.status_code, FORBIDDEN_CODE)
+
+  def test_should_delete_throws_not_found(self):
+    feature_value_id = 11
+    response = self.client.delete(url(feature_value_id), HTTP_AUTHORIZATION=self.token)
+    self.assertEqual(response.status_code, NOT_FOUND_CODE)

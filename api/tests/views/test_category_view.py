@@ -12,6 +12,8 @@ from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_m
 from api.utils.form_fields_constants import DATA_KEY, NAME_FIELD, FEATURE_TYPES_FIELD
 from api.utils.response_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE
 
+TEST_NAME = 'Test Name'
+
 
 def url(user_id):
   return '%s/%s' % (CATEGORY_LIST_URL, user_id)
@@ -48,7 +50,7 @@ class CategoryListViewTest(TestCase):
 
   def test_should_update_success(self):
     category_id = 2
-    data_dict = get_category_dict('New Name', [1])
+    data_dict = get_category_dict(TEST_NAME, feature_types_ids=[1])
     response = self.send_put_request(category_id, data_dict, self.token)
     self.assertEquals(response.status_code, OK_CODE)
     data = json.loads(response.content.decode())[DATA_KEY]
@@ -57,13 +59,13 @@ class CategoryListViewTest(TestCase):
 
   def test_should_update_throws_admin_required(self):
     category_id = 1
-    data_dict = get_category_dict('New Name', [1, 2])
+    data_dict = get_category_dict(TEST_NAME, feature_types_ids=[1, 2])
     response = self.send_put_request(category_id, data_dict)
     self.assertEquals(response.status_code, FORBIDDEN_CODE)
 
   def test_should_update_throws_same_category_name(self):
     category_id = 2
-    data_dict = get_category_dict(Category.objects.all()[0].name, [1, 2])
+    data_dict = get_category_dict(Category.objects.all()[0].name, feature_types_ids=[1, 2])
     response = self.send_put_request(category_id, data_dict, self.token)
     data = json.loads(response.content.decode())
     self.assertEquals(data[NAME_FIELD][0], SAME_CATEGORY_NAME_ERR)
@@ -78,7 +80,7 @@ class CategoryListViewTest(TestCase):
 
   def test_should_update_throws_feature_type_not_found(self):
     category_id = 2
-    data_dict = get_category_dict('New Name', [33])
+    data_dict = get_category_dict(TEST_NAME, feature_types_ids=[33])
     response = self.send_put_request(category_id, data_dict, self.token)
     self.assertEquals(response.status_code, NOT_FOUND_CODE)
     data = json.loads(response.content.decode())

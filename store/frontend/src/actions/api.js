@@ -1,67 +1,37 @@
 function playWithResponsePromise(response) {
-  return new Promise(function (resolve, reject) {
-    if (response.status < 400) {
-      response.json().then(resolve);
-    } else {
-      response.json().then(reject);
-    }
-  });
+  return new Promise((resolve, reject) => response.json().then(response.status < 400 ? resolve : reject));
 }
 
-export function get(url, token='') {
-  return fetch(url, {
-    method: 'GET',
+function makeRequest(method, url, token, data = null) {
+  let fetchParams = {
+    method,
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     }
-  }).then(playWithResponsePromise);
+  };
+  if (data)
+    fetchParams.body = JSON.stringify(data);
+  return fetch(url, fetchParams).then(playWithResponsePromise);
 }
 
-export function post(url, data, token='') {
-  return fetch(url, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(data)
-  }).then(playWithResponsePromise);
+export function get(url, token) {
+  return makeRequest('GET', url, token);
+}
+
+export function post(url, data, token) {
+  return makeRequest('POST', url, token, data);
 }
 
 export function update(url, data, token) {
-  return fetch(url, {
-    method: 'PUT',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(data)
-  }).then(playWithResponsePromise);
+  return makeRequest('PUT', url, token, data);
 }
 
 export function patch(url, data, token) {
-  return fetch(url, {
-    method: 'PATCH',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(data)
-  }).then(playWithResponsePromise);
+  return makeRequest('PATCH', url, token, data);
 }
 
-export function remove(url, token) {
-  return fetch(url, {
-    method: 'DELETE',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  }).then(playWithResponsePromise);
+export function remove(url, token, data = null) {
+  return makeRequest('DELETE', url, token, data);
 }

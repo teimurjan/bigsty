@@ -21,4 +21,6 @@ urlpatterns = [
 
   url(r'^users$', UserListView.as_view()),
   url(r'^users/(?P<user_id>\d+)$', UserView.as_view()),
+
+  url(r'^products/(?P<product_id>\d+)$', ProductView.as_view())
 ]

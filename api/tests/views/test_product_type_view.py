@@ -24,6 +24,12 @@ def get_product_type_dict(name=None, description=None, short_description=None, f
           FEATURE_VALUES_FIELD: feature_values, CATEGORY_FIELD: category, IMAGE_FIELD: image}
 
 
+def get_image(extension='jpg'):
+  pwd = os.path.dirname(__file__)
+  with open('%s/assets/test_product_type_img.jpg' % pwd, 'rb') as image:
+    return 'data:image/%s;base64,%s' % (extension, base64.b64encode(image.read()).decode())
+
+
 class ProductTypeViewTest(TestCase):
   fixtures = ['product_type_view_test.json']
 
@@ -52,10 +58,8 @@ class ProductTypeViewTest(TestCase):
 
   def test_should_update_success(self):
     product_type_id = 1
-    pwd = os.path.dirname(__file__)
-    with open('%s/assets/test.jpg' % pwd, 'rb') as image:
-      base64image = 'data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode()
-    data_dict = get_product_type_dict('New Name', 'New Description', 'New Short description', [1, 2], 1, base64image)
+    data_dict = get_product_type_dict('New Name', 'New Description', 'New Short description', feature_values=[1, 2],
+                                      category=1, image=get_image())
     response = self.send_put_request(product_type_id, data_dict, self.token)
     self.assertEquals(response.status_code, OK_CODE)
     product_type = json.loads(response.content.decode())[DATA_KEY]
@@ -68,10 +72,8 @@ class ProductTypeViewTest(TestCase):
 
   def test_should_update_throws_admin_required(self):
     product_type_id = 1
-    pwd = os.path.dirname(__file__)
-    with open('%s/assets/test.jpg' % pwd, 'rb') as image:
-      base64image = 'data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode()
-    data_dict = get_product_type_dict('New Name', 'New Description', 'New Short description', [1, 2], 1, base64image)
+    data_dict = get_product_type_dict('New Name', 'New Description', 'New Short description', feature_values=[1, 2],
+                                      category=1, image=get_image())
     response = self.send_put_request(product_type_id, data_dict)
     self.assertEquals(response.status_code, FORBIDDEN_CODE)
 
@@ -109,4 +111,3 @@ class ProductTypeViewTest(TestCase):
     product_type_id = 11
     response = self.client.delete(url(product_type_id), HTTP_AUTHORIZATION=self.token)
     self.assertEquals(response.status_code, NOT_FOUND_CODE)
-

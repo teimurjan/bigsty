@@ -130,7 +130,7 @@ class FeatureValue(BaseModel):
 
 class ProductImage(BaseModel):
   file = models.FileField(upload_to="store/static/images/products/")
-  product = models.ForeignKey(Product, related_name="product", on_delete=models.CASCADE)
+  product = models.ForeignKey(Product, related_name="images", on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'api_product_image'

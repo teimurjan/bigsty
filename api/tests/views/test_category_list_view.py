@@ -37,7 +37,7 @@ class CategoryListViewTest(TestCase):
     self.assertEquals(len(categories), len(categories_in_db))
 
   def test_should_post_success(self):
-    data_dict = self.get_data_dict(TEST_NAME, [1, 2])
+    data_dict = self.get_data_dict(TEST_NAME, feature_types_ids=[1, 2])
     response = self.send_post_request(data_dict, self.token)
     self.assertEquals(response.status_code, OK_CODE)
     data = json.loads(response.content.decode())[DATA_KEY]
@@ -45,7 +45,7 @@ class CategoryListViewTest(TestCase):
     data_dict[FEATURE_TYPES_FIELD] = data[FEATURE_TYPES_FIELD]
 
   def test_should_post_admin_required(self):
-    data_dict = self.get_data_dict(TEST_NAME, [1, 2])
+    data_dict = self.get_data_dict(TEST_NAME, feature_types_ids=[1, 2])
     response = self.send_post_request(data_dict, 'Invalid')
     self.assertEquals(response.status_code, FORBIDDEN_CODE)
 
@@ -58,14 +58,14 @@ class CategoryListViewTest(TestCase):
     self.assertEquals(data[FEATURE_TYPES_FIELD][0], get_field_empty_msg(FEATURE_TYPES_FIELD))
 
   def test_should_post_name_exists(self):
-    data_dict = self.get_data_dict(Category.objects.all()[0].name, [])
+    data_dict = self.get_data_dict(Category.objects.all()[0].name, feature_types_ids=[])
     response = self.send_post_request(data_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[NAME_FIELD][0], SAME_CATEGORY_NAME_ERR)
 
   def test_should_post_no_such_feature_type(self):
-    data_dict = self.get_data_dict(TEST_NAME, [23])
+    data_dict = self.get_data_dict(TEST_NAME, feature_types_ids=[23])
     response = self.send_post_request(data_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())

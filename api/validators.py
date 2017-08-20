@@ -11,7 +11,7 @@ from api.utils.errors.error_constants import NOT_VALID_EMAIL_ERR, NOT_VALID_PASS
 from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DISCOUNT_FIELD, QUANTITY_FIELD, \
   DESCRIPTION_FIELD, CATEGORY_FIELD, PRICE_FIELD, IMAGE_FIELD, GROUP_FIELD, GROUP_FIELD, FEATURE_TYPES_FIELD, \
-  SHORT_DESCRIPTION_FIELD, FEATURE_VALUES_FIELD, FEATURE_TYPE_FIELD
+  SHORT_DESCRIPTION_FIELD, FEATURE_VALUES_FIELD, FEATURE_TYPE_FIELD, IMAGES_FIELD, PRODUCT_TYPE_FIELD
 
 
 def validate_email(email):
@@ -29,15 +29,6 @@ def validate_password(password):
   password_regex = r'[A-Za-z0-9@#$%^&+=]{8,}'
   if not re.match(password_regex, password):
     errors.append(NOT_VALID_PASSWORD_ERR)
-  return errors
-
-
-def validate_model_existence(model, model_id):
-  errors = []
-  try:
-    model.objects.get(pk=model_id)
-  except model.DoesNotExist:
-    errors.append(get_not_exist_msg(model))
   return errors
 
 
@@ -140,58 +131,6 @@ class UserUpdateFormValidator(Validator):
     self.errors[PASSWORD_FIELD] = validate_password(self.data[PASSWORD_FIELD])
 
 
-class ProductFormValidator(Validator):
-  def __init__(self, data):
-    super().__init__(
-      [NAME_FIELD,
-       IMAGE_FIELD,
-       PRICE_FIELD,
-       CATEGORY_FIELD,
-       DESCRIPTION_FIELD,
-       DISCOUNT_FIELD,
-       QUANTITY_FIELD], data
-    )
-
-  def validate(self):
-    self._validate_data_integrity()
-    if self.has_errors():
-      return
-    self._validate_price()
-    self._validate_category()
-    self._validate_discount()
-    self._validate_quantity()
-
-  def _validate_price(self):
-    try:
-      if int(self.data[PRICE_FIELD]) < 0:
-        self.errors[PRICE_FIELD].append(PRICE_VALUE_ERR)
-    except ValueError:
-      self.errors[PRICE_FIELD].append(PRICE_NOT_INT_ERR)
-
-  def _validate_category(self):
-    try:
-      Category.objects.get(pk=self.data[Category])
-    except Category.DoesNotExist:
-      self.errors[CATEGORY_FIELD].append(get_not_exist_msg(Category))
-
-  def _validate_quantity(self):
-    try:
-      if int(self.data[QUANTITY_FIELD]) < 0:
-        self.errors[QUANTITY_FIELD].append(QUANTITY_VALUE_ERR)
-    except ValueError:
-      self.errors[QUANTITY_FIELD].append(QUANTITY_NOT_INT_ERR)
-
-  def _validate_discount(self):
-    try:
-      discount = int(self.data[DISCOUNT_FIELD])
-      max_discount = 100
-      min_discount = 0
-      if discount >= max_discount or discount < min_discount:
-        self.errors[DISCOUNT_FIELD].append(DISCOUNT_VALUE_ERR)
-    except ValueError:
-      self.errors[DISCOUNT_FIELD].append(DISCOUNT_NOT_INT_ERR)
-
-
 class CategoryFormValidator(Validator):
   def __init__(self, data):
     super().__init__([
@@ -252,3 +191,47 @@ class FeatureValueFormValidator(Validator):
     if self.has_errors():
       return
     self.errors[NAME_FIELD] = validate_length(NAME_FIELD, self.data[NAME_FIELD], 1, 30)
+
+
+class ProductFormValidator(Validator):
+  def __init__(self, data):
+    super().__init__(
+      [PRODUCT_TYPE_FIELD,
+       IMAGES_FIELD,
+       PRICE_FIELD,
+       DISCOUNT_FIELD,
+       QUANTITY_FIELD,
+       FEATURE_VALUES_FIELD], data
+    )
+
+  def validate(self):
+    self._validate_data_integrity()
+    if self.has_errors():
+      return
+    self._validate_price()
+    self._validate_discount()
+    self._validate_quantity()
+
+  def _validate_price(self):
+    try:
+      if int(self.data[PRICE_FIELD]) < 0:
+        self.errors[PRICE_FIELD].append(PRICE_VALUE_ERR)
+    except ValueError:
+      self.errors[PRICE_FIELD].append(PRICE_NOT_INT_ERR)
+
+  def _validate_quantity(self):
+    try:
+      if int(self.data[QUANTITY_FIELD]) < 0:
+        self.errors[QUANTITY_FIELD].append(QUANTITY_VALUE_ERR)
+    except ValueError:
+      self.errors[QUANTITY_FIELD].append(QUANTITY_NOT_INT_ERR)
+
+  def _validate_discount(self):
+    try:
+      discount = int(self.data[DISCOUNT_FIELD])
+      max_discount = 100
+      min_discount = 0
+      if discount >= max_discount or discount < min_discount:
+        self.errors[DISCOUNT_FIELD].append(DISCOUNT_VALUE_ERR)
+    except ValueError:
+      self.errors[DISCOUNT_FIELD].append(DISCOUNT_NOT_INT_ERR)

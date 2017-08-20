@@ -20,6 +20,12 @@ def get_product_type_dict(name=None, description=None, short_description=None, f
           FEATURE_VALUES_FIELD: feature_values, CATEGORY_FIELD: category, IMAGE_FIELD: image}
 
 
+def get_image(extension='jpg'):
+  pwd = os.path.dirname(__file__)
+  with open('%s/assets/test_product_type_img.jpg' % pwd, 'rb') as image:
+    return 'data:image/%s;base64,%s' % (extension, base64.b64encode(image.read()).decode())
+
+
 class ProductTypeListViewTest(TestCase):
   fixtures = ['product_type_list_view_test.json']
 
@@ -52,10 +58,8 @@ class ProductTypeListViewTest(TestCase):
     self.assertEquals(product_types, product_types_from_db)
 
   def test_should_post_success(self):
-    pwd = os.path.dirname(__file__)
-    with open('%s/assets/test.jpg' % pwd, 'rb') as image:
-      base64image = 'data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode()
-    data_dict = get_product_type_dict('Name', 'Description', 'Short description', [1, 2], 1, base64image)
+    data_dict = get_product_type_dict('Name', 'Description', 'Short description', feature_values=[1, 2], category=1,
+                                      image=get_image())
     response = self.send_post_request(data_dict, self.token)
     self.assertEquals(response.status_code, OK_CODE)
     data = json.loads(response.content.decode())[DATA_KEY]
@@ -66,7 +70,8 @@ class ProductTypeListViewTest(TestCase):
     self.assertEquals(data_dict[CATEGORY_FIELD], data[CATEGORY_FIELD])
 
   def test_should_post_throw_admin_required(self):
-    data_dict = get_product_type_dict('Name', 'Description', 'Short description', [1, 2], 1)
+    data_dict = get_product_type_dict('Name', 'Description', 'Short description', feature_values=[1, 2], category=1,
+                                      image=get_image())
     response = self.send_post_request(data_dict)
     self.assertEquals(response.status_code, FORBIDDEN_CODE)
 
@@ -79,47 +84,40 @@ class ProductTypeListViewTest(TestCase):
       self.assertEquals(v[0], get_field_empty_msg(k)) if k != 'global' else self.assertEquals(len(v), 0)
 
   def test_should_post_throw_invalid_image(self):
-    data_dict = get_product_type_dict('Name', 'Description', 'Short description', [1, 2], 1, 'Invalid')
+    data_dict = get_product_type_dict('Name', 'Description', 'Short description', feature_values=[1, 2], category=1,
+                                      image='Invalid')
     response = self.send_post_request(data_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[IMAGE_FIELD][0], NOT_VALID_IMAGE)
 
   def test_should_post_throw_invalid_image_type(self):
-    pwd = os.path.dirname(__file__)
-    with open('%s/assets/test.jpg' % pwd, 'rb') as image:
-      invalid_type_bas64 = 'data:image/txt;base64,%s' % base64.b64encode(image.read()).decode()
-    data_dict = get_product_type_dict('Name', 'Description', 'Short description', [1, 2], 1, invalid_type_bas64)
+    data_dict = get_product_type_dict('Name', 'Description', 'Short description', feature_values=[1, 2], category=1,
+                                      image=get_image('txt'))
     response = self.send_post_request(data_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[IMAGE_FIELD][0], NOT_VALID_IMAGE)
 
   def test_should_post_throw_no_such_feature_type(self):
-    pwd = os.path.dirname(__file__)
-    with open('%s/assets/test.jpg' % pwd, 'rb') as image:
-      base64image = 'data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode()
-    data_dict = get_product_type_dict('Name', 'Description', 'Short description', [11, 2], 1, base64image)
+    data_dict = get_product_type_dict('Name', 'Description', 'Short description', feature_values=[11, 2], category=1,
+                                      image=get_image())
     response = self.send_post_request(data_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[FEATURE_VALUES_FIELD][0], get_not_exist_msg(FeatureValue))
 
   def test_should_post_throw_no_such_category(self):
-    pwd = os.path.dirname(__file__)
-    with open('%s/assets/test.jpg' % pwd, 'rb') as image:
-      base64image = 'data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode()
-    data_dict = get_product_type_dict('Name', 'Description', 'Short description', [1, 2], 11, base64image)
+    data_dict = get_product_type_dict('Name', 'Description', 'Short description', feature_values=[1, 2], category=11,
+                                      image=get_image())
     response = self.send_post_request(data_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
     self.assertEquals(data[CATEGORY_FIELD][0], get_not_exist_msg(Category))
 
   def test_should_post_throw_invalid_feature_values(self):
-    pwd = os.path.dirname(__file__)
-    with open('%s/assets/test.jpg' % pwd, 'rb') as image:
-      base64image = 'data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode()
-    data_dict = get_product_type_dict('Name', 'Description', 'Short description', [1, 2], 2, base64image)
+    data_dict = get_product_type_dict('Name', 'Description', 'Short description', feature_values=[1, 2], category=2,
+                                      image=get_image())
     response = self.send_post_request(data_dict, self.token)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
