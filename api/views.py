@@ -9,7 +9,7 @@ from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, 
   CategorySerializer, ProductTypeListSerializer, ProductTypeSerializer, \
   FeatureTypeListSerializer, FeatureTypeSerializer, FeatureValueListSerializer, FeatureValueSerializer, \
   ProductSerializer
-from api.utils.form_fields_constants import GROUP_FIELD
+from api.utils.form_fields_constants import GROUP_FIELD, CATEGORY_FIELD
 from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE, EMPTY_DATA_RESPONSE
 from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, \
   UserCreationFormValidator, UserUpdateFormValidator, ProductTypeFormValidator, FeatureTypeFormValidator, \
@@ -165,9 +165,9 @@ class ProductTypeListView(View):
     serializer = ProductTypeListSerializer(data)
     return serializer.create()
 
-  def get(self, request, category_id=None):
+  def get(self, request):
     serializer = ProductTypeListSerializer()
-    return serializer.read(category_id=category_id)
+    return serializer.read(category_id=request.GET.get(CATEGORY_FIELD))
 
 
 class ProductTypeView(View):

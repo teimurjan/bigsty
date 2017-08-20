@@ -9,7 +9,6 @@ urlpatterns = [
   url(r'^categories$', CategoryListView.as_view()),
   url(r'^categories/(?P<category_id>\d+)$', CategoryView.as_view()),
 
-  url(r'^categories/(?P<category_id>\d+)/products$', ProductTypeListView.as_view()),
   url(r'^product_types$', ProductTypeListView.as_view()),
   url(r'^product_types/(?P<product_type_id>\d+)$', ProductTypeView.as_view()),
 
