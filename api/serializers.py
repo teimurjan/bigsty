@@ -25,9 +25,8 @@ def generate_token(user):
 
 
 class BaseSerializer:
-  def __init__(self, data=None):
-    if data:
-      self.data = data
+  def __init__(self):
+    self.data = None
 
 
 class ListSerializer(BaseSerializer):
@@ -41,6 +40,10 @@ class ListSerializer(BaseSerializer):
 
 
 class Serializer(BaseSerializer):
+  def __init__(self):
+    super().__init__()
+    self.model_id = None
+
   @abc.abstractmethod
   def read(self):
     return

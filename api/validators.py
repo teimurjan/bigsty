@@ -39,10 +39,10 @@ def validate_length(field_name, value, min_length, max_length):
 
 
 class Validator:
-  def __init__(self, fields, data):
+  def __init__(self, fields):
     self.fields = fields
-    self.data = data
     self.errors = self.get_initial_errors()
+    self.data = None
 
   def get_initial_errors(self):
     errors = {k: [] for k in self.fields}
@@ -69,11 +69,11 @@ class Validator:
 
 
 class RegistrationFormValidator(Validator):
-  def __init__(self, data):
+  def __init__(self):
     super().__init__(
       [NAME_FIELD,
        EMAIL_FIELD,
-       PASSWORD_FIELD], data
+       PASSWORD_FIELD]
     )
 
   def validate(self):
@@ -86,8 +86,8 @@ class RegistrationFormValidator(Validator):
 
 
 class LoginFormValidator(Validator):
-  def __init__(self, data):
-    super().__init__([EMAIL_FIELD, PASSWORD_FIELD], data)
+  def __init__(self):
+    super().__init__([EMAIL_FIELD, PASSWORD_FIELD])
 
   def validate(self):
     self._validate_data_integrity()
@@ -98,12 +98,12 @@ class LoginFormValidator(Validator):
 
 
 class UserCreationFormValidator(Validator):
-  def __init__(self, data):
+  def __init__(self):
     super().__init__(
       [NAME_FIELD,
        EMAIL_FIELD,
        PASSWORD_FIELD,
-       GROUP_FIELD], data
+       GROUP_FIELD]
     )
 
   def validate(self):
@@ -116,11 +116,11 @@ class UserCreationFormValidator(Validator):
 
 
 class UserUpdateFormValidator(Validator):
-  def __init__(self, data):
+  def __init__(self):
     super().__init__(
       [NAME_FIELD,
        PASSWORD_FIELD,
-       GROUP_FIELD], data
+       GROUP_FIELD]
     )
 
   def validate(self):
@@ -132,11 +132,11 @@ class UserUpdateFormValidator(Validator):
 
 
 class CategoryFormValidator(Validator):
-  def __init__(self, data):
+  def __init__(self):
     super().__init__([
       NAME_FIELD,
       FEATURE_TYPES_FIELD
-    ], data)
+    ])
 
   def validate(self):
     self._validate_data_integrity()
@@ -146,7 +146,7 @@ class CategoryFormValidator(Validator):
 
 
 class ProductTypeFormValidator(Validator):
-  def __init__(self, data):
+  def __init__(self):
     super().__init__([
       NAME_FIELD,
       DESCRIPTION_FIELD,
@@ -154,7 +154,7 @@ class ProductTypeFormValidator(Validator):
       FEATURE_VALUES_FIELD,
       CATEGORY_FIELD,
       IMAGE_FIELD
-    ], data)
+    ])
 
   def validate(self):
     self._validate_data_integrity()
@@ -167,10 +167,10 @@ class ProductTypeFormValidator(Validator):
 
 
 class FeatureTypeFormValidator(Validator):
-  def __init__(self, data):
+  def __init__(self):
     super().__init__([
       NAME_FIELD
-    ], data)
+    ])
 
   def validate(self):
     self._validate_data_integrity()
@@ -180,11 +180,11 @@ class FeatureTypeFormValidator(Validator):
 
 
 class FeatureValueFormValidator(Validator):
-  def __init__(self, data):
+  def __init__(self):
     super().__init__([
       NAME_FIELD,
       FEATURE_TYPE_FIELD
-    ], data)
+    ])
 
   def validate(self):
     self._validate_data_integrity()
@@ -194,14 +194,14 @@ class FeatureValueFormValidator(Validator):
 
 
 class ProductFormValidator(Validator):
-  def __init__(self, data):
+  def __init__(self):
     super().__init__(
       [PRODUCT_TYPE_FIELD,
        IMAGES_FIELD,
        PRICE_FIELD,
        DISCOUNT_FIELD,
        QUANTITY_FIELD,
-       FEATURE_VALUES_FIELD], data
+       FEATURE_VALUES_FIELD]
     )
 
   def validate(self):
