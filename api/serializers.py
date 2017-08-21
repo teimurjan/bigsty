@@ -1,6 +1,7 @@
 import abc
 
 import jwt
+from django.core.exceptions import FieldError
 from django.db import IntegrityError
 from django.http import JsonResponse
 
@@ -8,7 +9,7 @@ from api.models import *
 from api.utils.crypt import encrypt, matches
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NOT_VALID_IMAGE, \
   SAME_CATEGORY_NAME_ERR, SAME_EMAIL_ERR, INVALID_EMAIL_OR_PASSWORD_ERR, INVALID_FEATURE_TYPE_ID_ERR, \
-  SAME_PRODUCT_TYPE_NAME_ERR, SAME_FEATURE_TYPE_NAME_ERR
+  SAME_PRODUCT_TYPE_NAME_ERR, INVALID_QUERY_ERR
 from api.utils.errors.error_messages import get_not_exist_msg
 from api.utils.form_fields_constants import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, DESCRIPTION_FIELD, \
   DISCOUNT_FIELD, QUANTITY_FIELD, IMAGE_FIELD, PRICE_FIELD, CATEGORY_FIELD, FEATURE_TYPES_FIELD, \
@@ -29,32 +30,47 @@ class BaseSerializer:
     self.data = None
 
 
-class ListSerializer(BaseSerializer):
+class ModelSerializer(BaseSerializer):
+  def __init__(self, Model):
+    super().__init__()
+    self.Model = Model
+
+
+class ListSerializer(ModelSerializer):
   @abc.abstractmethod
   def create(self):
     return
 
-  @abc.abstractmethod
   def read(self, **kwargs):
-    return
+    try:
+      filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
+      return DataJsonResponse([model.to_dict() for model in self.Model.objects.filter(**filtered_kwargs)])
+    except FieldError:
+      return JsonResponse({GLOBAL_ERR_KEY: [INVALID_QUERY_ERR]}, status=BAD_REQUEST_CODE)
 
 
-class Serializer(BaseSerializer):
-  def __init__(self):
-    super().__init__()
+class DetailSerializer(ModelSerializer):
+  def __init__(self, Model):
+    super().__init__(Model)
     self.model_id = None
 
-  @abc.abstractmethod
   def read(self):
-    return
+    try:
+      user = self.Model.objects.get(pk=self.model_id)
+      return DataJsonResponse(user.to_dict())
+    except self.Model.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(self.Model)]}, status=NOT_FOUND_CODE)
 
   @abc.abstractmethod
   def update(self):
     return
 
-  @abc.abstractmethod
   def delete(self):
-    return
+    try:
+      self.Model.objects.get(pk=self.model_id).delete()
+      return JsonResponse(MESSAGE_OK)
+    except self.Model.DoesNotExist:
+      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(self.Model)]}, status=NOT_FOUND_CODE)
 
 
 class DataJsonResponse(JsonResponse):
@@ -88,13 +104,9 @@ class AuthSerializer(BaseSerializer):
       return JsonResponse({AUTH_FIELDS: [INVALID_EMAIL_OR_PASSWORD_ERR]}, status=BAD_REQUEST_CODE)
 
 
-class UserSerializer(Serializer):
-  def read(self):
-    try:
-      user = User.objects.get(pk=self.model_id)
-      return DataJsonResponse(user.to_dict())
-    except User.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(User)]}, status=NOT_FOUND_CODE)
+class UserSerializer(DetailSerializer):
+  def __init__(self):
+    super().__init__(User)
 
   def update(self):
     try:
@@ -109,15 +121,11 @@ class UserSerializer(Serializer):
     except Group.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Group)]}, status=BAD_REQUEST_CODE)
 
-  def delete(self):
-    try:
-      User.objects.get(pk=self.model_id).delete()
-      return JsonResponse(MESSAGE_OK)
-    except User.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(User)]}, status=NOT_FOUND_CODE)
-
 
 class UserListSerializer(ListSerializer):
+  def __init__(self):
+    super().__init__(User)
+
   def create(self):
     try:
       group = Group.objects.get(pk=self.data[GROUP_FIELD])
@@ -130,13 +138,10 @@ class UserListSerializer(ListSerializer):
       if 'Duplicate entry' in str(e):
         return JsonResponse({EMAIL_FIELD: [SAME_EMAIL_ERR]}, status=BAD_REQUEST_CODE)
 
-  def read(self):
-    return DataJsonResponse([user.to_dict() for user in User.objects.all()])
-
 
 class CategoryListSerializer(ListSerializer):
-  def read(self):
-    return DataJsonResponse([category.to_dict() for category in Category.objects.all()])
+  def __init__(self):
+    super().__init__(Category)
 
   def create(self):
     name = self.data[NAME_FIELD]
@@ -155,13 +160,9 @@ class CategoryListSerializer(ListSerializer):
         return JsonResponse({NAME_FIELD: [SAME_CATEGORY_NAME_ERR]}, status=BAD_REQUEST_CODE)
 
 
-class CategorySerializer(Serializer):
-  def delete(self):
-    try:
-      Category.objects.get(pk=self.model_id).delete()
-      return JsonResponse(MESSAGE_OK)
-    except Category.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Category)]}, status=NOT_FOUND_CODE)
+class CategorySerializer(DetailSerializer):
+  def __init__(self):
+    super().__init__(Category)
 
   def update(self):
     try:
@@ -181,15 +182,11 @@ class CategorySerializer(Serializer):
       if 'Duplicate entry' in str(e):
         return JsonResponse({NAME_FIELD: [SAME_CATEGORY_NAME_ERR]}, status=BAD_REQUEST_CODE)
 
-  def read(self):
-    try:
-      category = Category.objects.get(pk=self.model_id)
-      return JsonResponse({DATA_KEY: category.to_dict()})
-    except Category.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Category)]}, status=NOT_FOUND_CODE)
-
 
 class ProductTypeListSerializer(ListSerializer):
+  def __init__(self):
+    super().__init__(ProductType)
+
   def create(self):
     try:
       name = self.data[NAME_FIELD]
@@ -218,12 +215,11 @@ class ProductTypeListSerializer(ListSerializer):
     except ImageToBase64ConversionException:
       return JsonResponse({IMAGE_FIELD: [NOT_VALID_IMAGE]}, status=BAD_REQUEST_CODE)
 
-  def read(self, **kwargs):
-    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
-    return DataJsonResponse([product_type.to_dict() for product_type in ProductType.objects.filter(**filtered_kwargs)])
 
+class ProductTypeSerializer(DetailSerializer):
+  def __init__(self):
+    super().__init__(ProductType)
 
-class ProductTypeSerializer(Serializer):
   def update(self):
     try:
       product_type = ProductType.objects.get(pk=self.model_id)
@@ -257,31 +253,20 @@ class ProductTypeSerializer(Serializer):
       if 'Duplicate entry' in str(e):
         return JsonResponse({NAME_FIELD: [SAME_PRODUCT_TYPE_NAME_ERR]}, status=BAD_REQUEST_CODE)
 
-  def read(self):
-    try:
-      return DataJsonResponse(ProductType.objects.get(pk=self.model_id).to_dict())
-    except ProductType.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}, status=NOT_FOUND_CODE)
-
-  def delete(self):
-    try:
-      ProductType.objects.get(pk=self.model_id).delete()
-      return JsonResponse(MESSAGE_OK)
-    except ProductType.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}, status=NOT_FOUND_CODE)
-
 
 class FeatureTypeListSerializer(ListSerializer):
+  def __init__(self):
+    super().__init__(FeatureType)
+
   def create(self):
     feature_type = FeatureType.objects.create(name=self.data[NAME_FIELD])
     return DataJsonResponse(feature_type.to_dict())
 
-  def read(self, **kwargs):
-    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
-    return DataJsonResponse([feature_type.to_dict() for feature_type in FeatureType.objects.filter(**filtered_kwargs)])
 
+class FeatureTypeSerializer(DetailSerializer):
+  def __init__(self):
+    super().__init__(FeatureType)
 
-class FeatureTypeSerializer(Serializer):
   def update(self):
     try:
       feature_type = FeatureType.objects.get(pk=self.model_id)
@@ -291,26 +276,10 @@ class FeatureTypeSerializer(Serializer):
     except FeatureType.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
 
-  def delete(self):
-    try:
-      FeatureType.objects.get(pk=self.model_id).delete()
-      return JsonResponse(MESSAGE_OK)
-    except FeatureType.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
-
-  def read(self):
-    try:
-      feature_type = FeatureType.objects.get(pk=self.model_id)
-      return DataJsonResponse(feature_type.to_dict())
-    except FeatureType.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
-
 
 class FeatureValueListSerializer(ListSerializer):
-  def read(self, **kwargs):
-    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
-    return DataJsonResponse(
-      [feature_value.to_dict() for feature_value in FeatureValue.objects.filter(**filtered_kwargs)])
+  def __init__(self):
+    super().__init__(FeatureValue)
 
   def create(self):
     try:
@@ -321,7 +290,10 @@ class FeatureValueListSerializer(ListSerializer):
       return JsonResponse({FEATURE_TYPE_FIELD: [INVALID_FEATURE_TYPE_ID_ERR]}, status=BAD_REQUEST_CODE)
 
 
-class FeatureValueSerializer(Serializer):
+class FeatureValueSerializer(DetailSerializer):
+  def __init__(self):
+    super().__init__(FeatureValue)
+
   def update(self):
     try:
       feature_value = FeatureValue.objects.get(pk=self.model_id)
@@ -334,28 +306,10 @@ class FeatureValueSerializer(Serializer):
     except FeatureType.DoesNotExist:
       return JsonResponse({FEATURE_TYPE_FIELD: [INVALID_FEATURE_TYPE_ID_ERR]}, status=BAD_REQUEST_CODE)
 
-  def delete(self):
-    try:
-      FeatureValue.objects.get(pk=self.model_id).delete()
-      return JsonResponse(MESSAGE_OK)
-    except FeatureValue.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}, status=NOT_FOUND_CODE)
 
-  def read(self):
-    try:
-      feature_value = FeatureValue.objects.get(pk=self.model_id)
-      return DataJsonResponse(feature_value.to_dict())
-    except FeatureValue.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}, status=NOT_FOUND_CODE)
-
-
-class ProductSerializer(Serializer):
-  def read(self):
-    try:
-      product = Product.objects.get(pk=self.model_id)
-      return DataJsonResponse(product.to_dict())
-    except Product.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Product)]}, status=NOT_FOUND_CODE)
+class ProductSerializer(DetailSerializer):
+  def __init__(self):
+    super().__init__(Product)
 
   def update(self):
     try:
@@ -396,18 +350,10 @@ class ProductSerializer(Serializer):
     except ImageToBase64ConversionException:
       return JsonResponse({IMAGES_FIELD: [NOT_VALID_IMAGE]}, status=BAD_REQUEST_CODE)
 
-  def delete(self):
-    try:
-      Product.objects.get(pk=self.model_id).delete()
-      return JsonResponse(MESSAGE_OK)
-    except Product.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(Product)]}, status=NOT_FOUND_CODE)
-
 
 class ProductListSerializer(ListSerializer):
-  def read(self, **kwargs):
-    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
-    return DataJsonResponse([product.to_dict() for product in Product.objects.filter(**filtered_kwargs)])
+  def __init__(self):
+    super().__init__(Product)
 
   def create(self):
     pass

@@ -25,3 +25,5 @@ SAME_GROUP_NAME_ERR = 'Group with such name already exists'
 SAME_CATEGORY_NAME_ERR = 'Category with such name already exists'
 SAME_PRODUCT_TYPE_NAME_ERR = 'Product type with such name already exists'
 SAME_FEATURE_TYPE_NAME_ERR = 'Feature type with such name already exists'
+
+INVALID_QUERY_ERR = 'Invalid query'

@@ -9,7 +9,8 @@ from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, 
   FeatureTypeListSerializer, FeatureTypeSerializer, FeatureValueListSerializer, FeatureValueSerializer, \
   ProductSerializer, ProductListSerializer
 from api.utils.form_fields_constants import GROUP_FIELD, DATA_KEY
-from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE, EMPTY_DATA_RESPONSE
+from api.utils.response_constants import BAD_REQUEST_CODE, FORBIDDEN_CODE, EMPTY_DATA_RESPONSE, \
+  HTTP_AUTHORIZATION_HEADER
 from api.validators import LoginFormValidator, RegistrationFormValidator, CategoryFormValidator, \
   UserCreationFormValidator, UserUpdateFormValidator, ProductTypeFormValidator, FeatureTypeFormValidator, \
   FeatureValueFormValidator, ProductFormValidator
@@ -17,7 +18,7 @@ from main import settings
 
 
 def get_user_from_request(request):
-  authorization = request.META['HTTP_AUTHORIZATION'].replace('Bearer ', '')
+  authorization = request.META[HTTP_AUTHORIZATION_HEADER].replace('Bearer ', '')
   return jwt.decode(authorization, settings.SECRET_KEY)
 
 
