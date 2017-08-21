@@ -62,23 +62,20 @@ class DetailView(BaseView):
     self.serializer.model_id = model_id
     return self.serializer.read()
 
-  @admin_required
   @validation_required
   def put(self, request, model_id, **kwargs):
     self.serializer.model_id = model_id
     self.serializer.data = kwargs[DATA_KEY]
     return self.serializer.update()
 
-  @admin_required
   def delete(self, request, model_id):
     self.serializer.model_id = model_id
     return self.serializer.delete()
 
 
 class ListView(BaseView):
-  @admin_required
   @validation_required
-  def post(self, request, *args, **kwargs):
+  def post(self, request, **kwargs):
     self.serializer.data = kwargs[DATA_KEY]
     return self.serializer.create()
 
@@ -93,7 +90,7 @@ class LoginView(BaseView):
     self.validator = LoginFormValidator()
 
   @validation_required
-  def post(self, request, *args, **kwargs):
+  def post(self, request, **kwargs):
     self.serializer.data = kwargs[DATA_KEY]
     return self.serializer.login()
 
@@ -105,7 +102,7 @@ class RegistrationView(BaseView):
     self.validator = RegistrationFormValidator()
 
   @validation_required
-  def post(self, request, *args, **kwargs):
+  def post(self, request, **kwargs):
     self.serializer.data = kwargs[DATA_KEY]
     return self.serializer.register()
 
@@ -116,9 +113,8 @@ class UserListView(ListView):
     self.serializer = UserListSerializer()
     self.validator = UserCreationFormValidator()
 
-  @admin_required
-  def get(self, request):
-    return super().get(request)
+  get = admin_required(ListView.get)
+  post = admin_required(ListView.post)
 
 
 class UserView(DetailView):
@@ -127,9 +123,9 @@ class UserView(DetailView):
     self.serializer = UserSerializer()
     self.validator = UserUpdateFormValidator()
 
-  @admin_required
-  def get(self, request, model_id):
-    return super().get(request, model_id)
+  get = admin_required(DetailView.get)
+  put = admin_required(DetailView.put)
+  delete = admin_required(DetailView.delete)
 
 
 class CategoryListView(ListView):
@@ -138,12 +134,17 @@ class CategoryListView(ListView):
     self.serializer = CategoryListSerializer()
     self.validator = CategoryFormValidator()
 
+  post = admin_required(ListView.post)
+
 
 class CategoryView(DetailView):
   def __init__(self, **kwargs):
     super().__init__(**kwargs)
     self.serializer = CategorySerializer()
     self.validator = CategoryFormValidator()
+
+  put = admin_required(DetailView.put)
+  delete = admin_required(DetailView.delete)
 
 
 class ProductTypeListView(ListView):
@@ -152,12 +153,17 @@ class ProductTypeListView(ListView):
     self.serializer = ProductTypeListSerializer()
     self.validator = ProductTypeFormValidator()
 
+  post = admin_required(ListView.post)
+
 
 class ProductTypeView(DetailView):
   def __init__(self, **kwargs):
     super().__init__(**kwargs)
     self.serializer = ProductTypeSerializer()
     self.validator = ProductTypeFormValidator()
+
+  put = admin_required(DetailView.put)
+  delete = admin_required(DetailView.delete)
 
 
 class FeatureTypeListView(ListView):
@@ -166,12 +172,17 @@ class FeatureTypeListView(ListView):
     self.serializer = FeatureTypeListSerializer()
     self.validator = FeatureTypeFormValidator()
 
+  post = admin_required(ListView.post)
+
 
 class FeatureTypeView(DetailView):
   def __init__(self, **kwargs):
     super().__init__(**kwargs)
     self.serializer = FeatureTypeSerializer()
     self.validator = FeatureTypeFormValidator()
+
+  put = admin_required(DetailView.put)
+  delete = admin_required(DetailView.delete)
 
 
 class FeatureValueListView(ListView):
@@ -180,12 +191,17 @@ class FeatureValueListView(ListView):
     self.serializer = FeatureValueListSerializer()
     self.validator = FeatureValueFormValidator()
 
+  post = admin_required(ListView.post)
+
 
 class FeatureValueView(DetailView):
   def __init__(self, **kwargs):
     super().__init__(**kwargs)
     self.serializer = FeatureValueSerializer()
     self.validator = FeatureValueFormValidator()
+
+  put = admin_required(DetailView.put)
+  delete = admin_required(DetailView.delete)
 
 
 class ProductView(DetailView):
@@ -194,9 +210,14 @@ class ProductView(DetailView):
     self.serializer = ProductSerializer()
     self.validator = ProductFormValidator()
 
+  put = admin_required(DetailView.put)
+  delete = admin_required(DetailView.delete)
+
 
 class ProductListView(ListView):
   def __init__(self, **kwargs):
     super().__init__(**kwargs)
     self.serializer = ProductListSerializer()
     self.validator = ProductFormValidator()
+
+  post = admin_required(ListView.post)
