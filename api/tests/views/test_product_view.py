@@ -48,7 +48,7 @@ class ProductViewTest(TestCase):
         self.images.append('data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode())
 
   def send_put_request(self, product_id, data_dict=None, token=None):
-    return self.client.put(url(product_id), json.dumps(data_dict), HTTP_AUTHORIZATION=token)
+    return self.client.put(url(product_id), json.dumps(data_dict), HTTP_AUTHORIZATION='Bearer %s' % token)
 
   def test_should_get_success(self):
     product_id = 1
@@ -166,7 +166,7 @@ class ProductViewTest(TestCase):
 
   def test_should_update_throws_invalid_image(self):
     product_id = 1
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2, feature_values_ids=[4],
+    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2, feature_values_ids=[1, 2],
                                  images=['invalid image'])
     response = self.send_put_request(product_id, data_dict, self.token)
     self.assertEqual(response.status_code, BAD_REQUEST_CODE)
