@@ -13,16 +13,16 @@ import adminCategoryCreation from "./admin-category-creation";
 import adminProductCreation from "./admin-product-creation";
 
 export default combineReducers({
-    routing,
-    application,
-    layout,
-    productGrid,
-    registration,
-    login,
-    adminMain,
-    adminUsers,
-    adminProducts,
-    adminProductCreation,
-    adminCategories,
-    adminCategoryCreation
+  routing,
+  application,
+  layout,
+  productGrid,
+  registration,
+  login,
+  adminMain,
+  adminUsers,
+  adminProducts,
+  adminProductCreation,
+  adminCategories,
+  adminCategoryCreation,
 });
