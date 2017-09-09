@@ -25,13 +25,16 @@ const SideMenu = (props) => (
       <nav className="navbar-default navbar-static-side">
         <div className="sidebar-collapse">
           <ul className="nav metismenu">
-            <li className="nav-header">
-              <div className="profile-element">
-                <strong className="font-bold text-info">
-                  {props.title}
-                </strong>
-              </div>
-            </li>
+            <Link to='/'>
+              <li style={{padding: '21px'}} className="nav-header bg-primary">
+                <div className="profile-element">
+                  <i className="fa fa-backward"/>
+                  <strong className="font-bold m-l-sm">
+                    {props.title}
+                  </strong>
+                </div>
+              </li>
+            </Link>
             {props.children}
           </ul>
         </div>

@@ -12,21 +12,22 @@ class AdminMain extends React.PureComponent {
   };
 
   render() {
+    const {children, intl, actions} = this.props;
     return (
       <div>
-        <SideMenu title={this.props.admin.name}>
-          <MenuItem link="/admin/users" text={this.props.intl('adminMain.sideMenu.users')}
+        <SideMenu title={intl('adminLayout.sideMenu.title')}>
+          <MenuItem link="/admin/users" text={intl('adminLayout.sideMenu.users')}
                     icon="fa fa-user"/>
-          <MenuItem link="/admin/categories" text={this.props.intl('adminMain.sideMenu.categories')} icon="fa fa-th"/>
-          <MenuItem link="/admin/products" text={this.props.intl('adminMain.sideMenu.products')} icon="fa fa-th"/>
+          <MenuItem link="/admin/categories" text={intl('adminLayout.sideMenu.categories')} icon="fa fa-th"/>
+          <MenuItem link="/admin/products" text={intl('adminLayout.sideMenu.products')} icon="fa fa-th"/>
         </SideMenu>
         <TopMenu>
-          <MenuItem text={this.props.intl('adminMain.topMenu.logout')} onClick={this.props.actions.logout}
+          <MenuItem text={intl('adminLayout.topMenu.logout')} onClick={actions.logout}
                     icon="fa fa-sign-out"/>
         </TopMenu>
         <div id="page-wrapper" className="gray-bg">
           <div className="wrapper wrapper-content">
-            {this.props.children}
+            {children}
           </div>
         </div>
       </div>

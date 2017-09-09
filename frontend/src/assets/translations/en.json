@@ -1,13 +1,17 @@
 {
-  "adminMain.sideMenu.users":"Users",
-  "adminMain.sideMenu.categories":"Categories",
-  "adminMain.sideMenu.products":"Products",
-  "adminMain.topMenu.logout":"Log out",
+  "adminLayout.sideMenu.title": "Back Home",
+  "adminLayout.sideMenu.users": "Users",
+  "adminLayout.sideMenu.categories": "Categories",
+  "adminLayout.sideMenu.products": "Products",
+  "adminLayout.topMenu.logout": "Log out",
   "indexTable.tableHeaders.id": "ID",
   "indexTable.tableHeaders.actions": "Actions",
   "adminUsers.tableHeaders.name": "Name",
   "adminUsers.tableHeaders.email": "Email",
   "adminUsers.tableHeaders.group": "Group",
   "adminUsers.deleteModal.title": "Delete User",
-  "adminUsers.deleteModal.description": "Are you sure want to delete this user?"
+  "adminUsers.deleteModal.description": "Are you sure want to delete this user?",
+  "adminCategories.tableHeaders.name": "Name",
+  "adminCategories.deleteModal.title": "Delete Category",
+  "adminCategories.deleteModal.description": "Are you sure want to delete this category?"
 }

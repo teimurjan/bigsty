@@ -9,6 +9,7 @@ import Login from "./containers/Login";
 import AdminLayout from "./containers/admin/Layout";
 import {requireAdmin} from "./actions/admin/layout";
 import AdminUsers from "./containers/admin/Users";
+import AdminCategories from "./containers/admin/Categories";
 import Forbidden from "./components/Forbidden";
 import NotFound from "./components/NotFound";
 import ServerError from "./components/ServerError";
@@ -23,6 +24,7 @@ export default (
         <Route path="login" component={Login}/>
         <Route path="admin" component={AdminLayout} onEnter={requireAdmin}>
             <Route path="users" component={AdminUsers}/>
+            <Route path="categories" component={AdminCategories}/>
         </Route>
         <Route path="forbidden" component={Forbidden}/>
         <Route path="servererror" component={ServerError}/>
