@@ -1,0 +1,13 @@
+{
+  "adminMain.sideMenu.users":"Users",
+  "adminMain.sideMenu.categories":"Categories",
+  "adminMain.sideMenu.products":"Products",
+  "adminMain.topMenu.logout":"Log out",
+  "indexTable.tableHeaders.id": "ID",
+  "indexTable.tableHeaders.actions": "Actions",
+  "adminUsers.tableHeaders.name": "Name",
+  "adminUsers.tableHeaders.email": "Email",
+  "adminUsers.tableHeaders.group": "Group",
+  "adminUsers.deleteModal.title": "Delete User",
+  "adminUsers.deleteModal.description": "Are you sure want to delete this user?"
+}
