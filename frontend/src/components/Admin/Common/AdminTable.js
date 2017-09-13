@@ -4,6 +4,7 @@ import DeleteModal from "./DeleteModal";
 import SpinnerWrapper from "../../Common/SpinnerWrapper";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
 import {IntlWrapper} from "../../Common/IntlWrapper";
+import {Link} from "react-router";
 
 class AdminTable extends React.PureComponent {
   static propTypes = {
@@ -74,6 +75,12 @@ class AdminTable extends React.PureComponent {
           <BootstrapTable data={models} search striped hover condensed>
             {colProps.map((props, index) => this.renderColumn(props, index))}
           </BootstrapTable>
+          <hr className='m-t-sm m-b-sm'/>
+          <Link to={`${this.props.location.pathname}/add`}>
+            <button className='btn btn-primary btn-w-m'>
+              <i className="fa fa-plus"/> {intl('indexTable.buttons.add')}
+            </button>
+          </Link>
         </SpinnerWrapper>
         <DeleteModal isOpen={!isNaN(modelToDeleteId)}
                      onAccept={actions.deleteModel}

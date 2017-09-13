@@ -6,6 +6,7 @@
   "adminLayout.topMenu.logout": "Log out",
   "indexTable.tableHeaders.id": "ID",
   "indexTable.tableHeaders.actions": "Actions",
+  "indexTable.buttons.add": "Add",
   "adminUsers.tableHeaders.name": "Name",
   "adminUsers.tableHeaders.email": "Email",
   "adminUsers.tableHeaders.group": "Group",

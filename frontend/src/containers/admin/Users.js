@@ -1,7 +1,7 @@
 import {connect} from "react-redux";
 import {bindActionCreators} from 'redux';
 import {getAdminTableActions} from '../../actions/admin/admin-table';
-import IndexTable from "../../components/Admin/Common/AdminTable";
+import AdminTable from "../../components/Admin/Common/AdminTable";
 import {USERS_ACTION_PREFIX, USERS_BASE_URL, USERS_COL_PROPS, USERS_INTL_PREFIX} from "./constants";
 
 function mapStateToProps(state) {
@@ -20,4 +20,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(IndexTable)
+export default connect(mapStateToProps, mapDispatchToProps)(AdminTable)

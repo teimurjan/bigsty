@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-
 from django.db import migrations
 
 
@@ -11,10 +10,5 @@ def create_groups(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-  dependencies = [
-    ('api', '0001_initial'),
-  ]
-
-  operations = [
-    migrations.RunPython(create_groups)
-  ]
+  dependencies = [('api', '0001_initial'), ]
+  operations = [migrations.RunPython(create_groups)]

@@ -1,0 +1,2 @@
+ENGLISH = 'en'
+LANGUAGES = [ENGLISH]

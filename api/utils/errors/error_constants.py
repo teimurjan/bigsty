@@ -8,7 +8,7 @@ NOT_VALID_PASSWORD_ERR = 'Enter a password which will contain both uppercase and
                          '(@#$%^&+=),'
 INVALID_FEATURE_TYPE_ID_ERR = 'Invalid feature types'
 PASSWORD_DOESNT_MATCH_ERR = 'Invalid password'
-INVALID_EMAIL_OR_PASSWORD_ERR = 'Email or password are invalid'
+INVALID_EMAIL_OR_PASSWORD_ERR = 'errors.auth.invalidEmailOrPassword'
 
 VALUE_LENGTH_ERR = '%s\'s length must be between %s and %s'
 
