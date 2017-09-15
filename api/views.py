@@ -4,11 +4,8 @@ import jwt
 from django.http import JsonResponse
 from django.views.generic import View
 
-from api.serializers import AuthSerializer, UserListSerializer, UserSerializer, CategoryListSerializer, \
-  CategorySerializer, ProductTypeListSerializer, ProductTypeSerializer, \
-  FeatureTypeListSerializer, FeatureTypeSerializer, FeatureValueListSerializer, FeatureValueSerializer, \
-  ProductSerializer, ProductListSerializer
-from api.utils.form_fields_constants import GROUP_FIELD, DATA_KEY, NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, \
+from api.factories.serializers import SerializerFactory
+from api.utils.form_fields_constants import GROUP_FIELD, NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, \
   FEATURE_TYPES_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, FEATURE_VALUES_FIELD, CATEGORY_FIELD, IMAGE_FIELD, \
   FEATURE_TYPE_FIELD, PRODUCT_TYPE_FIELD, IMAGES_FIELD, PRICE_FIELD, DISCOUNT_FIELD, QUANTITY_FIELD
 from api.utils.langauges_costants import LANGUAGES
@@ -62,11 +59,12 @@ def validation_required(func):
 
 
 class BaseView(View):
-  def __init__(self, serializer=None, validation_rules=None, **kwargs):
+  def __init__(self, serializer_name: str, error_prefix: str = '', **kwargs):
     super().__init__(**kwargs)
-    self.serializer = serializer
-    self.validation_rules = validation_rules
+    self.serializer = SerializerFactory.create(serializer_name)
+    self.validation_rules = None
     self.parsed_data = None
+    self.error_prefix = error_prefix
 
 
 class DetailView(BaseView):
@@ -76,7 +74,7 @@ class DetailView(BaseView):
 
   @parse_json
   @validation_required
-  def put(self, request, model_id, **kwargs):
+  def put(self, request, model_id):
     self.serializer.model_id = model_id
     self.serializer.data = self.parsed_data
     return self.serializer.update()
@@ -89,7 +87,7 @@ class DetailView(BaseView):
 class ListView(BaseView):
   @parse_json
   @validation_required
-  def post(self, request, **kwargs):
+  def post(self, request):
     self.serializer.data = self.parsed_data
     return self.serializer.create()
 
@@ -99,9 +97,7 @@ class ListView(BaseView):
 
 class LoginView(BaseView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = AuthSerializer()
-    self.error_prefix = 'login.'
+    super().__init__(SerializerFactory.AUTH, 'login.', **kwargs)
     self.validation_rules = {
       EMAIL_FIELD: {REQUIRED: True, EMPTY: False, IS_EMAIL: True},
       PASSWORD_FIELD: {REQUIRED: True, EMPTY: False, REGEX: r'[A-Za-z0-9@#$%^&+=]{8,}'}
@@ -109,16 +105,14 @@ class LoginView(BaseView):
 
   @parse_json
   @validation_required
-  def post(self, request, **kwargs):
+  def post(self, request):
     self.serializer.data = self.parsed_data
     return self.serializer.login()
 
 
 class RegistrationView(BaseView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = AuthSerializer()
-    self.error_prefix = 'registration.'
+    super().__init__(SerializerFactory.AUTH, 'registration.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {REQUIRED: True, EMPTY: False, BETWEEN: (1, 30)},
       EMAIL_FIELD: {REQUIRED: True, EMPTY: False, IS_EMAIL: True},
@@ -127,16 +121,14 @@ class RegistrationView(BaseView):
 
   @parse_json
   @validation_required
-  def post(self, request, **kwargs):
+  def post(self, request):
     self.serializer.data = self.parsed_data
     return self.serializer.register()
 
 
 class UserListView(ListView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = UserListSerializer()
-    self.error_prefix = 'users.'
+    super().__init__(SerializerFactory.USERS, 'users.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {REQUIRED: True, EMPTY: False, BETWEEN: (1, 30)},
       EMAIL_FIELD: {REQUIRED: True, EMPTY: False, IS_EMAIL: True},
@@ -150,9 +142,7 @@ class UserListView(ListView):
 
 class UserView(DetailView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = UserSerializer()
-    self.error_prefix = 'user.'
+    super().__init__(SerializerFactory.USER, 'user.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30},
       PASSWORD_FIELD: {REQUIRED: True, EMPTY: False, REGEX: r'[A-Za-z0-9@#$%^&+=]{8,}'},
@@ -166,9 +156,7 @@ class UserView(DetailView):
 
 class CategoryListView(ListView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = CategoryListSerializer()
-    self.error_prefix = 'categories.'
+    super().__init__(SerializerFactory.CATEGORIES, 'categories.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {
         SCHEMA: {language: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30} for language in LANGUAGES}
@@ -181,9 +169,7 @@ class CategoryListView(ListView):
 
 class CategoryView(DetailView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = CategorySerializer()
-    self.error_prefix = 'category.'
+    super().__init__(SerializerFactory.CATEGORY, 'category.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {
         SCHEMA: {language: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30} for language in LANGUAGES}
@@ -197,9 +183,7 @@ class CategoryView(DetailView):
 
 class ProductTypeListView(ListView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = ProductTypeListSerializer()
-    self.error_prefix = 'productTypes.'
+    super().__init__(SerializerFactory.PRODUCT_TYPES, 'productTypes.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {REQUIRED: True, MAX_LENGTH: 30},
       DESCRIPTION_FIELD: {REQUIRED: True, MAX_LENGTH: 1000},
@@ -214,9 +198,7 @@ class ProductTypeListView(ListView):
 
 class ProductTypeView(DetailView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = ProductTypeSerializer()
-    self.error_prefix = 'productType.'
+    super().__init__(SerializerFactory.PRODUCT_TYPE, 'productType.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {
         SCHEMA: {language: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30} for language in LANGUAGES}
@@ -238,9 +220,7 @@ class ProductTypeView(DetailView):
 
 class FeatureTypeListView(ListView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = FeatureTypeListSerializer()
-    self.error_prefix = 'featureTypes.'
+    super().__init__(SerializerFactory.FEATURE_TYPES, 'featureTypes.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {
         SCHEMA: {language: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30} for language in LANGUAGES}
@@ -252,9 +232,7 @@ class FeatureTypeListView(ListView):
 
 class FeatureTypeView(DetailView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = FeatureTypeSerializer()
-    self.error_prefix = 'featureType.'
+    super().__init__(SerializerFactory.FEATURE_TYPE, 'featureType.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {
         SCHEMA: {language: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30} for language in LANGUAGES}
@@ -267,9 +245,7 @@ class FeatureTypeView(DetailView):
 
 class FeatureValueListView(ListView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = FeatureValueListSerializer()
-    self.error_prefix = 'featureValues.'
+    super().__init__(SerializerFactory.FEATURE_VALUES, 'featureValues.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {
         SCHEMA: {language: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30} for language in LANGUAGES}
@@ -282,9 +258,7 @@ class FeatureValueListView(ListView):
 
 class FeatureValueView(DetailView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = FeatureValueSerializer()
-    self.error_prefix = 'featureValue.'
+    super().__init__(SerializerFactory.FEATURE_VALUE, 'featureValue.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {
         SCHEMA: {language: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30} for language in LANGUAGES}
@@ -298,9 +272,7 @@ class FeatureValueView(DetailView):
 
 class ProductView(DetailView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = ProductSerializer()
-    self.error_prefix = 'product.'
+    super().__init__(SerializerFactory.PRODUCT, 'product.', **kwargs)
     self.validation_rules = {
       PRODUCT_TYPE_FIELD: {REQUIRED: True},
       IMAGES_FIELD: {REQUIRED: True},
@@ -316,9 +288,7 @@ class ProductView(DetailView):
 
 class ProductListView(ListView):
   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.serializer = ProductListSerializer()
-    self.error_prefix = 'products.'
+    super().__init__(SerializerFactory.PRODUCTS, 'products.', **kwargs)
     self.validation_rules = {
       PRODUCT_TYPE_FIELD: {REQUIRED: True},
       IMAGES_FIELD: {REQUIRED: True},

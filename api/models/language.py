@@ -9,12 +9,12 @@ class Language(BaseModel):
 
 class MultilingualText(BaseModel):
   language = models.ForeignKey(Language, db_column="language")
-
-  @property
-  def value(self): raise NotImplementedError
-
-  @property
-  def owner(self): raise NotImplementedError
+  #
+  # @property
+  # def value(self): raise NotImplementedError
+  #
+  # @property
+  # def owner(self): raise NotImplementedError
 
   class Meta:
     abstract = True
