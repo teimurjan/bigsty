@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Model
 from django.test import TestCase
 
-from api.models import User, Category, FeatureType, BaseModel
+from api.models import User, Category, FeatureType
 from api.serializers import generate_token
 from api.tests.views.constants import CATEGORY_LIST_URL
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY, SAME_CATEGORY_NAME_ERR
