@@ -1,13 +1,8 @@
-from django.http import JsonResponse
-
 from api.models import *
-from api.models.utils import ModelToDictTransformer
 from api.services.base import ListService, DetailService
-from api.utils.json_responses import DataJsonResponse, JsonResponseBadRequest
-from api.utils.errors.error_constants import GLOBAL_ERR_KEY, INVALID_FEATURE_TYPE_ID_ERR
 from api.utils.errors.error_messages import get_not_exist_msg
 from api.utils.form_fields import NAME_FIELD, FEATURE_TYPE_FIELD
-from api.utils.http_constants import NOT_FOUND_CODE, BAD_REQUEST_CODE
+from api.utils.json_responses import DataJsonResponse, JsonResponseBadRequest, JsonResponseNotFound
 
 
 class FeatureTypeListService(ListService):
@@ -34,7 +29,7 @@ class FeatureTypeService(DetailService):
       feature_type.save()
       return DataJsonResponse(feature_type.serialize(**self.request.serializer_data))
     except FeatureType.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}, status=NOT_FOUND_CODE)
+      return JsonResponseNotFound([get_not_exist_msg(FeatureType)])
 
 
 class FeatureValueListService(ListService):
@@ -53,17 +48,19 @@ class FeatureValueListService(ListService):
 
 
 class FeatureValueService(DetailService):
-  def __init__(self, model_id, transformer: ModelToDictTransformer):
-    super().__init__(FeatureValue, model_id, transformer)
+  def __init__(self, model_id, request):
+    super().__init__(FeatureValue, model_id, request)
 
   def update(self):
     try:
+      data = self.request.parsed_data
       feature_value = FeatureValue.objects.get(pk=self.model_id)
-      feature_value.name = self.data[NAME_FIELD]
-      feature_value.feature_type = FeatureType.objects.get(pk=self.data[FEATURE_TYPE_FIELD])
+      feature_type = FeatureType.objects.get(pk=data[FEATURE_TYPE_FIELD])
+      feature_value.feature_type = feature_type
+      feature_value.update_names(data[NAME_FIELD])
       feature_value.save()
-      return DataJsonResponse(self.transformer.handle(feature_value))
+      return DataJsonResponse(feature_value.serialize(**self.request.serializer_data))
     except FeatureValue.DoesNotExist:
-      return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}, status=NOT_FOUND_CODE)
+      return JsonResponseNotFound([get_not_exist_msg(FeatureValue)])
     except FeatureType.DoesNotExist:
-      return JsonResponse({FEATURE_TYPE_FIELD: [INVALID_FEATURE_TYPE_ID_ERR]}, status=BAD_REQUEST_CODE)
+      return JsonResponseBadRequest([get_not_exist_msg(FeatureType)])

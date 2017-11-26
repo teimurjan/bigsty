@@ -1,107 +1,98 @@
-import json
-
-from django.test import TestCase
-
-from api.models import User, FeatureValue
-from api.services import generate_token
+from api.models import FeatureValue, FeatureType
+from api.tests.views.base.base_detail_view_test import DetailViewTestCase
 from api.tests.views.constants import FEATURE_VALUE_LIST_URL
-from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NO_DATA_ERR, VALUE_LENGTH_ERR, INVALID_FEATURE_TYPE_ID_ERR
-from api.utils.errors.error_messages import get_field_empty_msg
-from api.utils.form_fields import DATA_KEY, NAME_FIELD, FEATURE_TYPE_FIELD
-from api.utils.http_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
+from api.tests.views.fixtures.feature_value_view_fixture import FeatureValueViewFixture
+from api.tests.views.utils import get_intl_texts, get_intl_texts_errors
+from api.utils.errors.error_constants import GLOBAL_ERR_KEY
+from api.utils.errors.error_messages import get_not_exist_msg
+from api.utils.form_fields import NAME_FIELD, FEATURE_TYPE_FIELD
+from api.utils.http_constants import NOT_FOUND_CODE
 
 
-def url(feature_value_id):
-  return '%s/%s' % (FEATURE_VALUE_LIST_URL, feature_value_id)
+class FeatureValueViewTest(DetailViewTestCase):
+  _fixtures = DetailViewTestCase._fixtures + [FeatureValueViewFixture]
 
+  def test_should_get_succeed(self):
+    feature_value = FeatureValue.objects.all()[0]
+    self.should_get_by_id_succeed(FEATURE_VALUE_LIST_URL, FeatureValue, feature_value.pk)
 
-class FeatureValueViewTest(TestCase):
-  fixtures = ['feature_value_view_test.json']
+  def test_should_get_succeed_with_serialize(self) -> None:
+    feature_value = FeatureValue.objects.all()[0]
+    expected = feature_value.serialize(serialize=['feature_type'])
+    url = '{0}/{1}?serialize=["feature_type"]'.format(FEATURE_VALUE_LIST_URL, feature_value.pk)
+    self.should_get_succeed(url, expected)
 
-  def setUp(self):
-    user = User.objects.get(pk=1)
-    self.token = generate_token(user)
+  def test_should_get_succeed_with_exclude(self) -> None:
+    feature_value = FeatureValue.objects.all()[0]
+    expected = feature_value.serialize(exclude=['feature_type'])
+    url = '{0}/{1}?exclude=["feature_type"]'.format(FEATURE_VALUE_LIST_URL, feature_value.pk)
+    self.should_get_succeed(url, expected)
 
-  def send_put_request(self, feature_value_id, data_dict=None, token=None):
-    return self.client.put(url(feature_value_id), json.dumps(data_dict),
-                           HTTP_AUTHORIZATION=token, content_type='application/json')
+  def test_should_get_not_found(self) -> None:
+    self.should_get_by_id_fail(FEATURE_VALUE_LIST_URL, FeatureValue, 999)
 
-  def test_should_get_success(self):
-    feature_value_id = 1
-    response = self.client.get(url(feature_value_id))
-    self.assertEqual(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEqual(data, FeatureValue.objects.get(pk=feature_value_id).dictify())
+  def test_should_put_succeed(self):
+    feature_value = FeatureValue.objects.all()[0]
+    name = '4 inches'
+    data = {NAME_FIELD: get_intl_texts(name), FEATURE_TYPE_FIELD: 2}
+    expected = data.copy()
+    expected[NAME_FIELD] = name
+    url = '{0}/{1}'.format(FEATURE_VALUE_LIST_URL, feature_value.pk)
+    self.should_put_succeed(url, data, self.admin_user.token, expected)
 
-  def test_should_get_throws_not_found(self):
-    feature_value_id = 11
-    response = self.client.get(url(feature_value_id))
-    self.assertEqual(response.status_code, NOT_FOUND_CODE)
+  def test_should_put_require_role(self):
+    feature_value = FeatureValue.objects.all()[0]
+    url = '{0}/{1}'.format(FEATURE_VALUE_LIST_URL, feature_value.pk)
+    self.should_put_require_role(url, self.reader_user.token)
 
-  def test_should_update_success(self):
-    feature_value_id = 1
-    data_dict = {NAME_FIELD: 'New name', FEATURE_TYPE_FIELD: 2}
-    response = self.send_put_request(feature_value_id, data_dict, self.token)
-    self.assertEqual(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEqual(data[NAME_FIELD], data_dict[NAME_FIELD])
-    self.assertEqual(data[FEATURE_TYPE_FIELD], data_dict[FEATURE_TYPE_FIELD])
+  def test_should_put_null_values(self):
+    feature_value = FeatureValue.objects.all()[0]
+    data = {NAME_FIELD: get_intl_texts(), FEATURE_TYPE_FIELD: None}
+    expected_content = {
+      NAME_FIELD: get_intl_texts_errors('featureValue'),
+      FEATURE_TYPE_FIELD: ['errors.featureValue.feature_type.mustNotBeNull']
+    }
+    url = '{0}/{1}'.format(FEATURE_VALUE_LIST_URL, feature_value.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_admin_required(self):
-    feature_value_id = 1
-    data_dict = {NAME_FIELD: 'New name', FEATURE_TYPE_FIELD: 2}
-    response = self.send_put_request(feature_value_id, data_dict)
-    self.assertEqual(response.status_code, FORBIDDEN_CODE)
+  def test_should_put_empty_values(self):
+    feature_value = FeatureValue.objects.all()[0]
+    data = {NAME_FIELD: get_intl_texts(''), FEATURE_TYPE_FIELD: ''}
+    expected_content = {
+      NAME_FIELD: get_intl_texts_errors('featureValue', 'mustNotBeEmpty'),
+      FEATURE_TYPE_FIELD: ['errors.featureValue.feature_type.mustBeInteger'],
+    }
+    url = '{0}/{1}'.format(FEATURE_VALUE_LIST_URL, feature_value.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_no_data(self):
-    feature_value_id = 1
-    response = self.send_put_request(feature_value_id, token=self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    errors = json.loads(response.content.decode())
-    self.assertEqual(errors[GLOBAL_ERR_KEY][0], NO_DATA_ERR)
+  def test_should_put_no_data(self):
+    feature_value = FeatureValue.objects.all()[0]
+    url = '{0}/{1}'.format(FEATURE_VALUE_LIST_URL, feature_value.pk)
+    self.should_put_fail_when_no_data_sent(url, self.admin_user.token)
 
-  def test_should_post_throws_no_values_err(self):
-    data_dict = {}
-    feature_value_id = 1
-    response = self.send_put_request(feature_value_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    errors = json.loads(response.content.decode())
-    self.assertEqual(errors[NAME_FIELD][0], get_field_empty_msg(NAME_FIELD))
-    self.assertEqual(errors[FEATURE_TYPE_FIELD][0], get_field_empty_msg(FEATURE_TYPE_FIELD))
+  def test_should_put_throws_invalid_length(self):
+    feature_value = FeatureValue.objects.all()[0]
+    data = {NAME_FIELD: get_intl_texts('a' * 31), FEATURE_TYPE_FIELD: 1}
+    expected_content = {
+      NAME_FIELD: get_intl_texts_errors('featureValue', 'maxLength'),
+    }
+    url = '{0}/{1}'.format(FEATURE_VALUE_LIST_URL, feature_value.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_post_throws_invalid_length(self):
-    feature_value_id = 1
-    data_dict = {NAME_FIELD: '', FEATURE_TYPE_FIELD: 1}
-    response = self.send_put_request(feature_value_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    errors = json.loads(response.content.decode())
-    self.assertEqual(errors[NAME_FIELD][0], VALUE_LENGTH_ERR % (NAME_FIELD.capitalize(), 1, 30))
+  def test_should_put_throws_invalid_feature_type(self):
+    feature_value = FeatureValue.objects.all()[0]
+    data = {NAME_FIELD: get_intl_texts('Test Name'), FEATURE_TYPE_FIELD: 999}
+    expected_content = {
+      GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)],
+    }
+    url = '{0}/{1}'.format(FEATURE_VALUE_LIST_URL, feature_value.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_post_throws_invalid_feature_type(self):
-    feature_value_id = 1
-    data_dict = {NAME_FIELD: 'Test', FEATURE_TYPE_FIELD: 11}
-    response = self.send_put_request(feature_value_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    errors = json.loads(response.content.decode())
-    self.assertEqual(errors[FEATURE_TYPE_FIELD][0], INVALID_FEATURE_TYPE_ID_ERR)
-
-  def test_should_update_throws_not_found(self):
-    feature_value_id = 11
-    data_dict = {NAME_FIELD: 'Test', FEATURE_TYPE_FIELD: 1}
-    response = self.send_put_request(feature_value_id, data_dict, self.token)
-    self.assertEqual(response.status_code, NOT_FOUND_CODE)
-
-  def test_should_delete_succees(self):
-    feature_value_id = 1
-    response = self.client.delete(url(feature_value_id), HTTP_AUTHORIZATION=self.token)
-    self.assertEqual(response.status_code, OK_CODE)
-
-  def test_should_delete_throws_admin_required(self):
-    feature_value_id = 1
-    response = self.client.delete(url(feature_value_id))
-    self.assertEqual(response.status_code, FORBIDDEN_CODE)
-
-  def test_should_delete_throws_not_found(self):
-    feature_value_id = 11
-    response = self.client.delete(url(feature_value_id), HTTP_AUTHORIZATION=self.token)
-    self.assertEqual(response.status_code, NOT_FOUND_CODE)
+  def test_should_put_not_found(self):
+    data = {NAME_FIELD: get_intl_texts('Test Name'), FEATURE_TYPE_FIELD: 1}
+    expected_content = {
+      GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)],
+    }
+    url = '{0}/{1}'.format(FEATURE_VALUE_LIST_URL, 999)
+    self.should_put_fail(url, data=data, expected_content=expected_content,
+                         token=self.admin_user.token, expected_code=NOT_FOUND_CODE)

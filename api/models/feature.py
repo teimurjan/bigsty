@@ -31,6 +31,9 @@ class FeatureValue(SerializableModel, IntlModel):
   def add_names(self, names: dict):
     self._add_intl_texts(names, FeatureValueName)
 
+  def update_names(self, names: Dict[str, str]):
+    self._update_intl_texts(names, FeatureValueName)
+
   class Meta:
     db_table = 'api_feature_value'
 
