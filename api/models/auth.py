@@ -13,15 +13,6 @@ class Group(SerializableModel):
     db_table = 'api_user_group'
 
 
-class Permission(SerializableModel):
-  name = models.CharField(max_length=60, unique=True, blank=False, null=False)
-  groups = models.ManyToManyField(Group, related_name='permissions', related_query_name='permission',
-                                  db_table='api_user_permission_x_group')
-
-  class Meta:
-    db_table = 'api_user_permission'
-
-
 class User(SerializableModel):
   email = models.EmailField(unique=True, blank=False, null=False)
   name = models.CharField(max_length=60, blank=False, null=False)

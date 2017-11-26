@@ -89,17 +89,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Permission',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=60, unique=True)),
-                ('groups', models.ManyToManyField(db_table='api_user_permission_x_group', related_name='permissions', related_query_name='permission', to='api.Group')),
-            ],
-            options={
-                'db_table': 'api_user_permission',
-            },
-        ),
-        migrations.CreateModel(
             name='Product',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
