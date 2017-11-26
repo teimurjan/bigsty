@@ -1,20 +1,14 @@
 from django.db import models
+from django.db.models import Model
 
-from api.models.base import BaseModel
 
-
-class Language(BaseModel):
+class Language(Model):
   name = models.CharField(max_length=2, blank=False, null=False, unique=True, primary_key=True)
 
 
-class MultilingualText(BaseModel):
+class IntlText(Model):
   language = models.ForeignKey(Language, db_column="language")
-  #
-  # @property
-  # def value(self): raise NotImplementedError
-  #
-  # @property
-  # def owner(self): raise NotImplementedError
+
 
   class Meta:
     abstract = True

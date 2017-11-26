@@ -20,7 +20,7 @@ DISCOUNT_NOT_INT_ERR = 'Discount has to be an integer'
 DISCOUNT_VALUE_ERR = 'Discount has to be in range of 0 and 100'
 NOT_VALID_IMAGE = 'Not valid image'
 
-SAME_EMAIL_ERR = 'User with such email already exists'
+SAME_EMAIL_ERR = 'errors.users.email.same'
 SAME_GROUP_NAME_ERR = 'Group with such name already exists'
 SAME_CATEGORY_NAME_ERR = 'Category with such name already exists'
 SAME_PRODUCT_TYPE_NAME_ERR = 'Product type with such name already exists'

@@ -1,2 +1,0 @@
-ENGLISH = 'en'
-LANGUAGES = [ENGLISH]

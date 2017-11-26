@@ -1,73 +1,90 @@
-import json
+from typing import List, Dict
 
-from django.test import TestCase
-
-from api.models import Category, User, FeatureType
-from api.serializers import generate_token
+from api.models import Category, FeatureType
+from api.tests.views.base.base_list_view_test import ListViewTestCase
 from api.tests.views.constants import CATEGORY_LIST_URL
-from api.utils.errors.error_constants import SAME_CATEGORY_NAME_ERR, GLOBAL_ERR_KEY
-from api.utils.errors.error_messages import get_field_empty_msg, get_not_exist_msg
-from api.utils.form_fields_constants import DATA_KEY, NAME_FIELD, FEATURE_TYPES_FIELD
-from api.utils.response_constants import OK_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE
+from api.tests.views.fixtures.category_list_view_fixture import CategoryListViewFixture
+from api.tests.views.utils import get_intl_texts_errors
+from api.utils.errors.error_constants import GLOBAL_ERR_KEY
+from api.utils.errors.error_messages import get_not_exist_msg
+from api.utils.form_fields import NAME_FIELD, FEATURE_TYPES_FIELD
 
-TEST_NAME = 'Test category'
+
+def get_name(en_name=None):
+  return {'en': en_name}
 
 
-class CategoryListViewTest(TestCase):
-  fixtures = ['category_list_view_test.json']
+def get_data(name: Dict[str, str] = get_name(), feature_types_ids: List[int] = None) -> dict:
+  return {NAME_FIELD: name, FEATURE_TYPES_FIELD: feature_types_ids}
 
-  def setUp(self):
-    user = User.objects.get(pk=2)
-    self.token = generate_token(user)
 
-  def send_post_request(self, data_dict, token=None):
-    return self.client.post(CATEGORY_LIST_URL, json.dumps(data_dict), HTTP_AUTHORIZATION='Bearer %s' % token,
-                            content_type='application/json')
+class CategoryListViewTest(ListViewTestCase):
+  _fixtures = ListViewTestCase._fixtures + [CategoryListViewFixture]
 
-  def get_data_dict(self, name=None, feature_types_ids=None):
-    return {NAME_FIELD: name, FEATURE_TYPES_FIELD: feature_types_ids}
+  def test_should_get_succeed(self) -> None:
+    self.should_get_all_succeed(CATEGORY_LIST_URL, Category)
 
-  def test_should_get_success(self):
-    response = self.client.get(CATEGORY_LIST_URL)
-    self.assertEquals(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())
-    categories = data[DATA_KEY]
-    categories_in_db = Category.objects.all()
-    self.assertEquals(categories[1], categories_in_db[1].to_dict())
-    self.assertEquals(len(categories), len(categories_in_db))
+  def test_should_get_with_filter_succeed(self) -> None:
+    url = '{0}?feature_type__in=[2]'.format(CATEGORY_LIST_URL)
+    self.should_get_succeed_with_filter(url, Category, {'feature_type__in': [2]})
 
-  def test_should_post_success(self):
-    data_dict = self.get_data_dict(TEST_NAME, feature_types_ids=[1, 2])
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEquals(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    data_dict[NAME_FIELD] = data[NAME_FIELD]
-    data_dict[FEATURE_TYPES_FIELD] = data[FEATURE_TYPES_FIELD]
+  def test_should_get_with_serialized_field_succeed(self) -> None:
+    url = '{0}?serialize=["feature_types"]'.format(CATEGORY_LIST_URL)
+    self.should_get_succeed_with_serialize(url, Category, serialize=['feature_types'])
 
-  def test_should_post_admin_required(self):
-    data_dict = self.get_data_dict(TEST_NAME, feature_types_ids=[1, 2])
-    response = self.send_post_request(data_dict, 'Invalid')
-    self.assertEquals(response.status_code, FORBIDDEN_CODE)
+  def test_should_get_with_exclude_succeed(self) -> None:
+    url = '{0}?exclude=["feature_types"]'.format(CATEGORY_LIST_URL)
+    self.should_get_succeed_with_exclude(url, Category, exclude=['feature_types'])
 
-  def test_should_post_no_values(self):
-    data_dict = self.get_data_dict()
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[NAME_FIELD][0], get_field_empty_msg(NAME_FIELD))
-    self.assertEquals(data[FEATURE_TYPES_FIELD][0], get_field_empty_msg(FEATURE_TYPES_FIELD))
+  def test_should_post_succeed(self) -> None:
+    name = 'Tablet'
+    data = get_data(get_name(name), feature_types_ids=[1, 2])
+    expected = data.copy()
+    expected.update(name=name)
+    self.should_post_succeed(CATEGORY_LIST_URL, data, self.admin_user.token, expected)
 
-  def test_should_post_name_exists(self):
-    data_dict = self.get_data_dict(Category.objects.all()[0].name, feature_types_ids=[])
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[NAME_FIELD][0], SAME_CATEGORY_NAME_ERR)
+  def test_should_post_with_serialized_field_succeed(self) -> None:
+    name = 'Tablet'
+    data = get_data(get_name(name), feature_types_ids=[1, 2])
+    expected = data.copy()
+    expected.update(name=name)
+    del expected[FEATURE_TYPES_FIELD]
+    url = '{0}?serialize=["feature_types"]'.format(CATEGORY_LIST_URL)
+    response_data = self.should_post_succeed(url, data, self.admin_user.token, expected)
+    self.assertIsInstance(response_data[FEATURE_TYPES_FIELD][0], dict)
 
-  def test_should_post_no_such_feature_type(self):
-    data_dict = self.get_data_dict(TEST_NAME, feature_types_ids=[23])
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(FeatureType))
+  def test_should_post_require_auth(self) -> None:
+    self.should_post_require_auth(CATEGORY_LIST_URL)
 
+  def test_should_post_null_values(self) -> None:
+    data = get_data()
+    expected_content = {
+      NAME_FIELD: get_intl_texts_errors('categories'),
+      FEATURE_TYPES_FIELD: ['errors.categories.feature_types.mustNotBeNull']
+    }
+    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
+
+  def test_should_post_empty_values(self) -> None:
+    data = get_data(get_name(''), [])
+    expected_content = {
+      NAME_FIELD: get_intl_texts_errors('categories', 'mustNotBeEmpty'),
+    }
+    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
+
+  def test_should_post_no_data(self) -> None:
+    self.should_post_fail_when_no_data_sent(CATEGORY_LIST_URL, self.admin_user.token)
+
+  def test_should_post_no_such_feature_type(self) -> None:
+    name = 'Tablet'
+    data = get_data(get_name(name), feature_types_ids=[23])
+    expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}
+    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
+
+  def test_should_post_throws_invalid_length(self) -> None:
+    data = {NAME_FIELD: get_name('a' * 31)}
+    expected_content = {
+      NAME_FIELD: get_intl_texts_errors('categories', 'maxLength'),
+      FEATURE_TYPES_FIELD: ['errors.categories.feature_types.required']
+    }
+    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content,
+                          token=self.admin_user.token)

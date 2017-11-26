@@ -5,13 +5,13 @@ import os
 from django.test import TestCase
 
 from api.models import User, ProductType
-from api.serializers import generate_token
+from api.services import generate_token
 from api.tests.views.constants import PRODUCT_TYPE_LIST_URL
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NO_DATA_ERR
 from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
-from api.utils.form_fields_constants import DATA_KEY, NAME_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, \
+from api.utils.form_fields import DATA_KEY, NAME_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, \
   CATEGORY_FIELD, IMAGE_FIELD, FEATURE_VALUES_FIELD
-from api.utils.response_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
+from api.utils.http_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
 
 
 def url(product_type_id):
@@ -47,7 +47,7 @@ class ProductTypeViewTest(TestCase):
     data = json.loads(response.content.decode())
     product_type = data[DATA_KEY]
     product_type_from_db = ProductType.objects.get(pk=product_type_id)
-    self.assertEquals(product_type, product_type_from_db.to_dict())
+    self.assertEquals(product_type, product_type_from_db.dictify())
 
   def test_should_get_throws_not_found(self):
     product_type_id = 11

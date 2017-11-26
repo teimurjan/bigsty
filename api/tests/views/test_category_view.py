@@ -1,104 +1,110 @@
-import json
-
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Model
-from django.test import TestCase
+from typing import Dict, List
 
 from api.models import User, Category, FeatureType
-from api.serializers import generate_token
+from api.tests.views.base.base_detail_view_test import DetailViewTestCase
 from api.tests.views.constants import CATEGORY_LIST_URL
+from api.tests.views.fixtures.category_view_fixture import CategoryViewFixture
+from api.tests.views.utils import get_intl_texts, get_intl_texts_errors
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY, SAME_CATEGORY_NAME_ERR
 from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
-from api.utils.form_fields_constants import DATA_KEY, NAME_FIELD, FEATURE_TYPES_FIELD
-from api.utils.response_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE
-
-TEST_NAME = 'Test Name'
+from api.utils.form_fields import DATA_KEY, NAME_FIELD, FEATURE_TYPES_FIELD
+from api.utils.http_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE
 
 
-def url(user_id):
-  return '%s/%s' % (CATEGORY_LIST_URL, user_id)
-
-
-def get_category_dict(name=None, feature_types_ids=None):
+def get_data(name: Dict[str, str] = None, feature_types_ids: List[int] = None):
   return {NAME_FIELD: name, FEATURE_TYPES_FIELD: feature_types_ids}
 
 
-class CategoryListViewTest(TestCase):
-  fixtures = ['category_view_test.json']
+class CategoryViewTest(DetailViewTestCase):
+  _fixtures = DetailViewTestCase._fixtures + [CategoryViewFixture]
 
-  def send_put_request(self, category_id, data_dict, token=None):
-    return self.client.put(url(category_id), json.dumps(data_dict), HTTP_AUTHORIZATION=token)
+  def test_should_get_succeed(self) -> None:
+    category = Category.objects.all()[0]
+    self.should_get_by_id_succeed(CATEGORY_LIST_URL, Category, category.pk)
 
-  def setUp(self):
-    user = User.objects.get(pk=2)
-    self.token = generate_token(user)
+  def test_should_get_succeed_with_serialize(self) -> None:
+    category = Category.objects.all()[0]
+    expected = category.serialize(serialize=['product_types'])
+    url = '{0}/{1}?serialize=["product_types"]'.format(CATEGORY_LIST_URL, category.pk)
+    self.should_get_succeed(url, expected)
 
-  def test_should_get_success(self):
-    category_id = 2
-    response = self.client.get(url(category_id))
-    self.assertEquals(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    category = Category.objects.get(pk=category_id)
-    self.assertEquals(data, category.to_dict())
+  def test_should_get_succeed_with_exclude(self) -> None:
+    category = Category.objects.all()[0]
+    expected = category.serialize(exclude=['product_types'])
+    url = '{0}/{1}?exclude=["product_types"]'.format(CATEGORY_LIST_URL, category.pk)
+    self.should_get_succeed(url, expected)
 
-  def test_should_get_not_found(self):
-    category_id = 22
-    response = self.client.get(url(category_id))
-    self.assertEquals(response.status_code, NOT_FOUND_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(Category))
+  def test_should_get_not_found(self) -> None:
+    self.should_get_by_id_fail(CATEGORY_LIST_URL, Category, 999)
 
-  def test_should_update_success(self):
-    category_id = 2
-    data_dict = get_category_dict(TEST_NAME, feature_types_ids=[1])
-    response = self.send_put_request(category_id, data_dict, self.token)
-    self.assertEquals(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEquals(data[NAME_FIELD], data_dict[NAME_FIELD])
-    self.assertEquals(data[FEATURE_TYPES_FIELD], data_dict[FEATURE_TYPES_FIELD])
+  def test_should_put_succeed(self):
+    category = Category.objects.all()[0]
+    en_name = 'New name for Phone category'
+    feature_types_ids = [1]
+    data = get_data(get_intl_texts(en_name), feature_types_ids=feature_types_ids)
+    url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
+    expected = category.serialize()
+    expected['name'] = en_name
+    expected['feature_types'] = feature_types_ids
+    self.should_put_succeed(url, data, self.manager_user.token, expected)
 
-  def test_should_update_throws_admin_required(self):
-    category_id = 1
-    data_dict = get_category_dict(TEST_NAME, feature_types_ids=[1, 2])
-    response = self.send_put_request(category_id, data_dict)
-    self.assertEquals(response.status_code, FORBIDDEN_CODE)
+  def test_should_put_succeed_with_serialize_and_exclude(self):
+    category = Category.objects.all()[0]
+    en_name = 'New name for Phone category'
+    data = get_data(get_intl_texts(en_name), feature_types_ids=[1, 2])
+    url = '{0}/{1}?serialize=["feature_types"]&exclude=["name"]'.format(CATEGORY_LIST_URL, category.pk)
+    expected = category.serialize(serialize=["feature_types"])
+    del expected['name']
+    self.should_put_succeed(url, data, self.manager_user.token, expected)
 
-  def test_should_update_throws_same_category_name(self):
-    category_id = 2
-    data_dict = get_category_dict(Category.objects.all()[0].name, feature_types_ids=[1, 2])
-    response = self.send_put_request(category_id, data_dict, self.token)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[NAME_FIELD][0], SAME_CATEGORY_NAME_ERR)
+  def test_should_put_require_role(self):
+    category = Category.objects.all()[0]
+    url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
+    self.should_put_require_role(url, self.reader_user.token)
 
-  def test_should_update_throws_no_values(self):
-    category_id = 2
-    data_dict = get_category_dict()
-    response = self.send_put_request(category_id, data_dict, self.token)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[NAME_FIELD][0], get_field_empty_msg(NAME_FIELD))
-    self.assertEquals(data[FEATURE_TYPES_FIELD][0], get_field_empty_msg(FEATURE_TYPES_FIELD))
+  def test_should_post_no_data(self) -> None:
+    category = Category.objects.all()[0]
+    url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
+    self.should_put_fail_when_no_data_sent(url, self.admin_user.token)
 
-  def test_should_update_throws_feature_type_not_found(self):
-    category_id = 2
-    data_dict = get_category_dict(TEST_NAME, feature_types_ids=[33])
-    response = self.send_put_request(category_id, data_dict, self.token)
-    self.assertEquals(response.status_code, NOT_FOUND_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(FeatureType))
+  def test_should_put_null_values(self):
+    category = Category.objects.all()[0]
+    data = get_data(get_intl_texts())
+    url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
+    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+      FEATURE_TYPES_FIELD: ['errors.category.feature_types.mustNotBeNull'],
+      NAME_FIELD: get_intl_texts_errors('category', field='name'),
+    })
 
-  def test_should_delete_success(self):
-    category_id = 2
-    response = self.client.delete(url(category_id), HTTP_AUTHORIZATION=self.token)
-    self.assertEquals(response.status_code, OK_CODE)
+  def test_should_put_empty_values(self):
+    category = Category.objects.all()[0]
+    data = get_data(get_intl_texts(''), [])
+    url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
+    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+      NAME_FIELD: get_intl_texts_errors('category', error='mustNotBeEmpty', field='name'),
+    })
 
-  def test_should_delete_throw_admin_required(self):
-    category_id = 2
-    response = self.client.delete(url(category_id))
-    self.assertEquals(response.status_code, FORBIDDEN_CODE)
+  def test_should_put_invalid_length(self):
+    category = Category.objects.all()[0]
+    data = get_data(get_intl_texts('a' * 31), [])
+    url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
+    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+      NAME_FIELD: get_intl_texts_errors('category', error='maxLength', field='name'),
+    })
 
-  def test_should_delete_throw_not_found(self):
-    category_id = 22
-    response = self.client.delete(url(category_id), HTTP_AUTHORIZATION=self.token)
-    self.assertEquals(response.status_code, NOT_FOUND_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(Category))
+  def test_should_put_invalid_feature_type(self):
+    category = Category.objects.all()[0]
+    data = get_data(get_intl_texts('New name'), [999])
+    url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
+    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+      GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]
+    })
+
+  def test_should_put_invalid_category(self):
+    data = get_data(get_intl_texts('New name'), [1])
+    url = '{0}/{1}'.format(CATEGORY_LIST_URL, 999)
+    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+      GLOBAL_ERR_KEY: [get_not_exist_msg(Category)]
+    }, expected_code=NOT_FOUND_CODE)
+
+

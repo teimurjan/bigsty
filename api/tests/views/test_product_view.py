@@ -5,15 +5,15 @@ import os
 from django.test import TestCase
 
 from api.models import User, Product, ProductType, FeatureValue
-from api.serializers import generate_token
+from api.services import generate_token
 from api.tests.views.constants import PRODUCT_LIST_URL
 from api.utils.errors.error_constants import NO_DATA_ERR, GLOBAL_ERR_KEY, PRICE_VALUE_ERR, DISCOUNT_VALUE_ERR, \
   QUANTITY_VALUE_ERR, PRICE_NOT_INT_ERR, DISCOUNT_NOT_INT_ERR, QUANTITY_NOT_INT_ERR, INVALID_FEATURE_TYPE_ID_ERR, \
   NOT_VALID_IMAGE
 from api.utils.errors.error_messages import get_field_empty_msg, get_not_exist_msg
-from api.utils.form_fields_constants import DATA_KEY, IMAGES_FIELD, QUANTITY_FIELD, PRICE_FIELD, DISCOUNT_FIELD, \
+from api.utils.form_fields import DATA_KEY, IMAGES_FIELD, QUANTITY_FIELD, PRICE_FIELD, DISCOUNT_FIELD, \
   PRODUCT_TYPE_FIELD, FEATURE_VALUES_FIELD
-from api.utils.response_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
+from api.utils.http_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
 
 VALID_DISCOUNT = 10
 VALID_PRICE = 100
@@ -55,7 +55,7 @@ class ProductViewTest(TestCase):
     response = self.client.get(url(product_id))
     self.assertEqual(response.status_code, OK_CODE)
     data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEqual(data, Product.objects.get(pk=product_id).to_dict())
+    self.assertEqual(data, Product.objects.get(pk=product_id).dictify())
 
   def test_should_get_throws_not_found(self):
     product_id = 11

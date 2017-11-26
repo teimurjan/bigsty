@@ -1,4 +1,4 @@
-class ImageToBase64ConversionException(Exception):
+class Base64ToImageConversionException(Exception):
   pass
 
 
@@ -9,7 +9,7 @@ def base64_to_image(data, file_name):
     format, img_base64 = data.split(';base64,')
     type = format.split('/')[-1]
     if type != 'jpg' and type != 'png':
-      raise ImageToBase64ConversionException
+      raise Base64ToImageConversionException
     return ContentFile(base64.b64decode(img_base64), name=file_name + '.' + type)
-  except Exception:
-    raise ImageToBase64ConversionException
+  except Exception as e:
+    raise Base64ToImageConversionException

@@ -1,76 +1,61 @@
 import json
 
-from django.test import TestCase
+import jwt
 
-from api.models import User
-from api.tests.views.constants import VALID_PASSWORD, \
-  NOT_MATCH_PASSWORD, INVALID_EMAIL_FORMAT, LOGIN_URL, INVALID_FORMAT_PASSWORD
-from api.utils.errors.error_constants import INVALID_EMAIL_OR_PASSWORD_ERR
-from api.utils.form_fields_constants import EMAIL_FIELD, PASSWORD_FIELD, TOKEN_KEY, AUTH_FIELDS
-from api.utils.response_constants import OK_CODE, BAD_REQUEST_CODE
-
-VALID_NOT_EXISTING_EMAIL = "test1@test.test"
+from api.tests.views.base.base_view_test import ViewTestCase
+from api.tests.views.constants import LOGIN_URL
+from api.utils.errors.error_constants import INVALID_EMAIL_OR_PASSWORD_ERR, GLOBAL_ERR_KEY
+from api.utils.form_fields import EMAIL_FIELD, PASSWORD_FIELD, TOKEN_KEY, AUTH_FIELDS, NAME_FIELD, GROUP_FIELD
+from api.utils.http_constants import OK_CODE, BAD_REQUEST_CODE
+from main.settings import SECRET_KEY
 
 
-class LoginViewTest(TestCase):
-  fixtures = ["login_view_test.json"]
+def get_data(email=None, password=None):
+  return {EMAIL_FIELD: email, PASSWORD_FIELD: password}
 
-  def send_request(self, email=None, password=None):
-    return self.client.post(LOGIN_URL, json.dumps(
-      {
-        EMAIL_FIELD: email,
-        PASSWORD_FIELD: password
-      }
-    ), content_type='application/json')
 
-  def test_should_post_success(self):
-    response = self.send_request(email=User.objects.all()[0].email,
-                                 password=VALID_PASSWORD)
+class LoginViewTest(ViewTestCase):
+  def test_should_post_succeed(self):
+    data = get_data(self.reader_user.email, 'Passw0rd')
+    response = self.send_post_request(LOGIN_URL, data)
     self.assertEquals(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())
-    self.assertIn(TOKEN_KEY, data)
-    token = data[TOKEN_KEY]
-    self.assertGreater(len(token), 0)
+    token = json.loads(response.content.decode())[TOKEN_KEY]
+    decoded_token = jwt.decode(token, SECRET_KEY)
+    self.assertEquals(decoded_token[NAME_FIELD], self.reader_user.name)
+    self.assertEquals(decoded_token[GROUP_FIELD], self.reader_user.group_id)
 
-  def test_should_throw_no_such_user(self):
-    response = self.send_request(email=VALID_NOT_EXISTING_EMAIL,
-                                 password=VALID_PASSWORD)
+  def test_should_post_empty_values(self):
+    data = get_data('', '')
+    response = self.send_post_request(LOGIN_URL, data)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertIn(AUTH_FIELDS, data)
-    email_errors = data[AUTH_FIELDS]
-    self.assertEquals(email_errors[0], INVALID_EMAIL_OR_PASSWORD_ERR)
+    self.assertEquals(data[EMAIL_FIELD], ['errors.login.email.mustNotBeEmpty'])
+    self.assertEquals(data[PASSWORD_FIELD], ['errors.login.password.mustNotBeEmpty'])
 
-  def test_should_throw_invalid_email_format(self):
-    response = self.send_request(email=INVALID_EMAIL_FORMAT, password=VALID_PASSWORD)
+  def test_should_post_null_values(self):
+    data = get_data()
+    response = self.send_post_request(LOGIN_URL, data)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertIn(EMAIL_FIELD, data)
-    email_errors = data[EMAIL_FIELD]
-    self.assertEquals(email_errors[0], 'errors.loginPage.email.is_email')
+    self.assertEquals(data[EMAIL_FIELD], ['errors.login.email.mustNotBeNull'])
+    self.assertEquals(data[PASSWORD_FIELD], ['errors.login.password.mustNotBeNull'])
 
-  def test_should_throw_invalid_password(self):
-    response = self.send_request(email=User.objects.all()[0].email,
-                                 password=NOT_MATCH_PASSWORD)
+  def test_should_post_no_data(self):
+    response = self.send_post_request(LOGIN_URL)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertIn(AUTH_FIELDS, data)
-    auth_errors = data[AUTH_FIELDS]
-    self.assertEquals(auth_errors[0], INVALID_EMAIL_OR_PASSWORD_ERR)
+    self.assertEquals(data[GLOBAL_ERR_KEY], 'Invalid JSON format')
 
-  def test_should_throw_invalid_password_format(self):
-    response = self.send_request(email=User.objects.all()[0].email,
-                                 password=INVALID_FORMAT_PASSWORD)
+  def test_should_post_invalid_email(self):
+    data = get_data('invalid', 'Passw0rd')
+    response = self.send_post_request(LOGIN_URL, data)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertIn(PASSWORD_FIELD, data)
-    password_errors = data[PASSWORD_FIELD]
-    self.assertEquals(password_errors[0], 'errors.loginPage.password.regex')
+    self.assertEquals(data[AUTH_FIELDS], [INVALID_EMAIL_OR_PASSWORD_ERR])
 
-  def test_should_throw_no_values(self):
-    response = self.send_request()
+  def test_should_post_invalid_password(self):
+    data = get_data(self.reader_user.email, 'passw0rd')
+    response = self.send_post_request(LOGIN_URL, data)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertIn(PASSWORD_FIELD, data)
-    self.assertEquals(data[PASSWORD_FIELD][0], 'errors.loginPage.password.mustNotBeNull')
-    self.assertEquals(data[EMAIL_FIELD][0], 'errors.loginPage.email.mustNotBeNull')
+    self.assertEquals(data[AUTH_FIELDS], [INVALID_EMAIL_OR_PASSWORD_ERR])

@@ -3,12 +3,12 @@ import json
 from django.test import TestCase
 
 from api.models import User, Group
-from api.serializers import generate_token
+from api.services import generate_token
 from api.tests.views.constants import USER_LIST_URL, INVALID_FORMAT_PASSWORD, VALID_PASSWORD
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NOT_VALID_PASSWORD_ERR
-from api.utils.form_fields_constants import NAME_FIELD, PASSWORD_FIELD, GROUP_FIELD, DATA_KEY, EMAIL_FIELD, ID_FIELD, \
+from api.utils.form_fields import NAME_FIELD, PASSWORD_FIELD, GROUP_FIELD, DATA_KEY, EMAIL_FIELD, ID_FIELD, \
   GROUP_FIELD
-from api.utils.response_constants import OK_CODE, FORBIDDEN_CODE, NOT_FOUND_CODE, BAD_REQUEST_CODE
+from api.utils.http_constants import OK_CODE, FORBIDDEN_CODE, NOT_FOUND_CODE, BAD_REQUEST_CODE
 from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
 
 NEW_NAME = "New name"

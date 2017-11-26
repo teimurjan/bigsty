@@ -3,12 +3,12 @@ import json
 from django.test import TestCase
 
 from api.models import User, FeatureValue
-from api.serializers import generate_token
+from api.services import generate_token
 from api.tests.views.constants import FEATURE_VALUE_LIST_URL
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NO_DATA_ERR, VALUE_LENGTH_ERR, INVALID_FEATURE_TYPE_ID_ERR
 from api.utils.errors.error_messages import get_field_empty_msg
-from api.utils.form_fields_constants import DATA_KEY, NAME_FIELD, FEATURE_TYPE_FIELD
-from api.utils.response_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
+from api.utils.form_fields import DATA_KEY, NAME_FIELD, FEATURE_TYPE_FIELD
+from api.utils.http_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
 
 
 def url(feature_value_id):
@@ -31,7 +31,7 @@ class FeatureValueViewTest(TestCase):
     response = self.client.get(url(feature_value_id))
     self.assertEqual(response.status_code, OK_CODE)
     data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEqual(data, FeatureValue.objects.get(pk=feature_value_id).to_dict())
+    self.assertEqual(data, FeatureValue.objects.get(pk=feature_value_id).dictify())
 
   def test_should_get_throws_not_found(self):
     feature_value_id = 11

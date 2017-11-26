@@ -1,93 +1,94 @@
 import json
+import re
 
-from django.test import TestCase
+import jwt
+from django.core import mail
 
-from api.models import User
-from api.tests.views.constants import REGISTER_URL, TEST_NAME, VALID_PASSWORD, \
-  INVALID_EMAIL_FORMAT, INVALID_FORMAT_PASSWORD
-from api.utils.errors.error_constants import SAME_EMAIL_ERR, NOT_VALID_EMAIL_ERR, NOT_VALID_PASSWORD_ERR
-from api.utils.form_fields_constants import EMAIL_FIELD, PASSWORD_FIELD, NAME_FIELD, TOKEN_KEY
-from api.utils.response_constants import OK_CODE, BAD_REQUEST_CODE
-from api.utils.errors.error_messages import get_field_empty_msg
+from api.tests.views.base.base_list_view_test import ListViewTestCase
+from api.tests.views.base.base_view_test import ViewTestCase
+from api.tests.views.constants import REGISTER_URL
+from api.utils.errors.error_constants import SAME_EMAIL_ERR
+from api.utils.form_fields import EMAIL_FIELD, PASSWORD_FIELD, NAME_FIELD, TOKEN_KEY, GROUP_FIELD, ID_FIELD
+from api.utils.http_constants import OK_CODE, BAD_REQUEST_CODE
+from main.settings import SECRET_KEY
 
 VALID_NOT_EXISTING_EMAIL = "test1@test.test"
 
 
-class RegisterViewTest(TestCase):
-  fixtures = ['register_view_test.json']
+def get_data(name=None, email=None, password=None):
+  return {NAME_FIELD: name, EMAIL_FIELD: email, PASSWORD_FIELD: password}
 
-  def send_request(self, name=None, email=None, password=None):
-    return self.client.post(REGISTER_URL, json.dumps(
-      {
-        NAME_FIELD: name,
-        EMAIL_FIELD: email,
-        PASSWORD_FIELD: password
-      }
-    ), content_type='application/json')
 
-  def test_should_post_success(self):
-    response = self.send_request(name=TEST_NAME,
-                                 email=VALID_NOT_EXISTING_EMAIL,
-                                 password=VALID_PASSWORD)
+class RegisterViewTest(ViewTestCase):
+  def test_should_post_succeed(self):
+    email = 'teymur@email.com'
+    data = get_data('Tim', email, 'Passw0rd')
+    response = self.send_post_request(REGISTER_URL, data)
     self.assertEquals(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())
-    self.assertIn(TOKEN_KEY, data)
-    token = data[TOKEN_KEY]
-    self.assertGreater(len(token), 0)
+    sent_mail = mail.outbox[0]
+    self.assertEquals(sent_mail.to, [email])
+    pattern = re.compile('<a href=\"testserver/(?P<url>.*)\">.*<\/a>')
+    match = pattern.match(sent_mail.body)
+    url = '/api/{0}'.format(match.group('url'))
+    response = self.client.get(url)
+    self.assertEquals(response.status_code, OK_CODE)
+    token = json.loads(response.content.decode())[TOKEN_KEY]
+    decoded_token = jwt.decode(token, SECRET_KEY)
+    self.assertEquals(decoded_token[NAME_FIELD], data[NAME_FIELD])
+    self.assertEquals(decoded_token[GROUP_FIELD], 'reader')
 
-  def test_should_throw_user_exists(self):
-    response = self.send_request(name=TEST_NAME,
-                                 email=User.objects.all()[0].email,
-                                 password=VALID_PASSWORD)
+  def test_should_post_existing_user(self):
+    data = get_data('Existing user', 'reader@user.com', 'Passw0rd')
+    response = self.send_post_request(REGISTER_URL, data)
+    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
+    response_data = json.loads(response.content.decode())
+    errors = response_data[EMAIL_FIELD]
+    self.assertEquals(errors, [SAME_EMAIL_ERR])
+
+  def test_should_post_invalid_values(self):
+    data = get_data('Existing user', 'invalid', 'invalid')
+    response = self.send_post_request(REGISTER_URL, data)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertIn(EMAIL_FIELD, data)
-    email_errors = data[EMAIL_FIELD]
-    self.assertEquals(email_errors[0], SAME_EMAIL_ERR)
+    self.assertEquals(data[EMAIL_FIELD], ['errors.registration.email.isEmail'])
+    self.assertEquals(data[PASSWORD_FIELD], ['errors.registration.password.regex'])
 
-  def test_should_throw_invalid_email_format(self):
-    response = self.send_request(name=TEST_NAME,
-                                 email=INVALID_EMAIL_FORMAT,
-                                 password=VALID_PASSWORD)
+  def test_should_post_no_data(self):
+    response = self.send_post_request(REGISTER_URL, get_data())
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertIn(EMAIL_FIELD, data)
-    email_errors = data[EMAIL_FIELD]
-    self.assertEquals(email_errors[0], NOT_VALID_EMAIL_ERR)
+    self.assertEquals(data[NAME_FIELD], ['errors.registration.name.mustNotBeNull'])
+    self.assertEquals(data[EMAIL_FIELD], ['errors.registration.email.mustNotBeNull'])
+    self.assertEquals(data[PASSWORD_FIELD], ['errors.registration.password.mustNotBeNull'])
 
-  def test_should_throw_invalid_password_format(self):
-    response = self.send_request(name=TEST_NAME,
-                                 email=VALID_NOT_EXISTING_EMAIL,
-                                 password=INVALID_FORMAT_PASSWORD)
+  def test_should_complete_registration_for_not_existing_user(self):
+    payload = {ID_FIELD: 999}
+    token = jwt.encode(payload, SECRET_KEY).decode()
+    url = '/api/register?token={0}'.format(token)
+    response = self.client.get(url)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertIn(PASSWORD_FIELD, data)
-    password_errors = data[PASSWORD_FIELD]
-    self.assertEquals(password_errors[0], NOT_VALID_PASSWORD_ERR)
+    err = json.loads(response.content.decode())['global']
+    self.assertEquals(err, ['errors.auth.invalidToken'])
 
-  def test_should_throw_no_name(self):
-    response = self.send_request(email=VALID_NOT_EXISTING_EMAIL,
-                                 password=VALID_PASSWORD)
+  def test_should_complete_registration_with_invalid_token_format(self):
+    url = '/api/register?token={0}'.format('invalid token')
+    response = self.client.get(url)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertIn(NAME_FIELD, data)
-    name_errors = data[NAME_FIELD]
-    self.assertEquals(name_errors[0], get_field_empty_msg(NAME_FIELD))
+    err = json.loads(response.content.decode())['global']
+    self.assertEquals(err, ['errors.auth.invalidToken'])
 
-  def test_should_throw_no_email(self):
-    response = self.send_request(name=TEST_NAME,
-                                 password=VALID_PASSWORD)
+  def test_should_complete_registration_without_token(self):
+    url = '/api/register'
+    response = self.client.get(url)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertIn(EMAIL_FIELD, data)
-    email_errors = data[EMAIL_FIELD]
-    self.assertEquals(email_errors[0], get_field_empty_msg(EMAIL_FIELD))
+    err = json.loads(response.content.decode())['global']
+    self.assertEquals(err, ['errors.auth.invalidToken'])
 
-  def test_should_throw_no_password(self):
-    response = self.send_request(name=TEST_NAME,
-                                 email=VALID_NOT_EXISTING_EMAIL)
+  def test_should_complete_registration_for_active_user(self):
+    payload = {ID_FIELD: self.reader_user.pk}
+    token = jwt.encode(payload, SECRET_KEY).decode()
+    url = '/api/register?token={0}'.format(token)
+    response = self.client.get(url)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertIn(PASSWORD_FIELD, data)
-    password_errors = data[PASSWORD_FIELD]
-    self.assertEquals(password_errors[0], get_field_empty_msg(PASSWORD_FIELD))
+    err = json.loads(response.content.decode())['global']
+    self.assertEquals(err, ['errors.auth.alreadyActive'])

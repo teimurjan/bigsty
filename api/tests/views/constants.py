@@ -6,10 +6,3 @@ PRODUCT_TYPE_LIST_URL = "/api/product_types"
 PRODUCT_LIST_URL = "/api/products"
 FEATURE_TYPE_LIST_URL = "/api/feature_types"
 FEATURE_VALUE_LIST_URL = "/api/feature_values"
-
-TEST_NAME = "Test User"
-
-VALID_PASSWORD = "testtest123"
-NOT_MATCH_PASSWORD = "testtest1"
-INVALID_FORMAT_PASSWORD = "pass"
-INVALID_EMAIL_FORMAT = "invalid"

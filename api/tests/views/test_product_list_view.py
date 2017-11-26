@@ -1,149 +1,116 @@
 import base64
-import json
 import os
-from django.test import TestCase
 
-from api.models import User, Product, FeatureValue, ProductType
-from api.serializers import generate_token
+from api.models import Product, FeatureValue, ProductType
+from api.tests.views.base.base_list_view_test import ListViewTestCase
 from api.tests.views.constants import PRODUCT_LIST_URL
-from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NO_DATA_ERR, DISCOUNT_VALUE_ERR, PRICE_VALUE_ERR, \
-  QUANTITY_VALUE_ERR, DISCOUNT_NOT_INT_ERR, PRICE_NOT_INT_ERR, QUANTITY_NOT_INT_ERR, INVALID_FEATURE_TYPE_ID_ERR, \
-  NOT_VALID_IMAGE
-from api.utils.errors.error_messages import get_field_empty_msg, get_not_exist_msg
-from api.utils.form_fields_constants import DISCOUNT_FIELD, PRICE_FIELD, QUANTITY_FIELD, PRODUCT_TYPE_FIELD, \
-  FEATURE_VALUES_FIELD, IMAGES_FIELD, DATA_KEY
-from api.utils.response_constants import OK_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
-
-VALID_DISCOUNT = 10
-VALID_PRICE = 100
-VALID_QUANTITY = 5
-
-INVALID_DISCOUNT = 150
-INVALID_PRICE = -VALID_PRICE
-INVALID_QUANTITY = -VALID_QUANTITY
+from api.tests.views.fixtures.product_list_view_fixture import ProductListViewFixture
+from api.utils.errors.error_constants import GLOBAL_ERR_KEY
+from api.utils.errors.error_messages import get_not_exist_msg
+from api.utils.form_fields import DISCOUNT_FIELD, PRICE_FIELD, QUANTITY_FIELD, PRODUCT_TYPE_FIELD, \
+  FEATURE_VALUES_FIELD, IMAGES_FIELD
 
 
-def get_product_dict(discount=None, price=None, quantity=None, product_type_id=None, feature_values_ids=None,
+def get_product_data(discount=None, price=None, quantity=None, product_type_id=None, feature_values_ids=None,
                      images=None):
   return {DISCOUNT_FIELD: discount, PRICE_FIELD: price, QUANTITY_FIELD: quantity, PRODUCT_TYPE_FIELD: product_type_id,
           FEATURE_VALUES_FIELD: feature_values_ids, IMAGES_FIELD: images}
 
 
-class ProductListViewTest(TestCase):
-  fixtures = ['product_list_view_test.json']
+class ProductListViewTest(ListViewTestCase):
+  _fixtures = ListViewTestCase._fixtures + [ProductListViewFixture]
 
-  def setUp(self):
-    user = User.objects.get(pk=1)
-    self.token = generate_token(user)
-
+  @classmethod
+  def setUpClass(cls):
+    super().setUpClass()
     pwd = os.path.dirname(__file__)
-    self.images = []
+    cls.images = []
     for i in range(1, 4):
-      with open('%s/assets/products_images/%s.jpg' % (pwd, i), 'rb') as image:
-        self.images.append('data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode())
-
-  def send_post_request(self, data_dict=None, token=None):
-    return self.client.post(PRODUCT_LIST_URL, json.dumps(data_dict),
-                            HTTP_AUTHORIZATION='Bearer %s' % token,
-                            content_type='application/json')
+      with open('{0}/assets/products_images/{1}.jpg'.format(pwd, i), 'rb') as image:
+        cls.images.append('data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode())
+        image.close()
 
   def test_should_get_success(self):
-    response = self.client.get(PRODUCT_LIST_URL)
-    self.assertEqual(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEqual(data, [product.to_dict() for product in Product.objects.all()])
+    self.should_get_all_succeed(PRODUCT_LIST_URL, Product)
 
-  def test_should_post_success(self):
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2,
-                                 feature_values_ids=[1, 2], images=self.images)
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEqual(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEqual(data[DISCOUNT_FIELD], data_dict[DISCOUNT_FIELD])
-    self.assertEqual(data[PRICE_FIELD], data_dict[PRICE_FIELD])
-    self.assertEqual(data[QUANTITY_FIELD], data_dict[QUANTITY_FIELD])
-    self.assertEqual(data[PRODUCT_TYPE_FIELD], data_dict[PRODUCT_TYPE_FIELD])
-    self.assertEqual(data[FEATURE_VALUES_FIELD], data_dict[FEATURE_VALUES_FIELD])
-    self.assertEqual(len(data[IMAGES_FIELD]), len(data_dict[IMAGES_FIELD]))
+  def test_should_get_with_filter_succeed(self):
+    url = '{0}?feature_value__in=[1]'.format(PRODUCT_LIST_URL)
+    self.should_get_succeed_with_filter(url, Product, {'feature_value__in': [1]})
 
-  def test_should_throws_admin_required(self):
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2,
-                                 feature_values_ids=[1, 2], images=self.images)
-    response = self.send_post_request(data_dict)
-    self.assertEqual(response.status_code, FORBIDDEN_CODE)
+  def test_should_get_with_exclude_succeed(self):
+    url = '{0}?exclude=["names"]'.format(PRODUCT_LIST_URL)
+    self.should_get_succeed_with_exclude(url, Product, exclude=['names'])
 
-  def test_should_update_throws_no_values(self):
-    response = self.send_post_request({}, self.token)
-    data = json.loads(response.content.decode())
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    self.assertEqual(data[DISCOUNT_FIELD][0], get_field_empty_msg(DISCOUNT_FIELD))
-    self.assertEqual(data[PRICE_FIELD][0], get_field_empty_msg(PRICE_FIELD))
-    self.assertEqual(data[QUANTITY_FIELD][0], get_field_empty_msg(QUANTITY_FIELD))
-    self.assertEqual(data[PRODUCT_TYPE_FIELD][0], get_field_empty_msg(PRODUCT_TYPE_FIELD))
-    self.assertEqual(data[FEATURE_VALUES_FIELD][0], get_field_empty_msg(FEATURE_VALUES_FIELD))
-    self.assertEqual(data[IMAGES_FIELD][0], get_field_empty_msg(IMAGES_FIELD))
+  def test_should_get_with_serialized_field_succeed(self):
+    url = '{0}?serialize=["feature_value"]'.format(PRODUCT_LIST_URL)
+    self.should_get_succeed_with_serialize(url, Product, serialize=['feature_value'])
 
-  def test_should_update_throws_no_data(self):
-    response = self.send_post_request(token=self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GLOBAL_ERR_KEY][0], NO_DATA_ERR)
+  def test_should_post_succeed(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=1,
+                            feature_values_ids=[3, 5], images=self.images)
+    expected = data.copy()
+    del expected[IMAGES_FIELD]
+    response_data = self.should_post_succeed(PRODUCT_LIST_URL, data, self.admin_user.token, expected)
+    self.assertEquals(len(response_data[IMAGES_FIELD]), len(self.images))
 
-  def test_should_update_throws_invalid_values(self):
-    data_dict = get_product_dict(INVALID_DISCOUNT, INVALID_PRICE, INVALID_QUANTITY, product_type_id=2,
-                                 feature_values_ids=[1, 2], images=self.images)
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[DISCOUNT_FIELD][0], DISCOUNT_VALUE_ERR)
-    self.assertEqual(data[PRICE_FIELD][0], PRICE_VALUE_ERR)
-    self.assertEqual(data[QUANTITY_FIELD][0], QUANTITY_VALUE_ERR)
+  def test_should_post_with_serialized_field_succeed(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=1,
+                            feature_values_ids=[3, 5], images=self.images)
+    expected = data.copy()
+    del expected[IMAGES_FIELD], expected[PRODUCT_TYPE_FIELD]
+    url = '{0}?serialize=["product_type"]'.format(PRODUCT_LIST_URL)
+    response_data = self.should_post_succeed(url, data, self.admin_user.token, expected)
+    self.assertEquals(len(response_data[IMAGES_FIELD]), len(self.images))
+    self.assertIsInstance(response_data[PRODUCT_TYPE_FIELD], dict)
 
-  def test_should_update_throws_not_int_value(self):
-    data_dict = get_product_dict(discount='invalid', price='invalid', quantity='invalid', product_type_id=2,
-                                 feature_values_ids=[1, 2], images=self.images)
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[DISCOUNT_FIELD][0], DISCOUNT_NOT_INT_ERR)
-    self.assertEqual(data[PRICE_FIELD][0], PRICE_NOT_INT_ERR)
-    self.assertEqual(data[QUANTITY_FIELD][0], QUANTITY_NOT_INT_ERR)
+  def test_should_post_require_auth(self):
+    self.should_post_require_auth(PRODUCT_LIST_URL)
 
-  def test_should_update_throws_invalid_product_type_id(self):
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=999,
-                                 feature_values_ids=[1, 2], images=self.images)
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[PRODUCT_TYPE_FIELD][0], get_not_exist_msg(ProductType))
+  def test_should_post_null_values(self):
+    data = get_product_data()
+    expected_content = {
+      FEATURE_VALUES_FIELD: ['errors.products.feature_values.mustNotBeNull'],
+      PRICE_FIELD: ['errors.products.price.mustNotBeNull'],
+      DISCOUNT_FIELD: ['errors.products.discount.mustNotBeNull'],
+      QUANTITY_FIELD: ['errors.products.quantity.mustNotBeNull'],
+      PRODUCT_TYPE_FIELD: ['errors.products.product_type.mustNotBeNull'],
+      IMAGES_FIELD: ['errors.products.images.mustNotBeNull'],
+    }
+    self.should_post_fail(PRODUCT_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_no_such_feature_value(self):
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2,
-                                 feature_values_ids=[1, 2, 33], images=self.images)
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[FEATURE_VALUES_FIELD][0], get_not_exist_msg(FeatureValue))
+  def test_should_post_no_data(self):
+    self.should_post_fail_when_no_data_sent(PRODUCT_LIST_URL, self.admin_user.token)
 
-  def test_should_update_throws_feature_values_from_the_same_feature_type(self):
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2,
-                                 feature_values_ids=[1, 2, 3], images=self.images)
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[FEATURE_VALUES_FIELD][0], INVALID_FEATURE_TYPE_ID_ERR)
+  def test_should_post_no_such_feature_value(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=1,
+                            feature_values_ids=[3, 999], images=self.images)
+    expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}
+    self.should_post_fail(PRODUCT_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_feature_values_of_another_product_type(self):
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, 2, [4], self.images)
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[FEATURE_VALUES_FIELD][0], INVALID_FEATURE_TYPE_ID_ERR)
+  def test_should_post_no_such_product_type(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=999,
+                            feature_values_ids=[3, 5], images=self.images)
+    expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}
+    self.should_post_fail(PRODUCT_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_invalid_image(self):
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2, feature_values_ids=[1, 2],
-                                 images=['invalid image'])
-    response = self.send_post_request(data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[IMAGES_FIELD][0], NOT_VALID_IMAGE)
+  def test_should_post_invalid_images(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=1,
+                            feature_values_ids=[3, 5], images=['invalid'])
+    expected_content = {IMAGES_FIELD: ['errors.products.images.notValidFormat']}
+    self.should_post_fail(PRODUCT_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
+
+  def test_should_post_invalid_feature_values(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=1,
+                            feature_values_ids=[3, 6], images=self.images)
+    expected_content = {GLOBAL_ERR_KEY: ['Invalid feature values']}
+    self.should_post_fail(PRODUCT_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
+
+  def test_should_post_invalid_discount_price_and_quality(self):
+    data = get_product_data(discount=150, price=-10, quantity=-20, product_type_id=1,
+                            feature_values_ids=[3, 5], images=self.images)
+    expected_content = {
+      DISCOUNT_FIELD: ['errors.products.discount.between'],
+      PRICE_FIELD: ['errors.products.price.min'],
+      QUANTITY_FIELD: ['errors.products.quantity.min']
+    }
+    self.should_post_fail(PRODUCT_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
