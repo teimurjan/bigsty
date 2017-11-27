@@ -31,6 +31,6 @@ class UserView(DetailView):
     super().__init__(ServiceFactory.USER, 'user.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30},
-      PASSWORD_FIELD: {REQUIRED: True, EMPTY: False, REGEX: r'[A-Za-z0-9@#$%^&+=]{8,}'},
+      PASSWORD_FIELD: {REQUIRED: True, REGEX: r'[A-Za-z0-9@#$%^&+=]{8,}'},
       GROUP_FIELD: {REQUIRED: True, EMPTY: False}
     }

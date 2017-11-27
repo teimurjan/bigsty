@@ -13,7 +13,7 @@ class SerializableModel(Model):
                 exclude: List[str] = list(),
                 serialize: List[str] = list()
                 ) -> Dict[str, Any]:
-    self.language, self.serialize = language, serialize
+    self.language, self.serialize_ = language, serialize
 
     serialized = {}
     fields = self._meta.get_fields()
@@ -34,15 +34,15 @@ class SerializableModel(Model):
         serialized[field_name] = self._get_field_value(field_name)
     return serialized
 
-  def __get_many_items(self, field_name: str) -> list:
+  def __get_many_items(self, field_name: str) -> List:
     related_items = getattr(self, field_name).all()
-    if field_name in self.serialize:
+    if field_name in self.serialize_:
       return [related_item.serialize(self.language) for related_item in related_items]
     return [related_item.pk for related_item in related_items]
 
   def __get_one_item(self, field_name: str):
     related_item = getattr(self, field_name)
-    return related_item.serialize(self.language) if field_name in self.serialize else related_item.pk
+    return related_item.serialize(self.language) if field_name in self.serialize_ else related_item.pk
 
   def __get_field_name(self, field: Type[Field]) -> str:
     try:

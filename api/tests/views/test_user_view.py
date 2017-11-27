@@ -1,135 +1,87 @@
-import json
-
-from django.test import TestCase
-
 from api.models import User, Group
-from api.services import generate_token
-from api.tests.views.constants import USER_LIST_URL, INVALID_FORMAT_PASSWORD, VALID_PASSWORD
-from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NOT_VALID_PASSWORD_ERR
-from api.utils.form_fields import NAME_FIELD, PASSWORD_FIELD, GROUP_FIELD, DATA_KEY, EMAIL_FIELD, ID_FIELD, \
-  GROUP_FIELD
-from api.utils.http_constants import OK_CODE, FORBIDDEN_CODE, NOT_FOUND_CODE, BAD_REQUEST_CODE
-from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
-
-NEW_NAME = "New name"
+from api.tests.views.base.base_detail_view_test import DetailViewTestCase
+from api.tests.views.constants import USER_LIST_URL
+from api.utils.errors.error_constants import GLOBAL_ERR_KEY
+from api.utils.errors.error_messages import get_not_exist_msg
+from api.utils.form_fields import NAME_FIELD, PASSWORD_FIELD, GROUP_FIELD, EMAIL_FIELD, ID_FIELD
+from api.utils.http_constants import FORBIDDEN_CODE
 
 
-def url(user_id):
-  return '%s/%s' % (USER_LIST_URL, user_id)
-
-
-def get_user_dict(name, password, group_id):
+def get_user_data(name=None, password=None, group_id=None):
   return {NAME_FIELD: name, PASSWORD_FIELD: password, GROUP_FIELD: group_id}
 
 
-class UserViewTest(TestCase):
-  fixtures = ["user_view_test.json"]
+class UserViewTest(DetailViewTestCase):
+  def test_should_get_succeed(self):
+    self.should_get_by_id_succeed(USER_LIST_URL, User, self.reader_user.pk, token=self.admin_user.token)
 
-  def send_put_request(self, user_id, data_dict, token=None):
-    return self.client.put(url(user_id),
-                           data=json.dumps(data_dict),
-                           HTTP_AUTHORIZATION='Bearer %s' % token,
-                           content_type="application/json")
-
-  def setUp(self):
-    user = User.objects.get(pk=2)
-    self.token = generate_token(user)
-
-  # GET
-  def test_should_get_success(self):
-    user_id = 1
-    response = self.client.get(url(user_id), HTTP_AUTHORIZATION='Bearer %s' % self.token)
-    self.assertEquals(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    user = User.objects.get(pk=1)
-    self.assertEquals(user.pk, data[ID_FIELD])
-    self.assertEquals(user.name, data[NAME_FIELD])
-    self.assertEquals(user.group.id, data[GROUP_FIELD])
-    self.assertEquals(user.email, data[EMAIL_FIELD])
-
-  def test_should_get_not_found(self):
-    user_id = 10
-    response = self.client.get(url(user_id), HTTP_AUTHORIZATION='Bearer %s' % self.token)
-    self.assertEquals(response.status_code, NOT_FOUND_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(User))
-
-  def test_should_get_admin_required(self):
-    user_id = 1
-    response = self.client.get(url(user_id), HTTP_AUTHORIZATION='invalid')
+  def test_should_get_require_role(self):
+    url = '{0}/{1}'.format(USER_LIST_URL, self.manager_user.pk)
+    response = self.client.get(url, HTTP_AUTHORIZATION='Bearer {0}'.format(self.reader_user.token))
     self.assertEquals(response.status_code, FORBIDDEN_CODE)
 
-  # PUT
-  def test_should_update_success(self):
-    user_id = 1
-    user_dict = get_user_dict(name=NEW_NAME,
-                              password=VALID_PASSWORD,
-                              group_id=3)
-    response = self.send_put_request(user_id=user_id, data_dict=user_dict, token=self.token)
-    self.assertEquals(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEquals(data[NAME_FIELD], user_dict[NAME_FIELD])
-    self.assertEquals(data[GROUP_FIELD], user_dict[GROUP_FIELD])
+  def test_should_get_with_exclude_succeed(self):
+    url = '{0}/{1}?exclude=["email"]'.format(USER_LIST_URL, self.manager_user.pk)
+    expected = self.manager_user.serialize(exclude=['email'])
+    self.should_get_succeed(url, expected, token=self.manager_user.token)
 
-  def test_should_throw_update_no_user_with_id(self):
-    user_id = 10
-    user_dict = get_user_dict(name=NEW_NAME,
-                              password=VALID_PASSWORD,
-                              group_id=3)
-    response = self.send_put_request(user_id=user_id, data_dict=user_dict, token=self.token)
-    self.assertEquals(response.status_code, NOT_FOUND_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(User))
+  def test_should_get_with_serialized_field_succeed(self):
+    url = '{0}/{1}?serialize=["group"]'.format(USER_LIST_URL, self.manager_user.pk)
+    expected = self.manager_user.serialize(serialize=['group'])
+    self.should_get_succeed(url, expected, token=self.manager_user.token)
 
-  def test_should_throw_invalid_password_format(self):
-    user_id = 1
-    user_dict = get_user_dict(name=NEW_NAME,
-                              password=INVALID_FORMAT_PASSWORD,
-                              group_id=3)
-    response = self.send_put_request(user_id=user_id, data_dict=user_dict, token=self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[PASSWORD_FIELD][0], NOT_VALID_PASSWORD_ERR)
+  def test_should_put_succeed(self):
+    user = self.reader_user
+    data = get_user_data('New reader name', 'Passw0rd', 'reader')
+    expected = data.copy()
+    expected[EMAIL_FIELD] = user.email
+    expected[ID_FIELD] = self.reader_user.pk
+    del expected[PASSWORD_FIELD]
+    url = '{0}/{1}'.format(USER_LIST_URL, user.pk)
+    self.should_put_succeed(url, data, self.admin_user.token, expected)
 
-  def test_should_throw_no_group_with_id(self):
-    user_id = 1
-    user_dict = get_user_dict(name=NEW_NAME,
-                              password=VALID_PASSWORD,
-                              group_id=22)
-    response = self.send_put_request(user_id=user_id, data_dict=user_dict, token=self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GLOBAL_ERR_KEY][0], get_not_exist_msg(Group))
+  def test_should_put_require_auth(self):
+    user = self.reader_user
+    url = '{0}/{1}'.format(USER_LIST_URL, user.pk)
+    self.should_put_require_auth(url)
 
-  def test_should_throw_update_no_values(self):
-    user_id = 1
-    response = self.send_put_request(user_id=user_id, data_dict={}, token=self.token)
-    self.assertEquals(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GROUP_FIELD][0], get_field_empty_msg(GROUP_FIELD))
-    self.assertEquals(data[NAME_FIELD][0], get_field_empty_msg(NAME_FIELD))
-    self.assertEquals(data[PASSWORD_FIELD][0], get_field_empty_msg(PASSWORD_FIELD))
+  def test_should_post_require_role(self):
+    user = self.reader_user
+    url = '{0}/{1}'.format(USER_LIST_URL, user.pk)
+    self.should_put_require_role(url, self.reader_user.token)
 
-  def test_should_throw_update_admin_required(self):
-    user_id = 1
-    user_dict = get_user_dict(name=NEW_NAME,
-                              password=VALID_PASSWORD,
-                              group_id=3)
-    response = self.send_put_request(user_id=user_id, data_dict=user_dict)
-    self.assertEquals(response.status_code, FORBIDDEN_CODE)
+  def test_should_put_null_values(self):
+    data = get_user_data()
+    expected_content = {
+      NAME_FIELD: ['errors.user.name.mustNotBeNull'],
+      PASSWORD_FIELD: ['errors.user.password.mustNotBeNull'],
+      GROUP_FIELD: ['errors.user.group.mustNotBeNull']
+    }
+    url = '{0}/{1}'.format(USER_LIST_URL, self.reader_user.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  # DELETE
-  def test_should_delete_success(self):
-    user_id = 1
-    response = self.client.delete(url(user_id), HTTP_AUTHORIZATION='Bearer %s' % self.token)
-    self.assertEquals(response.status_code, OK_CODE)
+  def test_should_put_empty_values(self):
+    data = get_user_data('', '', '')
+    expected_content = {
+      NAME_FIELD: ['errors.user.name.mustNotBeEmpty'],
+      PASSWORD_FIELD: ['errors.user.password.regex'],
+      GROUP_FIELD: ['errors.user.group.mustNotBeEmpty']
+    }
+    url = '{0}/{1}'.format(USER_LIST_URL, self.reader_user.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_throw_delete_no_user_with_id(self):
-    user_id = 12
-    response = self.client.delete(url(user_id), HTTP_AUTHORIZATION='Bearer %s' % self.token)
-    self.assertEquals(response.status_code, NOT_FOUND_CODE)
+  def test_should_put_invalid_values(self):
+    data = get_user_data('Name', 'wrong password', 'reader')
+    expected_content = {
+      PASSWORD_FIELD: ['errors.user.password.regex'],
+    }
+    url = '{0}/{1}'.format(USER_LIST_URL, self.reader_user.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_throw_delete_admin_required(self):
-    user_id = 1
-    response = self.client.delete(url(user_id), HTTP_AUTHORIZATION='invalid')
-    self.assertEquals(response.status_code, FORBIDDEN_CODE)
+  def test_should_post_invalid_group(self):
+    data = get_user_data('Name', 'Passw0rd', 'invalid group')
+    expected_content = {
+      GLOBAL_ERR_KEY: [get_not_exist_msg(Group)],
+    }
+    url = '{0}/{1}'.format(USER_LIST_URL, self.reader_user.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)

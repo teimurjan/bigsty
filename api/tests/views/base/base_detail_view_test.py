@@ -10,10 +10,11 @@ from api.utils.http_constants import OK_CODE, FORBIDDEN_CODE, UNAUTHROZIED_CODE,
 
 
 class DetailViewTestCase(ViewTestCase):
-  def should_get_by_id_succeed(self, list_url: str, Model: Type[SerializableModel], model_id: int) -> None:
+  def should_get_by_id_succeed(self, list_url: str, Model: Type[SerializableModel],
+                               model_id: int, token: str = None) -> None:
     expected = Model.objects.get(pk=model_id).serialize()
     url = '{0}/{1}'.format(list_url, model_id)
-    self.should_get_succeed(url, expected)
+    self.should_get_succeed(url, expected, token)
 
   def should_get_by_id_fail(self, list_url: str, Model: Type[SerializableModel], model_id: int) -> None:
     url = '{0}/{1}'.format(list_url, model_id)
