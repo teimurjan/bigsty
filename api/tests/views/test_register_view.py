@@ -4,15 +4,12 @@ import re
 import jwt
 from django.core import mail
 
-from api.tests.views.base.base_list_view_test import ListViewTestCase
 from api.tests.views.base.base_view_test import ViewTestCase
 from api.tests.views.constants import REGISTER_URL
 from api.utils.errors.error_constants import SAME_EMAIL_ERR
 from api.utils.form_fields import EMAIL_FIELD, PASSWORD_FIELD, NAME_FIELD, TOKEN_KEY, GROUP_FIELD, ID_FIELD
 from api.utils.http_constants import OK_CODE, BAD_REQUEST_CODE
 from main.settings import SECRET_KEY
-
-VALID_NOT_EXISTING_EMAIL = "test1@test.test"
 
 
 def get_data(name=None, email=None, password=None):

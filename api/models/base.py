@@ -70,19 +70,24 @@ class SerializableModel(Model):
 
 
 class IntlModel(Model):
-  def _add_intl_texts(self, texts: Dict[str, str], TextModel: Type[IntlText]) -> None:
+  def _add_intl_texts(self, texts: Dict[str, str], text_model_cls: Type[IntlText]) -> None:
     for language_pk, name in texts.items():
       language = Language.objects.filter(pk=language_pk)
       if not language.exists(): continue
-      TextModel.objects.create(owner=self, value=name, language=language[0])
+      text_model_cls.objects.create(owner=self, value=name, language=language[0])
 
-  def _update_intl_texts(self, texts: Dict[str, str], TextModel: Type[IntlText]) -> None:
+  def _update_intl_texts(self, texts: Dict[str, str], text_model_cls: Type[IntlText]) -> None:
     for language_pk, name in texts.items():
       language = Language.objects.filter(pk=language_pk)
       if not language.exists(): continue
-      text_model = TextModel.objects.get(owner=self, language=language[0])
+      text_model = text_model_cls.objects.get(owner=self, language=language[0])
       text_model.value = name
       text_model.save()
+
+  @staticmethod
+  def _get_by_intl_value(value: str, language: Type[Language],
+                         text_model_cls: Type[IntlText]):
+    return text_model_cls.objects.filter(value=value, language=language)
 
   class Meta:
     abstract = True

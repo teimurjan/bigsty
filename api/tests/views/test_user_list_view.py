@@ -11,9 +11,6 @@ def get_user_dict(name=None, email=None, password=None, group_id=None):
   return {NAME_FIELD: name, EMAIL_FIELD: email, PASSWORD_FIELD: password, GROUP_FIELD: group_id}
 
 
-VALID_EMAIL = 'test@test.test'
-
-
 def get_user_data(name=None, email=None, password=None, group=None):
   return {NAME_FIELD: name, EMAIL_FIELD: email, PASSWORD_FIELD: password, GROUP_FIELD: group}
 

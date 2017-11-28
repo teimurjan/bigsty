@@ -30,6 +30,18 @@ class ProductType(SerializableModel, IntlModel):
     self._add_intl_texts(descriptions, ProductTypeDescription)
     return self
 
+  def update_names(self, names: dict):
+    self._update_intl_texts(names, ProductTypeName)
+    return self
+
+  def update_short_descriptions(self, short_descriptions: dict):
+    self._update_intl_texts(short_descriptions, ProductTypeShortDescription)
+    return self
+
+  def update_descriptions(self, descriptions: dict):
+    self._update_intl_texts(descriptions, ProductTypeDescription)
+    return self
+
   def _get_field_value(self, field_name):
     if field_name == 'image':
       return self.image.url if self.image else None
