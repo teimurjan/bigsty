@@ -30,7 +30,9 @@ class Product(SerializableModel):
       if isinstance(image, str):
         new_images.append(image)
       elif isinstance(image, dict):
-        old_images.add(image[ID_FIELD])
+        image_id = image[ID_FIELD]
+        ProductImage.objects.get(id=image_id)
+        old_images.add(image_id)
     converted_images = [base64_to_image(i, self.product_type.__str__()) for i in new_images]
     deleted_images = {i.pk for i in self.images.all()} - old_images
     ProductImage.objects.filter(id__in=deleted_images).delete()

@@ -174,3 +174,14 @@ class ProductTypeViewTest(DetailViewTestCase):
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
     url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
+
+  def test_should_delete_succeed(self):
+    product_type = ProductType.objects.all()[0]
+    self.should_delete_succeed(PRODUCT_TYPE_LIST_URL, product_type.pk, self.manager_user.token)
+
+  def test_should_delete_require_role(self):
+    product_type = ProductType.objects.all()[0]
+    self.should_delete_require_role(PRODUCT_TYPE_LIST_URL, product_type.pk, self.reader_user.token)
+
+  def test_should_delete_not_found(self):
+    self.should_delete_not_found(PRODUCT_TYPE_LIST_URL, ProductType, 999, self.manager_user.token)

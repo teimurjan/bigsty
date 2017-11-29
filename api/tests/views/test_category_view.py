@@ -107,4 +107,13 @@ class CategoryViewTest(DetailViewTestCase):
       GLOBAL_ERR_KEY: [get_not_exist_msg(Category)]
     }, expected_code=NOT_FOUND_CODE)
 
+  def test_should_delete_succeed(self):
+    category = Category.objects.all()[0]
+    self.should_delete_succeed(CATEGORY_LIST_URL, category.pk, self.manager_user.token)
 
+  def test_should_delete_require_role(self):
+    category = Category.objects.all()[0]
+    self.should_delete_require_role(CATEGORY_LIST_URL, category.pk, self.reader_user.token)
+
+  def test_should_delete_not_found(self):
+    self.should_delete_not_found(CATEGORY_LIST_URL, Category, 999, self.manager_user.token)

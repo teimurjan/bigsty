@@ -95,3 +95,14 @@ class FeatureTypeViewTest(DetailViewTestCase):
     self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
       GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]
     }, expected_code=NOT_FOUND_CODE)
+
+  def test_should_delete_succeed(self):
+    feature_type = FeatureType.objects.all()[0]
+    self.should_delete_succeed(FEATURE_TYPE_LIST_URL, feature_type.pk, self.manager_user.token)
+
+  def test_should_delete_require_role(self):
+    feature_type = FeatureType.objects.all()[0]
+    self.should_delete_require_role(FEATURE_TYPE_LIST_URL, feature_type.pk, self.reader_user.token)
+
+  def test_should_delete_not_found(self):
+    self.should_delete_not_found(FEATURE_TYPE_LIST_URL, FeatureType, 999, self.manager_user.token)

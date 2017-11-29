@@ -85,3 +85,14 @@ class UserViewTest(DetailViewTestCase):
     }
     url = '{0}/{1}'.format(USER_LIST_URL, self.reader_user.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
+
+  def test_should_delete_succeed(self):
+    user = User.objects.all()[0]
+    self.should_delete_succeed(USER_LIST_URL, user.pk, self.admin_user.token)
+
+  def test_should_delete_require_role(self):
+    user = User.objects.all()[0]
+    self.should_delete_require_role(USER_LIST_URL, user.pk, self.reader_user.token)
+
+  def test_should_delete_not_found(self):
+    self.should_delete_not_found(USER_LIST_URL, User, 999, self.admin_user.token)

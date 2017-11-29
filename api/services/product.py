@@ -34,6 +34,8 @@ class ProductService(DetailService):
       return JsonResponseBadRequest(['Invalid feature values'])
     except FeatureValue.DoesNotExist:
       return JsonResponseBadRequest([get_not_exist_msg(FeatureValue)])
+    except ProductImage.DoesNotExist:
+      return JsonResponseBadRequest([get_not_exist_msg(ProductImage)])
     except Base64ToImageConversionException:
       return JsonResponseBadRequest(key=IMAGES_FIELD, err=['errors.product.images.notValidFormat'])
 

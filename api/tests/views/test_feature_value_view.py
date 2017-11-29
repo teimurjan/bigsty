@@ -99,3 +99,14 @@ class FeatureValueViewTest(DetailViewTestCase):
     url = '{0}/{1}'.format(FEATURE_VALUE_LIST_URL, 999)
     self.should_put_fail(url, data=data, expected_content=expected_content,
                          token=self.admin_user.token, expected_code=NOT_FOUND_CODE)
+
+  def test_should_delete_succeed(self):
+    feature_value = FeatureValue.objects.all()[0]
+    self.should_delete_succeed(FEATURE_VALUE_LIST_URL, feature_value.pk, self.manager_user.token)
+
+  def test_should_delete_require_role(self):
+    feature_value = FeatureValue.objects.all()[0]
+    self.should_delete_require_role(FEATURE_VALUE_LIST_URL, feature_value.pk, self.reader_user.token)
+
+  def test_should_delete_not_found(self):
+    self.should_delete_not_found(FEATURE_VALUE_LIST_URL, FeatureValue, 999, self.manager_user.token)
