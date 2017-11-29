@@ -49,7 +49,7 @@ class Product(SerializableModel):
 
 
 class ProductImage(SerializableModel):
-  file = models.FileField(upload_to="store/static/images/products/")
+  file = models.FileField(upload_to="products")
   product = models.ForeignKey(Product, related_name="images", related_query_name='image', on_delete=models.CASCADE)
 
   def _get_field_value(self, field_name):
