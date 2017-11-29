@@ -28,6 +28,10 @@ def get_image(extension='jpg'):
 class ProductTypeViewTest(DetailViewTestCase):
   _fixtures = DetailViewTestCase._fixtures + [ProductTypeViewFixture]
 
+  def setUp(self):
+    self.phone_category_id = Category.objects.filter(name__value='Phone')[0].id
+    self.laptop_category_id = Category.objects.filter(name__value='Laptop')[0].id
+
   def test_should_get_success(self):
     product_type = ProductType.objects.all()[0]
     self.should_get_by_id_succeed(PRODUCT_TYPE_LIST_URL, ProductType, product_type.pk)
@@ -110,7 +114,7 @@ class ProductTypeViewTest(DetailViewTestCase):
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
     data = get_data(get_intl_texts(''), get_intl_texts(''),
                     get_intl_texts(''), feature_values=[1, 2, 3, 4, 5],
-                    category=1, image=get_image())
+                    category=self.phone_category_id, image=get_image())
     expected_content = {
       NAME_FIELD: get_intl_texts_errors('productType', error='mustNotBeEmpty', field='name'),
       DESCRIPTION_FIELD: get_intl_texts_errors('productType', error='mustNotBeEmpty', field='description'),
@@ -122,7 +126,7 @@ class ProductTypeViewTest(DetailViewTestCase):
   def test_should_put_too_long_values(self):
     data = get_data(get_intl_texts('a' * 31), get_intl_texts('a' * 1001),
                     get_intl_texts('a' * 301), feature_values=[1, 2, 3, 4, 5, 6],
-                    category=1, image=get_image())
+                    category=self.phone_category_id, image=get_image())
     expected_content = {
       NAME_FIELD: get_intl_texts_errors('productType', error='maxLength', field='name'),
       DESCRIPTION_FIELD: get_intl_texts_errors('productType', error='maxLength', field='description'),
@@ -143,26 +147,29 @@ class ProductTypeViewTest(DetailViewTestCase):
 
   def test_should_put_no_such_feature_value(self):
     data = get_data(get_intl_texts('New Iphone 7 Name'), get_intl_texts('New Iphone 7 Description'),
-                    get_intl_texts('New Iphone 7 Short Description'), feature_values=[1, 2, 3, 4, 5, 999],
-                    category=1, image=get_image())
+                    get_intl_texts('New Iphone 7 Short Description'), feature_values=[999],
+                    category=self.phone_category_id, image=get_image())
     expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
     url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
   def test_should_put_invalid_image(self):
-    data = get_data(get_intl_texts('New Iphone 7 Name'), get_intl_texts('New Iphone 7 Description'),
-                    get_intl_texts('New Iphone 7 Short Description'), feature_values=[1, 2, 3, 4, 5, 6],
-                    category=1, image='invalid')
-    expected_content = {GLOBAL_ERR_KEY: [NOT_VALID_IMAGE]}
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
+    feature_values_ids = [i.pk for i in product_type.feature_values.all()]
+    data = get_data(get_intl_texts('New Iphone 7 Name'), get_intl_texts('New Iphone 7 Description'),
+                    get_intl_texts('New Iphone 7 Short Description'), feature_values=feature_values_ids,
+                    category=self.phone_category_id, image='invalid')
+    expected_content = {GLOBAL_ERR_KEY: [NOT_VALID_IMAGE]}
     url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
   def test_should_post_invalid_feature_values(self):
+    product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
+    feature_values_ids = [i.pk for i in product_type.feature_values.all()]
     data = get_data(get_intl_texts('Macbook Pro'), get_intl_texts('Macbook Pro Description'),
-                    get_intl_texts('Macbook Pro Short Description'), feature_values=[1, 2, 3, 4, 5, 6],
-                    category=2, image=get_image())
+                    get_intl_texts('Macbook Pro Short Description'), feature_values=feature_values_ids,
+                    category=self.laptop_category_id, image=get_image())
     expected_content = {GLOBAL_ERR_KEY: ['Invalid feature values']}
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
     url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)

@@ -32,7 +32,7 @@ class ListViewTestCase(ViewTestCase):
     self.assertEquals(response.status_code, OK_CODE)
     response_data = json.loads(response.content.decode())[DATA_KEY]
     for k, v in expected.items():
-      self.assertEquals(response_data[k], v)
+      self.assertEqual(response_data[k], v)
     return response_data
 
   def should_post_require_role(self, url: str, token):

@@ -12,7 +12,7 @@ class ProductView(DetailView):
       PRODUCT_TYPE_FIELD: {REQUIRED: True},
       IMAGES_FIELD: {REQUIRED: True},
       PRICE_FIELD: {REQUIRED: True, MIN_VALUE: 1},
-      DISCOUNT_FIELD: {REQUIRED: True, BETWEEN: (1, 99)},
+      DISCOUNT_FIELD: {REQUIRED: True, BETWEEN: (-1, 100)},
       QUANTITY_FIELD: {REQUIRED: True, MIN_VALUE: 0},
       FEATURE_VALUES_FIELD: {REQUIRED: True},
     }
@@ -25,7 +25,7 @@ class ProductListView(ListView):
       PRODUCT_TYPE_FIELD: {REQUIRED: True},
       IMAGES_FIELD: {REQUIRED: True},
       PRICE_FIELD: {REQUIRED: True, MIN_VALUE: 1},
-      DISCOUNT_FIELD: {REQUIRED: True, BETWEEN: (0, 100)},
+      DISCOUNT_FIELD: {REQUIRED: True, BETWEEN: (-1, 100)},
       QUANTITY_FIELD: {REQUIRED: True, MIN_VALUE: 0},
       FEATURE_VALUES_FIELD: {REQUIRED: True},
     }

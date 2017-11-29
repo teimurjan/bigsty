@@ -11,12 +11,15 @@ from api.utils.form_fields import NAME_FIELD, FEATURE_TYPE_FIELD
 class FeatureValueListViewTest(ListViewTestCase):
   _fixtures = ListViewTestCase._fixtures + [FeatureValueListViewFixture]
 
+  def setUp(self):
+    self.color_ft = FeatureType.objects.filter(name__value='Color')[0]
+
   def test_should_get_succeed(self):
     self.should_get_all_succeed(FEATURE_VALUE_LIST_URL, FeatureValue)
 
   def test_should_get_with_filter_succeed(self):
-    url = '{0}?feature_type__in=[1]'.format(FEATURE_VALUE_LIST_URL)
-    self.should_get_succeed_with_filter(url, FeatureValue, {'feature_type__in': [1]})
+    url = '{0}?feature_type__in=[{1}]'.format(FEATURE_VALUE_LIST_URL, self.color_ft.id)
+    self.should_get_succeed_with_filter(url, FeatureValue, {'feature_type__in': [self.color_ft.id]})
 
   def test_should_get_with_exclude_succeed(self):
     url = '{0}?exclude=["names"]'.format(FEATURE_VALUE_LIST_URL)
@@ -28,8 +31,8 @@ class FeatureValueListViewTest(ListViewTestCase):
 
   def test_should_post_succeed(self):
     name = 'Test Feature Value'
-    data = {NAME_FIELD: get_intl_texts(name), FEATURE_TYPE_FIELD: 1}
-    expected = {NAME_FIELD: name, FEATURE_TYPE_FIELD: 1}
+    data = {NAME_FIELD: get_intl_texts(name), FEATURE_TYPE_FIELD: self.color_ft.id}
+    expected = {NAME_FIELD: name, FEATURE_TYPE_FIELD: self.color_ft.id}
     self.should_post_succeed(FEATURE_VALUE_LIST_URL, data, self.admin_user.token, expected)
 
   def test_should_post_require_auth(self):
@@ -57,7 +60,7 @@ class FeatureValueListViewTest(ListViewTestCase):
     self.should_post_fail_when_no_data_sent(FEATURE_VALUE_LIST_URL, self.admin_user.token)
 
   def test_should_post_throws_invalid_length(self):
-    data = {NAME_FIELD: get_intl_texts('a' * 31), FEATURE_TYPE_FIELD: 1}
+    data = {NAME_FIELD: get_intl_texts('a' * 31), FEATURE_TYPE_FIELD: self.color_ft.id}
     expected_content = {
       NAME_FIELD: get_intl_texts_errors('featureValues', 'maxLength'),
     }

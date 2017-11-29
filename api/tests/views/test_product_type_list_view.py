@@ -27,12 +27,23 @@ def get_image(extension='jpg') -> str:
 class ProductTypeListViewTest(ListViewTestCase):
   _fixtures = ListViewTestCase._fixtures + [ProductTypeListViewFixture]
 
+  def setUp(self):
+    self.phone_category_id = Category.objects.filter(name__value="Phone")[0].id
+    self.laptop_category_id = Category.objects.filter(name__value="Laptop")[0].id
+    self.feature_values_ids = [FeatureValue.objects.filter(name__value='Black')[0].id,
+                               FeatureValue.objects.filter(name__value='White')[0].id,
+                               FeatureValue.objects.filter(name__value='Gold')[0].id,
+                               FeatureValue.objects.filter(name__value='64GB')[0].id,
+                               FeatureValue.objects.filter(name__value='128GB')[0].id,
+                               FeatureValue.objects.filter(name__value='256GB')[0].id]
+
   def test_should_get_success(self):
     self.should_get_all_succeed(PRODUCT_TYPE_LIST_URL, ProductType)
 
   def test_should_get_with_filter_succeed(self):
-    url = '{0}?feature_value__in=[1]'.format(PRODUCT_TYPE_LIST_URL)
-    self.should_get_succeed_with_filter(url, ProductType, {'feature_value__in': [1]})
+    feature_values_id = self.feature_values_ids[0]
+    url = '{0}?feature_value__in=[{1}]'.format(PRODUCT_TYPE_LIST_URL, feature_values_id)
+    self.should_get_succeed_with_filter(url, ProductType, {'feature_value__in': [feature_values_id]})
 
   def test_should_get_with_exclude_succeed(self):
     url = '{0}?exclude=["names"]'.format(PRODUCT_TYPE_LIST_URL)
@@ -47,8 +58,8 @@ class ProductTypeListViewTest(ListViewTestCase):
     en_description = 'Iphone 8 Description'
     en_short_description = 'Iphone 8 Short Description'
     data = get_data(get_intl_texts(en_name), get_intl_texts(en_description),
-                    get_intl_texts(en_short_description), feature_values=[1, 2, 3, 4, 5, 6],
-                    category=1, image=get_image())
+                    get_intl_texts(en_short_description), feature_values=self.feature_values_ids,
+                    category=self.phone_category_id, image=get_image())
     expected = data.copy()
     del expected[IMAGE_FIELD]
     expected[NAME_FIELD] = en_name
@@ -62,8 +73,8 @@ class ProductTypeListViewTest(ListViewTestCase):
     en_description = 'Iphone 8 Description'
     en_short_description = 'Iphone 8 Short Description'
     data = get_data(get_intl_texts(en_name), get_intl_texts(en_description),
-                    get_intl_texts(en_short_description), feature_values=[1, 2, 3, 4, 5, 6],
-                    category=1, image=get_image())
+                    get_intl_texts(en_short_description), feature_values=self.feature_values_ids,
+                    category=self.phone_category_id, image=get_image())
     expected = data.copy()
     del expected[IMAGE_FIELD], expected[CATEGORY_FIELD]
     expected[NAME_FIELD] = en_name
@@ -95,8 +106,8 @@ class ProductTypeListViewTest(ListViewTestCase):
 
   def test_should_post_empty_values(self):
     data = get_data(get_intl_texts(''), get_intl_texts(''),
-                    get_intl_texts(''), feature_values=[1, 2, 3, 4, 5, 6],
-                    category=1, image=get_image())
+                    get_intl_texts(''), feature_values=self.feature_values_ids,
+                    category=self.phone_category_id, image=get_image())
     expected_content = {
       NAME_FIELD: get_intl_texts_errors('productTypes', error='mustNotBeEmpty', field='name'),
       DESCRIPTION_FIELD: get_intl_texts_errors('productTypes', error='mustNotBeEmpty', field='description'),
@@ -107,7 +118,7 @@ class ProductTypeListViewTest(ListViewTestCase):
 
   def test_should_post_too_long_values(self):
     data = get_data(get_intl_texts('a' * 31), get_intl_texts('a' * 1001),
-                    get_intl_texts('a'*301), feature_values=[1, 2, 3, 4, 5, 6],
+                    get_intl_texts('a' * 301), feature_values=self.feature_values_ids,
                     category=1, image=get_image())
     expected_content = {
       NAME_FIELD: get_intl_texts_errors('productTypes', error='maxLength', field='name'),
@@ -119,7 +130,7 @@ class ProductTypeListViewTest(ListViewTestCase):
 
   def test_should_post_no_such_category(self):
     data = get_data(get_intl_texts('Iphone 8'), get_intl_texts('Iphone 8 Description'),
-                    get_intl_texts('Iphone 8 Short Description'), feature_values=[1, 2, 3, 4, 5, 6],
+                    get_intl_texts('Iphone 8 Short Description'), feature_values=self.feature_values_ids,
                     category=999, image=get_image())
     expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(Category)]}
     self.should_post_fail(PRODUCT_TYPE_LIST_URL, data=data, expected_content=expected_content,
@@ -127,24 +138,24 @@ class ProductTypeListViewTest(ListViewTestCase):
 
   def test_should_post_no_such_feature_value(self):
     data = get_data(get_intl_texts('Iphone 8'), get_intl_texts('Iphone 8 Description'),
-                    get_intl_texts('Iphone 8 Short Description'), feature_values=[1, 2, 3, 4, 5, 999],
-                    category=1, image=get_image())
+                    get_intl_texts('Iphone 8 Short Description'), feature_values=[999],
+                    category=self.phone_category_id, image=get_image())
     expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}
     self.should_post_fail(PRODUCT_TYPE_LIST_URL, data=data, expected_content=expected_content,
                           token=self.admin_user.token)
 
   def test_should_post_invalid_image(self):
     data = get_data(get_intl_texts('Iphone 8'), get_intl_texts('Iphone 8 Description'),
-                    get_intl_texts('Iphone 8 Short Description'), feature_values=[1, 2, 3, 4, 5, 6],
-                    category=1, image='invalid')
+                    get_intl_texts('Iphone 8 Short Description'), feature_values=self.feature_values_ids,
+                    category=self.phone_category_id, image='invalid')
     expected_content = {GLOBAL_ERR_KEY: [NOT_VALID_IMAGE]}
     self.should_post_fail(PRODUCT_TYPE_LIST_URL, data=data, expected_content=expected_content,
                           token=self.admin_user.token)
 
   def test_should_post_invalid_feature_values(self):
     data = get_data(get_intl_texts('Macbook Pro'), get_intl_texts('Macbook Pro Description'),
-                    get_intl_texts('Macbook Pro Short Description'), feature_values=[1, 2, 3, 4, 5, 6],
-                    category=2, image=get_image())
+                    get_intl_texts('Macbook Pro Short Description'), feature_values=self.feature_values_ids,
+                    category=self.laptop_category_id, image=get_image())
     expected_content = {GLOBAL_ERR_KEY: ['Invalid feature values']}
     self.should_post_fail(PRODUCT_TYPE_LIST_URL, data=data, expected_content=expected_content,
                           token=self.admin_user.token)

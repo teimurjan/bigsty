@@ -35,7 +35,7 @@ class SerializableModel(Model):
     return serialized
 
   def __get_many_items(self, field_name: str) -> List:
-    related_items = getattr(self, field_name).all()
+    related_items = getattr(self, field_name).order_by('id')
     if field_name in self.serialize_:
       return [related_item.serialize(self.language) for related_item in related_items]
     return [related_item.pk for related_item in related_items]
@@ -83,11 +83,6 @@ class IntlModel(Model):
       text_model = text_model_cls.objects.get(owner=self, language=language[0])
       text_model.value = name
       text_model.save()
-
-  @staticmethod
-  def _get_by_intl_value(value: str, language: Type[Language],
-                         text_model_cls: Type[IntlText]):
-    return text_model_cls.objects.filter(value=value, language=language)
 
   class Meta:
     abstract = True

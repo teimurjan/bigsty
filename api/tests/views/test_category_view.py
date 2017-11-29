@@ -1,14 +1,14 @@
 from typing import Dict, List
 
-from api.models import User, Category, FeatureType
+from api.models import Category, FeatureType
 from api.tests.views.base.base_detail_view_test import DetailViewTestCase
 from api.tests.views.constants import CATEGORY_LIST_URL
 from api.tests.views.fixtures.category_view_fixture import CategoryViewFixture
 from api.tests.views.utils import get_intl_texts, get_intl_texts_errors
-from api.utils.errors.error_constants import GLOBAL_ERR_KEY, SAME_CATEGORY_NAME_ERR
-from api.utils.errors.error_messages import get_not_exist_msg, get_field_empty_msg
-from api.utils.form_fields import DATA_KEY, NAME_FIELD, FEATURE_TYPES_FIELD
-from api.utils.http_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE
+from api.utils.errors.error_constants import GLOBAL_ERR_KEY
+from api.utils.errors.error_messages import get_not_exist_msg
+from api.utils.form_fields import NAME_FIELD, FEATURE_TYPES_FIELD
+from api.utils.http_constants import NOT_FOUND_CODE
 
 
 def get_data(name: Dict[str, str] = None, feature_types_ids: List[int] = None):

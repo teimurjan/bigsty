@@ -1,189 +1,139 @@
 import base64
-import json
-
 import os
-from django.test import TestCase
 
-from api.models import User, Product, ProductType, FeatureValue
-from api.services import generate_token
+from api.models import Product, ProductType, FeatureValue
+from api.tests.views.base.base_detail_view_test import DetailViewTestCase
 from api.tests.views.constants import PRODUCT_LIST_URL
-from api.utils.errors.error_constants import NO_DATA_ERR, GLOBAL_ERR_KEY, PRICE_VALUE_ERR, DISCOUNT_VALUE_ERR, \
-  QUANTITY_VALUE_ERR, PRICE_NOT_INT_ERR, DISCOUNT_NOT_INT_ERR, QUANTITY_NOT_INT_ERR, INVALID_FEATURE_TYPE_ID_ERR, \
-  NOT_VALID_IMAGE
-from api.utils.errors.error_messages import get_field_empty_msg, get_not_exist_msg
-from api.utils.form_fields import DATA_KEY, IMAGES_FIELD, QUANTITY_FIELD, PRICE_FIELD, DISCOUNT_FIELD, \
+from api.tests.views.fixtures.product_view_fixture import ProductViewFixture
+from api.utils.errors.error_constants import GLOBAL_ERR_KEY
+from api.utils.errors.error_messages import get_not_exist_msg
+from api.utils.form_fields import IMAGES_FIELD, QUANTITY_FIELD, PRICE_FIELD, DISCOUNT_FIELD, \
   PRODUCT_TYPE_FIELD, FEATURE_VALUES_FIELD
-from api.utils.http_constants import OK_CODE, NOT_FOUND_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE
-
-VALID_DISCOUNT = 10
-VALID_PRICE = 100
-VALID_QUANTITY = 5
-
-INVALID_DISCOUNT = 150
-INVALID_PRICE = -VALID_PRICE
-INVALID_QUANTITY = -VALID_QUANTITY
 
 
-def url(product_id):
-  return '%s/%s' % (PRODUCT_LIST_URL, product_id)
-
-
-def get_product_dict(discount=None, price=None, quantity=None, product_type_id=None, feature_values_ids=None,
+def get_product_data(discount=None, price=None, quantity=None, product_type_id=None, feature_values_ids=None,
                      images=None):
   return {DISCOUNT_FIELD: discount, PRICE_FIELD: price, QUANTITY_FIELD: quantity, PRODUCT_TYPE_FIELD: product_type_id,
           FEATURE_VALUES_FIELD: feature_values_ids, IMAGES_FIELD: images}
 
 
-class ProductViewTest(TestCase):
-  fixtures = ['product_view_test.json']
+class ProductViewTest(DetailViewTestCase):
+  _fixtures = DetailViewTestCase._fixtures + [ProductViewFixture]
+
+  @classmethod
+  def setUpClass(cls):
+    super().setUpClass()
+    pwd = os.path.dirname(__file__)
+    cls.images = []
+    for i in range(1, 4):
+      with open('{0}/assets/products_images/{1}.jpg'.format(pwd, i), 'rb') as image:
+        cls.images.append('data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode())
+        image.close()
 
   def setUp(self):
-    user = User.objects.get(pk=1)
-    self.token = generate_token(user)
-
-    pwd = os.path.dirname(__file__)
-    self.images = []
-    for i in range(1, 4):
-      with open('%s/assets/products_images/%s.jpg' % (pwd, i), 'rb') as image:
-        self.images.append('data:image/jpg;base64,%s' % base64.b64encode(image.read()).decode())
-
-  def send_put_request(self, product_id, data_dict=None, token=None):
-    return self.client.put(url(product_id), json.dumps(data_dict), HTTP_AUTHORIZATION='Bearer %s' % token)
+    self.black_fv = FeatureValue.objects.filter(name__value='Black')[0]
+    self.white_fv = FeatureValue.objects.filter(name__value='White')[0]
+    self.gold_fv = FeatureValue.objects.filter(name__value='Gold')[0]
+    self.fv_64GB = FeatureValue.objects.filter(name__value='64GB')[0]
+    self.fv_128GB = FeatureValue.objects.filter(name__value='128GB')[0]
+    self.fv_512GB = FeatureValue.objects.filter(name__value='512GB')[0]
+    self.iphone7_pt = ProductType.objects.filter(name__value='Iphone 7')[0]
 
   def test_should_get_success(self):
-    product_id = 1
-    response = self.client.get(url(product_id))
-    self.assertEqual(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEqual(data, Product.objects.get(pk=product_id).dictify())
+    product = Product.objects.all()[0]
+    self.should_get_by_id_succeed(PRODUCT_LIST_URL, Product, product.pk)
 
-  def test_should_get_throws_not_found(self):
-    product_id = 11
-    response = self.client.get(url(product_id))
-    self.assertEqual(response.status_code, NOT_FOUND_CODE)
+  def test_should_get_with_exclude_and_serialize_succeed(self):
+    product = Product.objects.all()[0]
+    url = '{0}/{1}?exclude=["discount"]&serialize=["product_type"]'.format(PRODUCT_LIST_URL, product.pk)
+    expected = product.serialize(exclude=['discount'], serialize=["product_type"])
+    self.should_get_succeed(url, expected)
 
-  def test_should_update_success(self):
-    product_id = 1
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2,
-                                 feature_values_ids=[1, 2], images=self.images)
-    response = self.send_put_request(product_id, data_dict, self.token)
-    self.assertEqual(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
-    self.assertEqual(data_dict[DISCOUNT_FIELD], data[DISCOUNT_FIELD])
-    self.assertEqual(data_dict[PRICE_FIELD], data[PRICE_FIELD])
-    self.assertEqual(data_dict[QUANTITY_FIELD], data[QUANTITY_FIELD])
-    self.assertEqual(data_dict[PRODUCT_TYPE_FIELD], data[PRODUCT_TYPE_FIELD])
-    self.assertEqual(data_dict[FEATURE_VALUES_FIELD], data[FEATURE_VALUES_FIELD])
-    self.assertEqual(len(data_dict[IMAGES_FIELD]), len(data[IMAGES_FIELD]))
+  def test_should_put_succeed(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
+                            feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
+    product = Product.objects.all()[0]
+    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    expected = data.copy()
+    del expected[IMAGES_FIELD]
+    response_data = self.should_put_succeed(url, data, self.admin_user.token, expected)
+    self.assertEquals(len(response_data[IMAGES_FIELD]), len(self.images))
 
-  def test_should_update_throws_admin_required(self):
-    product_id = 1
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, 2, [1, 2], self.images)
-    response = self.send_put_request(product_id, data_dict)
-    self.assertEqual(response.status_code, FORBIDDEN_CODE)
+  def test_should_put_with_serialize_and_exclude(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
+                            feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
+    product = Product.objects.all()[0]
+    url = '{0}/{1}?exclude=["discount"]&serialize=["product_type"]'.format(PRODUCT_LIST_URL, product.pk)
+    expected = data.copy()
+    del expected[IMAGES_FIELD], expected[DISCOUNT_FIELD], expected[PRODUCT_TYPE_FIELD]
+    response_data = self.should_put_succeed(url, data, self.admin_user.token, expected)
+    self.assertEquals(len(response_data[IMAGES_FIELD]), len(self.images))
+    self.assertIsInstance(response_data[PRODUCT_TYPE_FIELD], dict)
 
-  def test_should_update_throw_not_found(self):
-    product_id = 11
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, 2, [1, 2], self.images)
-    response = self.send_put_request(product_id, data_dict, self.token)
-    self.assertEqual(response.status_code, NOT_FOUND_CODE)
+  def test_should_put_require_auth(self):
+    product = Product.objects.all()[0]
+    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    self.should_put_require_auth(url)
 
-  def test_should_update_throws_no_values(self):
-    product_id = 1
-    response = self.send_put_request(product_id, {}, self.token)
-    data = json.loads(response.content.decode())
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    self.assertEqual(data[DISCOUNT_FIELD][0], get_field_empty_msg(DISCOUNT_FIELD))
-    self.assertEqual(data[PRICE_FIELD][0], get_field_empty_msg(PRICE_FIELD))
-    self.assertEqual(data[QUANTITY_FIELD][0], get_field_empty_msg(QUANTITY_FIELD))
-    self.assertEqual(data[PRODUCT_TYPE_FIELD][0], get_field_empty_msg(PRODUCT_TYPE_FIELD))
-    self.assertEqual(data[FEATURE_VALUES_FIELD][0], get_field_empty_msg(FEATURE_VALUES_FIELD))
-    self.assertEqual(data[IMAGES_FIELD][0], get_field_empty_msg(IMAGES_FIELD))
+  def test_should_put_null_values(self):
+    data = get_product_data()
+    expected_content = {
+      FEATURE_VALUES_FIELD: ['errors.product.feature_values.mustNotBeNull'],
+      PRICE_FIELD: ['errors.product.price.mustNotBeNull'],
+      DISCOUNT_FIELD: ['errors.product.discount.mustNotBeNull'],
+      QUANTITY_FIELD: ['errors.product.quantity.mustNotBeNull'],
+      PRODUCT_TYPE_FIELD: ['errors.product.product_type.mustNotBeNull'],
+      IMAGES_FIELD: ['errors.product.images.mustNotBeNull'],
+    }
+    product = Product.objects.all()[0]
+    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_no_data(self):
-    product_id = 1
-    response = self.send_put_request(product_id, token=self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEquals(data[GLOBAL_ERR_KEY][0], NO_DATA_ERR)
+  def test_should_put_no_data(self):
+    product = Product.objects.all()[0]
+    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    self.should_put_fail_when_no_data_sent(url, self.admin_user.token)
 
-  def test_should_update_throws_invalid_values(self):
-    product_id = 1
-    data_dict = get_product_dict(INVALID_DISCOUNT, INVALID_PRICE, INVALID_QUANTITY, product_type_id=2,
-                                 feature_values_ids=[1, 2], images=self.images)
-    response = self.send_put_request(product_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[DISCOUNT_FIELD][0], DISCOUNT_VALUE_ERR)
-    self.assertEqual(data[PRICE_FIELD][0], PRICE_VALUE_ERR)
-    self.assertEqual(data[QUANTITY_FIELD][0], QUANTITY_VALUE_ERR)
+  def test_should_put_no_such_feature_value(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
+                            feature_values_ids=[self.gold_fv.id, 999], images=self.images)
+    expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}
+    product = Product.objects.all()[0]
+    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_not_int_value(self):
-    product_id = 1
-    data_dict = get_product_dict(discount='invalid', price='invalid', quantity='invalid', product_type_id=2,
-                                 feature_values_ids=[1, 2], images=self.images)
-    response = self.send_put_request(product_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[DISCOUNT_FIELD][0], DISCOUNT_NOT_INT_ERR)
-    self.assertEqual(data[PRICE_FIELD][0], PRICE_NOT_INT_ERR)
-    self.assertEqual(data[QUANTITY_FIELD][0], QUANTITY_NOT_INT_ERR)
+  def test_should_put_no_such_product_type(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=999,
+                            feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
+    expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}
+    product = Product.objects.all()[0]
+    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_invalid_product_type_id(self):
-    product_id = 1
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=999,
-                                 feature_values_ids=[1, 2], images=self.images)
-    response = self.send_put_request(product_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[PRODUCT_TYPE_FIELD][0], get_not_exist_msg(ProductType))
+  def test_should_put_invalid_images(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
+                            feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=['invalid'])
+    expected_content = {IMAGES_FIELD: ['errors.product.images.notValidFormat']}
+    product = Product.objects.all()[0]
+    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_no_such_feature_value(self):
-    product_id = 1
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2,
-                                 feature_values_ids=[1, 2, 33], images=self.images)
-    response = self.send_put_request(product_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[FEATURE_VALUES_FIELD][0], get_not_exist_msg(FeatureValue))
+  def test_should_put_invalid_feature_values(self):
+    data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
+                            feature_values_ids=[self.gold_fv.id, self.fv_512GB.id], images=self.images)
+    expected_content = {GLOBAL_ERR_KEY: ['Invalid feature values']}
+    product = Product.objects.all()[0]
+    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
 
-  def test_should_update_throws_feature_values_from_the_same_feature_type(self):
-    product_id = 1
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2,
-                                 feature_values_ids=[1, 2, 3], images=self.images)
-    response = self.send_put_request(product_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[FEATURE_VALUES_FIELD][0], INVALID_FEATURE_TYPE_ID_ERR)
-
-  def test_should_update_throws_feature_values_of_another_product_type(self):
-    product_id = 1
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, 2, [4], self.images)
-    response = self.send_put_request(product_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[FEATURE_VALUES_FIELD][0], INVALID_FEATURE_TYPE_ID_ERR)
-
-  def test_should_update_throws_invalid_image(self):
-    product_id = 1
-    data_dict = get_product_dict(VALID_DISCOUNT, VALID_PRICE, VALID_QUANTITY, product_type_id=2, feature_values_ids=[1, 2],
-                                 images=['invalid image'])
-    response = self.send_put_request(product_id, data_dict, self.token)
-    self.assertEqual(response.status_code, BAD_REQUEST_CODE)
-    data = json.loads(response.content.decode())
-    self.assertEqual(data[IMAGES_FIELD][0], NOT_VALID_IMAGE)
-
-  def test_should_delete_success(self):
-    product_id = 1
-    response = self.client.delete(url(product_id), HTTP_AUTHORIZATION=self.token)
-    self.assertEqual(response.status_code, OK_CODE)
-
-  def test_should_delete_throws_admin_required(self):
-    product_id = 1
-    response = self.client.delete(url(product_id), HTTP_AUTHORIZATION='')
-    self.assertEqual(response.status_code, FORBIDDEN_CODE)
-
-  def test_should_delete_throws_not_found(self):
-    product_id = 1111
-    response = self.client.delete(url(product_id), HTTP_AUTHORIZATION=self.token)
-    self.assertEqual(response.status_code, NOT_FOUND_CODE)
+  def test_should_put_invalid_discount_price_and_quality(self):
+    data = get_product_data(discount=150, price=-10, quantity=-20, product_type_id=self.iphone7_pt.id,
+                            feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
+    expected_content = {
+      DISCOUNT_FIELD: ['errors.product.discount.between'],
+      PRICE_FIELD: ['errors.product.price.min'],
+      QUANTITY_FIELD: ['errors.product.quantity.min']
+    }
+    product = Product.objects.all()[0]
+    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)

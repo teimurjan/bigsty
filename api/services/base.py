@@ -33,7 +33,8 @@ class ListService(ModelService):
     try:
       q = deep_serialize_query(kwargs.items(), exclude=['serialize', 'exclude'])
       return DataJsonResponse(
-        [model.serialize(**self.request.serializer_data) for model in self.model_cls.objects.filter(**q)])
+        [model.serialize(**self.request.serializer_data) for model in self.model_cls.objects.filter(**q)]
+      )
     except FieldError as e:
       return JsonResponse({GLOBAL_ERR_KEY: [INVALID_QUERY_ERR]}, status=BAD_REQUEST_CODE)
 
