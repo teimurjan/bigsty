@@ -23,7 +23,7 @@ const Login = props => {
     }
   };
 
-  const {email, password, intl, isLoading} = props;
+  const {email, password, intl, isLoading, errors} = props;
   const emailError = getError('email');
   const passwordError = getError('password');
   const authError = getError('auth');
@@ -42,7 +42,7 @@ const Login = props => {
                          placeholder={intl('login.placeholder.password')}/>
             </FormGroup>
             <button disabled={isLoading} type="submit"
-                    className={`btn btn-${authError ? 'danger' : 'primary'} block full-width m-b-sm`}>
+                    className={`btn btn-${errors ? 'danger' : 'primary'} block full-width m-b-sm`}>
               {intl('login.button.submit')}
             </button>
             {authError && <div className="m-b-sm">

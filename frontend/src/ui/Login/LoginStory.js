@@ -14,7 +14,7 @@ const props = {
     submit: action('Submitted')
   }
 };
-const messages = require(`../assets/translations/en.json`);
+const messages = require(`../../assets/translations/en.json`);
 const LoginWithIntl = props => <IntlProvider locale='en' messages={messages}><Login {...props}/></IntlProvider>;
 
 storiesOf('Login', module)
@@ -35,8 +35,8 @@ storiesOf('Login', module)
 .add('With empty errors', () => {
   const newProps = Object.assign({}, props, {
     errors: {
-      email: 'errors.login.email.mustNotBeEmpty',
-      password: 'errors.login.password.mustNotBeEmpty'
+      email: ['errors.login.email.mustNotBeEmpty'],
+      password: ['errors.login.password.mustNotBeEmpty']
     }
   });
   return <LoginWithIntl {...newProps}/>;
