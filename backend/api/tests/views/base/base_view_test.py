@@ -2,6 +2,7 @@ import json
 from typing import Type, List
 
 from django.test import TestCase
+from shutil import rmtree
 
 from api.models import User
 from api.tests.views.fixtures.base.fixture import IFixture
@@ -12,6 +13,7 @@ from api.utils.http_constants import OK_CODE
 
 class ViewTestCase(TestCase):
   _fixtures: List[Type[IFixture]] = [UsersFixture]
+  _rm_after: List[str] = None
 
   @classmethod
   def setUpClass(cls):
@@ -26,6 +28,13 @@ class ViewTestCase(TestCase):
     cls.reader_user = User.objects.filter(group='reader')[0]
     cls.reader_user.token = cls.reader_user.generate_token()
     cls.reader_user.save()
+
+  @classmethod
+  def tearDownClass(cls):
+    super().tearDownClass()
+    if cls._rm_after:
+      for path in cls._rm_after:
+        rmtree(path, ignore_errors=True)
 
   def send_request_with_data(self, method: str, url: str, data: dict, token: str):
     send = getattr(self.client, method)

@@ -10,6 +10,7 @@ from api.utils.errors.error_messages import get_not_exist_msg
 from api.utils.form_fields import IMAGES_FIELD, QUANTITY_FIELD, PRICE_FIELD, DISCOUNT_FIELD, \
   PRODUCT_TYPE_FIELD, FEATURE_VALUES_FIELD, ID_FIELD
 from api.utils.image_utils import base64_to_image
+from main.settings import MEDIA_ROOT
 
 
 def get_product_data(discount=None, price=None, quantity=None, product_type_id=None, feature_values_ids=None,
@@ -20,6 +21,7 @@ def get_product_data(discount=None, price=None, quantity=None, product_type_id=N
 
 class ProductViewTest(DetailViewTestCase):
   _fixtures = DetailViewTestCase._fixtures + [ProductViewFixture]
+  _rm_after = [os.path.join(MEDIA_ROOT)]
 
   @classmethod
   def setUpClass(cls):

@@ -9,6 +9,7 @@ from api.utils.errors.error_constants import GLOBAL_ERR_KEY
 from api.utils.errors.error_messages import get_not_exist_msg
 from api.utils.form_fields import DISCOUNT_FIELD, PRICE_FIELD, QUANTITY_FIELD, PRODUCT_TYPE_FIELD, \
   FEATURE_VALUES_FIELD, IMAGES_FIELD
+from main.settings import MEDIA_ROOT
 
 
 def get_product_data(discount=None, price=None, quantity=None, product_type_id=None, feature_values_ids=None,
@@ -19,6 +20,7 @@ def get_product_data(discount=None, price=None, quantity=None, product_type_id=N
 
 class ProductListViewTest(ListViewTestCase):
   _fixtures = ListViewTestCase._fixtures + [ProductListViewFixture]
+  _rm_after = [os.path.join(MEDIA_ROOT)]
 
   @classmethod
   def setUpClass(cls):

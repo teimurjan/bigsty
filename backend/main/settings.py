@@ -36,7 +36,6 @@ TEMPLATES = [
       'context_processors': [
         'django.template.context_processors.debug',
         'django.template.context_processors.request',
-        # 'django.contrib.auth.context_processors.auth',
         'django.contrib.messages.context_processors.messages',
       ],
     },
@@ -52,7 +51,7 @@ DATABASES = {
     'USER': 'postgres',
     'PASSWORD': '',
     'HOST': 'localhost',
-    'PORT': '32768',
+    'PORT': '5432',
   }
 }
 
@@ -68,7 +67,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media' if not DEBUG else 'media_debug')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True

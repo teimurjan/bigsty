@@ -10,6 +10,7 @@ from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NOT_VALID_IMAGE
 from api.utils.errors.error_messages import get_not_exist_msg
 from api.utils.form_fields import NAME_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, \
   CATEGORY_FIELD, IMAGE_FIELD, FEATURE_VALUES_FIELD
+from main.settings import MEDIA_ROOT
 
 
 def get_data(name=get_intl_texts(), description=get_intl_texts(),
@@ -27,6 +28,7 @@ def get_image(extension='jpg'):
 
 class ProductTypeViewTest(DetailViewTestCase):
   _fixtures = DetailViewTestCase._fixtures + [ProductTypeViewFixture]
+  _rm_after = [os.path.join(MEDIA_ROOT)]
 
   def setUp(self):
     self.phone_category_id = Category.objects.filter(name__value='Phone')[0].id
