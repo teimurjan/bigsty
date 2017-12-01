@@ -7,15 +7,21 @@ import {Provider} from 'react-redux';
 import registerServiceWorker from "./registerServiceWorker";
 import routes from "./routes";
 import configureStore from "./configureStore";
+import {IntlProvider} from 'react-intl-redux'
+import {setupLocale} from "./ui/App/AppActions";
 
 const store = configureStore(rootReducer);
 const history = syncHistoryWithStore(browserHistory, store);
 
+store.dispatch(setupLocale());
+
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
-      {routes}
-    </Router>
+    <IntlProvider>
+      <Router history={history}>
+        {routes}
+      </Router>
+    </IntlProvider>
   </Provider>
   , document.getElementById('root'));
 registerServiceWorker();

@@ -839,19 +839,24 @@
   top: 0;
 }
 
-.sk-spinner-fading-circle .sk-circle:before {
-  content: '';
-  display: block;
-  margin: $spin-margin;
-  width: 18%;
-  height: 18%;
-  background-color: $spin-color;
-  border-radius: 100%;
-  -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out;
-  animation: sk-circleFadeDelay 1.2s infinite ease-in-out;
-  /* Prevent first frame from flickering when animation starts */
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
+.sk-spinner-fading-circle {
+  .sk-circle:before {
+    content: '';
+    display: block;
+    margin: $spin-margin;
+    width: 18%;
+    height: 18%;
+    background-color: $spin-color;
+    border-radius: 100%;
+    -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out;
+    animation: sk-circleFadeDelay 1.2s infinite ease-in-out;
+    /* Prevent first frame from flickering when animation starts */
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+  &.sk-white .sk-circle:before {
+    background-color: #FFFFFF;
+  }
 }
 
 .sk-spinner-fading-circle .sk-circle2 {
@@ -995,11 +1000,17 @@
   }
 }
 
-.ibox-content > .sk-spinner { display: none; }
-.ibox-content.sk-loading { position: relative; }
+.ibox-content > .sk-spinner {
+  display: none;
+}
+
+.ibox-content.sk-loading {
+  position: relative;
+}
+
 .ibox-content.sk-loading:after {
   content: '';
-  background-color: rgba(255,255,255,0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   position: absolute;
   top: 0;
   left: 0;
@@ -1007,6 +1018,7 @@
   bottom: 0;
 
 }
+
 .ibox-content.sk-loading > .sk-spinner {
   display: block;
   position: absolute;

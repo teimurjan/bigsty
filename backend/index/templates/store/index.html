@@ -10,6 +10,8 @@
 {% endblock %}
 
 {% block js %}
-{#    <script src="{% static 'js/bundle/bundle.js' %}"></script>#}
-    <script src="http://localhost:3000/static/js/bundle.js"></script>
+    {#    <script src="{% static 'js/bundle/bundle.js' %}"></script>#}
+    {% csrf_token %}
+    <script src="http://localhost:3000/static/js/bundle.js">
+    </script>
 {% endblock %}

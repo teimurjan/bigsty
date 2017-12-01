@@ -1,0 +1,11 @@
+{
+  "errors.login.email.mustNotBeEmpty": "Email should not be empty",
+  "errors.login.password.mustNotBeEmpty": "Password should not be empty",
+  "errors.login.auth.invalidEmailOrPassword": "Email and/or password are incorrect",
+  "login.placeholder.email": "Email",
+  "login.placeholder.password": "Password",
+  "login.button.submit": "Login",
+  "login.link.forgot": "Forgot Password",
+  "login.text.noAccount": "Do not have account?",
+  "login.link.register": "Register"
+}
