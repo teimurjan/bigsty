@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import {syncHistoryWithStore} from 'react-router-redux';
 import {browserHistory, Router} from 'react-router';
 import rootReducer from "./rootReducer";
@@ -16,12 +16,12 @@ const history = syncHistoryWithStore(browserHistory, store);
 store.dispatch(setupLocale());
 
 ReactDOM.render(
-  <Provider store={store}>
-    <IntlProvider>
-      <Router history={history}>
-        {routes}
-      </Router>
-    </IntlProvider>
-  </Provider>
-  , document.getElementById('root'));
+    <Provider store={store}>
+        <IntlProvider>
+            <Router history={history}>
+                {routes}
+            </Router>
+        </IntlProvider>
+    </Provider>
+    , document.getElementById('root') as HTMLElement);
 registerServiceWorker();

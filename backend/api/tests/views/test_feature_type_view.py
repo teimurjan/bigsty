@@ -44,7 +44,7 @@ class FeatureTypeViewTest(DetailViewTestCase):
     url = '{0}/{1}'.format(FEATURE_TYPE_LIST_URL, feature_type.pk)
     expected = feature_type.serialize()
     expected['name'] = en_name
-    self.should_put_succeed(url, data, self.manager_user.token, expected)
+    self.should_put_succeed(url, data, self.manager_user_token, expected)
 
   def test_should_put_succeed_with_serialize_and_exclude(self):
     feature_type = FeatureType.objects.all()[0]
@@ -53,23 +53,23 @@ class FeatureTypeViewTest(DetailViewTestCase):
     url = '{0}/{1}?serialize=["categories"]&exclude=["name"]'.format(FEATURE_TYPE_LIST_URL, feature_type.pk)
     expected = feature_type.serialize(serialize=["categories"])
     del expected['name']
-    self.should_put_succeed(url, data, self.manager_user.token, expected)
+    self.should_put_succeed(url, data, self.manager_user_token, expected)
 
   def test_should_put_require_role(self):
     feature_type = FeatureType.objects.all()[0]
     url = '{0}/{1}'.format(FEATURE_TYPE_LIST_URL, feature_type.pk)
-    self.should_put_require_role(url, self.reader_user.token)
+    self.should_put_require_role(url, self.reader_user_token)
 
   def test_should_post_no_data(self) -> None:
     feature_type = FeatureType.objects.all()[0]
     url = '{0}/{1}'.format(FEATURE_TYPE_LIST_URL, feature_type.pk)
-    self.should_put_fail_when_no_data_sent(url, self.admin_user.token)
+    self.should_put_fail_when_no_data_sent(url, self.admin_user_token)
 
   def test_should_put_null_values(self):
     feature_type = FeatureType.objects.all()[0]
     data = get_data()
     url = '{0}/{1}'.format(FEATURE_TYPE_LIST_URL, feature_type.pk)
-    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+    self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
       NAME_FIELD: get_intl_texts_errors('featureType', field='name'),
     })
 
@@ -77,7 +77,7 @@ class FeatureTypeViewTest(DetailViewTestCase):
     feature_type = FeatureType.objects.all()[0]
     data = get_data(get_intl_texts(''))
     url = '{0}/{1}'.format(FEATURE_TYPE_LIST_URL, feature_type.pk)
-    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+    self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
       NAME_FIELD: get_intl_texts_errors('featureType', error='mustNotBeEmpty', field='name'),
     })
 
@@ -85,24 +85,24 @@ class FeatureTypeViewTest(DetailViewTestCase):
     feature_type = FeatureType.objects.all()[0]
     data = get_data(get_intl_texts('a' * 31))
     url = '{0}/{1}'.format(FEATURE_TYPE_LIST_URL, feature_type.pk)
-    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+    self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
       NAME_FIELD: get_intl_texts_errors('featureType', error='maxLength', field='name'),
     })
 
   def test_should_put_invalid_feature_type(self):
     data = get_data(get_intl_texts('New name'))
     url = '{0}/{1}'.format(FEATURE_TYPE_LIST_URL, 999)
-    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+    self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
       GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]
     }, expected_code=NOT_FOUND_CODE)
 
   def test_should_delete_succeed(self):
     feature_type = FeatureType.objects.all()[0]
-    self.should_delete_succeed(FEATURE_TYPE_LIST_URL, feature_type.pk, self.manager_user.token)
+    self.should_delete_succeed(FEATURE_TYPE_LIST_URL, feature_type.pk, self.manager_user_token)
 
   def test_should_delete_require_role(self):
     feature_type = FeatureType.objects.all()[0]
-    self.should_delete_require_role(FEATURE_TYPE_LIST_URL, feature_type.pk, self.reader_user.token)
+    self.should_delete_require_role(FEATURE_TYPE_LIST_URL, feature_type.pk, self.reader_user_token)
 
   def test_should_delete_not_found(self):
-    self.should_delete_not_found(FEATURE_TYPE_LIST_URL, FeatureType, 999, self.manager_user.token)
+    self.should_delete_not_found(FEATURE_TYPE_LIST_URL, FeatureType, 999, self.manager_user_token)

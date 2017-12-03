@@ -7,7 +7,7 @@ from django.core import mail
 from api.tests.views.base.base_view_test import ViewTestCase
 from api.tests.views.constants import REGISTER_URL
 from api.utils.errors.error_constants import SAME_EMAIL_ERR
-from api.utils.form_fields import EMAIL_FIELD, PASSWORD_FIELD, NAME_FIELD, TOKEN_KEY, GROUP_FIELD, ID_FIELD
+from api.utils.form_fields import EMAIL_FIELD, PASSWORD_FIELD, NAME_FIELD, ACCESS_TOKEN_KEY, GROUP_FIELD, ID_FIELD
 from api.utils.http_constants import OK_CODE, BAD_REQUEST_CODE
 from main.settings import SECRET_KEY
 
@@ -29,7 +29,7 @@ class RegisterViewTest(ViewTestCase):
     url = '/api/{0}'.format(match.group('url'))
     response = self.client.get(url)
     self.assertEquals(response.status_code, OK_CODE)
-    token = json.loads(response.content.decode())[TOKEN_KEY]
+    token = json.loads(response.content.decode())[ACCESS_TOKEN_KEY]
     decoded_token = jwt.decode(token, SECRET_KEY)
     self.assertEquals(decoded_token[NAME_FIELD], data[NAME_FIELD])
     self.assertEquals(decoded_token[GROUP_FIELD], 'reader')
@@ -65,21 +65,21 @@ class RegisterViewTest(ViewTestCase):
     response = self.client.get(url)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     err = json.loads(response.content.decode())['global']
-    self.assertEquals(err, ['errors.auth.invalidToken'])
+    self.assertEquals(err, ['errors.completeRegistration.invalidToken'])
 
   def test_should_complete_registration_with_invalid_token_format(self):
     url = '/api/register?token={0}'.format('invalid token')
     response = self.client.get(url)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     err = json.loads(response.content.decode())['global']
-    self.assertEquals(err, ['errors.auth.invalidToken'])
+    self.assertEquals(err, ['errors.completeRegistration.invalidToken'])
 
   def test_should_complete_registration_without_token(self):
     url = '/api/register'
     response = self.client.get(url)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     err = json.loads(response.content.decode())['global']
-    self.assertEquals(err, ['errors.auth.invalidToken'])
+    self.assertEquals(err, ['errors.completeRegistration.invalidToken'])
 
   def test_should_complete_registration_for_active_user(self):
     payload = {ID_FIELD: self.reader_user.pk}

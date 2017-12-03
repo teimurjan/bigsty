@@ -1,11 +1,18 @@
 {
-  "errors.login.email.mustNotBeEmpty": "Email should not be empty",
-  "errors.login.password.mustNotBeEmpty": "Password should not be empty",
-  "errors.login.auth.invalidEmailOrPassword": "Email and/or password are incorrect",
-  "login.placeholder.email": "Email",
-  "login.placeholder.password": "Password",
-  "login.button.submit": "Login",
+  "auth.placeholder.email": "Email",
+  "auth.placeholder.password": "Password",
+  "auth.button.logIn": "Log in",
+  "auth.button.register": "Register",
+  "errors.login.email.mustNotBeEmpty": "Email must not be empty",
+  "errors.login.password.mustNotBeEmpty": "Password must not be empty",
+  "errors.login.invalidEmailOrPassword": "Email and/or password are incorrect",
   "login.link.forgot": "Forgot Password",
   "login.text.noAccount": "Do not have account?",
-  "login.link.register": "Register"
+  "errors.registration.name.mustNotBeEmpty": "Name must not be empty",
+  "errors.registration.name.maxLength": "Name length must not exceed 30 symbols",
+  "errors.registration.email.isEmail": "Invalid email format",
+  "errors.registration.email.same": "User with such email already exists",
+  "errors.registration.password.regex": "Password must have at least 8 characters and include numbers, lowercase and uppercase letters",
+  "registration.placeholder.name": "Name",
+  "registration.text.haveAccount": "Already have an account?"
 }

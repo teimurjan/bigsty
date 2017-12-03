@@ -1,8 +1,11 @@
 import os
+import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = True
+
+TESTING = sys.argv[1:2] == ['test']
 SECRET_KEY = 'i$i=bi(g&$7g81fo^$$i8voh80ubv%_&u_e%uru86vj3kyk0xu'
 
 ALLOWED_HOSTS = ['localhost']
@@ -69,7 +72,8 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media' if not DEBUG else 'media_debug')
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' if not DEBUG else 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'logs/email')
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'store@gmail.com'

@@ -1,7 +1,7 @@
 import jwt
 from django.http import HttpRequest, JsonResponse
 from django.utils.deprecation import MiddlewareMixin
-from jwt import DecodeError
+from jwt import InvalidTokenError
 
 from api.models import User
 from api.utils.form_fields import ID_FIELD
@@ -22,10 +22,8 @@ class AuthMiddleware(MiddlewareMixin):
       user = User.objects.get(pk=decoded_token[ID_FIELD])
       if not user.is_active:
         return JsonResponseUnauthorized()
-      if user.token != token:
-        return JsonResponseUnauthorized()
       if user.group.name not in allowed_roles:
         return JsonResponseForbidden()
       request.user = user
-    except (DecodeError, KeyError, User.DoesNotExist) as e:
+    except (InvalidTokenError, KeyError, User.DoesNotExist) as e:
       return JsonResponseUnauthorized()

@@ -20,13 +20,13 @@ class ViewTestCase(TestCase):
     super().setUpClass()
     for fixture in cls._fixtures: fixture.make()
     cls.admin_user = User.objects.filter(group='admin')[0]
-    cls.admin_user.token = cls.admin_user.generate_token()
+    cls.admin_user_token = cls.admin_user.generate_access_token()
     cls.admin_user.save()
     cls.manager_user = User.objects.filter(group='manager')[0]
-    cls.manager_user.token = cls.manager_user.generate_token()
+    cls.manager_user_token = cls.manager_user.generate_access_token()
     cls.manager_user.save()
     cls.reader_user = User.objects.filter(group='reader')[0]
-    cls.reader_user.token = cls.reader_user.generate_token()
+    cls.reader_user_token = cls.reader_user.generate_access_token()
     cls.reader_user.save()
 
   @classmethod

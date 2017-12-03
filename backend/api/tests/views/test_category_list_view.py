@@ -41,7 +41,7 @@ class CategoryListViewTest(ListViewTestCase):
     data = get_data(get_name(name), feature_types_ids=[1, 2])
     expected = data.copy()
     expected.update(name=name)
-    self.should_post_succeed(CATEGORY_LIST_URL, data, self.admin_user.token, expected)
+    self.should_post_succeed(CATEGORY_LIST_URL, data, self.admin_user_token, expected)
 
   def test_should_post_with_serialized_field_succeed(self) -> None:
     name = 'Tablet'
@@ -50,7 +50,7 @@ class CategoryListViewTest(ListViewTestCase):
     expected.update(name=name)
     del expected[FEATURE_TYPES_FIELD]
     url = '{0}?serialize=["feature_types"]'.format(CATEGORY_LIST_URL)
-    response_data = self.should_post_succeed(url, data, self.admin_user.token, expected)
+    response_data = self.should_post_succeed(url, data, self.admin_user_token, expected)
     self.assertIsInstance(response_data[FEATURE_TYPES_FIELD][0], dict)
 
   def test_should_post_require_auth(self) -> None:
@@ -62,23 +62,23 @@ class CategoryListViewTest(ListViewTestCase):
       NAME_FIELD: get_intl_texts_errors('categories'),
       FEATURE_TYPES_FIELD: ['errors.categories.feature_types.mustNotBeNull']
     }
-    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
+    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_post_empty_values(self) -> None:
     data = get_data(get_name(''), [])
     expected_content = {
       NAME_FIELD: get_intl_texts_errors('categories', 'mustNotBeEmpty'),
     }
-    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
+    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_post_no_data(self) -> None:
-    self.should_post_fail_when_no_data_sent(CATEGORY_LIST_URL, self.admin_user.token)
+    self.should_post_fail_when_no_data_sent(CATEGORY_LIST_URL, self.admin_user_token)
 
   def test_should_post_no_such_feature_type(self) -> None:
     name = 'Tablet'
     data = get_data(get_name(name), feature_types_ids=[23])
     expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]}
-    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user.token)
+    self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_post_throws_invalid_length(self) -> None:
     data = {NAME_FIELD: get_name('a' * 31)}
@@ -87,4 +87,4 @@ class CategoryListViewTest(ListViewTestCase):
       FEATURE_TYPES_FIELD: ['errors.categories.feature_types.required']
     }
     self.should_post_fail(CATEGORY_LIST_URL, data=data, expected_content=expected_content,
-                          token=self.admin_user.token)
+                          token=self.admin_user_token)

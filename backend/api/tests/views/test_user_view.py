@@ -13,22 +13,22 @@ def get_user_data(name=None, password=None, group_id=None):
 
 class UserViewTest(DetailViewTestCase):
   def test_should_get_succeed(self):
-    self.should_get_by_id_succeed(USER_LIST_URL, User, self.reader_user.pk, token=self.admin_user.token)
+    self.should_get_by_id_succeed(USER_LIST_URL, User, self.reader_user.pk, token=self.admin_user_token)
 
   def test_should_get_require_role(self):
     url = '{0}/{1}'.format(USER_LIST_URL, self.manager_user.pk)
-    response = self.client.get(url, HTTP_AUTHORIZATION='Bearer {0}'.format(self.reader_user.token))
+    response = self.client.get(url, HTTP_AUTHORIZATION='Bearer {0}'.format(self.reader_user_token))
     self.assertEquals(response.status_code, FORBIDDEN_CODE)
 
   def test_should_get_with_exclude_succeed(self):
     url = '{0}/{1}?exclude=["email"]'.format(USER_LIST_URL, self.manager_user.pk)
     expected = self.manager_user.serialize(exclude=['email'])
-    self.should_get_succeed(url, expected, token=self.manager_user.token)
+    self.should_get_succeed(url, expected, token=self.manager_user_token)
 
   def test_should_get_with_serialized_field_succeed(self):
     url = '{0}/{1}?serialize=["group"]'.format(USER_LIST_URL, self.manager_user.pk)
     expected = self.manager_user.serialize(serialize=['group'])
-    self.should_get_succeed(url, expected, token=self.manager_user.token)
+    self.should_get_succeed(url, expected, token=self.manager_user_token)
 
   def test_should_put_succeed(self):
     user = self.reader_user
@@ -38,7 +38,7 @@ class UserViewTest(DetailViewTestCase):
     expected[ID_FIELD] = self.reader_user.pk
     del expected[PASSWORD_FIELD]
     url = '{0}/{1}'.format(USER_LIST_URL, user.pk)
-    self.should_put_succeed(url, data, self.admin_user.token, expected)
+    self.should_put_succeed(url, data, self.admin_user_token, expected)
 
   def test_should_put_require_auth(self):
     user = self.reader_user
@@ -48,7 +48,7 @@ class UserViewTest(DetailViewTestCase):
   def test_should_post_require_role(self):
     user = self.reader_user
     url = '{0}/{1}'.format(USER_LIST_URL, user.pk)
-    self.should_put_require_role(url, self.reader_user.token)
+    self.should_put_require_role(url, self.reader_user_token)
 
   def test_should_put_null_values(self):
     data = get_user_data()
@@ -58,7 +58,7 @@ class UserViewTest(DetailViewTestCase):
       GROUP_FIELD: ['errors.user.group.mustNotBeNull']
     }
     url = '{0}/{1}'.format(USER_LIST_URL, self.reader_user.pk)
-    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_empty_values(self):
     data = get_user_data('', '', '')
@@ -68,7 +68,7 @@ class UserViewTest(DetailViewTestCase):
       GROUP_FIELD: ['errors.user.group.mustNotBeEmpty']
     }
     url = '{0}/{1}'.format(USER_LIST_URL, self.reader_user.pk)
-    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_invalid_values(self):
     data = get_user_data('Name', 'wrong password', 'reader')
@@ -76,7 +76,7 @@ class UserViewTest(DetailViewTestCase):
       PASSWORD_FIELD: ['errors.user.password.regex'],
     }
     url = '{0}/{1}'.format(USER_LIST_URL, self.reader_user.pk)
-    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_post_invalid_group(self):
     data = get_user_data('Name', 'Passw0rd', 'invalid group')
@@ -84,15 +84,15 @@ class UserViewTest(DetailViewTestCase):
       GLOBAL_ERR_KEY: [get_not_exist_msg(Group)],
     }
     url = '{0}/{1}'.format(USER_LIST_URL, self.reader_user.pk)
-    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user.token)
+    self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_delete_succeed(self):
     user = User.objects.all()[0]
-    self.should_delete_succeed(USER_LIST_URL, user.pk, self.admin_user.token)
+    self.should_delete_succeed(USER_LIST_URL, user.pk, self.admin_user_token)
 
   def test_should_delete_require_role(self):
     user = User.objects.all()[0]
-    self.should_delete_require_role(USER_LIST_URL, user.pk, self.reader_user.token)
+    self.should_delete_require_role(USER_LIST_URL, user.pk, self.reader_user_token)
 
   def test_should_delete_not_found(self):
-    self.should_delete_not_found(USER_LIST_URL, User, 999, self.admin_user.token)
+    self.should_delete_not_found(USER_LIST_URL, User, 999, self.admin_user_token)

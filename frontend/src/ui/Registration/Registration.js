@@ -4,8 +4,10 @@ import {Link} from "react-router";
 import {InjectIntl} from "../Common/InjectIntl";
 import FormInput from "../Common/Forms/FormInput";
 import FormGroup from "../Common/Forms/FormGroup";
+import {getFieldErrorFromProps} from "../Common/errors";
 
-const Login = props => {
+const Registration = props => {
+  const handleNameChange = e => props.actions.changeName(e.target.value);
   const handleEmailChange = e => props.actions.changeEmail(e.target.value);
   const handlePasswordChange = e => props.actions.changePassword(e.target.value);
   const handleSubmit = e => {
@@ -13,51 +15,36 @@ const Login = props => {
     props.actions.submit();
   };
 
-  const getError = field => {
-    const {errors, intl} = props;
-    if (!errors) {
-      return false;
-    } else {
-      const errorCodes = errors[field];
-      return errorCodes && errorCodes.length > 0 ? intl(errorCodes[0]) : false;
-    }
-  };
+  const getError = getFieldErrorFromProps.bind(null, props);
 
-  const {email, password, intl, isLoading, errors} = props;
-  const emailError = getError('email');
-  const passwordError = getError('password');
-  const authError = getError('auth');
+  const {email, password, name, intl, isLoading, errors} = props;
   return (
     <div>
       <div className="middle-box text-center loginscreen animated fadeInDown">
         <div>
           <Link to="/"><h1 className="logo-name">M</h1></Link>
           <form className="m-t" onSubmit={handleSubmit} noValidate>
-            <FormGroup error={emailError}>
-              <FormInput email value={email} onChange={handleEmailChange}
-                         placeholder={intl('login.placeholder.email')}/>
+            <FormGroup error={getError('name')}>
+              <FormInput value={name} onChange={handleNameChange}
+                         placeholder={intl('registration.placeholder.name')}/>
             </FormGroup>
-            <FormGroup error={passwordError}>
+            <FormGroup error={getError('email')}>
+              <FormInput email value={email} onChange={handleEmailChange}
+                         placeholder={intl('auth.placeholder.email')}/>
+            </FormGroup>
+            <FormGroup error={getError('password')}>
               <FormInput password value={password} onChange={handlePasswordChange}
-                         placeholder={intl('login.placeholder.password')}/>
+                         placeholder={intl('auth.placeholder.password')}/>
             </FormGroup>
             <button disabled={isLoading} type="submit"
                     className={`btn btn-${errors ? 'danger' : 'primary'} block full-width m-b-sm`}>
-              {intl('login.button.submit')}
+              {intl('auth.button.register')}
             </button>
-            {authError && <div className="m-b-sm">
-              <small className="text-danger">{authError}</small>
-              <br/>
-            </div>}
-            <Link to="/password/forgot">
-              <small>{intl('login.link.forgot')}</small>
-              <br/>
-            </Link>
             <p className="text-muted text-center">
-              <small>{intl('login.text.noAccount')}</small>
+              <small>{intl('registration.text.haveAccount')}</small>
             </p>
-            <Link className="btn btn-sm btn-white btn-block" to="/register">
-              {intl('login.link.register')}
+            <Link className="btn btn-sm btn-white btn-block" to="/login">
+              {intl('auth.button.logIn')}
             </Link>
           </form>
         </div>
@@ -66,16 +53,18 @@ const Login = props => {
   );
 };
 
-Login.propTypes = {
+Registration.propTypes = {
+  name: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
   errors: PropTypes.object,
   isLoading: PropTypes.bool.isRequired,
   actions: PropTypes.shape({
     changeEmail: PropTypes.func.isRequired,
+    changeName: PropTypes.func.isRequired,
     changePassword: PropTypes.func.isRequired,
     submit: PropTypes.func.isRequired
   }).isRequired
 };
 
-export default InjectIntl(Login);
+export default InjectIntl(Registration);

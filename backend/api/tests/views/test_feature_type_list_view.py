@@ -28,7 +28,7 @@ class FeatureTypeListViewTest(ListViewTestCase):
     name = 'Test Feature'
     data = {NAME_FIELD: get_intl_texts(name)}
     expected = {NAME_FIELD: name}
-    self.should_post_succeed(FEATURE_TYPE_LIST_URL, data, self.admin_user.token, expected)
+    self.should_post_succeed(FEATURE_TYPE_LIST_URL, data, self.admin_user_token, expected)
 
   def test_should_post_require_auth(self):
     self.should_post_require_auth(FEATURE_TYPE_LIST_URL)
@@ -39,7 +39,7 @@ class FeatureTypeListViewTest(ListViewTestCase):
       NAME_FIELD: get_intl_texts_errors('featureTypes'),
     }
     self.should_post_fail(FEATURE_TYPE_LIST_URL, data=data, expected_content=expected_content,
-                          token=self.admin_user.token)
+                          token=self.admin_user_token)
 
   def test_should_post_empty_values(self):
     data = {NAME_FIELD: get_intl_texts('')}
@@ -47,10 +47,10 @@ class FeatureTypeListViewTest(ListViewTestCase):
       NAME_FIELD: get_intl_texts_errors('featureTypes', 'mustNotBeEmpty'),
     }
     self.should_post_fail(FEATURE_TYPE_LIST_URL, data=data, expected_content=expected_content,
-                          token=self.admin_user.token)
+                          token=self.admin_user_token)
 
   def test_should_post_no_data(self):
-    self.should_post_fail_when_no_data_sent(FEATURE_TYPE_LIST_URL, self.admin_user.token)
+    self.should_post_fail_when_no_data_sent(FEATURE_TYPE_LIST_URL, self.admin_user_token)
 
   def test_should_post_throws_invalid_length(self):
     data = {NAME_FIELD: get_intl_texts('a' * 31)}
@@ -58,4 +58,4 @@ class FeatureTypeListViewTest(ListViewTestCase):
       NAME_FIELD: get_intl_texts_errors('featureTypes', 'maxLength'),
     }
     self.should_post_fail(FEATURE_TYPE_LIST_URL, data=data, expected_content=expected_content,
-                          token=self.admin_user.token)
+                          token=self.admin_user_token)

@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 
-const FormGroup = ({error, children, className, ...props}) => (
+interface FormGroupProps {
+  error?: string,
+  className?: string
+}
+
+const FormGroup: React.SFC<FormGroupProps> = ({error, children, className, ...props}) => (
   <div className={`form-group ${className}${error ? ' has-error' : ''}`}>
     {children}
     {error && <small className="text-danger">{error}</small>}
   </div>
 );
-
-FormGroup.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
-};
 
 FormGroup.defaultProps = {
   className: ''

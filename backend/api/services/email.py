@@ -14,8 +14,8 @@ class EmailService:
   def send(self):
     msg = EmailMessage(self.subject, self.html_content, to=self.to)
     msg.content_subtype = self.content_subtype
-    from main.settings import DEBUG
-    self.EmailThread(msg).start() if not DEBUG else msg.send()
+    from main.settings import TESTING
+    self.EmailThread(msg).start() if not TESTING else msg.send()
 
   class EmailThread(Thread):
     def __init__(self, msg: EmailMessage):

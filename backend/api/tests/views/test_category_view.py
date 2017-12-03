@@ -46,7 +46,7 @@ class CategoryViewTest(DetailViewTestCase):
     expected = category.serialize()
     expected['name'] = en_name
     expected['feature_types'] = feature_types_ids
-    self.should_put_succeed(url, data, self.manager_user.token, expected)
+    self.should_put_succeed(url, data, self.manager_user_token, expected)
 
   def test_should_put_succeed_with_serialize_and_exclude(self):
     category = Category.objects.all()[0]
@@ -55,23 +55,23 @@ class CategoryViewTest(DetailViewTestCase):
     url = '{0}/{1}?serialize=["feature_types"]&exclude=["name"]'.format(CATEGORY_LIST_URL, category.pk)
     expected = category.serialize(serialize=["feature_types"])
     del expected['name']
-    self.should_put_succeed(url, data, self.manager_user.token, expected)
+    self.should_put_succeed(url, data, self.manager_user_token, expected)
 
   def test_should_put_require_role(self):
     category = Category.objects.all()[0]
     url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
-    self.should_put_require_role(url, self.reader_user.token)
+    self.should_put_require_role(url, self.reader_user_token)
 
   def test_should_post_no_data(self) -> None:
     category = Category.objects.all()[0]
     url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
-    self.should_put_fail_when_no_data_sent(url, self.admin_user.token)
+    self.should_put_fail_when_no_data_sent(url, self.admin_user_token)
 
   def test_should_put_null_values(self):
     category = Category.objects.all()[0]
     data = get_data(get_intl_texts())
     url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
-    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+    self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
       FEATURE_TYPES_FIELD: ['errors.category.feature_types.mustNotBeNull'],
       NAME_FIELD: get_intl_texts_errors('category', field='name'),
     })
@@ -80,7 +80,7 @@ class CategoryViewTest(DetailViewTestCase):
     category = Category.objects.all()[0]
     data = get_data(get_intl_texts(''), [])
     url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
-    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+    self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
       NAME_FIELD: get_intl_texts_errors('category', error='mustNotBeEmpty', field='name'),
     })
 
@@ -88,7 +88,7 @@ class CategoryViewTest(DetailViewTestCase):
     category = Category.objects.all()[0]
     data = get_data(get_intl_texts('a' * 31), [])
     url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
-    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+    self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
       NAME_FIELD: get_intl_texts_errors('category', error='maxLength', field='name'),
     })
 
@@ -96,24 +96,24 @@ class CategoryViewTest(DetailViewTestCase):
     category = Category.objects.all()[0]
     data = get_data(get_intl_texts('New name'), [999])
     url = '{0}/{1}'.format(CATEGORY_LIST_URL, category.pk)
-    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+    self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
       GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)]
     })
 
   def test_should_put_invalid_category(self):
     data = get_data(get_intl_texts('New name'), [1])
     url = '{0}/{1}'.format(CATEGORY_LIST_URL, 999)
-    self.should_put_fail(url, data, token=self.manager_user.token, expected_content={
+    self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
       GLOBAL_ERR_KEY: [get_not_exist_msg(Category)]
     }, expected_code=NOT_FOUND_CODE)
 
   def test_should_delete_succeed(self):
     category = Category.objects.all()[0]
-    self.should_delete_succeed(CATEGORY_LIST_URL, category.pk, self.manager_user.token)
+    self.should_delete_succeed(CATEGORY_LIST_URL, category.pk, self.manager_user_token)
 
   def test_should_delete_require_role(self):
     category = Category.objects.all()[0]
-    self.should_delete_require_role(CATEGORY_LIST_URL, category.pk, self.reader_user.token)
+    self.should_delete_require_role(CATEGORY_LIST_URL, category.pk, self.reader_user_token)
 
   def test_should_delete_not_found(self):
-    self.should_delete_not_found(CATEGORY_LIST_URL, Category, 999, self.manager_user.token)
+    self.should_delete_not_found(CATEGORY_LIST_URL, Category, 999, self.manager_user_token)

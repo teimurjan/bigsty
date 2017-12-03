@@ -33,7 +33,7 @@ class FeatureValueListViewTest(ListViewTestCase):
     name = 'Test Feature Value'
     data = {NAME_FIELD: get_intl_texts(name), FEATURE_TYPE_FIELD: self.color_ft.id}
     expected = {NAME_FIELD: name, FEATURE_TYPE_FIELD: self.color_ft.id}
-    self.should_post_succeed(FEATURE_VALUE_LIST_URL, data, self.admin_user.token, expected)
+    self.should_post_succeed(FEATURE_VALUE_LIST_URL, data, self.admin_user_token, expected)
 
   def test_should_post_require_auth(self):
     self.should_post_require_auth(FEATURE_VALUE_LIST_URL)
@@ -45,7 +45,7 @@ class FeatureValueListViewTest(ListViewTestCase):
       FEATURE_TYPE_FIELD: ['errors.featureValues.feature_type.mustNotBeNull']
     }
     self.should_post_fail(FEATURE_VALUE_LIST_URL, data=data, expected_content=expected_content,
-                          token=self.admin_user.token)
+                          token=self.admin_user_token)
 
   def test_should_post_empty_values(self):
     data = {NAME_FIELD: get_intl_texts(''), FEATURE_TYPE_FIELD: ''}
@@ -54,10 +54,10 @@ class FeatureValueListViewTest(ListViewTestCase):
       FEATURE_TYPE_FIELD: ['errors.featureValues.feature_type.mustBeInteger'],
     }
     self.should_post_fail(FEATURE_VALUE_LIST_URL, data=data, expected_content=expected_content,
-                          token=self.admin_user.token)
+                          token=self.admin_user_token)
 
   def test_should_post_no_data(self):
-    self.should_post_fail_when_no_data_sent(FEATURE_VALUE_LIST_URL, self.admin_user.token)
+    self.should_post_fail_when_no_data_sent(FEATURE_VALUE_LIST_URL, self.admin_user_token)
 
   def test_should_post_throws_invalid_length(self):
     data = {NAME_FIELD: get_intl_texts('a' * 31), FEATURE_TYPE_FIELD: self.color_ft.id}
@@ -65,7 +65,7 @@ class FeatureValueListViewTest(ListViewTestCase):
       NAME_FIELD: get_intl_texts_errors('featureValues', 'maxLength'),
     }
     self.should_post_fail(FEATURE_VALUE_LIST_URL, data=data, expected_content=expected_content,
-                          token=self.admin_user.token)
+                          token=self.admin_user_token)
 
   def test_should_post_throws_invalid_feature_type(self):
     data = {NAME_FIELD: get_intl_texts('Test Name'), FEATURE_TYPE_FIELD: 999}
@@ -73,4 +73,4 @@ class FeatureValueListViewTest(ListViewTestCase):
       GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)],
     }
     self.should_post_fail(FEATURE_VALUE_LIST_URL, data=data, expected_content=expected_content,
-                          token=self.admin_user.token)
+                          token=self.admin_user_token)

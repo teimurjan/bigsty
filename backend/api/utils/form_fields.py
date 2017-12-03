@@ -18,5 +18,6 @@ FEATURE_VALUES_FIELD = 'feature_values'
 AUTH_FIELDS = 'auth'
 PRODUCT_TYPE_FIELD = 'product_type'
 
-TOKEN_KEY = 'token'
+ACCESS_TOKEN_KEY = 'access_token'
+REFRESH_TOKEN_KEY = 'refresh_token'
 DATA_KEY = 'data'
