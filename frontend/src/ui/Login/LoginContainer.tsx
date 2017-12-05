@@ -1,8 +1,8 @@
-import {connect} from "react-redux";
+import {connect} from 'react-redux';
 import {bindActionCreators, Dispatch} from 'redux';
 import Login from './Login';
-import {RootState} from "../../rootReducer";
-import {changeEmail, changePassword, submit} from "./LoginActions";
+import {RootState} from '../../rootReducer';
+import {LoginActions} from './LoginActions';
 
 
 function mapStateToProps(state: RootState) {
@@ -11,7 +11,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch: Dispatch<RootState>) {
   return {
-    actions: bindActionCreators({changeEmail, changePassword, submit}, dispatch)
+    actions: bindActionCreators(LoginActions, dispatch)
   }
 }
 

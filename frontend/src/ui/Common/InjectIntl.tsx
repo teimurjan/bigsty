@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {intlShape} from "react-intl";
 
 export type IntlFunction = (messageId: string, values?: {}) => string;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {InputHTMLAttributes} from "react";
 
 interface FormInputProps {
@@ -8,12 +8,12 @@ interface FormInputProps {
 }
 
 const FormInput: React.SFC<FormInputProps & InputHTMLAttributes<any>> = ({email, password, className, ...props}) => {
-  let type = 'text';
+  let type = "text";
   if (email) {
-    type = 'email';
+    type = "email";
   }
   else if (password) {
-    type = 'password';
+    type = "password";
   }
   return <input className={`form-control ${className}`} type={type} {...props}/>;
 };
@@ -21,7 +21,7 @@ const FormInput: React.SFC<FormInputProps & InputHTMLAttributes<any>> = ({email,
 FormInput.defaultProps = {
   email: false,
   password: false,
-  className: ''
+  className: ""
 };
 
 

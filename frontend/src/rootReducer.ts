@@ -5,10 +5,10 @@ import login from './ui/Login/LoginReducer';
 import registration from './ui/Registration/RegistrationReducer';
 
 export interface RootState {
-  routing: any,
-  login: any,
-  intl: any,
-  registration: any
+  routing: any;
+  login: any;
+  intl: any;
+  registration: any;
 }
 
 export default combineReducers<RootState>({

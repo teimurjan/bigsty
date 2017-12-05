@@ -2,9 +2,9 @@ import * as React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
-import Login from "./Login";
-import {initialState, LoginState} from "./LoginReducer";
-import {IntlProvider} from "react-intl";
+import Login from './Login';
+import {initialState, LoginState} from './LoginReducer';
+import {IntlProvider} from 'react-intl';
 
 interface LoginTestProps extends LoginState {
   actions: {
