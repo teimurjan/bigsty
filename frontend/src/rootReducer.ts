@@ -1,14 +1,15 @@
-import {combineReducers} from 'redux';
-import {routerReducer as routing} from 'react-router-redux';
-import {intlReducer as intl} from 'react-intl-redux'
+import { combineReducers } from 'redux';
+import { routerReducer as routing } from 'react-router-redux';
+import { intlReducer as intl } from 'react-intl-redux';
 import login from './ui/Login/LoginReducer';
 import registration from './ui/Registration/RegistrationReducer';
+import { Map } from 'immutable';
 
 export interface RootState {
-  routing: any;
-  login: any;
-  intl: any;
-  registration: any;
+  routing: Map<string, {}>;
+  login: Map<string, {}>;
+  intl: Map<string, {}>;
+  registration: Map<string, {}>;
 }
 
 export default combineReducers<RootState>({

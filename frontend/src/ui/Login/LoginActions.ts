@@ -1,17 +1,17 @@
-import {Action} from '../Common/types';
+import { Action } from '../../types/redux';
 
 export type LoginActionType =
-  "LOGIN/CHANGE_EMAIL" |
-  "LOGIN/CHANGE_PASSWORD" |
-  "LOGIN/SUBMIT" |
-  "LOGIN/SUBMIT_SUCCESS" |
-  "LOGIN/SUBMIT_FAILURE";
+  'LOGIN/CHANGE_EMAIL' |
+  'LOGIN/CHANGE_PASSWORD' |
+  'LOGIN/SUBMIT' |
+  'LOGIN/SUBMIT_SUCCESS' |
+  'LOGIN/SUBMIT_FAILURE';
 
-export const CHANGE_EMAIL: LoginActionType = "LOGIN/CHANGE_EMAIL";
-export const CHANGE_PASSWORD: LoginActionType = "LOGIN/CHANGE_PASSWORD";
-export const SUBMIT: LoginActionType = "LOGIN/SUBMIT";
-export const SUBMIT_SUCCESS: LoginActionType = "LOGIN/SUBMIT_SUCCESS";
-export const SUBMIT_FAILURE: LoginActionType = "LOGIN/SUBMIT_FAILURE";
+export const CHANGE_EMAIL: LoginActionType = 'LOGIN/CHANGE_EMAIL';
+export const CHANGE_PASSWORD: LoginActionType = 'LOGIN/CHANGE_PASSWORD';
+export const SUBMIT: LoginActionType = 'LOGIN/SUBMIT';
+export const SUBMIT_SUCCESS: LoginActionType = 'LOGIN/SUBMIT_SUCCESS';
+export const SUBMIT_FAILURE: LoginActionType = 'LOGIN/SUBMIT_FAILURE';
 
 function changeEmail(email: string): Action<LoginActionType> {
   return {type: CHANGE_EMAIL, payload: {email}};

@@ -1,19 +1,18 @@
-import * as React from "react";
-import {InputHTMLAttributes} from "react";
+import * as React from 'react';
+import { InputHTMLAttributes } from 'react';
 
 interface FormInputProps {
-  email?: boolean,
-  password?: boolean,
-  className?: string
+  email?: boolean;
+  password?: boolean;
+  className?: string;
 }
 
-const FormInput: React.SFC<FormInputProps & InputHTMLAttributes<any>> = ({email, password, className, ...props}) => {
-  let type = "text";
+const FormInput: React.SFC<FormInputProps & InputHTMLAttributes<{}>> = ({email, password, className, ...props}) => {
+  let type = 'text';
   if (email) {
-    type = "email";
-  }
-  else if (password) {
-    type = "password";
+    type = 'email';
+  } else if (password) {
+    type = 'password';
   }
   return <input className={`form-control ${className}`} type={type} {...props}/>;
 };
@@ -21,8 +20,7 @@ const FormInput: React.SFC<FormInputProps & InputHTMLAttributes<any>> = ({email,
 FormInput.defaultProps = {
   email: false,
   password: false,
-  className: ""
+  className: ''
 };
-
 
 export default FormInput;

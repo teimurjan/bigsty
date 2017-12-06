@@ -1,19 +1,19 @@
-import {Action} from '../Common/types';
+import { Action } from '../../types/redux';
 
 export type RegistrationActionType =
-  "REGISTRATION/CHANGE_NAME" |
-  "REGISTRATION/CHANGE_EMAIL" |
-  "REGISTRATION/CHANGE_PASSWORD" |
-  "REGISTRATION/SUBMIT" |
-  "REGISTRATION/SUBMIT_SUCCESS" |
-  "REGISTRATION/SUBMIT_FAILURE";
+  'REGISTRATION/CHANGE_NAME' |
+  'REGISTRATION/CHANGE_EMAIL' |
+  'REGISTRATION/CHANGE_PASSWORD' |
+  'REGISTRATION/SUBMIT' |
+  'REGISTRATION/SUBMIT_SUCCESS' |
+  'REGISTRATION/SUBMIT_FAILURE';
 
-export const CHANGE_NAME: RegistrationActionType = "REGISTRATION/CHANGE_NAME";
-export const CHANGE_EMAIL: RegistrationActionType = "REGISTRATION/CHANGE_EMAIL";
-export const CHANGE_PASSWORD: RegistrationActionType = "REGISTRATION/CHANGE_PASSWORD";
-export const SUBMIT: RegistrationActionType = "REGISTRATION/SUBMIT";
-export const SUBMIT_SUCCESS: RegistrationActionType = "REGISTRATION/SUBMIT_SUCCESS";
-export const SUBMIT_FAILURE: RegistrationActionType = "REGISTRATION/SUBMIT_FAILURE";
+export const CHANGE_NAME: RegistrationActionType = 'REGISTRATION/CHANGE_NAME';
+export const CHANGE_EMAIL: RegistrationActionType = 'REGISTRATION/CHANGE_EMAIL';
+export const CHANGE_PASSWORD: RegistrationActionType = 'REGISTRATION/CHANGE_PASSWORD';
+export const SUBMIT: RegistrationActionType = 'REGISTRATION/SUBMIT';
+export const SUBMIT_SUCCESS: RegistrationActionType = 'REGISTRATION/SUBMIT_SUCCESS';
+export const SUBMIT_FAILURE: RegistrationActionType = 'REGISTRATION/SUBMIT_FAILURE';
 
 function changeEmail(email: string): Action<RegistrationActionType> {
   return {type: CHANGE_EMAIL, payload: {email}};
