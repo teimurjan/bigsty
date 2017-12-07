@@ -14,7 +14,7 @@ const composeEnhancers = windowWithReduxDevTools.__REDUX_DEVTOOLS_EXTENSION_COMP
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const enhancer = composeEnhancers(applyMiddleware(epicMiddleware, routerMiddleware(browserHistory)));
 
-export default function configureStore(rootReducer: Reducer<RootState>) {
+export default function (rootReducer: Reducer<RootState>) {
   const store = createStore(rootReducer, enhancer);
   if (module.hot) {
     module.hot.accept('../rootReducer', () => store.replaceReducer(rootReducer));

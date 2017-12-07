@@ -8,6 +8,6 @@ import { RootState } from '../rootReducer';
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const enhancer = compose(applyMiddleware(epicMiddleware, routerMiddleware(browserHistory)));
 
-export default function configureStore(rootReducer: Reducer<RootState>) {
+export default function (rootReducer: Reducer<RootState>) {
   return createStore(rootReducer, enhancer);
 }

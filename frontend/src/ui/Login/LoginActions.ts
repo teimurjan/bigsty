@@ -25,4 +25,4 @@ function submit(): Action<LoginActionType> {
   return {type: SUBMIT};
 }
 
-export const LoginActions = {changeEmail, changePassword, submit};
+export default {changeEmail, changePassword, submit};

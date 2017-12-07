@@ -10,7 +10,12 @@ export interface RegistrationState {
   email: string;
   password: string;
   isLoading: boolean;
-  errors?: object;
+  errors?: {
+    name?: {};
+    email?: {};
+    password?: {};
+    global?: {};
+  };
 }
 
 export const initialState: RegistrationState = {

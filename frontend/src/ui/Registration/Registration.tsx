@@ -7,13 +7,9 @@ import { getFieldErrorFromProps } from '../Common/errors';
 import { ActionCreator } from 'redux';
 import { RegistrationActionType } from './RegistrationActions';
 import { FormEvent, InputEvent } from '../../types/html';
+import { RegistrationState } from './RegistrationReducer';
 
-export interface RegistrationProps {
-  name: string;
-  email: string;
-  password: string;
-  isLoading: boolean;
-  errors?: object;
+export interface RegistrationProps extends RegistrationState {
   actions: {
     changeName: ActionCreator<RegistrationActionType>
     changeEmail: ActionCreator<RegistrationActionType>

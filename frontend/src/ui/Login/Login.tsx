@@ -7,12 +7,9 @@ import { getFieldErrorFromProps } from '../Common/errors';
 import { ActionCreator } from 'redux';
 import { LoginActionType } from './LoginActions';
 import { FormEvent, InputEvent } from '../../types/html';
+import { LoginState } from './LoginReducer';
 
-export interface LoginProps {
-  email: string;
-  password: string;
-  isLoading: boolean;
-  errors?: object;
+export interface LoginProps extends LoginState {
   actions: {
     changeEmail: ActionCreator<LoginActionType>
     changePassword: ActionCreator<LoginActionType>

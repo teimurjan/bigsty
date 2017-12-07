@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import Registration from './Registration';
-import { RegistrationActions } from './RegistrationActions';
+import RegistrationActions from './RegistrationActions';
 import { RootState } from '../../rootReducer';
 
 function mapStateToProps(state: RootState) {

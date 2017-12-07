@@ -6,7 +6,7 @@ import { ActionsObservable } from 'redux-observable';
 import { AnyAction, Store } from 'redux';
 import { RootState } from '../../rootReducer';
 
-export function submitEpic(action$: ActionsObservable<AnyAction>, store: Store<RootState>) {
+function submitEpic(action$: ActionsObservable<AnyAction>, store: Store<RootState>) {
   return action$.ofType(SUBMIT)
     .mergeMap((action: AnyAction) => {
         const {name, email, password} = store.getState().registration.toJS();
@@ -16,3 +16,5 @@ export function submitEpic(action$: ActionsObservable<AnyAction>, store: Store<R
       }
     );
 }
+
+export default [submitEpic];

@@ -31,4 +31,4 @@ function submit(): Action<RegistrationActionType> {
   return {type: SUBMIT};
 }
 
-export const RegistrationActions = {changeEmail, changeName, changePassword, submit};
+export default {changeEmail, changeName, changePassword, submit};

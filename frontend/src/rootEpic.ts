@@ -1,8 +1,10 @@
 import { combineEpics } from 'redux-observable';
-import { submitEpic as loginSubmitEpic } from './ui/Login/LoginEpic';
-import { submitEpic as registrationSubmitEpic } from './ui/Registration/RegistrationEpic';
+import loginEpics from './ui/Login/LoginEpics';
+import registrationEpics from './ui/Registration/RegistrationEpics';
+import adminUsersIndexEpics from './ui/Admin/Users/Index/UsersIndexEpics';
 
 export default combineEpics(
-  loginSubmitEpic,
-  registrationSubmitEpic
+  ...loginEpics,
+  ...registrationEpics,
+  ...adminUsersIndexEpics
 );
