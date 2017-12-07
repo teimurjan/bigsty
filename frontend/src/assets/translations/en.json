@@ -8,6 +8,8 @@
   "errors.login.invalidEmailOrPassword": "Email and/or password are incorrect",
   "login.link.forgot": "Forgot Password",
   "login.text.noAccount": "Do not have account?",
+  "errors.registration.email.mustNotBeEmpty": "Email must not be empty",
+  "errors.registration.password.mustNotBeEmpty": "Password must not be empty",
   "errors.registration.name.mustNotBeEmpty": "Name must not be empty",
   "errors.registration.name.maxLength": "Name length must not exceed 30 symbols",
   "errors.registration.email.isEmail": "Invalid email format",

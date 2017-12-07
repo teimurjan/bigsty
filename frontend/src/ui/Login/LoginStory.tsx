@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 
 import Login from './Login';
 import { initialState, LoginState } from './LoginReducer';
-import { IntlProvider } from 'react-intl';
+import WithIntl from '../Common/WithIntl';
 
 interface LoginTestProps extends LoginState {
   actions: {
@@ -22,13 +22,7 @@ const initialProps: LoginTestProps = {
     submit: action('Submitted')
   }
 };
-const messages = require(`../../assets/translations/en.json`);
-
-const LoginWithIntl: React.SFC<LoginTestProps> = props => (
-  <IntlProvider locale="en" messages={messages}>
-    <Login {...props} />
-  </IntlProvider>
-);
+const LoginWithIntl: React.SFC<LoginTestProps> = WithIntl(Login);
 
 storiesOf('Login', module)
   .add('Initial state', () => <LoginWithIntl {...initialProps} />)
