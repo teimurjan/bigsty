@@ -16,5 +16,7 @@
   "errors.registration.email.same": "User with such email already exists",
   "errors.registration.password.regex": "Password must have at least 8 characters and include numbers, lowercase and uppercase letters",
   "registration.placeholder.name": "Name",
-  "registration.text.haveAccount": "Already have an account?"
+  "registration.text.haveAccount": "Already have an account?",
+  "admin.username.label": "Username",
+  "admin.usersIndex.linkText": "Users"
 }

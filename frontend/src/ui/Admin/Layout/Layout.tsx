@@ -3,20 +3,19 @@ import Icon from '../../Common/Icon';
 import Menu from './Menu/Menu';
 import MenuHeader from './Menu/MenuHeader';
 import MenuLink from './Menu/MenuLink';
+import InjectIntl, { IntlProps } from '../../Common/InjectIntl';
 
-export default class Layout extends React.Component {
-  render() {
-    return (
-      <div id="wrapper">
-        <Menu>
-          <MenuHeader>
-            <h3>Username</h3>
-          </MenuHeader>
-          <MenuLink to="/admin/users">
-            <Icon type="user"/> <span className="nav-label">Users</span>
-          </MenuLink>
-        </Menu>
-      </div>
-    );
-  }
-}
+const Layout: React.SFC<IntlProps> = ({intl}) => (
+  <div id="wrapper">
+    <Menu>
+      <MenuHeader>
+        <h3>{intl('admin.username.label')}</h3>
+      </MenuHeader>
+      <MenuLink to="/admin/users">
+        <Icon type="user"/> <span className="nav-label">{intl('admin.usersIndex.linkText')}</span>
+      </MenuLink>
+    </Menu>
+  </div>
+);
+
+export default InjectIntl(Layout);

@@ -2,7 +2,7 @@ import { User } from '../../../../types/models';
 import createReducer from '../../../../createReducer';
 import { Map } from 'immutable';
 
-interface UsersIndexState {
+export interface UsersIndexState {
   users: Array<User>;
   isLoading: boolean;
 }

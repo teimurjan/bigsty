@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { ComponentOrStatelessComponent } from '../../types/common';
 import { IntlProvider } from 'react-intl';
 
-export default (Component: ComponentOrStatelessComponent<{}>,
+export default (Component: React.ComponentType<{}>,
                 messages: {} = require(`../../assets/translations/en.json`),
                 locale: 'en' = 'en'): React.SFC =>
   (props: {}, context) => (
