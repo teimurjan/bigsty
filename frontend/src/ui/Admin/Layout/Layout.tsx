@@ -5,7 +5,7 @@ import MenuHeader from './Menu/MenuHeader';
 import MenuLink from './Menu/MenuLink';
 import InjectIntl, { IntlProps } from '../../Common/InjectIntl';
 
-const Layout: React.SFC<IntlProps> = ({intl}) => (
+export default InjectIntl(({intl, children}: IntlProps & React.Props<{}>) => (
   <div id="wrapper">
     <Menu>
       <MenuHeader>
@@ -15,7 +15,8 @@ const Layout: React.SFC<IntlProps> = ({intl}) => (
         <Icon type="user"/> <span className="nav-label">{intl('admin.usersIndex.linkText')}</span>
       </MenuLink>
     </Menu>
+    <div id="content">
+      {children}
+    </div>
   </div>
-);
-
-export default InjectIntl(Layout);
+));

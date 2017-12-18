@@ -9,7 +9,7 @@ import { LoginActionType } from './LoginActions';
 import { FormEvent, InputEvent } from '../../types/html';
 import { LoginState } from './LoginReducer';
 
-export interface LoginProps extends LoginState {
+export interface LoginProps extends LoginState, IntlProps {
   actions: {
     changeEmail: ActionCreator<LoginActionType>
     changePassword: ActionCreator<LoginActionType>
@@ -17,7 +17,7 @@ export interface LoginProps extends LoginState {
   };
 }
 
-const Login: React.SFC<LoginProps & IntlProps> = props => {
+export default InjectIntl((props: LoginProps) => {
   const handleEmailChange = (e: InputEvent) => props.actions.changeEmail(e.currentTarget.value);
   const handlePasswordChange = (e: InputEvent) => props.actions.changePassword(e.currentTarget.value);
   const handleSubmit = (e: FormEvent) => {
@@ -76,6 +76,4 @@ const Login: React.SFC<LoginProps & IntlProps> = props => {
       </div>
     </div>
   );
-};
-
-export default InjectIntl(Login);
+});

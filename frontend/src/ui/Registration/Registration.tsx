@@ -9,7 +9,7 @@ import { RegistrationActionType } from './RegistrationActions';
 import { FormEvent, InputEvent } from '../../types/html';
 import { RegistrationState } from './RegistrationReducer';
 
-export interface RegistrationProps extends RegistrationState {
+export interface RegistrationProps extends RegistrationState, IntlProps {
   actions: {
     changeName: ActionCreator<RegistrationActionType>
     changeEmail: ActionCreator<RegistrationActionType>
@@ -18,7 +18,7 @@ export interface RegistrationProps extends RegistrationState {
   };
 }
 
-const Registration: React.SFC<RegistrationProps & IntlProps> = props => {
+export default InjectIntl((props: RegistrationProps) => {
   const handleNameChange = (e: InputEvent) => props.actions.changeName(e.currentTarget.value);
   const handleEmailChange = (e: InputEvent) => props.actions.changeEmail(e.currentTarget.value);
   const handlePasswordChange = (e: InputEvent) => props.actions.changePassword(e.currentTarget.value);
@@ -63,6 +63,4 @@ const Registration: React.SFC<RegistrationProps & IntlProps> = props => {
       </div>
     </div>
   );
-};
-
-export default InjectIntl(Registration);
+});

@@ -18,5 +18,11 @@
   "registration.placeholder.name": "Name",
   "registration.text.haveAccount": "Already have an account?",
   "admin.username.label": "Username",
-  "admin.usersIndex.linkText": "Users"
+  "admin.usersIndex.linkText": "Users",
+  "admin.usersIndex.table.columns.id": "ID",
+  "admin.usersIndex.table.columns.name": "Name",
+  "admin.usersIndex.table.columns.email": "Email",
+  "admin.usersIndex.table.columns.group": "Group",
+  "admin.usersIndex.table.columns.dateJoined": "Date joined",
+  "admin.usersIndex.table.columns.isActive": "Active"
 }
