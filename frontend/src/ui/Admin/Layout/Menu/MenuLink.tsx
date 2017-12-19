@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { Props, ReactChild } from 'react';
 import MenuItem from './MenuItem';
+import Link from 'react-router/lib/Link';
 
-interface MenuLinkProps extends Props<{}> {
+interface MenuLinkProps extends React.Props<{}> {
   to: string;
   className?: string;
 }
 
 export default ({to, children, className}: MenuLinkProps) => {
-  const createLink = (child: ReactChild) => <a href={to}>{child}</a>;
   return (
     <MenuItem active={window.location.pathname === to} className={className}>
-      {React.Children.map(children, createLink)}
+      <Link to={to}>{children}</Link>
     </MenuItem>
   );
 };

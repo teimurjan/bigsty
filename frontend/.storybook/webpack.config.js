@@ -16,7 +16,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(s|sc)ss$/,
+        test: /\.(c|sc)ss$/,
         use: [
           require.resolve('style-loader'),
           {

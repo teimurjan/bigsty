@@ -9,7 +9,7 @@ export default InjectIntl(({intl, children}: IntlProps & React.Props<{}>) => (
   <div id="wrapper">
     <Menu>
       <MenuHeader>
-        <h3>{intl('admin.username.label')}</h3>
+        <h3>Ivan Pupkin</h3>
       </MenuHeader>
       <MenuLink to="/admin/users">
         <Icon type="user"/> <span className="nav-label">{intl('admin.usersIndex.linkText')}</span>
