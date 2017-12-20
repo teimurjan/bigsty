@@ -5,10 +5,14 @@ import { UsersIndexActionType } from './UsersIndexActions';
 import { default as InjectIntl, IntlProps } from '../../../Common/InjectIntl';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import { DangerButton, PrimaryButton } from '../../../Common/Buttons/Buttons';
+import { ButtonEvent } from '../../../../types/html';
+import { User } from '../../../../types/models';
 
 interface UsersIndexProps extends UsersIndexState, IntlProps {
   actions: {
     fetchUsers: ActionCreator<UsersIndexActionType>;
+    deleteUser: ActionCreator<UsersIndexActionType>;
   };
 }
 
@@ -16,6 +20,23 @@ export default InjectIntl(class extends React.Component<UsersIndexProps> {
   componentWillMount() {
     this.props.actions.fetchUsers();
   }
+
+  actionsColumnFormatter = (cell: {}, user: User) => {
+    const onDelete = (e: ButtonEvent) => {
+      e.preventDefault();
+      this.props.actions.deleteUser(user.id);
+    };
+    return (
+      <div>
+        <PrimaryButton className="col-md-6">
+          {this.props.intl('admin.usersIndex.table.columns.actions.edit')}
+        </PrimaryButton>
+        <DangerButton className="col-md-6" onClick={onDelete}>
+          {this.props.intl('admin.usersIndex.table.columns.actions.delete')}
+        </DangerButton>
+      </div>
+    );
+  };
 
   public render() {
     const {users, intl} = this.props;
@@ -29,6 +50,7 @@ export default InjectIntl(class extends React.Component<UsersIndexProps> {
         <TableHeaderColumn dataField="date_joined">
           {intl('admin.usersIndex.table.columns.dateJoined')}
         </TableHeaderColumn>
+        <TableHeaderColumn dataFormat={this.actionsColumnFormatter}/>
       </BootstrapTable>
     );
   }
