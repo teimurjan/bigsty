@@ -4,20 +4,15 @@ import InjectIntl, { IntlProps } from '../Common/InjectIntl';
 import FormInput from '../Common/Forms/FormInput';
 import FormGroup from '../Common/Forms/FormGroup';
 import { getFieldErrorFromProps } from '../Common/errors';
-import { ActionCreator } from 'redux';
-import { LoginActionType } from './LoginActions';
+import { LoginActionCreatorsMapObject } from './LoginActions';
 import { FormEvent, InputEvent } from '../../types/html';
 import { LoginState } from './LoginReducer';
 
-export interface LoginProps extends LoginState, IntlProps {
-  actions: {
-    changeEmail: ActionCreator<LoginActionType>
-    changePassword: ActionCreator<LoginActionType>
-    submit: ActionCreator<LoginActionType>
-  };
+export interface LoginProps extends LoginState {
+  actions: LoginActionCreatorsMapObject;
 }
 
-export default InjectIntl((props: LoginProps) => {
+export default InjectIntl((props: LoginProps & IntlProps) => {
   const handleEmailChange = (e: InputEvent) => props.actions.changeEmail(e.currentTarget.value);
   const handlePasswordChange = (e: InputEvent) => props.actions.changePassword(e.currentTarget.value);
   const handleSubmit = (e: FormEvent) => {

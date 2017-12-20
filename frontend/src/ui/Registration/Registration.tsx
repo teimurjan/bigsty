@@ -5,20 +5,15 @@ import FormInput from '../Common/Forms/FormInput';
 import FormGroup from '../Common/Forms/FormGroup';
 import { getFieldErrorFromProps } from '../Common/errors';
 import { ActionCreator } from 'redux';
-import { RegistrationActionType } from './RegistrationActions';
+import { RegistrationActionCreatorsMapObject, RegistrationActionType } from './RegistrationActions';
 import { FormEvent, InputEvent } from '../../types/html';
 import { RegistrationState } from './RegistrationReducer';
 
-export interface RegistrationProps extends RegistrationState, IntlProps {
-  actions: {
-    changeName: ActionCreator<RegistrationActionType>
-    changeEmail: ActionCreator<RegistrationActionType>
-    changePassword: ActionCreator<RegistrationActionType>
-    submit: ActionCreator<RegistrationActionType>
-  };
+export interface RegistrationProps extends RegistrationState {
+  actions: RegistrationActionCreatorsMapObject;
 }
 
-export default InjectIntl((props: RegistrationProps) => {
+export default InjectIntl((props: RegistrationProps & IntlProps) => {
   const handleNameChange = (e: InputEvent) => props.actions.changeName(e.currentTarget.value);
   const handleEmailChange = (e: InputEvent) => props.actions.changeEmail(e.currentTarget.value);
   const handlePasswordChange = (e: InputEvent) => props.actions.changePassword(e.currentTarget.value);

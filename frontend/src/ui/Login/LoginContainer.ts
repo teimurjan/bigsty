@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import Login from './Login';
 import { RootState } from '../../rootReducer';
-import LoginActions from './LoginActions';
+import LoginActionCreators from './LoginActions';
 
 function mapStateToProps(state: RootState) {
   return state.login.toJS();
@@ -10,7 +10,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch: Dispatch<RootState>) {
   return {
-    actions: bindActionCreators(LoginActions, dispatch)
+    actions: bindActionCreators(LoginActionCreators, dispatch)
   };
 }
 

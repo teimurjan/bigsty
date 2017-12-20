@@ -26,6 +26,7 @@
   "admin.usersIndex.table.columns.group": "Group",
   "admin.usersIndex.table.columns.dateJoined": "Date joined",
   "admin.usersIndex.table.columns.isActive": "Active",
-  "admin.usersIndex.table.columns.actions.delete": "Delete",
-  "admin.usersIndex.table.columns.actions.edit": "Edit"
+  "admin.modelTable.buttons.delete": "Delete",
+  "admin.modelTable.buttons.edit": "Edit",
+  "admin.modelTable.buttons.add": "Add"
 }

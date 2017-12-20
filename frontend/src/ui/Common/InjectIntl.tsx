@@ -8,14 +8,13 @@ export interface IntlProps {
   intlLocale: string;
 }
 
-export default (Component: React.ComponentType<IntlProps>): React.StatelessComponent => {
-  const IntlComponent: React.SFC = (props, context) => {
+export default function <T>(Component: React.ComponentType<T & IntlProps>): React.StatelessComponent<T> {
+  const IntlComponent: React.SFC<T> = (props, context) => {
     const intl = (messageId: string, values?: {}) => context.intl.formatMessage({id: messageId}, values);
     return <Component {...props} intl={intl} intlLocale={context.intl.locale}/>;
-
   };
   IntlComponent.contextTypes = {
     intl: intlShape
   };
   return IntlComponent;
-};
+}

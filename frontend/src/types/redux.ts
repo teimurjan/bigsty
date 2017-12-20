@@ -3,3 +3,5 @@ export interface Action<T> {
 
   [extraProps: string]: {};
 }
+
+export type ActionCreatorsMapObject<A> = Map<string, A>;

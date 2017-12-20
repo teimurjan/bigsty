@@ -1,4 +1,5 @@
 import { Action } from '../../types/redux';
+import { ActionCreator } from 'redux';
 
 export type RegistrationActionType =
   'REGISTRATION/CHANGE_NAME' |
@@ -15,20 +16,35 @@ export const SUBMIT: RegistrationActionType = 'REGISTRATION/SUBMIT';
 export const SUBMIT_SUCCESS: RegistrationActionType = 'REGISTRATION/SUBMIT_SUCCESS';
 export const SUBMIT_FAILURE: RegistrationActionType = 'REGISTRATION/SUBMIT_FAILURE';
 
-function changeEmail(email: string): Action<RegistrationActionType> {
+type RegistrationAction = Action<RegistrationActionType>;
+
+function changeEmail(email: string): RegistrationAction {
   return {type: CHANGE_EMAIL, payload: {email}};
 }
 
-function changeName(name: string): Action<RegistrationActionType> {
+function changeName(name: string): RegistrationAction {
   return {type: CHANGE_NAME, payload: {name}};
 }
 
-function changePassword(password: string): Action<RegistrationActionType> {
+function changePassword(password: string): RegistrationAction {
   return {type: CHANGE_PASSWORD, payload: {password}};
 }
 
-function submit(): Action<RegistrationActionType> {
+function submit(): RegistrationAction {
   return {type: SUBMIT};
 }
 
-export default {changeEmail, changeName, changePassword, submit};
+export type RegistrationActionCreatorsMapObject = {
+  changeEmail: ActionCreator<RegistrationAction>;
+  changeName: ActionCreator<RegistrationAction>;
+  changePassword: ActionCreator<RegistrationAction>;
+  submit: ActionCreator<RegistrationAction>;
+};
+
+const RegistrationActionCreators: RegistrationActionCreatorsMapObject = {
+  changeEmail,
+  changeName,
+  changePassword,
+  submit
+};
+export default RegistrationActionCreators;
