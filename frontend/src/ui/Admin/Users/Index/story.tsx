@@ -2,7 +2,7 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import UsersIndex from './UsersIndex';
-import { UsersIndexState, initialState } from './UsersIndexReducer';
+import { UsersIndexState, initialState } from './reducer';
 import WithIntl from '../../../Common/WithIntl';
 
 interface UsersIndexTestProps extends UsersIndexState {

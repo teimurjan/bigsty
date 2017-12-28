@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import { routerReducer as routing } from 'react-router-redux';
 import { intlReducer as intl } from 'react-intl-redux';
-import login from './ui/Login/LoginReducer';
-import registration from './ui/Registration/RegistrationReducer';
-import adminUsersIndex from './ui/Admin/Users/Index/UsersIndexReducer';
+import login from './ui/Login/reducer';
+import registration from './ui/Registration/reducer';
+import adminUsersIndex from './ui/Admin/Users/Index/reducer';
 import { Map } from 'immutable';
 
 export interface RootState {

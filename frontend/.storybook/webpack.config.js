@@ -74,6 +74,12 @@ module.exports = {
         ],
         loader: require.resolve('ts-loader'),
       },
+      {
+        test: /\.js$/,
+        loader: require.resolve('source-map-loader'),
+        enforce: 'pre',
+        include: paths.appSrc,
+      },
     ],
   },
   resolve: {

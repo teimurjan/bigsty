@@ -1,5 +1,5 @@
-import { Action } from '../../../../types/redux';
 import { ActionCreator, } from 'redux';
+import { Action } from '../../../../typings/redux-custom';
 
 export type UsersIndexActionType =
   'USERS_INDEX/FETCH_USERS' |

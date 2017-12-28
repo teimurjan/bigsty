@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { UsersIndexState } from './UsersIndexReducer';
-import { UsersIndexActionCreatorsMapObject } from './UsersIndexActions';
+import { UsersIndexState } from './reducer';
+import { UsersIndexActionCreatorsMapObject } from './actions';
 import { default as InjectIntl, IntlProps } from '../../../Common/InjectIntl';
 import { TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';

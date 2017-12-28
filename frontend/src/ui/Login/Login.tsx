@@ -4,9 +4,9 @@ import InjectIntl, { IntlProps } from '../Common/InjectIntl';
 import FormInput from '../Common/Forms/FormInput';
 import FormGroup from '../Common/Forms/FormGroup';
 import { getFieldErrorFromProps } from '../Common/errors';
-import { LoginActionCreatorsMapObject } from './LoginActions';
-import { FormEvent, InputEvent } from '../../types/html';
-import { LoginState } from './LoginReducer';
+import { LoginActionCreatorsMapObject } from './actions';
+import { LoginState } from './reducer';
+import { FormEvent, InputEvent } from '../../typings/html-shortcuts';
 
 export interface LoginProps extends LoginState {
   actions: LoginActionCreatorsMapObject;

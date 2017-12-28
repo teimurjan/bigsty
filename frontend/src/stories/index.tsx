@@ -1,5 +1,6 @@
 import '../assets/scss/style.scss';
-import '../ui/Login/LoginStory';
-import '../ui/Registration/RegistrationStory';
-import '../ui/Admin/Layout/LayoutStory';
-import '../ui/Admin/Users/Index/UsersIndexStory';
+import '../ui/Login/story';
+import '../ui/Registration/story';
+import '../ui/Admin/Layout/story';
+import '../ui/Admin/Users/Index/story';
+import '../ui/Admin/Users/Add/story';

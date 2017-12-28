@@ -3,8 +3,9 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
 import Registration from './Registration';
-import { initialState, RegistrationState } from './RegistrationReducer';
+import { initialState, RegistrationState } from './reducer';
 import WithIntl from '../Common/WithIntl';
+import { Map as ImmutableMap } from 'immutable';
 
 interface RegistrationTestProps extends RegistrationState {
   actions: {
@@ -24,31 +25,31 @@ const initialProps: RegistrationTestProps = {
     submit: action('Submitted')
   }
 };
+
+const immutableProps = ImmutableMap(initialProps);
 const RegistrationWithIntl: React.SFC<RegistrationTestProps> = WithIntl(Registration);
 
 storiesOf('Registration', module)
   .add('Initial state', () => <RegistrationWithIntl {...initialProps} />)
   .add('With content', () => {
-    const newProps = Object.assign({}, initialProps, {
+    const newProps = immutableProps.merge({
       name: 'Test Name',
       email: 'test@email.com',
       password: 'Passw0rd'
     });
-    return <RegistrationWithIntl {...newProps} />;
+    return <RegistrationWithIntl {...newProps.toJS()} />;
   })
   .add('Loading', () => {
-    const newProps = Object.assign({}, initialProps, {
-      isLoading: true
-    });
-    return <RegistrationWithIntl {...newProps} />;
+    const newProps = immutableProps.set('isLoading', true);
+    return <RegistrationWithIntl {...newProps.toJS()} />;
   })
   .add('With empty errors', () => {
-    const newProps = Object.assign({}, initialProps, {
+    const newProps = immutableProps.merge({
       errors: {
         name: ['errors.registration.name.mustNotBeEmpty'],
         email: ['errors.registration.email.mustNotBeEmpty'],
         password: ['errors.registration.password.mustNotBeEmpty']
       }
     });
-    return <RegistrationWithIntl {...newProps} />;
+    return <RegistrationWithIntl {...newProps.toJS()} />;
   });

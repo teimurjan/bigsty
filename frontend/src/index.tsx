@@ -8,7 +8,7 @@ import registerServiceWorker from './registerServiceWorker';
 import routes from './routes';
 import configureStore from './configureStore';
 import { IntlProvider } from 'react-intl-redux';
-import { setupLocale } from './ui/App/AppActions';
+import { setupLocale } from './ui/App/actions';
 
 const store = configureStore(rootReducer);
 const history = syncHistoryWithStore(browserHistory, store);

@@ -28,5 +28,12 @@
   "admin.usersIndex.table.columns.isActive": "Active",
   "admin.modelTable.buttons.delete": "Delete",
   "admin.modelTable.buttons.edit": "Edit",
-  "admin.modelTable.buttons.add": "Add"
+  "admin.modelTable.buttons.add": "Add",
+  "admin.addModal.buttons.add": "Add",
+  "admin.addModal.buttons.cancel": "Cancel",
+  "admin.addUser.labels.name": "Name",
+  "admin.addUser.labels.email": "Email",
+  "admin.addUser.labels.password": "Password",
+  "admin.addUser.labels.group": "Group",
+  "admin.addUser.placeholders.groupSelect": "Select a group..."
 }

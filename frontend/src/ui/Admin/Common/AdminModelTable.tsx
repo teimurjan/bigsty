@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { BootstrapTable, BootstrapTableProps, TableHeaderColumn } from 'react-bootstrap-table';
-import { User } from '../../../types/models';
-import { ButtonEvent } from '../../../types/html';
 import { DangerButton, PrimaryButton } from '../../Common/Buttons/Buttons';
 import { default as InjectIntl, IntlProps } from '../../Common/InjectIntl';
+import { ButtonEvent } from '../../../typings/html-shortcuts';
+import { User } from '../../../typings/api-models';
 
 interface AdminModelTableProps extends BootstrapTableProps {
   onDelete: Function;

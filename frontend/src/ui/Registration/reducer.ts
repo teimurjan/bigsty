@@ -1,9 +1,9 @@
-import { Map } from 'immutable';
+import { Map as ImmutableMap } from 'immutable';
 import createReducer from '../../createReducer';
 import {
   CHANGE_EMAIL, CHANGE_NAME, CHANGE_PASSWORD, SUBMIT, SUBMIT_FAILURE,
   SUBMIT_SUCCESS
-} from './RegistrationActions';
+} from './actions';
 
 export interface RegistrationState {
   name: string;
@@ -33,4 +33,4 @@ export default createReducer({
   [SUBMIT]: (state, action) => state.merge({isLoading: true, errors: null}),
   [SUBMIT_SUCCESS]: (state, action) => state.set('isLoading', false),
   [SUBMIT_FAILURE]: (state, action) => state.merge({isLoading: false, errors: action.errors})
-}, Map(initialState));
+}, ImmutableMap(initialState));

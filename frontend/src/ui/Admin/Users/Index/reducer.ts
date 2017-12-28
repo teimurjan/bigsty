@@ -1,6 +1,6 @@
-import { User } from '../../../../types/models';
 import createReducer from '../../../../createReducer';
-import { Map } from 'immutable';
+import { Map as ImmutableMap } from 'immutable';
+import { User } from '../../../../typings/api-models';
 
 export interface UsersIndexState {
   users: Array<User>;
@@ -12,4 +12,4 @@ export const initialState: UsersIndexState = {
   isLoading: false
 };
 
-export default createReducer({}, Map(initialState));
+export default createReducer({}, ImmutableMap(initialState));

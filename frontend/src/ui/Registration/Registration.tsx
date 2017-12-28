@@ -4,10 +4,9 @@ import InjectIntl, { IntlProps } from '../Common/InjectIntl';
 import FormInput from '../Common/Forms/FormInput';
 import FormGroup from '../Common/Forms/FormGroup';
 import { getFieldErrorFromProps } from '../Common/errors';
-import { ActionCreator } from 'redux';
-import { RegistrationActionCreatorsMapObject, RegistrationActionType } from './RegistrationActions';
-import { FormEvent, InputEvent } from '../../types/html';
-import { RegistrationState } from './RegistrationReducer';
+import { RegistrationActionCreatorsMapObject } from './actions';
+import { RegistrationState } from './reducer';
+import { FormEvent, InputEvent } from '../../typings/html-shortcuts';
 
 export interface RegistrationProps extends RegistrationState {
   actions: RegistrationActionCreatorsMapObject;

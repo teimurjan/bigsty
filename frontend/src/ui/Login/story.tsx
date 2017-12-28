@@ -3,8 +3,9 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
 import Login from './Login';
-import { initialState, LoginState } from './LoginReducer';
+import { initialState, LoginState } from './reducer';
 import WithIntl from '../Common/WithIntl';
+import { Map as ImmutableMap } from 'immutable';
 
 interface LoginTestProps extends LoginState {
   actions: {
@@ -22,37 +23,40 @@ const initialProps: LoginTestProps = {
     submit: action('Submitted')
   }
 };
+
+const immutableProps = ImmutableMap(initialProps);
+
 const LoginWithIntl: React.SFC<LoginTestProps> = WithIntl(Login);
 
 storiesOf('Login', module)
   .add('Initial state', () => <LoginWithIntl {...initialProps} />)
   .add('With content', () => {
-    const newProps = Object.assign({}, initialProps, {
+    const newProps = immutableProps.merge({
       email: 'test@email.com',
       password: 'Passw0rd'
     });
-    return <LoginWithIntl {...newProps} />;
+    return <LoginWithIntl {...newProps.toJS()} />;
   })
   .add('Loading', () => {
-    const newProps = Object.assign({}, initialProps, {
+    const newProps = immutableProps.merge({
       isLoading: true
     });
-    return <LoginWithIntl {...newProps} />;
+    return <LoginWithIntl {...newProps.toJS()} />;
   })
   .add('With empty errors', () => {
-    const newProps = Object.assign({}, initialProps, {
+    const newProps = immutableProps.merge({
       errors: {
         email: ['errors.login.email.mustNotBeEmpty'],
         password: ['errors.login.password.mustNotBeEmpty']
       }
     });
-    return <LoginWithIntl {...newProps} />;
+    return <LoginWithIntl {...newProps.toJS()} />;
   })
   .add('With auth errors', () => {
-    const newProps = Object.assign({}, initialProps, {
+    const newProps = immutableProps.merge({
       errors: {
         auth: ['errors.login.invalidEmailOrPassword'],
       }
     });
-    return <LoginWithIntl {...newProps} />;
+    return <LoginWithIntl {...newProps.toJS()} />;
   });

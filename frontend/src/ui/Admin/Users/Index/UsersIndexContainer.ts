@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import UsersIndex from './UsersIndex';
 import { RootState } from '../../../../rootReducer';
-import UsersIndexActionCreators from './UsersIndexActions';
+import UsersIndexActionCreators from './actions';
 
 function mapStateToProps(state: RootState) {
   return state.adminUsersIndex.toJS();

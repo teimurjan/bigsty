@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import Login from './Login';
 import { RootState } from '../../rootReducer';
-import LoginActionCreators from './LoginActions';
+import LoginActionCreators from './actions';
 
 function mapStateToProps(state: RootState) {
   return state.login.toJS();
