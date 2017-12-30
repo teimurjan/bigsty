@@ -14,7 +14,10 @@ export interface AddUserState {
   group?: Group;
   isLoading: boolean;
   groups: Array<Group>;
-  errors: {};
+  errors: {
+    addUser?: Array<string>;
+    fetchGroups?: Array<string>;
+  };
 }
 
 export const initialState: AddUserState = {
@@ -29,19 +32,30 @@ export const initialState: AddUserState = {
 
 export default createReducer({
   [FETCH_GROUPS]: (state, action) => state.merge({
-    isLoading: true, errors: state.errors.delete('fetchGroups')
+    isLoading: true,
+    errors: {
+      fetchGroups: undefined
+    }
   }),
   [FETCH_GROUPS_SUCCESS]: (state, action) => state.merge({
     isLoading: false, groups: action.groups
   }),
   [FETCH_GROUPS_FAILURE]: (state, action) => state.merge({
-    isLoading: false, errors: state.errors.set('fetchGroups', action.errors)
+    isLoading: false,
+    errors: {
+      fetchGroups: action.errors
+    }
   }),
   [ADD_USER]: (state, action) => state.merge({
-    isLoading: true, errors: state.errors.delete('addUser')
+    isLoading: true, errors: {
+      addUser: undefined
+    }
   }),
   [ADD_USER_SUCCESS]: (state, action) => state.set('isLoading', false),
   [ADD_USER_FAILURE]: (state, action) => state.merge({
-    isLoading: false, errors: state.errors.set('addUser', action.errors)
+    isLoading: false,
+    errors: {
+      addUser: action.errors
+    }
   })
 }, ImmutableMap(initialState));

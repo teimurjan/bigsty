@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router';
-import InjectIntl, { IntlProps } from '../Common/InjectIntl';
+import injectIntl, { IntlProps } from '../Common/injectIntl';
 import FormInput from '../Common/Forms/FormInput';
 import FormGroup from '../Common/Forms/FormGroup';
 import { getFieldErrorFromProps } from '../Common/errors';
@@ -12,7 +12,7 @@ export interface RegistrationProps extends RegistrationState {
   actions: RegistrationActionCreatorsMapObject;
 }
 
-export default InjectIntl((props: RegistrationProps & IntlProps) => {
+export default injectIntl((props: RegistrationProps & IntlProps) => {
   const handleNameChange = (e: InputEvent) => props.actions.changeName(e.currentTarget.value);
   const handleEmailChange = (e: InputEvent) => props.actions.changeEmail(e.currentTarget.value);
   const handlePasswordChange = (e: InputEvent) => props.actions.changePassword(e.currentTarget.value);

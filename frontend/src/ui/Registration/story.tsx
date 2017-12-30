@@ -1,47 +1,39 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 
-import Registration from './Registration';
-import { initialState, RegistrationState } from './reducer';
-import WithIntl from '../Common/WithIntl';
+import RegistrationComponent, { RegistrationProps } from './Registration';
+import { initialState } from './reducer';
 import { Map as ImmutableMap } from 'immutable';
+import { reduxAction } from '../../stories/utils';
+import { CHANGE_NAME, CHANGE_EMAIL, CHANGE_PASSWORD, SUBMIT } from './actions';
+import withIntl from '../../stories/withIntl';
 
-interface RegistrationTestProps extends RegistrationState {
-  actions: {
-    changeName: Function,
-    changeEmail: Function,
-    changePassword: Function,
-    submit: Function
-  };
-}
-
-const initialProps: RegistrationTestProps = {
+const initialProps: RegistrationProps = {
   ...initialState,
   actions: {
-    changeName: action('Name changed'),
-    changeEmail: action('Email changed'),
-    changePassword: action('Password changed'),
-    submit: action('Submitted')
+    changeName: reduxAction(CHANGE_NAME),
+    changeEmail: reduxAction(CHANGE_EMAIL),
+    changePassword: reduxAction(CHANGE_PASSWORD),
+    submit: reduxAction(SUBMIT)
   }
 };
 
 const immutableProps = ImmutableMap(initialProps);
-const RegistrationWithIntl: React.SFC<RegistrationTestProps> = WithIntl(Registration);
+const Registration = withIntl(RegistrationComponent);
 
 storiesOf('Registration', module)
-  .add('Initial state', () => <RegistrationWithIntl {...initialProps} />)
+  .add('Initial state', () => <Registration {...initialProps} />)
   .add('With content', () => {
     const newProps = immutableProps.merge({
       name: 'Test Name',
       email: 'test@email.com',
       password: 'Passw0rd'
     });
-    return <RegistrationWithIntl {...newProps.toJS()} />;
+    return <Registration {...newProps.toJS()} />;
   })
   .add('Loading', () => {
     const newProps = immutableProps.set('isLoading', true);
-    return <RegistrationWithIntl {...newProps.toJS()} />;
+    return <Registration {...newProps.toJS()} />;
   })
   .add('With empty errors', () => {
     const newProps = immutableProps.merge({
@@ -51,5 +43,5 @@ storiesOf('Registration', module)
         password: ['errors.registration.password.mustNotBeEmpty']
       }
     });
-    return <RegistrationWithIntl {...newProps.toJS()} />;
+    return <Registration {...newProps.toJS()} />;
   });

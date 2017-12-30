@@ -1,4 +1,4 @@
-import { IntlFunction } from './InjectIntl';
+import { IntlFunction } from './injectIntl';
 
 export const getFieldErrorFromProps = (props: { errors: Map<string, object>, intl: IntlFunction },
                                        field: string): false | string => {

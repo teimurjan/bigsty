@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import AddUser from './AddUser';
+import AddUser, { AddUserNotStateProps } from './AddUser';
 import { RootState } from '../../../../rootReducer';
-import addUserActionCreators from './actions';
+import addUserActionCreators, { AddUserActionCreatorsMapObject } from './actions';
+import { AddUserState } from './reducer';
 
 function mapStateToProps(state: RootState) {
   return state.adminAddUser.toJS();
@@ -10,8 +11,9 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch: Dispatch<RootState>) {
   return {
-    actions: bindActionCreators(addUserActionCreators, dispatch)
+    actions: bindActionCreators<AddUserActionCreatorsMapObject>(addUserActionCreators, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddUser);
+export default connect<AddUserState, { actions: AddUserActionCreatorsMapObject },
+  AddUserNotStateProps>(mapStateToProps, mapDispatchToProps)(AddUser);

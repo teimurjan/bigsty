@@ -3,9 +3,9 @@ import Icon from '../../Common/Icon';
 import Menu from './Menu/Menu';
 import MenuHeader from './Menu/MenuHeader';
 import MenuLink from './Menu/MenuLink';
-import InjectIntl, { IntlProps } from '../../Common/InjectIntl';
+import injectIntl, { IntlProps } from '../../Common/injectIntl';
 
-export default InjectIntl(({intl, children}: IntlProps & React.Props<{}>) => (
+export default injectIntl(({intl, children}: IntlProps & React.Props<{}>) => (
   <div id="wrapper">
     <Menu>
       <MenuHeader>

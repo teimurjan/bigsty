@@ -35,5 +35,7 @@
   "admin.addUser.labels.email": "Email",
   "admin.addUser.labels.password": "Password",
   "admin.addUser.labels.group": "Group",
-  "admin.addUser.placeholders.groupSelect": "Select a group..."
+  "admin.addUser.placeholders.groupSelect": "Select a group...",
+  "errors.common": "Something went wrong...",
+  "errors.common.tryAgain": "Try again"
 }

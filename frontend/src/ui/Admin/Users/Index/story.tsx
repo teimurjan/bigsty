@@ -1,27 +1,28 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import Users from './Users';
-import { UsersState, initialState } from './reducer';
-import WithIntl from '../../../Common/WithIntl';
+import UsersComponent, { UsersProps } from './Users';
+import { initialState } from './reducer';
+import withIntl from '../../../../stories/withIntl';
+import { Provider } from 'react-redux';
+import configureStore from '../../../../configureStore';
+import rootReducer from '../../../../rootReducer';
+import { reduxAction } from '../../../../stories/utils';
+import { FETCH_USERS } from './actions';
+import withStore from '../../../../stories/withStore';
 
-interface UsersTestProps extends UsersState {
-  actions: {
-    fetchUsers: Function
-  };
-}
-
-const initialProps: UsersTestProps = {
+const initialProps: UsersProps = {
   ...initialState,
   actions: {
-    fetchUsers: action('Fetched users'),
+    fetchUsers: reduxAction(FETCH_USERS),
   }
 };
 
-const UsersWithIntl: React.SFC<UsersTestProps> = WithIntl(Users);
+const store = configureStore(rootReducer);
+const Users = withStore(withIntl(UsersComponent), store);
 
 storiesOf('Admin Users', module)
-  .add('Initial state', () => <UsersWithIntl {...initialProps}/>)
+  .addDecorator(getStory => <Provider store={store}>{getStory()}</Provider>)
+  .add('Initial state', () => <Users {...initialProps}/>)
   .add('With content', () => {
     const newProps = Object.assign({}, initialProps, {
       users: [{
@@ -33,5 +34,5 @@ storiesOf('Admin Users', module)
         group: 'admin'
       }]
     });
-    return <UsersWithIntl {...newProps}/>;
+    return <Users {...newProps}/>;
   });

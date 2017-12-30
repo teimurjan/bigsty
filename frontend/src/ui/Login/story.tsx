@@ -1,47 +1,38 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 
-import Login from './Login';
-import { initialState, LoginState } from './reducer';
-import WithIntl from '../Common/WithIntl';
+import LoginComponent, { LoginProps } from './Login';
+import { initialState } from './reducer';
 import { Map as ImmutableMap } from 'immutable';
+import { reduxAction } from '../../stories/utils';
+import { CHANGE_EMAIL, CHANGE_PASSWORD, SUBMIT } from './actions';
+import withIntl from '../../stories/withIntl';
 
-interface LoginTestProps extends LoginState {
-  actions: {
-    changeEmail: Function,
-    changePassword: Function,
-    submit: Function
-  };
-}
-
-const initialProps: LoginTestProps = {
+const initialProps: LoginProps = {
   ...initialState,
   actions: {
-    changeEmail: action('Email changed'),
-    changePassword: action('Password changed'),
-    submit: action('Submitted')
+    changeEmail: reduxAction(CHANGE_EMAIL),
+    changePassword: reduxAction(CHANGE_PASSWORD),
+    submit: reduxAction(SUBMIT)
   }
 };
-
+const Login = withIntl(LoginComponent);
 const immutableProps = ImmutableMap(initialProps);
 
-const LoginWithIntl: React.SFC<LoginTestProps> = WithIntl(Login);
-
 storiesOf('Login', module)
-  .add('Initial state', () => <LoginWithIntl {...initialProps} />)
+  .add('Initial state', () => <Login {...initialProps} />)
   .add('With content', () => {
     const newProps = immutableProps.merge({
       email: 'test@email.com',
       password: 'Passw0rd'
     });
-    return <LoginWithIntl {...newProps.toJS()} />;
+    return <Login {...newProps.toJS()} />;
   })
   .add('Loading', () => {
     const newProps = immutableProps.merge({
       isLoading: true
     });
-    return <LoginWithIntl {...newProps.toJS()} />;
+    return <Login {...newProps.toJS()} />;
   })
   .add('With empty errors', () => {
     const newProps = immutableProps.merge({
@@ -50,7 +41,7 @@ storiesOf('Login', module)
         password: ['errors.login.password.mustNotBeEmpty']
       }
     });
-    return <LoginWithIntl {...newProps.toJS()} />;
+    return <Login {...newProps.toJS()} />;
   })
   .add('With auth errors', () => {
     const newProps = immutableProps.merge({
@@ -58,5 +49,5 @@ storiesOf('Login', module)
         auth: ['errors.login.invalidEmailOrPassword'],
       }
     });
-    return <LoginWithIntl {...newProps.toJS()} />;
+    return <Login {...newProps.toJS()} />;
   });

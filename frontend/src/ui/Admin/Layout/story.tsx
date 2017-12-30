@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
-import Layout from './Layout';
-import WithIntl from '../../Common/WithIntl';
+import LayoutComponent from './Layout';
+import withIntl from '../../../stories/withIntl';
 
-const LayoutWithIntl: React.SFC<{}> = WithIntl(Layout);
+const Layout = withIntl(LayoutComponent);
 
 storiesOf('Admin Layout', module)
-  .add('Initial state', () => <LayoutWithIntl/>);
+  .add('Initial state', () => <Layout/>);

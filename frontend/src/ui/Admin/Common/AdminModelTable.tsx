@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BootstrapTable, BootstrapTableProps, TableHeaderColumn } from 'react-bootstrap-table';
 import { DangerButton, PrimaryButton } from '../../Common/Buttons/Buttons';
-import { default as InjectIntl, IntlProps } from '../../Common/InjectIntl';
+import { default as injectIntl, IntlProps } from '../../Common/injectIntl';
 import { ButtonEvent } from '../../../typings/html-shortcuts';
 import { User } from '../../../typings/api-models';
 
@@ -11,7 +11,7 @@ interface AdminModelTableProps extends BootstrapTableProps {
   onEdit: Function;
 }
 
-export default InjectIntl<AdminModelTableProps>(({
+export default injectIntl<AdminModelTableProps>(({
                                                    onDelete, onAdd, onEdit,
                                                    children, intl, ...props
                                                  }: AdminModelTableProps & IntlProps) => {
@@ -49,7 +49,7 @@ export default InjectIntl<AdminModelTableProps>(({
         {children}
         <TableHeaderColumn dataFormat={actionsColumnFormatter}/>
       </BootstrapTable>
-      <PrimaryButton onClick={handleAddClick}>
+      <PrimaryButton className="m-t-sm" mWidth onClick={handleAddClick}>
         {intl('admin.modelTable.buttons.add')}
       </PrimaryButton>
     </div>

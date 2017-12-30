@@ -24,7 +24,7 @@ function addUserEpic(action$: ActionsObservable<AnyAction>, store: Store<RootSta
 function fetchGroupsEpic(action$: ActionsObservable<AnyAction>, store: Store<RootState>) {
   return action$.ofType(FETCH_GROUPS)
     .mergeMap((action: AnyAction) => {
-        return Observable.fromPromise(get(urls.users))
+        return Observable.fromPromise(get(urls.groups))
           .map((payload: DataPayload) => ({type: FETCH_GROUPS_SUCCESS, groups: payload.data}))
           .catch(errors => Observable.of({type: FETCH_GROUPS_FAILURE, errors}));
       }

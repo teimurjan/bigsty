@@ -13,9 +13,11 @@ from main import settings
 class AuthMiddleware(MiddlewareMixin):
   def process_view(self, request, view_func, view_args, view_kwargs) -> JsonResponse:
     auth_rules = view_func.view_class.auth_rules
-    if not auth_rules or len(auth_rules) == 0: return view_func(request, *view_args, **view_kwargs)
+    if not auth_rules or len(auth_rules) == 0:
+      return view_func(request, *view_args, **view_kwargs)
     allowed_roles = auth_rules.get(request.method) or []
-    if 'anonymous' in allowed_roles: return view_func(request, *view_args, **view_kwargs)
+    if 'anonymous' in allowed_roles:
+      return view_func(request, *view_args, **view_kwargs)
     try:
       token = request.META[AUTHORIZATION_HEADER].replace('Bearer ', '')
       decoded_token = jwt.decode(token, settings.SECRET_KEY)

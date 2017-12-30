@@ -16,8 +16,8 @@ type UsersAction = Action<UsersActionType>;
 
 export type UsersActionCreatorsMapObject = {
   fetchUsers: ActionCreator<UsersAction>;
-  deleteUser: ActionCreator<UsersAction>;
-  editUser: ActionCreator<UsersAction>;
+  // deleteUser: ActionCreator<UsersAction>;
+  // editUser: ActionCreator<UsersAction>;
 };
 
 export const FETCH_USERS: UsersActionType = 'USERS/FETCH_USERS';
@@ -32,20 +32,19 @@ export const DELETE_USER: UsersActionType = 'USERS/DELETE_USER';
 export const DELETE_USER_SUCCESS: UsersActionType = 'USERS/DELETE_USER_SUCCESS';
 export const DELETE_USER_FAILURE: UsersActionType = 'USERS/DELETE_USER_FAILURE';
 
-
 function fetchUsers(): UsersAction {
   return {type: FETCH_USERS};
 }
 
-function deleteUser(userId: number): UsersAction {
-  return {type: DELETE_USER, payload: {userId}};
-}
-
-function editUser(userId: number): UsersAction {
-  return {type: DELETE_USER, payload: {userId}};
-}
+// function deleteUser(userId: number): UsersAction {
+//   return {type: DELETE_USER, payload: {userId}};
+// }
+//
+// function editUser(userId: number): UsersAction {
+//   return {type: DELETE_USER, payload: {userId}};
+// }
 
 const usersActionCreators: UsersActionCreatorsMapObject = {
-  fetchUsers, deleteUser, editUser
+  fetchUsers
 };
 export default usersActionCreators;
