@@ -1,62 +1,51 @@
 import { ActionCreator, } from 'redux';
 import { Action } from '../../../../typings/redux-custom';
 
-export type UsersIndexActionType =
-  'USERS_INDEX/FETCH_USERS' |
-  'USERS_INDEX/FETCH_USERS_SUCCESS' |
-  'USERS_INDEX/FETCH_USERS_FAILURE' |
-  'USERS_INDEX/ADD_USER' |
-  'USERS_INDEX/ADD_USER_SUCCESS' |
-  'USERS_INDEX/ADD_USER_FAILURE' |
-  'USERS_INDEX/EDIT_USER' |
-  'USERS_INDEX/EDIT_USER_SUCCESS' |
-  'USERS_INDEX/EDIT_USER_FAILURE' |
-  'USERS_INDEX/DELETE_USER' |
-  'USERS_INDEX/DELETE_USER_SUCCESS' |
-  'USERS_INDEX/DELETE_USER_FAILURE';
+export type UsersActionType =
+  'USERS/FETCH_USERS' |
+  'USERS/FETCH_USERS_SUCCESS' |
+  'USERS/FETCH_USERS_FAILURE' |
+  'USERS/EDIT_USER' |
+  'USERS/EDIT_USER_SUCCESS' |
+  'USERS/EDIT_USER_FAILURE' |
+  'USERS/DELETE_USER' |
+  'USERS/DELETE_USER_SUCCESS' |
+  'USERS/DELETE_USER_FAILURE';
 
-export const FETCH_USERS: UsersIndexActionType = 'USERS_INDEX/FETCH_USERS';
-export const FETCH_USERS_SUCCESS: UsersIndexActionType = 'USERS_INDEX/FETCH_USERS_SUCCESS';
-export const FETCH_USERS_FAILURE: UsersIndexActionType = 'USERS_INDEX/FETCH_USERS_FAILURE';
+type UsersAction = Action<UsersActionType>;
 
-export const ADD_USER: UsersIndexActionType = 'USERS_INDEX/ADD_USER';
-export const ADD_USER_SUCCESS: UsersIndexActionType = 'USERS_INDEX/ADD_USER_SUCCESS';
-export const ADD_USER_FAILURE: UsersIndexActionType = 'USERS_INDEX/ADD_USER_FAILURE';
+export type UsersActionCreatorsMapObject = {
+  fetchUsers: ActionCreator<UsersAction>;
+  deleteUser: ActionCreator<UsersAction>;
+  editUser: ActionCreator<UsersAction>;
+};
 
-export const EDIT_USER: UsersIndexActionType = 'USERS_INDEX/EDIT_USER';
-export const EDIT_USER_SUCCESS: UsersIndexActionType = 'USERS_INDEX/EDIT_USER_SUCCESS';
-export const EDIT_USER_FAILURE: UsersIndexActionType = 'USERS_INDEX/EDIT_USER_FAILURE';
+export const FETCH_USERS: UsersActionType = 'USERS/FETCH_USERS';
+export const FETCH_USERS_SUCCESS: UsersActionType = 'USERS/FETCH_USERS_SUCCESS';
+export const FETCH_USERS_FAILURE: UsersActionType = 'USERS/FETCH_USERS_FAILURE';
 
-export const DELETE_USER: UsersIndexActionType = 'USERS_INDEX/DELETE_USER';
-export const DELETE_USER_SUCCESS: UsersIndexActionType = 'USERS_INDEX/DELETE_USER_SUCCESS';
-export const DELETE_USER_FAILURE: UsersIndexActionType = 'USERS_INDEX/DELETE_USER_FAILURE';
+export const EDIT_USER: UsersActionType = 'USERS/EDIT_USER';
+export const EDIT_USER_SUCCESS: UsersActionType = 'USERS/EDIT_USER_SUCCESS';
+export const EDIT_USER_FAILURE: UsersActionType = 'USERS/EDIT_USER_FAILURE';
 
-type UsersIndexAction = Action<UsersIndexActionType>;
+export const DELETE_USER: UsersActionType = 'USERS/DELETE_USER';
+export const DELETE_USER_SUCCESS: UsersActionType = 'USERS/DELETE_USER_SUCCESS';
+export const DELETE_USER_FAILURE: UsersActionType = 'USERS/DELETE_USER_FAILURE';
 
-function fetchUsers(): UsersIndexAction {
+
+function fetchUsers(): UsersAction {
   return {type: FETCH_USERS};
 }
 
-function addUser(): UsersIndexAction {
-  return {type: ADD_USER};
-}
-
-function deleteUser(userId: number): UsersIndexAction {
+function deleteUser(userId: number): UsersAction {
   return {type: DELETE_USER, payload: {userId}};
 }
 
-function editUser(userId: number): UsersIndexAction {
+function editUser(userId: number): UsersAction {
   return {type: DELETE_USER, payload: {userId}};
 }
 
-export type UsersIndexActionCreatorsMapObject = {
-  fetchUsers: ActionCreator<UsersIndexAction>;
-  addUser: ActionCreator<UsersIndexAction>;
-  deleteUser: ActionCreator<UsersIndexAction>;
-  editUser: ActionCreator<UsersIndexAction>;
+const usersActionCreators: UsersActionCreatorsMapObject = {
+  fetchUsers, deleteUser, editUser
 };
-
-const UsersIndexActionCreators: UsersIndexActionCreatorsMapObject = {
-  fetchUsers, addUser, deleteUser, editUser
-};
-export default UsersIndexActionCreators;
+export default usersActionCreators;

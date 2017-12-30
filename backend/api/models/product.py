@@ -11,7 +11,8 @@ class Product(SerializableModel):
   discount = models.IntegerField(default=0)
   price = models.IntegerField(null=False, blank=False)
   quantity = models.IntegerField(null=False, blank=False, default=0)
-  product_type = models.ForeignKey(ProductType, null=True, related_name='products', related_query_name='product')
+  product_type = models.ForeignKey(ProductType, null=True, related_name='products',
+                                   related_query_name='product', on_delete=models.CASCADE)
 
   @staticmethod
   def validate_relations(feature_values: list, product_type: Type[ProductType]):

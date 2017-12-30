@@ -21,7 +21,7 @@ class Category(SerializableModel, IntlModel):
 
 class CategoryName(IntlText):
   value = models.CharField(max_length=50, null=False, blank=False)
-  owner = models.ForeignKey(Category, related_name="names", related_query_name="name")
+  owner = models.ForeignKey(Category, related_name="names", related_query_name="name", on_delete=models.CASCADE)
 
   def __str__(self):
     return 'Category: {0}, Language: {1}, Value: {2}'.format(self.owner.id, self.language, self.value)

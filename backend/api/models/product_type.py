@@ -8,7 +8,7 @@ from api.models.language import IntlText
 class ProductType(SerializableModel, IntlModel):
   image = models.FileField(upload_to="product_types/", null=True, blank=True)
   category = models.ForeignKey(Category, related_name="product_types",
-                               related_query_name="product_types")
+                               related_query_name="product_types", on_delete=models.CASCADE)
 
   @staticmethod
   def validate_relations(feature_values: list, category: Category):
@@ -62,7 +62,8 @@ class ProductType(SerializableModel, IntlModel):
 
 class ProductTypeName(IntlText):
   value = models.CharField(max_length=50, null=False, blank=False)
-  owner = models.ForeignKey(ProductType, related_name="names", related_query_name='name')
+  owner = models.ForeignKey(ProductType, related_name="names", related_query_name='name',
+                            on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'api_product_type_name'
@@ -70,7 +71,8 @@ class ProductTypeName(IntlText):
 
 class ProductTypeDescription(IntlText):
   value = models.CharField(max_length=1000, null=False, blank=False)
-  owner = models.ForeignKey(ProductType, related_name="descriptions", related_query_name='description')
+  owner = models.ForeignKey(ProductType, related_name="descriptions", related_query_name='description',
+                            on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'api_product_type_description'
@@ -78,7 +80,8 @@ class ProductTypeDescription(IntlText):
 
 class ProductTypeShortDescription(IntlText):
   value = models.CharField(max_length=100, null=False, blank=False)
-  owner = models.ForeignKey(ProductType, related_name="short_descriptions", related_query_name='short_description')
+  owner = models.ForeignKey(ProductType, related_name="short_descriptions", related_query_name='short_description',
+                            on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'api_product_type_short_description'

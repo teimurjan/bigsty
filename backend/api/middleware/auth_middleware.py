@@ -1,5 +1,5 @@
 import jwt
-from django.http import HttpRequest, JsonResponse
+from django.http import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
 from jwt import InvalidTokenError
 

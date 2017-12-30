@@ -1,10 +1,11 @@
+from enum import Enum
 from typing import Dict, Type
 
 from api.services import *
 from api.services.base import Service
 
 
-class ServiceFactory:
+class ServiceType(Enum):
   USER: str = 'user'
   USERS: str = 'users'
   AUTH: str = 'auth'
@@ -18,22 +19,26 @@ class ServiceFactory:
   PRODUCT_TYPES: str = 'product_types'
   PRODUCT: str = 'product'
   PRODUCTS: str = 'products'
-  _name_to_serializer: Dict[str, Type[Service]] = {
-    USER: UserService,
-    USERS: UserListService,
-    AUTH: AuthService,
-    CATEGORY: CategoryService,
-    CATEGORIES: CategoryListService,
-    FEATURE_TYPE: FeatureTypeService,
-    FEATURE_TYPES: FeatureTypeListService,
-    FEATURE_VALUE: FeatureValueService,
-    FEATURE_VALUES: FeatureValueListService,
-    PRODUCT_TYPE: ProductTypeService,
-    PRODUCT_TYPES: ProductTypeListService,
-    PRODUCT: ProductService,
-    PRODUCTS: ProductListService
+  GROUPS: str = 'groups'
+
+
+class ServiceFactory:
+  _name_to_serializer: Dict[ServiceType, Type[Service]] = {
+    ServiceType.USER: UserService,
+    ServiceType.USERS: UserListService,
+    ServiceType.AUTH: AuthService,
+    ServiceType.CATEGORY: CategoryService,
+    ServiceType.CATEGORIES: CategoryListService,
+    ServiceType.FEATURE_TYPE: FeatureTypeService,
+    ServiceType.FEATURE_TYPES: FeatureTypeListService,
+    ServiceType.FEATURE_VALUE: FeatureValueService,
+    ServiceType.FEATURE_VALUES: FeatureValueListService,
+    ServiceType.PRODUCT_TYPE: ProductTypeService,
+    ServiceType.PRODUCT_TYPES: ProductTypeListService,
+    ServiceType.PRODUCT: ProductService,
+    ServiceType.PRODUCTS: ProductListService
   }
 
   @staticmethod
-  def create(name: str, **kwargs) -> Service:
-    return ServiceFactory._name_to_serializer[name](**kwargs)
+  def create(service_type: ServiceType, **kwargs) -> Service:
+    return ServiceFactory._name_to_serializer[service_type](**kwargs)

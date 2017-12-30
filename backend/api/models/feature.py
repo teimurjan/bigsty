@@ -22,7 +22,8 @@ class FeatureType(SerializableModel, IntlModel):
 
 
 class FeatureValue(SerializableModel, IntlModel):
-  feature_type = models.ForeignKey(FeatureType, related_name='feature_values', related_query_name='feature_value')
+  feature_type = models.ForeignKey(FeatureType, related_name='feature_values',
+                                   related_query_name='feature_value', on_delete=models.CASCADE)
   product_types = models.ManyToManyField(ProductType, related_name='feature_values', related_query_name='feature_value',
                                          db_table='api_feature_value_x_product_type')
   products = models.ManyToManyField(Product, related_name='feature_values', related_query_name='feature_value',
@@ -40,7 +41,7 @@ class FeatureValue(SerializableModel, IntlModel):
 
 class FeatureTypeName(IntlText):
   value = models.CharField(max_length=100, null=False, blank=False)
-  owner = models.ForeignKey(FeatureType, related_name="names", related_query_name="name")
+  owner = models.ForeignKey(FeatureType, related_name="names", related_query_name="name", on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'api_feature_type_name'
@@ -48,7 +49,7 @@ class FeatureTypeName(IntlText):
 
 class FeatureValueName(IntlText):
   value = models.CharField(max_length=100, null=False, blank=False)
-  owner = models.ForeignKey(FeatureValue, related_name="names", related_query_name="name")
+  owner = models.ForeignKey(FeatureValue, related_name="names", related_query_name="name", on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'api_feature_value_name'

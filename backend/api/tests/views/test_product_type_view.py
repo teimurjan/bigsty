@@ -1,9 +1,10 @@
 import base64
 import os
 
+from django.urls import reverse
+
 from api.models import ProductType, Category, FeatureValue
 from api.tests.views.base.base_detail_view_test import DetailViewTestCase
-from api.tests.views.constants import PRODUCT_TYPE_LIST_URL
 from api.tests.views.fixtures.product_type_view_fixture import ProductTypeViewFixture
 from api.tests.views.utils import get_intl_texts, get_intl_texts_errors
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NOT_VALID_IMAGE
@@ -11,6 +12,8 @@ from api.utils.errors.error_messages import get_not_exist_msg
 from api.utils.form_fields import NAME_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, \
   CATEGORY_FIELD, IMAGE_FIELD, FEATURE_VALUES_FIELD
 from main.settings import MEDIA_ROOT
+
+list_url = reverse('product_types')
 
 
 def get_data(name=get_intl_texts(), description=get_intl_texts(),
@@ -36,17 +39,17 @@ class ProductTypeViewTest(DetailViewTestCase):
 
   def test_should_get_success(self):
     product_type = ProductType.objects.all()[0]
-    self.should_get_by_id_succeed(PRODUCT_TYPE_LIST_URL, ProductType, product_type.pk)
+    self.should_get_by_id_succeed(list_url, ProductType, product_type.pk)
 
   def test_should_get_with_exclude_succeed(self):
     product_type = ProductType.objects.all()[0]
-    url = '{0}/{1}?exclude=["name"]'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}?exclude=["name"]'.format(list_url, product_type.pk)
     expected = product_type.serialize(exclude=['name'])
     self.should_get_succeed(url, expected)
 
   def test_should_get_with_serialized_field_succeed(self):
     product_type = ProductType.objects.all()[0]
-    url = '{0}/{1}?serialize=["products"]'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}?serialize=["products"]'.format(list_url, product_type.pk)
     expected = product_type.serialize(serialize=['products'])
     self.should_get_succeed(url, expected)
 
@@ -64,7 +67,7 @@ class ProductTypeViewTest(DetailViewTestCase):
     expected[NAME_FIELD] = en_name
     expected[DESCRIPTION_FIELD] = en_description
     expected[SHORT_DESCRIPTION_FIELD] = en_short_description
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     response_data = self.should_put_succeed(url, data, self.admin_user_token, expected)
     self.assertIsNotNone(response_data[IMAGE_FIELD])
 
@@ -83,14 +86,14 @@ class ProductTypeViewTest(DetailViewTestCase):
     expected[SHORT_DESCRIPTION_FIELD] = en_short_description
     del expected[CATEGORY_FIELD]
     del expected[NAME_FIELD]
-    url = '{0}/{1}?serialize=["category"]&exclude=["name"]'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}?serialize=["category"]&exclude=["name"]'.format(list_url, product_type.pk)
     response_data = self.should_put_succeed(url, data, self.admin_user_token, expected)
     self.assertIsNotNone(response_data[IMAGE_FIELD])
     self.assertIsInstance(response_data[CATEGORY_FIELD], dict)
 
   def test_should_put_require_auth(self):
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_require_auth(url)
 
   def test_should_put_null_values(self):
@@ -104,12 +107,12 @@ class ProductTypeViewTest(DetailViewTestCase):
       CATEGORY_FIELD: ['errors.productType.category.mustNotBeNull'],
       IMAGE_FIELD: ['errors.productType.image.mustNotBeNull']
     }
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_no_data(self):
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail_when_no_data_sent(url, self.admin_user_token)
 
   def test_should_put_empty_values(self):
@@ -122,7 +125,7 @@ class ProductTypeViewTest(DetailViewTestCase):
       DESCRIPTION_FIELD: get_intl_texts_errors('productType', error='mustNotBeEmpty', field='description'),
       SHORT_DESCRIPTION_FIELD: get_intl_texts_errors('productType', error='mustNotBeEmpty', field='short_description'),
     }
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_too_long_values(self):
@@ -135,7 +138,7 @@ class ProductTypeViewTest(DetailViewTestCase):
       SHORT_DESCRIPTION_FIELD: get_intl_texts_errors('productType', error='maxLength', field='short_description'),
     }
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_no_such_category(self):
@@ -144,7 +147,7 @@ class ProductTypeViewTest(DetailViewTestCase):
                     category=999, image=get_image())
     expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(Category)]}
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_no_such_feature_value(self):
@@ -153,7 +156,7 @@ class ProductTypeViewTest(DetailViewTestCase):
                     category=self.phone_category_id, image=get_image())
     expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_invalid_image(self):
@@ -163,7 +166,7 @@ class ProductTypeViewTest(DetailViewTestCase):
                     get_intl_texts('New Iphone 7 Short Description'), feature_values=feature_values_ids,
                     category=self.phone_category_id, image='invalid')
     expected_content = {GLOBAL_ERR_KEY: [NOT_VALID_IMAGE]}
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_post_invalid_feature_values(self):
@@ -174,16 +177,16 @@ class ProductTypeViewTest(DetailViewTestCase):
                     category=self.laptop_category_id, image=get_image())
     expected_content = {GLOBAL_ERR_KEY: ['Invalid feature values']}
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
-    url = '{0}/{1}'.format(PRODUCT_TYPE_LIST_URL, product_type.pk)
+    url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_delete_succeed(self):
     product_type = ProductType.objects.all()[0]
-    self.should_delete_succeed(PRODUCT_TYPE_LIST_URL, product_type.pk, self.manager_user_token)
+    self.should_delete_succeed(list_url, product_type.pk, self.manager_user_token)
 
   def test_should_delete_require_role(self):
     product_type = ProductType.objects.all()[0]
-    self.should_delete_require_role(PRODUCT_TYPE_LIST_URL, product_type.pk, self.reader_user_token)
+    self.should_delete_require_role(list_url, product_type.pk, self.reader_user_token)
 
   def test_should_delete_not_found(self):
-    self.should_delete_not_found(PRODUCT_TYPE_LIST_URL, ProductType, 999, self.manager_user_token)
+    self.should_delete_not_found(list_url, ProductType, 999, self.manager_user_token)

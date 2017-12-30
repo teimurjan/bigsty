@@ -39,7 +39,7 @@ class UserListService(ListService):
       group = Group.objects.get(pk=data[GROUP_FIELD])
       password = User.encrypt_password(data[PASSWORD_FIELD])
       user = User.objects.create(name=data[NAME_FIELD], email=data[EMAIL_FIELD],
-                                 password=password, group=group)
+                                 password=password, group=group, is_active=True)
       return DataJsonResponse(user.serialize(**self.request.serializer_data))
     except Group.DoesNotExist:
       return JsonResponseBadRequest([get_not_exist_msg(Group)])

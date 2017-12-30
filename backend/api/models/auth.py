@@ -20,7 +20,8 @@ class User(SerializableModel):
   name = models.CharField(max_length=60, blank=False, null=False)
   date_joined = models.DateTimeField(auto_now_add=True)
   password = models.CharField(max_length=255, blank=False, null=False)
-  group = models.ForeignKey(Group, related_name='users', related_query_name='user', db_column='group')
+  group = models.ForeignKey(Group, related_name='users', related_query_name='user',
+                            db_column='group', on_delete=models.CASCADE)
   is_active = models.BooleanField(default=False)
 
   def _should_hide(self, field_name: str) -> bool:
@@ -28,14 +29,14 @@ class User(SerializableModel):
 
   @staticmethod
   def encrypt_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode('utf-8')
 
   def is_password_matches(self, password: str) -> bool:
     return bcrypt.checkpw(password.encode(), self.password.encode())
 
   def generate_access_token(self) -> str:
     exp_date = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-    payload = {ID_FIELD: self.pk, GROUP_FIELD: self.group.pk, "exp": exp_date}
+    payload = {ID_FIELD: self.pk, NAME_FIELD: self.name, GROUP_FIELD: self.group.pk, "exp": exp_date}
     return jwt.encode(payload, SECRET_KEY).decode()
 
   def generate_refresh_token(self) -> str:

@@ -1,4 +1,3 @@
-import abc
 from typing import Type
 
 from django.core.exceptions import FieldError
@@ -25,16 +24,14 @@ class ModelService(Service):
 
 
 class ListService(ModelService):
-  @abc.abstractmethod
   def create(self) -> JsonResponse:
     raise NotImplementedError()
 
   def read(self, **kwargs) -> JsonResponse:
     try:
       q = deep_serialize_query(kwargs.items(), exclude=['serialize', 'exclude'])
-      return DataJsonResponse(
-        [model.serialize(**self.request.serializer_data) for model in self.model_cls.objects.filter(**q)]
-      )
+      models = [model.serialize(**self.request.serializer_data) for model in self.model_cls.objects.filter(**q)]
+      return DataJsonResponse(models)
     except FieldError as e:
       return JsonResponse({GLOBAL_ERR_KEY: [INVALID_QUERY_ERR]}, status=BAD_REQUEST_CODE)
 
@@ -51,7 +48,6 @@ class DetailService(ModelService):
     except self.model_cls.DoesNotExist:
       return JsonResponse({GLOBAL_ERR_KEY: [get_not_exist_msg(self.model_cls)]}, status=NOT_FOUND_CODE)
 
-  @abc.abstractmethod
   def update(self) -> JsonResponse:
     raise NotImplementedError()
 

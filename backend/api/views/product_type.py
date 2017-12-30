@@ -1,4 +1,4 @@
-from api.factories.services import ServiceFactory
+from api.factories.services import ServiceType
 from api.utils.form_fields import NAME_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, \
   FEATURE_VALUES_FIELD, CATEGORY_FIELD, IMAGE_FIELD
 from api.utils.langauges import LANGUAGES
@@ -8,7 +8,7 @@ from api.views.base import ListView, DetailView
 
 class ProductTypeListView(ListView):
   def __init__(self, **kwargs):
-    super().__init__(ServiceFactory.PRODUCT_TYPES, 'productTypes.', **kwargs)
+    super().__init__(ServiceType.PRODUCT_TYPES, 'productTypes.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {
         SCHEMA: {language: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30} for language in LANGUAGES}
@@ -27,7 +27,7 @@ class ProductTypeListView(ListView):
 
 class ProductTypeView(DetailView):
   def __init__(self, **kwargs):
-    super().__init__(ServiceFactory.PRODUCT_TYPE, 'productType.', **kwargs)
+    super().__init__(ServiceType.PRODUCT_TYPE, 'productType.', **kwargs)
     self.validation_rules = {
       NAME_FIELD: {
         SCHEMA: {language: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30} for language in LANGUAGES}

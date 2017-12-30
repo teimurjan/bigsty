@@ -1,10 +1,9 @@
 import { AnyAction, Store } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { get, post, put, remove } from '../../../../api';
+import { get, put, remove } from '../../../../api';
 import { RootState } from '../../../../rootReducer';
 import { Observable } from 'rxjs/Observable';
 import {
-  ADD_USER, ADD_USER_FAILURE, ADD_USER_SUCCESS,
   DELETE_USER, DELETE_USER_FAILURE, DELETE_USER_SUCCESS, EDIT_USER, EDIT_USER_FAILURE, EDIT_USER_SUCCESS, FETCH_USERS,
   FETCH_USERS_FAILURE,
   FETCH_USERS_SUCCESS
@@ -18,16 +17,6 @@ function fetchUsersEpic(action$: ActionsObservable<AnyAction>, store: Store<Root
         return Observable.fromPromise(get(urls.users))
           .map((payload: DataPayload) => ({type: FETCH_USERS_SUCCESS, users: payload.data}))
           .catch(errors => Observable.of({type: FETCH_USERS_FAILURE, errors}));
-      }
-    );
-}
-
-function addUserEpic(action$: ActionsObservable<AnyAction>, store: Store<RootState>) {
-  return action$.ofType(ADD_USER)
-    .mergeMap((action: AnyAction) => {
-        return Observable.fromPromise(post(urls.users, action.payload))
-          .map((payload: DataPayload) => ({type: ADD_USER_SUCCESS, user: payload.data}))
-          .catch(errors => Observable.of({type: ADD_USER_FAILURE, errors}));
       }
     );
 }
@@ -53,4 +42,4 @@ function editUserEpic(action$: ActionsObservable<AnyAction>, store: Store<RootSt
     );
 }
 
-export default [fetchUsersEpic, addUserEpic, deleteUserEpic, editUserEpic];
+export default [fetchUsersEpic, deleteUserEpic, editUserEpic];

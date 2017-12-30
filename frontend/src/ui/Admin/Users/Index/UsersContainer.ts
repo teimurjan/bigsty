@@ -1,17 +1,17 @@
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import UsersIndex from './UsersIndex';
+import Users from './Users';
 import { RootState } from '../../../../rootReducer';
-import UsersIndexActionCreators from './actions';
+import usersActionCreators from './actions';
 
 function mapStateToProps(state: RootState) {
-  return state.adminUsersIndex.toJS();
+  return state.adminUsers.toJS();
 }
 
 function mapDispatchToProps(dispatch: Dispatch<RootState>) {
   return {
-    actions: bindActionCreators(UsersIndexActionCreators, dispatch)
+    actions: bindActionCreators(usersActionCreators, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UsersIndex);
+export default connect(mapStateToProps, mapDispatchToProps)(Users);

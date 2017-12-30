@@ -1,27 +1,27 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import UsersIndex from './UsersIndex';
-import { UsersIndexState, initialState } from './reducer';
+import Users from './Users';
+import { UsersState, initialState } from './reducer';
 import WithIntl from '../../../Common/WithIntl';
 
-interface UsersIndexTestProps extends UsersIndexState {
+interface UsersTestProps extends UsersState {
   actions: {
     fetchUsers: Function
   };
 }
 
-const initialProps: UsersIndexTestProps = {
+const initialProps: UsersTestProps = {
   ...initialState,
   actions: {
     fetchUsers: action('Fetched users'),
   }
 };
 
-const UsersIndexWithIntl: React.SFC<UsersIndexTestProps> = WithIntl(UsersIndex);
+const UsersWithIntl: React.SFC<UsersTestProps> = WithIntl(Users);
 
-storiesOf('Users Index', module)
-  .add('Initial state', () => <UsersIndexWithIntl {...initialProps}/>)
+storiesOf('Admin Users', module)
+  .add('Initial state', () => <UsersWithIntl {...initialProps}/>)
   .add('With content', () => {
     const newProps = Object.assign({}, initialProps, {
       users: [{
@@ -33,5 +33,5 @@ storiesOf('Users Index', module)
         group: 'admin'
       }]
     });
-    return <UsersIndexWithIntl {...newProps}/>;
+    return <UsersWithIntl {...newProps}/>;
   });

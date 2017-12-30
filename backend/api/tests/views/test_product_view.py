@@ -1,9 +1,10 @@
 import base64
 import os
 
+from django.urls import reverse
+
 from api.models import Product, ProductType, FeatureValue, ProductImage
 from api.tests.views.base.base_detail_view_test import DetailViewTestCase
-from api.tests.views.constants import PRODUCT_LIST_URL
 from api.tests.views.fixtures.product_view_fixture import ProductViewFixture
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY
 from api.utils.errors.error_messages import get_not_exist_msg
@@ -11,6 +12,8 @@ from api.utils.form_fields import IMAGES_FIELD, QUANTITY_FIELD, PRICE_FIELD, DIS
   PRODUCT_TYPE_FIELD, FEATURE_VALUES_FIELD, ID_FIELD
 from api.utils.image_utils import base64_to_image
 from main.settings import MEDIA_ROOT
+
+list_url = reverse('products')
 
 
 def get_product_data(discount=None, price=None, quantity=None, product_type_id=None, feature_values_ids=None,
@@ -44,11 +47,11 @@ class ProductViewTest(DetailViewTestCase):
 
   def test_should_get_success(self):
     product = Product.objects.all()[0]
-    self.should_get_by_id_succeed(PRODUCT_LIST_URL, Product, product.pk)
+    self.should_get_by_id_succeed(list_url, Product, product.pk)
 
   def test_should_get_with_exclude_and_serialize_succeed(self):
     product = Product.objects.all()[0]
-    url = '{0}/{1}?exclude=["discount"]&serialize=["product_type"]'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}?exclude=["discount"]&serialize=["product_type"]'.format(list_url, product.pk)
     expected = product.serialize(exclude=['discount'], serialize=["product_type"])
     self.should_get_succeed(url, expected)
 
@@ -56,7 +59,7 @@ class ProductViewTest(DetailViewTestCase):
     data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
                             feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
     product = Product.objects.all()[0]
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     expected = data.copy()
     del expected[IMAGES_FIELD]
     response_data = self.should_put_succeed(url, data, self.admin_user_token, expected)
@@ -70,7 +73,7 @@ class ProductViewTest(DetailViewTestCase):
     old_images = product.serialize(serialize=["images"])[IMAGES_FIELD]
     data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
                             feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=old_images)
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     expected = data.copy()
     expected[IMAGES_FIELD] = [i[ID_FIELD] for i in old_images]
     self.should_put_succeed(url, data, self.admin_user_token, expected)
@@ -79,7 +82,7 @@ class ProductViewTest(DetailViewTestCase):
     data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
                             feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
     product = Product.objects.all()[0]
-    url = '{0}/{1}?exclude=["discount"]&serialize=["product_type"]'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}?exclude=["discount"]&serialize=["product_type"]'.format(list_url, product.pk)
     expected = data.copy()
     del expected[IMAGES_FIELD], expected[DISCOUNT_FIELD], expected[PRODUCT_TYPE_FIELD]
     response_data = self.should_put_succeed(url, data, self.admin_user_token, expected)
@@ -88,7 +91,7 @@ class ProductViewTest(DetailViewTestCase):
 
   def test_should_put_require_auth(self):
     product = Product.objects.all()[0]
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     self.should_put_require_auth(url)
 
   def test_should_put_null_values(self):
@@ -102,12 +105,12 @@ class ProductViewTest(DetailViewTestCase):
       IMAGES_FIELD: ['errors.product.images.mustNotBeNull'],
     }
     product = Product.objects.all()[0]
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_no_data(self):
     product = Product.objects.all()[0]
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     self.should_put_fail_when_no_data_sent(url, self.admin_user_token)
 
   def test_should_put_no_such_feature_value(self):
@@ -115,7 +118,7 @@ class ProductViewTest(DetailViewTestCase):
                             feature_values_ids=[self.gold_fv.id, 999], images=self.images)
     expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)]}
     product = Product.objects.all()[0]
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_no_such_product_type(self):
@@ -123,7 +126,7 @@ class ProductViewTest(DetailViewTestCase):
                             feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
     expected_content = {GLOBAL_ERR_KEY: [get_not_exist_msg(ProductType)]}
     product = Product.objects.all()[0]
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_invalid_images(self):
@@ -131,7 +134,7 @@ class ProductViewTest(DetailViewTestCase):
                             feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=['invalid'])
     expected_content = {IMAGES_FIELD: ['errors.product.images.notValidFormat']}
     product = Product.objects.all()[0]
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_invalid_feature_values(self):
@@ -139,7 +142,7 @@ class ProductViewTest(DetailViewTestCase):
                             feature_values_ids=[self.gold_fv.id, self.fv_512GB.id], images=self.images)
     expected_content = {GLOBAL_ERR_KEY: ['Invalid feature values']}
     product = Product.objects.all()[0]
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_invalid_discount_price_and_quality(self):
@@ -151,16 +154,16 @@ class ProductViewTest(DetailViewTestCase):
       QUANTITY_FIELD: ['errors.product.quantity.min']
     }
     product = Product.objects.all()[0]
-    url = '{0}/{1}'.format(PRODUCT_LIST_URL, product.pk)
+    url = '{0}/{1}'.format(list_url, product.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_delete_succeed(self):
     product = Product.objects.all()[0]
-    self.should_delete_succeed(PRODUCT_LIST_URL, product.pk, self.manager_user_token)
+    self.should_delete_succeed(list_url, product.pk, self.manager_user_token)
 
   def test_should_delete_require_role(self):
     product = Product.objects.all()[0]
-    self.should_delete_require_role(PRODUCT_LIST_URL, product.pk, self.reader_user_token)
+    self.should_delete_require_role(list_url, product.pk, self.reader_user_token)
 
   def test_should_delete_not_found(self):
-    self.should_delete_not_found(PRODUCT_LIST_URL, Product, 999, self.manager_user_token)
+    self.should_delete_not_found(list_url, Product, 999, self.manager_user_token)

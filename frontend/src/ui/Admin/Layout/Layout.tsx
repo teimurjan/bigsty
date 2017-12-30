@@ -12,7 +12,7 @@ export default InjectIntl(({intl, children}: IntlProps & React.Props<{}>) => (
         <h3>Ivan Pupkin</h3>
       </MenuHeader>
       <MenuLink to="/admin/users">
-        <Icon type="user"/> <span className="nav-label">{intl('admin.usersIndex.linkText')}</span>
+        <Icon type="user"/> <span className="nav-label">{intl('admin.users.linkText')}</span>
       </MenuLink>
     </Menu>
     <div id="content">
