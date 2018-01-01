@@ -8,14 +8,13 @@ from api.tests.views.fixtures.feature_type_view_fixture import FeatureTypeViewFi
 from api.tests.views.utils import get_intl_texts, get_intl_texts_errors
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import NAME_FIELD
 from api.utils.http_constants import NOT_FOUND_CODE
 
 list_url = reverse('feature_types')
 
 
 def get_data(names: Dict[str, str] = get_intl_texts()):
-  return {NAME_FIELD: names}
+  return {'name': names}
 
 
 class FeatureTypeViewTest(DetailViewTestCase):
@@ -73,7 +72,7 @@ class FeatureTypeViewTest(DetailViewTestCase):
     data = get_data()
     url = '{0}/{1}'.format(list_url, feature_type.pk)
     self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
-      NAME_FIELD: get_intl_texts_errors('featureType', field='name'),
+      'name': get_intl_texts_errors('featureType', field='name'),
     })
 
   def test_should_put_empty_values(self):
@@ -81,7 +80,7 @@ class FeatureTypeViewTest(DetailViewTestCase):
     data = get_data(get_intl_texts(''))
     url = '{0}/{1}'.format(list_url, feature_type.pk)
     self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
-      NAME_FIELD: get_intl_texts_errors('featureType', error='mustNotBeEmpty', field='name'),
+      'name': get_intl_texts_errors('featureType', error='mustNotBeEmpty', field='name'),
     })
 
   def test_should_put_invalid_length(self):
@@ -89,7 +88,7 @@ class FeatureTypeViewTest(DetailViewTestCase):
     data = get_data(get_intl_texts('a' * 31))
     url = '{0}/{1}'.format(list_url, feature_type.pk)
     self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
-      NAME_FIELD: get_intl_texts_errors('featureType', error='maxLength', field='name'),
+      'name': get_intl_texts_errors('featureType', error='maxLength', field='name'),
     })
 
   def test_should_put_invalid_feature_type(self):

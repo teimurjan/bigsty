@@ -6,7 +6,6 @@ from api.tests.views.fixtures.feature_value_view_fixture import FeatureValueView
 from api.tests.views.utils import get_intl_texts, get_intl_texts_errors
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import NAME_FIELD, FEATURE_TYPE_FIELD
 from api.utils.http_constants import NOT_FOUND_CODE
 
 list_url = reverse('feature_values')
@@ -40,9 +39,9 @@ class FeatureValueViewTest(DetailViewTestCase):
   def test_should_put_succeed(self):
     feature_value = FeatureValue.objects.all()[0]
     name = '4 inches'
-    data = {NAME_FIELD: get_intl_texts(name), FEATURE_TYPE_FIELD: self.color_ft.id}
+    data = {'name': get_intl_texts(name), 'feature_type': self.color_ft.id}
     expected = data.copy()
-    expected[NAME_FIELD] = name
+    expected['name'] = name
     url = '{0}/{1}'.format(list_url, feature_value.pk)
     self.should_put_succeed(url, data, self.admin_user_token, expected)
 
@@ -53,20 +52,20 @@ class FeatureValueViewTest(DetailViewTestCase):
 
   def test_should_put_null_values(self):
     feature_value = FeatureValue.objects.all()[0]
-    data = {NAME_FIELD: get_intl_texts(), FEATURE_TYPE_FIELD: None}
+    data = {'name': get_intl_texts(), 'feature_type': None}
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('featureValue'),
-      FEATURE_TYPE_FIELD: ['errors.featureValue.feature_type.mustNotBeNull']
+      'name': get_intl_texts_errors('featureValue'),
+      'feature_type': ['errors.featureValue.feature_type.mustNotBeNull']
     }
     url = '{0}/{1}'.format(list_url, feature_value.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_empty_values(self):
     feature_value = FeatureValue.objects.all()[0]
-    data = {NAME_FIELD: get_intl_texts(''), FEATURE_TYPE_FIELD: ''}
+    data = {'name': get_intl_texts(''), 'feature_type': ''}
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('featureValue', 'mustNotBeEmpty'),
-      FEATURE_TYPE_FIELD: ['errors.featureValue.feature_type.mustBeInteger'],
+      'name': get_intl_texts_errors('featureValue', 'mustNotBeEmpty'),
+      'feature_type': ['errors.featureValue.feature_type.mustBeInteger'],
     }
     url = '{0}/{1}'.format(list_url, feature_value.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
@@ -78,16 +77,16 @@ class FeatureValueViewTest(DetailViewTestCase):
 
   def test_should_put_throws_invalid_length(self):
     feature_value = FeatureValue.objects.all()[0]
-    data = {NAME_FIELD: get_intl_texts('a' * 31), FEATURE_TYPE_FIELD: self.color_ft.id}
+    data = {'name': get_intl_texts('a' * 31), 'feature_type': self.color_ft.id}
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('featureValue', 'maxLength'),
+      'name': get_intl_texts_errors('featureValue', 'maxLength'),
     }
     url = '{0}/{1}'.format(list_url, feature_value.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_throws_invalid_feature_type(self):
     feature_value = FeatureValue.objects.all()[0]
-    data = {NAME_FIELD: get_intl_texts('Test Name'), FEATURE_TYPE_FIELD: 999}
+    data = {'name': get_intl_texts('Test Name'), 'feature_type': 999}
     expected_content = {
       GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)],
     }
@@ -95,7 +94,7 @@ class FeatureValueViewTest(DetailViewTestCase):
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_put_not_found(self):
-    data = {NAME_FIELD: get_intl_texts('Test Name'), FEATURE_TYPE_FIELD: self.color_ft.id}
+    data = {'name': get_intl_texts('Test Name'), 'feature_type': self.color_ft.id}
     expected_content = {
       GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureValue)],
     }

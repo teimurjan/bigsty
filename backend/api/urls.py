@@ -1,11 +1,13 @@
 from django.conf.urls import url
 
 from api.views import *
+from api.views.auth import RefreshTokenView
 from api.views.group import GroupListView
 
 urlpatterns = [
   url(r'^login$', LoginView.as_view(), name='login'),
   url(r'^register$', RegistrationView.as_view(), name='register'),
+  url(r'^refresh$', RefreshTokenView.as_view(), name='refresh'),
 
   url(r'^categories$', CategoryListView.as_view(), name='categories'),
   url(r'^categories/(?P<model_id>\d+)$', CategoryView.as_view(), name='categories'),

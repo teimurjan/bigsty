@@ -7,10 +7,30 @@ from django.views import View
 from api.exceptions import EmptyDataError
 from api.factories.services import ServiceFactory, ServiceType
 from api.services.base import DetailService, ListService
+from api.utils.http_constants import HTTP_X_APP_HEADER
 from api.utils.json_responses import JsonResponseBadRequest, JsonResponseServerError
 from api.utils.json_utils import parse_json_or_none
 from api.views.utils import get_language_from_request, validation_required
 from main.settings import DEBUG
+
+
+def get_parsed_payload(request) -> dict:
+  json_data = request.body.decode()
+  data = json.loads(json_data)
+  if data is None:
+    raise EmptyDataError
+  return data
+
+
+def get_serializer_data(request) -> dict:
+  serializer_data = {}
+  serializer_data.update({'language': get_language_from_request(request)})
+  serialize_query, exclude_query = request.GET.get('serialize'), request.GET.get('exclude')
+  if serialize_query:
+    serializer_data.update({'serialize': parse_json_or_none(serialize_query)})
+  if exclude_query:
+    serializer_data.update({'exclude': parse_json_or_none(exclude_query)})
+  return serializer_data
 
 
 class BaseView(View):
@@ -24,32 +44,20 @@ class BaseView(View):
 
   def dispatch(self, request, *args, **kwargs) -> JsonResponse:
     try:
-      self.__extract_serializer_data(request)
+      request.serializer_data = get_serializer_data(request)
+      request.client_id = request.META.get(HTTP_X_APP_HEADER)
+      if not request.client_id:
+        return JsonResponseBadRequest('Unknown client')
       if request.method == 'POST' or request.method == 'PUT':
-        try:
-          self.__parse_request_payload(request)
-        except (JSONDecodeError, EmptyDataError):
-          return JsonResponseBadRequest('Invalid JSON format')
+        request.parsed_data = get_parsed_payload(request)
       return super(BaseView, self).dispatch(request, *args, **kwargs)
+    except (JSONDecodeError, EmptyDataError):
+      return JsonResponseBadRequest('Invalid JSON format')
     except Exception as e:
       if DEBUG:
         raise e
       else:
         return JsonResponseServerError()
-
-  def __parse_request_payload(self, request) -> None:
-    json_data = request.body.decode()
-    data = json.loads(json_data)
-    if data is None: raise EmptyDataError
-    request.parsed_data = data
-
-  def __extract_serializer_data(self, request) -> None:
-    serializer_data = {}
-    serializer_data.update({'language': get_language_from_request(request)})
-    serialize_query, exclude_query = request.GET.get('serialize'), request.GET.get('exclude')
-    if serialize_query: serializer_data.update({'serialize': parse_json_or_none(serialize_query)})
-    if exclude_query: serializer_data.update({'exclude': parse_json_or_none(exclude_query)})
-    request.serializer_data = serializer_data
 
 
 class DetailView(BaseView):

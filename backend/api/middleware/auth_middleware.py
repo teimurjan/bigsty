@@ -4,7 +4,7 @@ from django.utils.deprecation import MiddlewareMixin
 from jwt import InvalidTokenError
 
 from api.models import User
-from api.utils.form_fields import ID_FIELD
+
 from api.utils.http_constants import AUTHORIZATION_HEADER
 from api.utils.json_responses import JsonResponseUnauthorized, JsonResponseForbidden
 from main import settings
@@ -21,7 +21,7 @@ class AuthMiddleware(MiddlewareMixin):
     try:
       token = request.META[AUTHORIZATION_HEADER].replace('Bearer ', '')
       decoded_token = jwt.decode(token, settings.SECRET_KEY)
-      user = User.objects.get(pk=decoded_token[ID_FIELD])
+      user = User.objects.get(pk=decoded_token['user_id'])
       if not user.is_active:
         return JsonResponseUnauthorized()
       if user.group.name not in allowed_roles:

@@ -3,6 +3,7 @@ from typing import Dict, Type
 
 from api.services import *
 from api.services.base import Service
+from api.services.group import GroupListService
 
 
 class ServiceType(Enum):
@@ -36,7 +37,8 @@ class ServiceFactory:
     ServiceType.PRODUCT_TYPE: ProductTypeService,
     ServiceType.PRODUCT_TYPES: ProductTypeListService,
     ServiceType.PRODUCT: ProductService,
-    ServiceType.PRODUCTS: ProductListService
+    ServiceType.PRODUCTS: ProductListService,
+    ServiceType.GROUPS: GroupListService,
   }
 
   @staticmethod

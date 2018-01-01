@@ -6,11 +6,8 @@ from api.utils.validator import SchemaValidator, ErrorHandler
 
 
 def get_language_from_request(request):
-  try:
-    language = request.META[ACCEPT_LANGUAGE_HEADER]
-    return DEFAULT_LANGUAGE if language not in LANGUAGES else language
-  except KeyError:
-    return DEFAULT_LANGUAGE
+  language = request.META.get(ACCEPT_LANGUAGE_HEADER)
+  return DEFAULT_LANGUAGE if language not in LANGUAGES else language
 
 
 def validation_required(func):

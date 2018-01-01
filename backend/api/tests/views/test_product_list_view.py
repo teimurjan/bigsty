@@ -8,8 +8,6 @@ from api.tests.views.base.base_list_view_test import ListViewTestCase
 from api.tests.views.fixtures.product_list_view_fixture import ProductListViewFixture
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import DISCOUNT_FIELD, PRICE_FIELD, QUANTITY_FIELD, PRODUCT_TYPE_FIELD, \
-  FEATURE_VALUES_FIELD, IMAGES_FIELD
 from main.settings import MEDIA_ROOT
 
 list_url = reverse('products')
@@ -17,8 +15,8 @@ list_url = reverse('products')
 
 def get_product_data(discount=None, price=None, quantity=None, product_type_id=None, feature_values_ids=None,
                      images=None):
-  return {DISCOUNT_FIELD: discount, PRICE_FIELD: price, QUANTITY_FIELD: quantity, PRODUCT_TYPE_FIELD: product_type_id,
-          FEATURE_VALUES_FIELD: feature_values_ids, IMAGES_FIELD: images}
+  return {'discount': discount, 'price': price, 'quantity': quantity, 'product_type': product_type_id,
+          'feature_values': feature_values_ids, 'images': images}
 
 
 class ProductListViewTest(ListViewTestCase):
@@ -63,19 +61,19 @@ class ProductListViewTest(ListViewTestCase):
     data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
                             feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
     expected = data.copy()
-    del expected[IMAGES_FIELD]
+    del expected['images']
     response_data = self.should_post_succeed(list_url, data, self.admin_user_token, expected)
-    self.assertEquals(len(response_data[IMAGES_FIELD]), len(self.images))
+    self.assertEquals(len(response_data['images']), len(self.images))
 
   def test_should_post_with_serialized_field_succeed(self):
     data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
                             feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
     expected = data.copy()
-    del expected[IMAGES_FIELD], expected[PRODUCT_TYPE_FIELD]
+    del expected['images'], expected['product_type']
     url = '{0}?serialize=["product_type"]'.format(list_url)
     response_data = self.should_post_succeed(url, data, self.admin_user_token, expected)
-    self.assertEquals(len(response_data[IMAGES_FIELD]), len(self.images))
-    self.assertIsInstance(response_data[PRODUCT_TYPE_FIELD], dict)
+    self.assertEquals(len(response_data['images']), len(self.images))
+    self.assertIsInstance(response_data['product_type'], dict)
 
   def test_should_post_require_auth(self):
     self.should_post_require_auth(list_url)
@@ -83,12 +81,12 @@ class ProductListViewTest(ListViewTestCase):
   def test_should_post_null_values(self):
     data = get_product_data()
     expected_content = {
-      FEATURE_VALUES_FIELD: ['errors.products.feature_values.mustNotBeNull'],
-      PRICE_FIELD: ['errors.products.price.mustNotBeNull'],
-      DISCOUNT_FIELD: ['errors.products.discount.mustNotBeNull'],
-      QUANTITY_FIELD: ['errors.products.quantity.mustNotBeNull'],
-      PRODUCT_TYPE_FIELD: ['errors.products.product_type.mustNotBeNull'],
-      IMAGES_FIELD: ['errors.products.images.mustNotBeNull'],
+      'feature_values': ['errors.products.feature_values.mustNotBeNull'],
+      'price': ['errors.products.price.mustNotBeNull'],
+      'discount': ['errors.products.discount.mustNotBeNull'],
+      'quantity': ['errors.products.quantity.mustNotBeNull'],
+      'product_type': ['errors.products.product_type.mustNotBeNull'],
+      'images': ['errors.products.images.mustNotBeNull'],
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
@@ -110,7 +108,7 @@ class ProductListViewTest(ListViewTestCase):
   def test_should_post_invalid_images(self):
     data = get_product_data(discount=0, price=250, quantity=5, product_type_id=self.iphone7_pt.id,
                             feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=['invalid'])
-    expected_content = {IMAGES_FIELD: ['errors.products.images.notValidFormat']}
+    expected_content = {'images': ['errors.products.images.notValidFormat']}
     self.should_post_fail(list_url, data=data, expected_content=expected_content, token=self.admin_user_token)
 
   def test_should_post_invalid_feature_values(self):
@@ -123,8 +121,8 @@ class ProductListViewTest(ListViewTestCase):
     data = get_product_data(discount=150, price=-10, quantity=-20, product_type_id=self.iphone7_pt.id,
                             feature_values_ids=[self.gold_fv.id, self.fv_128GB.id], images=self.images)
     expected_content = {
-      DISCOUNT_FIELD: ['errors.products.discount.between'],
-      PRICE_FIELD: ['errors.products.price.min'],
-      QUANTITY_FIELD: ['errors.products.quantity.min']
+      'discount': ['errors.products.discount.between'],
+      'price': ['errors.products.price.min'],
+      'quantity': ['errors.products.quantity.min']
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content, token=self.admin_user_token)

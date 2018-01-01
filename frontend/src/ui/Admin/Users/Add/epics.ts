@@ -13,8 +13,9 @@ import urls from '../../../../urls';
 function addUserEpic(action$: ActionsObservable<AnyAction>, store: Store<RootState>) {
   return action$.ofType(ADD_USER)
     .mergeMap((action: AnyAction) => {
-        const {name, email, password, group} = store.getState().adminAddUser.toJS();
-        return Observable.fromPromise(post(urls.users, {name, email, password, group}))
+        console.log(store.getState().adminAddUser.toJS());
+        const {name, email, password, group = {name: undefined}} = store.getState().adminAddUser.toJS();
+        return Observable.fromPromise(post(urls.users, {name, email, password, group: group.name}))
           .map((payload: DataPayload) => ({type: ADD_USER_SUCCESS, user: payload.data}))
           .catch(errors => Observable.of({type: ADD_USER_FAILURE, errors}));
       }
@@ -24,7 +25,7 @@ function addUserEpic(action$: ActionsObservable<AnyAction>, store: Store<RootSta
 function fetchGroupsEpic(action$: ActionsObservable<AnyAction>, store: Store<RootState>) {
   return action$.ofType(FETCH_GROUPS)
     .mergeMap((action: AnyAction) => {
-        return Observable.fromPromise(get(urls.groups))
+        return Observable.fromPromise(get(`${urls.groups}?exclude=["users"]`))
           .map((payload: DataPayload) => ({type: FETCH_GROUPS_SUCCESS, groups: payload.data}))
           .catch(errors => Observable.of({type: FETCH_GROUPS_FAILURE, errors}));
       }

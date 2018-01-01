@@ -1,12 +1,12 @@
 from django.http import JsonResponse
 
-from api.utils.http_constants import BAD_REQUEST_CODE, NOT_FOUND_CODE, UNAUTHROZIED_CODE, SERVER_ERROR_CODE, \
+from api.utils.http_constants import BAD_REQUEST_CODE, NOT_FOUND_CODE, UNAUTHORIZED_CODE, SERVER_ERROR_CODE, \
   FORBIDDEN_CODE
 
 
 class JsonResponseUnauthorized(JsonResponse):
   def __init__(self, err='Invalid auth credentials', key='global'):
-    super().__init__({key: err}, status=UNAUTHROZIED_CODE)
+    super().__init__({key: err}, status=UNAUTHORIZED_CODE)
 
 
 class JsonResponseForbidden(JsonResponse):

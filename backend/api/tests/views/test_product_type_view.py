@@ -9,8 +9,6 @@ from api.tests.views.fixtures.product_type_view_fixture import ProductTypeViewFi
 from api.tests.views.utils import get_intl_texts, get_intl_texts_errors
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY, NOT_VALID_IMAGE
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import NAME_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, \
-  CATEGORY_FIELD, IMAGE_FIELD, FEATURE_VALUES_FIELD
 from main.settings import MEDIA_ROOT
 
 list_url = reverse('product_types')
@@ -19,8 +17,8 @@ list_url = reverse('product_types')
 def get_data(name=get_intl_texts(), description=get_intl_texts(),
              short_description=get_intl_texts(),
              feature_values=None, category=None, image=None):
-  return {NAME_FIELD: name, DESCRIPTION_FIELD: description, SHORT_DESCRIPTION_FIELD: short_description,
-          FEATURE_VALUES_FIELD: feature_values, CATEGORY_FIELD: category, IMAGE_FIELD: image}
+  return {'name': name, 'description': description, 'short_description': short_description,
+          'feature_values': feature_values, 'category': category, 'image': image}
 
 
 def get_image(extension='jpg'):
@@ -63,13 +61,13 @@ class ProductTypeViewTest(DetailViewTestCase):
                     get_intl_texts(en_short_description), category=product_type.category.pk,
                     feature_values=feature_values_ids, image=get_image())
     expected = data.copy()
-    del expected[IMAGE_FIELD]
-    expected[NAME_FIELD] = en_name
-    expected[DESCRIPTION_FIELD] = en_description
-    expected[SHORT_DESCRIPTION_FIELD] = en_short_description
+    del expected['image']
+    expected['name'] = en_name
+    expected['description'] = en_description
+    expected['short_description'] = en_short_description
     url = '{0}/{1}'.format(list_url, product_type.pk)
     response_data = self.should_put_succeed(url, data, self.admin_user_token, expected)
-    self.assertIsNotNone(response_data[IMAGE_FIELD])
+    self.assertIsNotNone(response_data['image'])
 
   def test_should_put_succeed_with_serialize_and_exclude(self):
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
@@ -81,15 +79,15 @@ class ProductTypeViewTest(DetailViewTestCase):
                     get_intl_texts(en_short_description), category=product_type.category.pk,
                     feature_values=feature_values_ids, image=get_image())
     expected = data.copy()
-    del expected[IMAGE_FIELD]
-    expected[DESCRIPTION_FIELD] = en_description
-    expected[SHORT_DESCRIPTION_FIELD] = en_short_description
-    del expected[CATEGORY_FIELD]
-    del expected[NAME_FIELD]
+    del expected['image']
+    expected['description'] = en_description
+    expected['short_description'] = en_short_description
+    del expected['category']
+    del expected['name']
     url = '{0}/{1}?serialize=["category"]&exclude=["name"]'.format(list_url, product_type.pk)
     response_data = self.should_put_succeed(url, data, self.admin_user_token, expected)
-    self.assertIsNotNone(response_data[IMAGE_FIELD])
-    self.assertIsInstance(response_data[CATEGORY_FIELD], dict)
+    self.assertIsNotNone(response_data['image'])
+    self.assertIsInstance(response_data['category'], dict)
 
   def test_should_put_require_auth(self):
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
@@ -100,12 +98,12 @@ class ProductTypeViewTest(DetailViewTestCase):
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
     data = get_data()
     expected_content = {
-      FEATURE_VALUES_FIELD: ['errors.productType.feature_values.mustNotBeNull'],
-      NAME_FIELD: get_intl_texts_errors('productType', field='name'),
-      DESCRIPTION_FIELD: get_intl_texts_errors('productType', field='description'),
-      SHORT_DESCRIPTION_FIELD: get_intl_texts_errors('productType', field='short_description'),
-      CATEGORY_FIELD: ['errors.productType.category.mustNotBeNull'],
-      IMAGE_FIELD: ['errors.productType.image.mustNotBeNull']
+      'feature_values': ['errors.productType.feature_values.mustNotBeNull'],
+      'name': get_intl_texts_errors('productType', field='name'),
+      'description': get_intl_texts_errors('productType', field='description'),
+      'short_description': get_intl_texts_errors('productType', field='short_description'),
+      'category': ['errors.productType.category.mustNotBeNull'],
+      'image': ['errors.productType.image.mustNotBeNull']
     }
     url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
@@ -121,9 +119,9 @@ class ProductTypeViewTest(DetailViewTestCase):
                     get_intl_texts(''), feature_values=[1, 2, 3, 4, 5],
                     category=self.phone_category_id, image=get_image())
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('productType', error='mustNotBeEmpty', field='name'),
-      DESCRIPTION_FIELD: get_intl_texts_errors('productType', error='mustNotBeEmpty', field='description'),
-      SHORT_DESCRIPTION_FIELD: get_intl_texts_errors('productType', error='mustNotBeEmpty', field='short_description'),
+      'name': get_intl_texts_errors('productType', error='mustNotBeEmpty', field='name'),
+      'description': get_intl_texts_errors('productType', error='mustNotBeEmpty', field='description'),
+      'short_description': get_intl_texts_errors('productType', error='mustNotBeEmpty', field='short_description'),
     }
     url = '{0}/{1}'.format(list_url, product_type.pk)
     self.should_put_fail(url, data=data, expected_content=expected_content, token=self.admin_user_token)
@@ -133,9 +131,9 @@ class ProductTypeViewTest(DetailViewTestCase):
                     get_intl_texts('a' * 301), feature_values=[1, 2, 3, 4, 5, 6],
                     category=self.phone_category_id, image=get_image())
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('productType', error='maxLength', field='name'),
-      DESCRIPTION_FIELD: get_intl_texts_errors('productType', error='maxLength', field='description'),
-      SHORT_DESCRIPTION_FIELD: get_intl_texts_errors('productType', error='maxLength', field='short_description'),
+      'name': get_intl_texts_errors('productType', error='maxLength', field='name'),
+      'description': get_intl_texts_errors('productType', error='maxLength', field='description'),
+      'short_description': get_intl_texts_errors('productType', error='maxLength', field='short_description'),
     }
     product_type = ProductType.objects.filter(name__value='Iphone 7')[0]
     url = '{0}/{1}'.format(list_url, product_type.pk)

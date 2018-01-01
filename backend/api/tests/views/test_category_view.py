@@ -8,12 +8,11 @@ from api.tests.views.fixtures.category_view_fixture import CategoryViewFixture
 from api.tests.views.utils import get_intl_texts, get_intl_texts_errors
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import NAME_FIELD, FEATURE_TYPES_FIELD
 from api.utils.http_constants import NOT_FOUND_CODE
 
 
 def get_data(name: Dict[str, str] = None, feature_types_ids: List[int] = None):
-  return {NAME_FIELD: name, FEATURE_TYPES_FIELD: feature_types_ids}
+  return {'name': name, 'feature_types': feature_types_ids}
 
 
 list_url = reverse('categories')
@@ -76,8 +75,8 @@ class CategoryViewTest(DetailViewTestCase):
     data = get_data(get_intl_texts())
     url = '{0}/{1}'.format(list_url, category.pk)
     self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
-      FEATURE_TYPES_FIELD: ['errors.category.feature_types.mustNotBeNull'],
-      NAME_FIELD: get_intl_texts_errors('category', field='name'),
+      'feature_types': ['errors.category.feature_types.mustNotBeNull'],
+      'name': get_intl_texts_errors('category', field='name'),
     })
 
   def test_should_put_empty_values(self):
@@ -85,7 +84,7 @@ class CategoryViewTest(DetailViewTestCase):
     data = get_data(get_intl_texts(''), [])
     url = '{0}/{1}'.format(list_url, category.pk)
     self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
-      NAME_FIELD: get_intl_texts_errors('category', error='mustNotBeEmpty', field='name'),
+      'name': get_intl_texts_errors('category', error='mustNotBeEmpty', field='name'),
     })
 
   def test_should_put_invalid_length(self):
@@ -93,7 +92,7 @@ class CategoryViewTest(DetailViewTestCase):
     data = get_data(get_intl_texts('a' * 31), [])
     url = '{0}/{1}'.format(list_url, category.pk)
     self.should_put_fail(url, data, token=self.manager_user_token, expected_content={
-      NAME_FIELD: get_intl_texts_errors('category', error='maxLength', field='name'),
+      'name': get_intl_texts_errors('category', error='maxLength', field='name'),
     })
 
   def test_should_put_invalid_feature_type(self):

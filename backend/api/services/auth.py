@@ -1,48 +1,46 @@
-from typing import Type
-
 from django.db import IntegrityError
 from django.http import JsonResponse
-from jwt import DecodeError
+import jwt
 
 from api.models import Group, User
+from api.models.auth import UserAuthCredentials
 from api.services.base import Service
 from api.services.email import EmailService
 from api.services.utils import is_uniqueness_exception
-from api.utils.json_responses import JsonResponseBadRequest
+from api.utils.json_responses import JsonResponseBadRequest, JsonResponseUnauthorized
 from api.utils.errors.error_constants import SAME_EMAIL_ERR, INVALID_EMAIL_OR_PASSWORD_ERR
-from api.utils.form_fields import NAME_FIELD, EMAIL_FIELD, PASSWORD_FIELD, ACCESS_TOKEN_KEY, \
-  AUTH_FIELDS, ID_FIELD, REFRESH_TOKEN_KEY
+from main import settings
 
 
 class AuthService(Service):
   def register(self) -> JsonResponse:
-    data = self.request.parsed_data
-    name = data[NAME_FIELD]
-    email = data[EMAIL_FIELD]
-    password = data[PASSWORD_FIELD]
-    group = Group.objects.get(pk='reader')
     try:
-      user = User.objects.create(name=name, email=email, password=User.encrypt_password(password), group=group)
+      data = self.request.parsed_data
+      group = Group.objects.get(pk='reader')
+      user = User.objects.create(name=data['name'], email=data['email'], group=group,
+                                 password=User.encrypt_password(data['password']))
       token = user.generate_registration_token()
       self._send_confirm_email(user.email, token)
       return JsonResponse({'message': 'Complete the registration now.'})
     except IntegrityError as e:
-      if is_uniqueness_exception(e, EMAIL_FIELD):
-        return JsonResponseBadRequest(err=[SAME_EMAIL_ERR], key=EMAIL_FIELD)
+      if is_uniqueness_exception(e, 'email'):
+        return JsonResponseBadRequest(err=[SAME_EMAIL_ERR], key='email')
+      else:
+        raise e
 
   def complete_registration(self) -> JsonResponse:
     try:
-      import jwt
-      from main.settings import SECRET_KEY
       token = self.request.GET.get('token')
-      decoded_token = jwt.decode(token, SECRET_KEY)
-      user = User.objects.get(pk=decoded_token[ID_FIELD])
-      if user.is_active: return JsonResponseBadRequest(err=['errors.completeRegistration.alreadyActive'])
+      decoded_token = jwt.decode(token, settings.SECRET_KEY)
+      user = User.objects.get(pk=decoded_token['user_id'])
+      if user.is_active:
+        return JsonResponseBadRequest(err=['errors.completeRegistration.alreadyActive'])
       user.is_active = True
       user.save()
-      return JsonResponse({ACCESS_TOKEN_KEY: user.generate_access_token(),
-                           REFRESH_TOKEN_KEY: user.generate_refresh_token()})
-    except (KeyError, User.DoesNotExist, DecodeError):
+      auth_credentials = UserAuthCredentials.objects.create(client_id=self.request.client_id, user=user)
+      return JsonResponse({'access_token': user.generate_access_token(),
+                           'refresh_token': auth_credentials.to_jwt()})
+    except (KeyError, User.DoesNotExist, jwt.DecodeError):
       return JsonResponseBadRequest(err=['errors.completeRegistration.invalidToken'])
 
   def _send_confirm_email(self, email_address: str, token: str) -> None:
@@ -52,19 +50,31 @@ class AuthService(Service):
     EmailService(subject, html_content, to=[email_address]).send()
 
   def login(self) -> JsonResponse:
-    data = self.request.parsed_data
-    email = data[EMAIL_FIELD]
-    password = data[PASSWORD_FIELD]
     try:
-      user = User.objects.get(email=email)
-      if user.is_active and user.is_password_matches(password):
-        return JsonResponse({ACCESS_TOKEN_KEY: user.generate_access_token(),
-                             REFRESH_TOKEN_KEY: user.generate_refresh_token()})
+      data = self.request.parsed_data
+      user = User.objects.get(email=data['email'])
+      if user.is_active and user.is_password_matches(data['password']):
+        auth_credentials = UserAuthCredentials.objects.create(client_id=self.request.client_id, user=user)
+        return JsonResponse({'access_token': user.generate_access_token(),
+                             'refresh_token': auth_credentials.to_jwt()})
       else:
-        return JsonResponseBadRequest(key=AUTH_FIELDS, err=[INVALID_EMAIL_OR_PASSWORD_ERR])
+        return JsonResponseBadRequest(key='auth', err=[INVALID_EMAIL_OR_PASSWORD_ERR])
     except User.DoesNotExist:
-      return JsonResponseBadRequest(key=AUTH_FIELDS, err=[INVALID_EMAIL_OR_PASSWORD_ERR])
+      return JsonResponseBadRequest(key='auth', err=[INVALID_EMAIL_OR_PASSWORD_ERR])
 
-  #TODO Add refresh token method
   def refresh(self) -> JsonResponse:
-    pass
+    try:
+      data = self.request.parsed_data
+      decoded_token = jwt.decode(data['refresh_token'], settings.SECRET_KEY)
+      auth_credentials = UserAuthCredentials.objects.get(pk=decoded_token['jti'])
+      is_client_valid = decoded_token['client_id'] == auth_credentials.client_id
+      is_user_id_valid = decoded_token['user_id'] == auth_credentials.user_id
+      if is_client_valid and is_user_id_valid:
+        user = User.objects.get(pk=decoded_token['user_id'])
+        return JsonResponse({'access_token': user.generate_access_token(),
+                             'refresh_token': auth_credentials.to_jwt()})
+      else:
+        auth_credentials.delete()
+        return JsonResponseUnauthorized()
+    except (jwt.DecodeError, UserAuthCredentials.DoesNotExist):
+      return JsonResponseUnauthorized()

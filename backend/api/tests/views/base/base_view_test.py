@@ -7,7 +7,7 @@ from shutil import rmtree
 from api.models import User
 from api.tests.views.fixtures.base.fixture import IFixture
 from api.tests.views.fixtures.common.users_fixture import UsersFixture
-from api.utils.form_fields import DATA_KEY
+
 from api.utils.http_constants import OK_CODE
 
 
@@ -40,7 +40,18 @@ class ViewTestCase(TestCase):
     send = getattr(self.client, method)
     return send(url, json.dumps(data),
                 HTTP_AUTHORIZATION='Bearer {token}'.format(token=token),
-                content_type='application/json')
+                HTTP_X_APP=1, content_type='application/json')
+
+  def send_request(self, method: str, url: str, token: str):
+    send = getattr(self.client, method)
+    return send(url, HTTP_AUTHORIZATION='Bearer {token}'.format(token=token),
+                HTTP_X_APP=1, content_type='application/json')
+
+  def send_get_request(self, url: str, token: str = None):
+    return self.send_request('get', url, token)
+
+  def send_delete_request(self, url: str, token: str = None):
+    return self.send_request('delete', url, token)
 
   def send_post_request(self, url: str, data: dict = None, token: str = None):
     return self.send_request_with_data('post', url, data, token)
@@ -49,13 +60,13 @@ class ViewTestCase(TestCase):
     return self.send_request_with_data('put', url, data, token)
 
   def should_get_succeed(self, url: str, expected: list, token: str = None):
-    response = self.client.get(url, HTTP_AUTHORIZATION='Bearer {token}'.format(token=token))
+    response = self.send_get_request(url, token)
     self.assertEquals(response.status_code, OK_CODE)
-    data = json.loads(response.content.decode())[DATA_KEY]
+    data = json.loads(response.content.decode())['data']
     self.assertEquals(data, expected)
 
-  def should_get_fail(self, url: str, expected_code: int, expected_content: dict):
-    response = self.client.get(url)
+  def should_get_fail(self, url: str, expected_code: int, expected_content: dict, token: str = None):
+    response = self.send_get_request(url, token)
     self.assertEquals(response.status_code, expected_code)
     content = json.loads(response.content.decode())
     self.assertEquals(content, expected_content)

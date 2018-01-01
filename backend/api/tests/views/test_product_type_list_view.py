@@ -9,8 +9,6 @@ from api.tests.views.fixtures.product_type_list_view_fixture import ProductTypeL
 from api.tests.views.utils import get_intl_texts_errors, get_intl_texts
 from api.utils.errors.error_constants import NOT_VALID_IMAGE, GLOBAL_ERR_KEY
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import NAME_FIELD, DESCRIPTION_FIELD, SHORT_DESCRIPTION_FIELD, \
-  FEATURE_VALUES_FIELD, CATEGORY_FIELD, IMAGE_FIELD
 from main.settings import MEDIA_ROOT
 
 list_url = reverse('product_types')
@@ -18,8 +16,8 @@ list_url = reverse('product_types')
 
 def get_data(name=get_intl_texts(), description=get_intl_texts(), short_description=get_intl_texts(),
              feature_values=None, category=None, image=None) -> dict:
-  return {NAME_FIELD: name, DESCRIPTION_FIELD: description, SHORT_DESCRIPTION_FIELD: short_description,
-          FEATURE_VALUES_FIELD: feature_values, CATEGORY_FIELD: category, IMAGE_FIELD: image}
+  return {'name': name, 'description': description, 'short_description': short_description,
+          'feature_values': feature_values, 'category': category, 'image': image}
 
 
 def get_image(extension='jpg') -> str:
@@ -66,12 +64,12 @@ class ProductTypeListViewTest(ListViewTestCase):
                     get_intl_texts(en_short_description), feature_values=self.feature_values_ids,
                     category=self.phone_category_id, image=get_image())
     expected = data.copy()
-    del expected[IMAGE_FIELD]
-    expected[NAME_FIELD] = en_name
-    expected[DESCRIPTION_FIELD] = en_description
-    expected[SHORT_DESCRIPTION_FIELD] = en_short_description
+    del expected['image']
+    expected['name'] = en_name
+    expected['description'] = en_description
+    expected['short_description'] = en_short_description
     response_data = self.should_post_succeed(list_url, data, self.admin_user_token, expected)
-    self.assertIsNotNone(response_data[IMAGE_FIELD])
+    self.assertIsNotNone(response_data['image'])
 
   def test_should_post_with_serialized_field_succeed(self):
     en_name = 'Iphone 8'
@@ -81,14 +79,14 @@ class ProductTypeListViewTest(ListViewTestCase):
                     get_intl_texts(en_short_description), feature_values=self.feature_values_ids,
                     category=self.phone_category_id, image=get_image())
     expected = data.copy()
-    del expected[IMAGE_FIELD], expected[CATEGORY_FIELD]
-    expected[NAME_FIELD] = en_name
-    expected[DESCRIPTION_FIELD] = en_description
-    expected[SHORT_DESCRIPTION_FIELD] = en_short_description
+    del expected['image'], expected['category']
+    expected['name'] = en_name
+    expected['description'] = en_description
+    expected['short_description'] = en_short_description
     url = '{0}?serialize=["category"]'.format(list_url)
     response_data = self.should_post_succeed(url, data, self.admin_user_token, expected)
-    self.assertIsNotNone(response_data[IMAGE_FIELD])
-    self.assertIsInstance(response_data[CATEGORY_FIELD], dict)
+    self.assertIsNotNone(response_data['image'])
+    self.assertIsInstance(response_data['category'], dict)
 
   def test_should_post_require_auth(self):
     self.should_post_require_auth(list_url)
@@ -96,12 +94,12 @@ class ProductTypeListViewTest(ListViewTestCase):
   def test_should_post_null_values(self):
     data = get_data()
     expected_content = {
-      FEATURE_VALUES_FIELD: ['errors.productTypes.feature_values.mustNotBeNull'],
-      NAME_FIELD: get_intl_texts_errors('productTypes', field='name'),
-      DESCRIPTION_FIELD: get_intl_texts_errors('productTypes', field='description'),
-      SHORT_DESCRIPTION_FIELD: get_intl_texts_errors('productTypes', field='short_description'),
-      CATEGORY_FIELD: ['errors.productTypes.category.mustNotBeNull'],
-      IMAGE_FIELD: ['errors.productTypes.image.mustNotBeNull']
+      'feature_values': ['errors.productTypes.feature_values.mustNotBeNull'],
+      'name': get_intl_texts_errors('productTypes', field='name'),
+      'description': get_intl_texts_errors('productTypes', field='description'),
+      'short_description': get_intl_texts_errors('productTypes', field='short_description'),
+      'category': ['errors.productTypes.category.mustNotBeNull'],
+      'image': ['errors.productTypes.image.mustNotBeNull']
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content,
                           token=self.admin_user_token)
@@ -114,9 +112,9 @@ class ProductTypeListViewTest(ListViewTestCase):
                     get_intl_texts(''), feature_values=self.feature_values_ids,
                     category=self.phone_category_id, image=get_image())
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('productTypes', error='mustNotBeEmpty', field='name'),
-      DESCRIPTION_FIELD: get_intl_texts_errors('productTypes', error='mustNotBeEmpty', field='description'),
-      SHORT_DESCRIPTION_FIELD: get_intl_texts_errors('productTypes', error='mustNotBeEmpty', field='short_description'),
+      'name': get_intl_texts_errors('productTypes', error='mustNotBeEmpty', field='name'),
+      'description': get_intl_texts_errors('productTypes', error='mustNotBeEmpty', field='description'),
+      'short_description': get_intl_texts_errors('productTypes', error='mustNotBeEmpty', field='short_description'),
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content,
                           token=self.admin_user_token)
@@ -126,9 +124,9 @@ class ProductTypeListViewTest(ListViewTestCase):
                     get_intl_texts('a' * 301), feature_values=self.feature_values_ids,
                     category=1, image=get_image())
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('productTypes', error='maxLength', field='name'),
-      DESCRIPTION_FIELD: get_intl_texts_errors('productTypes', error='maxLength', field='description'),
-      SHORT_DESCRIPTION_FIELD: get_intl_texts_errors('productTypes', error='maxLength', field='short_description'),
+      'name': get_intl_texts_errors('productTypes', error='maxLength', field='name'),
+      'description': get_intl_texts_errors('productTypes', error='maxLength', field='description'),
+      'short_description': get_intl_texts_errors('productTypes', error='maxLength', field='short_description'),
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content,
                           token=self.admin_user_token)

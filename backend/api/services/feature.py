@@ -1,7 +1,7 @@
 from api.models import *
 from api.services.base import ListService, DetailService
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import NAME_FIELD, FEATURE_TYPE_FIELD
+
 from api.utils.json_responses import DataJsonResponse, JsonResponseBadRequest, JsonResponseNotFound
 
 
@@ -11,7 +11,7 @@ class FeatureTypeListService(ListService):
 
   def create(self):
     data = self.request.parsed_data
-    names = data[NAME_FIELD]
+    names = data['name']
     feature_type = FeatureType.objects.create()
     feature_type.add_names(names)
     return DataJsonResponse(feature_type.serialize(**self.request.serializer_data))
@@ -25,7 +25,7 @@ class FeatureTypeService(DetailService):
     try:
       data = self.request.parsed_data
       feature_type = FeatureType.objects.get(pk=self.model_id)
-      feature_type.update_names(data[NAME_FIELD])
+      feature_type.update_names(data['name'])
       feature_type.save()
       return DataJsonResponse(feature_type.serialize(**self.request.serializer_data))
     except FeatureType.DoesNotExist:
@@ -39,9 +39,9 @@ class FeatureValueListService(ListService):
   def create(self):
     try:
       data = self.request.parsed_data
-      feature_type = FeatureType.objects.get(pk=data[FEATURE_TYPE_FIELD])
+      feature_type = FeatureType.objects.get(pk=data['feature_type'])
       feature_value = FeatureValue.objects.create(feature_type=feature_type)
-      feature_value.add_names(data[NAME_FIELD])
+      feature_value.add_names(data['name'])
       return DataJsonResponse(feature_value.serialize(**self.request.serializer_data))
     except FeatureType.DoesNotExist:
       return JsonResponseBadRequest([get_not_exist_msg(FeatureType)])
@@ -55,9 +55,9 @@ class FeatureValueService(DetailService):
     try:
       data = self.request.parsed_data
       feature_value = FeatureValue.objects.get(pk=self.model_id)
-      feature_type = FeatureType.objects.get(pk=data[FEATURE_TYPE_FIELD])
+      feature_type = FeatureType.objects.get(pk=data['feature_type'])
       feature_value.feature_type = feature_type
-      feature_value.update_names(data[NAME_FIELD])
+      feature_value.update_names(data['name'])
       feature_value.save()
       return DataJsonResponse(feature_value.serialize(**self.request.serializer_data))
     except FeatureValue.DoesNotExist:

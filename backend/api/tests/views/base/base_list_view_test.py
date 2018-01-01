@@ -3,8 +3,8 @@ from typing import Type
 
 from api.models.base import SerializableModel
 from api.tests.views.base.base_view_test import ViewTestCase
-from api.utils.form_fields import DATA_KEY
-from api.utils.http_constants import OK_CODE, FORBIDDEN_CODE, UNAUTHROZIED_CODE, BAD_REQUEST_CODE
+
+from api.utils.http_constants import OK_CODE, FORBIDDEN_CODE, UNAUTHORIZED_CODE, BAD_REQUEST_CODE
 
 
 class ListViewTestCase(ViewTestCase):
@@ -30,7 +30,7 @@ class ListViewTestCase(ViewTestCase):
   def should_post_succeed(self, url: str, data: dict, token: str, expected: dict) -> dict:
     response = self.send_post_request(url, data, token)
     self.assertEquals(response.status_code, OK_CODE)
-    response_data = json.loads(response.content.decode())[DATA_KEY]
+    response_data = json.loads(response.content.decode())['data']
     for k, v in expected.items():
       self.assertEqual(response_data[k], v)
     return response_data
@@ -41,7 +41,7 @@ class ListViewTestCase(ViewTestCase):
 
   def should_post_require_auth(self, url: str):
     response = self.send_post_request(url)
-    self.assertEquals(response.status_code, UNAUTHROZIED_CODE)
+    self.assertEquals(response.status_code, UNAUTHORIZED_CODE)
 
   def should_post_fail(self, url: str, data: dict = None,
                        expected_code: int = BAD_REQUEST_CODE,

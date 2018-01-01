@@ -37,5 +37,11 @@
   "admin.addUser.labels.group": "Group",
   "admin.addUser.placeholders.groupSelect": "Select a group...",
   "errors.common": "Something went wrong...",
-  "errors.common.tryAgain": "Try again"
+  "errors.common.tryAgain": "Try again",
+  "errors.users.name.mustNotBeEmpty": "Name must not be empty",
+  "errors.users.name.maxLength": "Name length must not exceed 30 symbols",
+  "errors.users.email.mustNotBeEmpty": "Email must not be empty",
+  "errors.users.email.isEmail": "Invalid email format",
+  "errors.users.group.required": "Group must not be empty",
+  "errors.users.password.regex": "Password must have at least 8 characters and include numbers, lowercase and uppercase letters"
 }

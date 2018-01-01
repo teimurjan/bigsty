@@ -10,7 +10,7 @@ import FormGroup from '../../../Common/Forms/FormGroup';
 import Label from '../../../Common/Forms/Label';
 import { AddUserActionCreatorsMapObject } from './actions';
 import Icon from '../../../Common/Icon';
-import { ButtonEvent } from '../../../../typings/html-shortcuts';
+import { ButtonEvent, InputEvent } from '../../../../typings/html-shortcuts';
 
 export interface AddUserNotStateProps {
   isOpen: boolean;
@@ -38,28 +38,62 @@ export default injectIntl(class extends React.Component<AddUserProps & IntlProps
     }
   }
 
+  onNameChange = (e: InputEvent) => {
+    this.props.actions.changeName(e.currentTarget.value);
+  };
+
+  onEmailChange = (e: InputEvent) => {
+    this.props.actions.changeEmail(e.currentTarget.value);
+  };
+
+  onGroupChange = (group: Group) => {
+    this.props.actions.changeGroup(group);
+  };
+
+  onPasswordChange = (e: InputEvent) => {
+    this.props.actions.changePassword(e.currentTarget.value);
+  };
+
+  getFieldError = (field: keyof AddUserState): string | undefined => {
+    const {errors, intl} = this.props;
+    if (!errors.addUser) {
+      return undefined;
+    } else {
+      const error = errors.addUser[field];
+      return error ? intl(error) : undefined;
+    }
+  };
+
   renderAddUserForm() {
     const {intl, group, groups, name, email, password} = this.props;
+    const nameInput = (
+      <FormInputWithLabel labelText={intl('admin.addUser.labels.name')}
+                          formInputProps={{value: name, onChange: this.onNameChange}}
+                          formGroupProps={{className: 'row', error: this.getFieldError('name')}}
+                          {...formInputWithLabelProps}/>);
+    const emailInput = (
+      <FormInputWithLabel labelText={intl('admin.addUser.labels.email')}
+                          formInputProps={{value: email, onChange: this.onEmailChange}}
+                          formGroupProps={{className: 'row', error: this.getFieldError('email')}}
+                          {...formInputWithLabelProps}/>);
+    const groupSelect = (
+      <FormGroup className="row" error={this.getFieldError('group')}>
+        <Label className={LABEL_CLASS_NAME}>{intl('admin.addUser.labels.group')}</Label>
+        <GroupSelect placeholder={intl('admin.addUser.placeholders.groupSelect')}
+                     labelKey="name" valueKey="name" onChange={this.onGroupChange}
+                     className={INPUT_CLASS_NAME} options={groups} value={group}/>
+      </FormGroup>);
+    const passwordInput = (
+      <FormInputWithLabel labelText={intl('admin.addUser.labels.password')}
+                          formInputProps={{value: password, onChange: this.onPasswordChange}}
+                          formGroupProps={{className: 'row', error: this.getFieldError('password')}}
+                          {...formInputWithLabelProps}/>);
     return (
       <form className="form-horizontal">
-        <FormInputWithLabel labelText={intl('admin.addUser.labels.name')}
-                            formInputProps={{value: name}}
-                            formGroupProps={{className: 'row'}}
-                            {...formInputWithLabelProps}/>
-        <FormInputWithLabel labelText={intl('admin.addUser.labels.email')}
-                            formInputProps={{value: email}}
-                            formGroupProps={{className: 'row'}}
-                            {...formInputWithLabelProps}/>
-        <FormGroup className="row">
-          <Label className={LABEL_CLASS_NAME}>{intl('admin.addUser.labels.group')}</Label>
-          <GroupSelect placeholder={intl('admin.addUser.placeholders.groupSelect')}
-                       labelKey="name" valueKey="name"
-                       className={INPUT_CLASS_NAME} options={groups} value={group}/>
-        </FormGroup>
-        <FormInputWithLabel labelText={intl('admin.addUser.labels.password')}
-                            formInputProps={{value: password}}
-                            formGroupProps={{className: 'row'}}
-                            {...formInputWithLabelProps}/>
+        {nameInput}
+        {emailInput}
+        {groupSelect}
+        {passwordInput}
       </form>);
   }
 

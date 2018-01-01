@@ -2,10 +2,10 @@ import createReducer from '../../../../createReducer';
 import { Map as ImmutableMap } from 'immutable';
 import { Group } from '../../../../typings/api-models';
 import {
-  ADD_USER, ADD_USER_FAILURE, ADD_USER_SUCCESS, FETCH_GROUPS, FETCH_GROUPS_FAILURE,
-  FETCH_GROUPS_SUCCESS
+  ADD_USER, ADD_USER_FAILURE, ADD_USER_SUCCESS, CHANGE_EMAIL, CHANGE_GROUP, CHANGE_NAME, FETCH_GROUPS,
+  FETCH_GROUPS_FAILURE,
+  FETCH_GROUPS_SUCCESS, CHANGE_PASSWORD
 } from './actions';
-
 
 export interface AddUserState {
   name: string;
@@ -15,7 +15,7 @@ export interface AddUserState {
   isLoading: boolean;
   groups: Array<Group>;
   errors: {
-    addUser?: Array<string>;
+    addUser?: Map<string, Array<string>>;
     fetchGroups?: Array<string>;
   };
 }
@@ -57,5 +57,9 @@ export default createReducer({
     errors: {
       addUser: action.errors
     }
-  })
+  }),
+  [CHANGE_NAME]: (state, action) => state.set('name', action.payload.name),
+  [CHANGE_EMAIL]: (state, action) => state.set('email', action.payload.email),
+  [CHANGE_GROUP]: (state, action) => state.set('group', action.payload.group),
+  [CHANGE_PASSWORD]: (state, action) => state.set('password', action.payload.password),
 }, ImmutableMap(initialState));

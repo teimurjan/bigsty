@@ -1,10 +1,7 @@
-from urllib.request import Request
-
-from api.models import *
+from api.models import Category, FeatureType
 from api.services.base import ListService, DetailService
 from api.utils.json_responses import DataJsonResponse, JsonResponseNotFound, JsonResponseBadRequest
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import NAME_FIELD, FEATURE_TYPES_FIELD
 
 
 class CategoryListService(ListService):
@@ -14,8 +11,8 @@ class CategoryListService(ListService):
   def create(self):
     try:
       data = self.request.parsed_data
-      names = data[NAME_FIELD]
-      feature_types = [FeatureType.objects.get(pk=pk) for pk in data[FEATURE_TYPES_FIELD]]
+      names = data['name']
+      feature_types = [FeatureType.objects.get(pk=pk) for pk in data['feature_types']]
       category = Category.objects.create().add_names(names)
       category.feature_types.set(feature_types)
       return DataJsonResponse(category.serialize(**self.request.serializer_data))
@@ -31,9 +28,9 @@ class CategoryService(DetailService):
     try:
       data = self.request.parsed_data
       category = Category.objects.get(pk=self.model_id)
-      names = data[NAME_FIELD]
+      names = data['name']
       category.update_names(names)
-      feature_types = [FeatureType.objects.get(pk=pk) for pk in data[FEATURE_TYPES_FIELD]]
+      feature_types = [FeatureType.objects.get(pk=pk) for pk in data['feature_types']]
       category.feature_types.set(feature_types)
       return DataJsonResponse(category.serialize(**self.request.serializer_data))
     except FeatureType.DoesNotExist:

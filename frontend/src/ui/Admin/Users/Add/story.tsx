@@ -5,7 +5,7 @@ import withIntl from '../../../../stories/withIntl';
 import { Map as ImmutableMap } from 'immutable';
 import { initialState } from './reducer';
 import { reduxAction } from '../../../../stories/utils';
-import { ADD_USER, FETCH_GROUPS } from './actions';
+import { ADD_USER, CHANGE_EMAIL, CHANGE_GROUP, CHANGE_NAME, CHANGE_PASSWORD, FETCH_GROUPS } from './actions';
 import { action as getStoryAction } from '@storybook/addon-actions';
 
 const initialProps: AddUserProps = {
@@ -13,7 +13,11 @@ const initialProps: AddUserProps = {
   onClose: getStoryAction('Closed'),
   actions: {
     fetchGroups: reduxAction(FETCH_GROUPS),
-    addUser: reduxAction(ADD_USER)
+    addUser: reduxAction(ADD_USER),
+    changeName: reduxAction(CHANGE_NAME),
+    changePassword: reduxAction(CHANGE_PASSWORD),
+    changeGroup: reduxAction(CHANGE_GROUP),
+    changeEmail: reduxAction(CHANGE_EMAIL),
   }
 };
 const AddUser = withIntl(AddUserComponent);

@@ -15,7 +15,7 @@ export default injectIntl(({intl, children}: IntlProps & React.Props<{}>) => (
         <Icon type="user"/> <span className="nav-label">{intl('admin.users.linkText')}</span>
       </MenuLink>
     </Menu>
-    <div id="content">
+    <div id="page-wrapper">
       {children}
     </div>
   </div>

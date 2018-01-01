@@ -5,8 +5,8 @@ from api.models.base import SerializableModel
 from api.tests.views.base.base_view_test import ViewTestCase
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import DATA_KEY
-from api.utils.http_constants import OK_CODE, FORBIDDEN_CODE, UNAUTHROZIED_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE
+
+from api.utils.http_constants import OK_CODE, FORBIDDEN_CODE, UNAUTHORIZED_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE
 
 
 class DetailViewTestCase(ViewTestCase):
@@ -23,7 +23,7 @@ class DetailViewTestCase(ViewTestCase):
   def should_put_succeed(self, url: str, data: dict, token: str, expected: dict) -> dict:
     response = self.send_put_request(url, data, token)
     self.assertEquals(response.status_code, OK_CODE)
-    response_data = json.loads(response.content.decode())[DATA_KEY]
+    response_data = json.loads(response.content.decode())['data']
     for k, v in expected.items():
       self.assertEquals(response_data[k], v)
     return response_data
@@ -34,7 +34,7 @@ class DetailViewTestCase(ViewTestCase):
 
   def should_put_require_auth(self, url: str):
     response = self.send_put_request(url)
-    self.assertEquals(response.status_code, UNAUTHROZIED_CODE)
+    self.assertEquals(response.status_code, UNAUTHORIZED_CODE)
 
   def should_put_fail(self, url: str, data: dict = None,
                       expected_code: int = BAD_REQUEST_CODE,
@@ -51,7 +51,7 @@ class DetailViewTestCase(ViewTestCase):
 
   def should_delete_succeed(self, list_url, model_id: int, token: str = None):
     url = '{0}/{1}'.format(list_url, model_id)
-    response = self.client.delete(url, HTTP_AUTHORIZATION='Bearer {token}'.format(token=token))
+    response = self.client.delete(url, HTTP_AUTHORIZATION='Bearer {token}'.format(token=token), HTTP_X_APP=1)
     self.assertEquals(response.status_code, OK_CODE)
 
   def should_delete_require_role(self, list_url, model_id: int, token: str = None):
@@ -67,7 +67,7 @@ class DetailViewTestCase(ViewTestCase):
                          model_id: int, expected_errors: list = None,
                          expected_code=BAD_REQUEST_CODE, token: str = None):
     url = '{0}/{1}'.format(list_url, model_id)
-    response = self.client.delete(url, HTTP_AUTHORIZATION='Bearer {token}'.format(token=token))
+    response = self.client.delete(url, HTTP_AUTHORIZATION='Bearer {token}'.format(token=token), HTTP_X_APP=1)
     self.assertEquals(response.status_code, expected_code)
     errors = json.loads(response.content.decode())[GLOBAL_ERR_KEY]
     if expected_errors:

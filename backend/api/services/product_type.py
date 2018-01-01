@@ -2,8 +2,6 @@ from api.models import *
 from api.services.base import ListService, DetailService
 from api.utils.errors.error_constants import NOT_VALID_IMAGE
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import NAME_FIELD, DESCRIPTION_FIELD, \
-  IMAGE_FIELD, CATEGORY_FIELD, SHORT_DESCRIPTION_FIELD, FEATURE_VALUES_FIELD
 from api.utils.image_utils import base64_to_image, Base64ToImageConversionException
 from api.utils.json_responses import DataJsonResponse, JsonResponseBadRequest, JsonResponseNotFound
 
@@ -15,13 +13,13 @@ class ProductTypeListService(ListService):
   def create(self):
     try:
       data = self.request.parsed_data
-      category = Category.objects.get(pk=data[CATEGORY_FIELD])
-      feature_values = [FeatureValue.objects.get(pk=pk) for pk in data[FEATURE_VALUES_FIELD]]
+      category = Category.objects.get(pk=data['category'])
+      feature_values = [FeatureValue.objects.get(pk=pk) for pk in data['feature_values']]
       ProductType.validate_relations(feature_values, category)
-      names = data[NAME_FIELD]
-      descriptions = data[DESCRIPTION_FIELD]
-      short_descriptions = data[SHORT_DESCRIPTION_FIELD]
-      image = base64_to_image(data[IMAGE_FIELD], names['en'])
+      names = data['name']
+      descriptions = data['description']
+      short_descriptions = data['short_description']
+      image = base64_to_image(data['image'], names['en'])
       product_type = ProductType.objects.create(image=image, category=category) \
         .add_names(names).add_descriptions(descriptions).add_short_descriptions(short_descriptions)
       product_type.feature_values.set(feature_values)
@@ -44,16 +42,16 @@ class ProductTypeService(DetailService):
     try:
       data = self.request.parsed_data
       product_type = ProductType.objects.get(pk=self.model_id)
-      names = data[NAME_FIELD]
-      category = Category.objects.get(pk=data[CATEGORY_FIELD])
-      feature_values = [FeatureValue.objects.get(pk=pk) for pk in data[FEATURE_VALUES_FIELD]]
+      names = data['name']
+      category = Category.objects.get(pk=data['category'])
+      feature_values = [FeatureValue.objects.get(pk=pk) for pk in data['feature_values']]
       ProductType.validate_relations(feature_values, category)
-      image = base64_to_image(data[IMAGE_FIELD], names['en'])
+      image = base64_to_image(data['image'], names['en'])
       product_type.image = image
       product_type.category = category
       product_type.update_names(names) \
-        .update_short_descriptions(data[SHORT_DESCRIPTION_FIELD]) \
-        .update_descriptions(data[DESCRIPTION_FIELD]) \
+        .update_short_descriptions(data['short_description']) \
+        .update_descriptions(data['description']) \
         .feature_values.set(feature_values)
       return DataJsonResponse(product_type.serialize(**self.request.serializer_data))
     except ProductType.DoesNotExist:

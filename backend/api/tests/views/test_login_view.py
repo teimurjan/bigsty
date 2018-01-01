@@ -5,7 +5,6 @@ from django.urls import reverse
 
 from api.tests.views.base.base_view_test import ViewTestCase
 from api.utils.errors.error_constants import INVALID_EMAIL_OR_PASSWORD_ERR, GLOBAL_ERR_KEY
-from api.utils.form_fields import EMAIL_FIELD, PASSWORD_FIELD, ACCESS_TOKEN_KEY, AUTH_FIELDS, NAME_FIELD, GROUP_FIELD
 from api.utils.http_constants import OK_CODE, BAD_REQUEST_CODE
 from main.settings import SECRET_KEY
 
@@ -13,7 +12,7 @@ url = reverse('login')
 
 
 def get_data(email=None, password=None):
-  return {EMAIL_FIELD: email, PASSWORD_FIELD: password}
+  return {'email': email, 'password': password}
 
 
 class LoginViewTest(ViewTestCase):
@@ -21,26 +20,26 @@ class LoginViewTest(ViewTestCase):
     data = get_data(self.reader_user.email, 'Passw0rd')
     response = self.send_post_request(url, data)
     self.assertEquals(response.status_code, OK_CODE)
-    token = json.loads(response.content.decode())[ACCESS_TOKEN_KEY]
+    token = json.loads(response.content.decode())['access_token']
     decoded_token = jwt.decode(token, SECRET_KEY)
-    self.assertEquals(decoded_token[NAME_FIELD], self.reader_user.name)
-    self.assertEquals(decoded_token[GROUP_FIELD], self.reader_user.group_id)
+    self.assertEquals(decoded_token['name'], self.reader_user.name)
+    self.assertEquals(decoded_token['group'], self.reader_user.group_id)
 
   def test_should_post_empty_values(self):
     data = get_data('', '')
     response = self.send_post_request(url, data)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertEquals(data[EMAIL_FIELD], ['errors.login.email.mustNotBeEmpty'])
-    self.assertEquals(data[PASSWORD_FIELD], ['errors.login.password.mustNotBeEmpty'])
+    self.assertEquals(data['email'], ['errors.login.email.mustNotBeEmpty'])
+    self.assertEquals(data['password'], ['errors.login.password.mustNotBeEmpty'])
 
   def test_should_post_null_values(self):
     data = get_data()
     response = self.send_post_request(url, data)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertEquals(data[EMAIL_FIELD], ['errors.login.email.mustNotBeNull'])
-    self.assertEquals(data[PASSWORD_FIELD], ['errors.login.password.mustNotBeNull'])
+    self.assertEquals(data['email'], ['errors.login.email.mustNotBeNull'])
+    self.assertEquals(data['password'], ['errors.login.password.mustNotBeNull'])
 
   def test_should_post_no_data(self):
     response = self.send_post_request(url)
@@ -53,11 +52,11 @@ class LoginViewTest(ViewTestCase):
     response = self.send_post_request(url, data)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertEquals(data[AUTH_FIELDS], [INVALID_EMAIL_OR_PASSWORD_ERR])
+    self.assertEquals(data['auth'], [INVALID_EMAIL_OR_PASSWORD_ERR])
 
   def test_should_post_invalid_password(self):
     data = get_data(self.reader_user.email, 'passw0rd')
     response = self.send_post_request(url, data)
     self.assertEquals(response.status_code, BAD_REQUEST_CODE)
     data = json.loads(response.content.decode())
-    self.assertEquals(data[AUTH_FIELDS], [INVALID_EMAIL_OR_PASSWORD_ERR])
+    self.assertEquals(data['auth'], [INVALID_EMAIL_OR_PASSWORD_ERR])

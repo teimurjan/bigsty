@@ -15,7 +15,7 @@ function fetchUsersEpic(action$: ActionsObservable<AnyAction>, store: Store<Root
   return action$.ofType(FETCH_USERS)
     .mergeMap((action: AnyAction) => {
         return Observable.fromPromise(get(urls.users))
-          .map((payload: DataPayload) => ({type: FETCH_USERS_SUCCESS, users: payload.data}))
+          .map((payload: DataPayload) => ({type: FETCH_USERS_SUCCESS, payload: {users: payload.data}}))
           .catch(errors => Observable.of({type: FETCH_USERS_FAILURE, errors}));
       }
     );

@@ -12,7 +12,11 @@ function submitEpic(action$: ActionsObservable<AnyAction>, store: Store<RootStat
     .mergeMap((action: AnyAction) => {
         const {email, password} = store.getState().login.toJS();
         return Observable.fromPromise(post(urls.login, {email, password}))
-          .map(payload => ({type: SUBMIT_SUCCESS, payload}))
+          .map((payload: { refresh_token: string, access_token: string }) => {
+            localStorage.setItem('refresh_token', payload.refresh_token);
+            localStorage.setItem('access_token', payload.access_token);
+            return {type: SUBMIT_SUCCESS};
+          })
           .catch(errors => Observable.of({type: SUBMIT_FAILURE, errors}));
       }
     );

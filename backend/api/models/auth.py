@@ -1,8 +1,8 @@
 import datetime
+import uuid
 
 from django.db import models
 import bcrypt
-from api.utils.form_fields import ID_FIELD, NAME_FIELD, GROUP_FIELD
 from main.settings import SECRET_KEY
 import jwt
 from api.models.base import SerializableModel
@@ -25,7 +25,7 @@ class User(SerializableModel):
   is_active = models.BooleanField(default=False)
 
   def _should_hide(self, field_name: str) -> bool:
-    return field_name == 'password'
+    return field_name == 'password' or field_name == 'auth_credentials'
 
   @staticmethod
   def encrypt_password(password: str) -> str:
@@ -36,18 +36,32 @@ class User(SerializableModel):
 
   def generate_access_token(self) -> str:
     exp_date = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-    payload = {ID_FIELD: self.pk, NAME_FIELD: self.name, GROUP_FIELD: self.group.pk, "exp": exp_date}
+    payload = {'user_id': self.pk, 'name': self.name, 'group': self.group.pk, "exp": exp_date}
     return jwt.encode(payload, SECRET_KEY).decode()
 
-  def generate_refresh_token(self) -> str:
-    exp_date = datetime.datetime.utcnow() + datetime.timedelta(hours=12)
-    payload = {ID_FIELD: self.pk, "exp": exp_date}
-    return jwt.encode(payload, SECRET_KEY).decode()
+  def generate_refresh_token(self, client_id) -> str:
+    auth_credentials = UserAuthCredentials.objects.create(client_id=client_id, user=self)
+    return auth_credentials.to_jwt()
 
   def generate_registration_token(self) -> str:
     exp_date = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-    payload = {ID_FIELD: self.pk, "exp": exp_date}
+    payload = {'user_id': self.pk, "exp": exp_date}
     return jwt.encode(payload, SECRET_KEY).decode()
 
   def __str__(self):
     return self.email
+
+
+class UserAuthCredentials(SerializableModel):
+  client_id = models.IntegerField()
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auth_credentials',
+                           related_query_name='auth_credential')
+  jti = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+  def to_jwt(self):
+    exp_date = datetime.datetime.utcnow() + datetime.timedelta(days=30)
+    payload = {'user_id': self.user.pk, 'client_id': self.client_id, 'jti': str(self.jti), 'exp': exp_date}
+    return jwt.encode(payload, SECRET_KEY).decode()
+
+  class Meta:
+    db_table = 'api_user_auth_credentials'

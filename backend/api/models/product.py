@@ -3,7 +3,7 @@ from typing import Type
 from django.db import models
 from api.models.base import SerializableModel
 from api.models.product_type import ProductType
-from api.utils.form_fields import ID_FIELD
+
 from api.utils.image_utils import base64_to_image
 
 
@@ -31,7 +31,7 @@ class Product(SerializableModel):
       if isinstance(image, str):
         new_images.append(image)
       elif isinstance(image, dict):
-        image_id = image[ID_FIELD]
+        image_id = image['id']
         ProductImage.objects.get(id=image_id)
         old_images.add(image_id)
     converted_images = [base64_to_image(i, self.product_type.__str__()) for i in new_images]

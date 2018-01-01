@@ -1,5 +1,4 @@
 from api.factories.services import ServiceType
-from api.utils.form_fields import NAME_FIELD, PASSWORD_FIELD, GROUP_FIELD, EMAIL_FIELD
 from api.utils.validator import REQUIRED, EMPTY, MAX_LENGTH, REGEX, IS_EMAIL
 from api.views.base import DetailView, ListView
 
@@ -13,10 +12,10 @@ class UserListView(ListView):
   def __init__(self, **kwargs):
     super().__init__(ServiceType.USERS, 'users.', **kwargs)
     self.validation_rules = {
-      NAME_FIELD: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30},
-      EMAIL_FIELD: {REQUIRED: True, IS_EMAIL: True},
-      PASSWORD_FIELD: {REQUIRED: True, REGEX: r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$'},
-      GROUP_FIELD: {REQUIRED: True, EMPTY: False}
+      'name': {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30},
+      'email': {REQUIRED: True, IS_EMAIL: True},
+      'password': {REQUIRED: True, REGEX: r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$'},
+      'group': {REQUIRED: True, EMPTY: False}
     }
 
 
@@ -30,7 +29,7 @@ class UserView(DetailView):
   def __init__(self, **kwargs):
     super().__init__(ServiceType.USER, 'user.', **kwargs)
     self.validation_rules = {
-      NAME_FIELD: {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30},
-      PASSWORD_FIELD: {REQUIRED: True, REGEX: r'[A-Za-z0-9@#$%^&+=]{8,}'},
-      GROUP_FIELD: {REQUIRED: True, EMPTY: False}
+      'name': {REQUIRED: True, EMPTY: False, MAX_LENGTH: 30},
+      'password': {REQUIRED: True, REGEX: r'[A-Za-z0-9@#$%^&+=]{8,}'},
+      'group': {REQUIRED: True, EMPTY: False}
     }

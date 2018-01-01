@@ -4,7 +4,6 @@ from api.models import FeatureType
 from api.tests.views.base.base_list_view_test import ListViewTestCase
 from api.tests.views.fixtures.feature_type_list_view_fixture import FeatureTypeListViewFixture
 from api.tests.views.utils import get_intl_texts_errors, get_intl_texts
-from api.utils.form_fields import NAME_FIELD
 
 list_url = reverse('feature_types')
 
@@ -29,25 +28,25 @@ class FeatureTypeListViewTest(ListViewTestCase):
 
   def test_should_post_succeed(self):
     name = 'Test Feature'
-    data = {NAME_FIELD: get_intl_texts(name)}
-    expected = {NAME_FIELD: name}
+    data = {'name': get_intl_texts(name)}
+    expected = {'name': name}
     self.should_post_succeed(list_url, data, self.admin_user_token, expected)
 
   def test_should_post_require_auth(self):
     self.should_post_require_auth(list_url)
 
   def test_should_post_null_values(self):
-    data = {NAME_FIELD: get_intl_texts()}
+    data = {'name': get_intl_texts()}
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('featureTypes'),
+      'name': get_intl_texts_errors('featureTypes'),
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content,
                           token=self.admin_user_token)
 
   def test_should_post_empty_values(self):
-    data = {NAME_FIELD: get_intl_texts('')}
+    data = {'name': get_intl_texts('')}
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('featureTypes', 'mustNotBeEmpty'),
+      'name': get_intl_texts_errors('featureTypes', 'mustNotBeEmpty'),
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content,
                           token=self.admin_user_token)
@@ -56,9 +55,9 @@ class FeatureTypeListViewTest(ListViewTestCase):
     self.should_post_fail_when_no_data_sent(list_url, self.admin_user_token)
 
   def test_should_post_throws_invalid_length(self):
-    data = {NAME_FIELD: get_intl_texts('a' * 31)}
+    data = {'name': get_intl_texts('a' * 31)}
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('featureTypes', 'maxLength'),
+      'name': get_intl_texts_errors('featureTypes', 'maxLength'),
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content,
                           token=self.admin_user_token)

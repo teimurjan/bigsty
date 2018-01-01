@@ -6,7 +6,6 @@ from api.tests.views.fixtures.feature_value_list_view_fixture import FeatureValu
 from api.tests.views.utils import get_intl_texts, get_intl_texts_errors
 from api.utils.errors.error_constants import GLOBAL_ERR_KEY
 from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.form_fields import NAME_FIELD, FEATURE_TYPE_FIELD
 
 list_url = reverse('feature_values')
 
@@ -34,27 +33,27 @@ class FeatureValueListViewTest(ListViewTestCase):
 
   def test_should_post_succeed(self):
     name = 'Test Feature Value'
-    data = {NAME_FIELD: get_intl_texts(name), FEATURE_TYPE_FIELD: self.color_ft.id}
-    expected = {NAME_FIELD: name, FEATURE_TYPE_FIELD: self.color_ft.id}
+    data = {'name': get_intl_texts(name), 'feature_type': self.color_ft.id}
+    expected = {'name': name, 'feature_type': self.color_ft.id}
     self.should_post_succeed(list_url, data, self.admin_user_token, expected)
 
   def test_should_post_require_auth(self):
     self.should_post_require_auth(list_url)
 
   def test_should_post_null_values(self):
-    data = {NAME_FIELD: get_intl_texts(), FEATURE_TYPE_FIELD: None}
+    data = {'name': get_intl_texts(), 'feature_type': None}
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('featureValues'),
-      FEATURE_TYPE_FIELD: ['errors.featureValues.feature_type.mustNotBeNull']
+      'name': get_intl_texts_errors('featureValues'),
+      'feature_type': ['errors.featureValues.feature_type.mustNotBeNull']
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content,
                           token=self.admin_user_token)
 
   def test_should_post_empty_values(self):
-    data = {NAME_FIELD: get_intl_texts(''), FEATURE_TYPE_FIELD: ''}
+    data = {'name': get_intl_texts(''), 'feature_type': ''}
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('featureValues', 'mustNotBeEmpty'),
-      FEATURE_TYPE_FIELD: ['errors.featureValues.feature_type.mustBeInteger'],
+      'name': get_intl_texts_errors('featureValues', 'mustNotBeEmpty'),
+      'feature_type': ['errors.featureValues.feature_type.mustBeInteger'],
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content,
                           token=self.admin_user_token)
@@ -63,15 +62,15 @@ class FeatureValueListViewTest(ListViewTestCase):
     self.should_post_fail_when_no_data_sent(list_url, self.admin_user_token)
 
   def test_should_post_throws_invalid_length(self):
-    data = {NAME_FIELD: get_intl_texts('a' * 31), FEATURE_TYPE_FIELD: self.color_ft.id}
+    data = {'name': get_intl_texts('a' * 31), 'feature_type': self.color_ft.id}
     expected_content = {
-      NAME_FIELD: get_intl_texts_errors('featureValues', 'maxLength'),
+      'name': get_intl_texts_errors('featureValues', 'maxLength'),
     }
     self.should_post_fail(list_url, data=data, expected_content=expected_content,
                           token=self.admin_user_token)
 
   def test_should_post_throws_invalid_feature_type(self):
-    data = {NAME_FIELD: get_intl_texts('Test Name'), FEATURE_TYPE_FIELD: 999}
+    data = {'name': get_intl_texts('Test Name'), 'feature_type': 999}
     expected_content = {
       GLOBAL_ERR_KEY: [get_not_exist_msg(FeatureType)],
     }
