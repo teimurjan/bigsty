@@ -6,27 +6,26 @@ import { TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import AdminModelTable from '../../Common/AdminModelTable';
 import AddUser from '../Add/AddUserContainer';
+import { AddUserModalActionCreatorsMapObject } from '../Add/actions';
 import { ButtonEvent } from '../../../../typings/html-shortcuts';
 
 export interface UsersProps extends UsersState {
-  actions: UsersActionCreatorsMapObject;
+  actions: UsersActionCreatorsMapObject & AddUserModalActionCreatorsMapObject;
 }
 
 export default injectIntl(class extends React.Component<UsersProps & IntlProps> {
-  state = {
-    isAdding: false
-  };
-
   componentWillMount() {
     this.props.actions.fetchUsers();
   }
 
-  onAdd = (e: ButtonEvent) => {
-    this.setState({isAdding: true});
+  onOpenAddUserModal = (e: ButtonEvent) => {
+    e.preventDefault();
+    this.props.actions.openAddUserModal();
   };
 
-  onAddClose = (e: ButtonEvent) => {
-    this.setState({isAdding: false});
+  onCloseAddUserModal = (e: ButtonEvent) => {
+    e.preventDefault();
+    this.props.actions.closeAddUserModal();
   };
 
   render() {
@@ -36,7 +35,7 @@ export default injectIntl(class extends React.Component<UsersProps & IntlProps> 
     return (
       <div id="adminUsers">
         <AdminModelTable data={users} options={{noDataText: intl('admin.users.table.text.noData')}}
-                         onEdit={stubMethod} onAdd={this.onAdd} onDelete={stubMethod}>
+                         onEdit={stubMethod} onAdd={this.onOpenAddUserModal} onDelete={stubMethod}>
           <TableHeaderColumn isKey dataField="id">{intl('admin.users.table.columns.id')}</TableHeaderColumn>
           <TableHeaderColumn dataField="name">{intl('admin.users.table.columns.name')}</TableHeaderColumn>
           <TableHeaderColumn dataField="email">{intl('admin.users.table.columns.email')}</TableHeaderColumn>
@@ -46,7 +45,7 @@ export default injectIntl(class extends React.Component<UsersProps & IntlProps> 
             {intl('admin.users.table.columns.dateJoined')}
           </TableHeaderColumn>
         </AdminModelTable>
-        <AddUser isOpen={this.state.isAdding} onClose={this.onAddClose}/>
+        <AddUser onClose={this.onCloseAddUserModal}/>
       </div>
     );
   }

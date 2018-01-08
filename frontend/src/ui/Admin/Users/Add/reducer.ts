@@ -4,10 +4,11 @@ import { Group } from '../../../../typings/api-models';
 import {
   ADD_USER, ADD_USER_FAILURE, ADD_USER_SUCCESS, CHANGE_EMAIL, CHANGE_GROUP, CHANGE_NAME, FETCH_GROUPS,
   FETCH_GROUPS_FAILURE,
-  FETCH_GROUPS_SUCCESS, CHANGE_PASSWORD
+  FETCH_GROUPS_SUCCESS, CHANGE_PASSWORD, OPEN_MODAL, CLOSE_MODAL
 } from './actions';
 
 export interface AddUserState {
+  isOpen: boolean;
   name: string;
   email: string;
   password: string;
@@ -21,6 +22,7 @@ export interface AddUserState {
 }
 
 export const initialState: AddUserState = {
+  isOpen: false,
   name: '',
   email: '',
   password: '',
@@ -31,6 +33,8 @@ export const initialState: AddUserState = {
 };
 
 export default createReducer({
+  [OPEN_MODAL]: (state, action) => state.set('isOpen', true),
+  [CLOSE_MODAL]: (state, action) => state.set('isOpen', false),
   [FETCH_GROUPS]: (state, action) => state.merge({
     isLoading: true,
     errors: {

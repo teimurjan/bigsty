@@ -116,7 +116,10 @@ video {
 .note-editor.fullscreen {
   z-index: 2050;
 }
-.note-editor.note-frame.fullscreen { z-index: 2020; }
+
+.note-editor.note-frame.fullscreen {
+  z-index: 2020;
+}
 
 .note-editor.note-frame .note-editing-area .note-editable {
   color: $text-color;
@@ -331,8 +334,7 @@ body.body-small .footer.fixed {
 }
 
 .page > .panel-heading,
-.bg-white > .panel-heading
-{
+.bg-white > .panel-heading {
   padding-bottom: 0;
 }
 
@@ -654,7 +656,6 @@ table.table-mail tr td {
 
 /* BACKGROUNDS */
 
-
 .gray-bg, .bg-muted {
   background-color: $gray;
 }
@@ -921,7 +922,11 @@ a.close-canvas-menu:hover {
 }
 
 .modal {
-  z-index: 2050 !important;
+  display: block;
+  z-index: -2050 !important;
+  &.open {
+    z-index: 2050 !important;
+  }
 }
 
 .spiner-example {
@@ -987,6 +992,7 @@ a.close-canvas-menu:hover {
   padding: 0 40px;
 
 }
+
 .p-h-xs {
   padding: 10px 0;
 }
@@ -1015,7 +1021,6 @@ a.close-canvas-menu:hover {
   padding: 40px 0;
 
 }
-
 
 .m-xxs {
   margin: 2px 4px;
@@ -1305,7 +1310,6 @@ a.close-canvas-menu:hover {
   margin: 30px 0;
 }
 
-
 // IMAGES SIZE
 
 .img-sm {
@@ -1390,7 +1394,6 @@ body.modal-open {
   padding-right: inherit !important;
 }
 
-
 // Fix modal in Safari browser
 body.modal-open .wrapper-content.animated {
   -webkit-animation: none;
@@ -1423,16 +1426,17 @@ body.mini-navbar.fixed-sidebar .logo-element {
   animation: none;
 }
 
-.move_btn[disabled]{
+.move_btn[disabled] {
   background-color: #27A1D5;
   border-color: #27A1D5;
 }
 
-.btn-delete{
+.btn-delete {
   background-color: #EC4758;
   border-color: #EC4758;
   color: #ffffff;
 }
+
 .btn-delete:hover {
   color: #ffffff;
 }

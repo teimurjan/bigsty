@@ -3,6 +3,8 @@ import { Action } from '../../../../typings/redux-custom';
 import { Group } from '../../../../typings/api-models';
 
 export type AddUserActionType =
+  'ADD_USER/OPEN_MODAL' |
+  'ADD_USER/CLOSE_MODAL' |
   'ADD_USER/ADD' |
   'ADD_USER/ADD_SUCCESS' |
   'ADD_USER/ADD_FAILURE' |
@@ -25,6 +27,13 @@ export type AddUserActionCreatorsMapObject = {
   changePassword: ActionCreator<AddUserAction>;
 };
 
+export type AddUserModalActionCreatorsMapObject = {
+  openAddUserModal: ActionCreator<AddUserAction>;
+  closeAddUserModal: ActionCreator<AddUserAction>;
+}
+
+export const OPEN_MODAL: AddUserActionType = 'ADD_USER/OPEN_MODAL';
+export const CLOSE_MODAL: AddUserActionType = 'ADD_USER/CLOSE_MODAL';
 export const ADD_USER: AddUserActionType = 'ADD_USER/ADD';
 export const ADD_USER_SUCCESS: AddUserActionType = 'ADD_USER/ADD_SUCCESS';
 export const ADD_USER_FAILURE: AddUserActionType = 'ADD_USER/ADD_FAILURE';
@@ -35,6 +44,14 @@ export const CHANGE_NAME: AddUserActionType = 'ADD_USER/CHANGE_NAME';
 export const CHANGE_EMAIL: AddUserActionType = 'ADD_USER/CHANGE_EMAIL';
 export const CHANGE_GROUP: AddUserActionType = 'ADD_USER/CHANGE_GROUP';
 export const CHANGE_PASSWORD: AddUserActionType = 'ADD_USER/CHANGE_PASSWORD';
+
+function openModal(): AddUserAction {
+  return {type: OPEN_MODAL};
+}
+
+function closeModal(): AddUserAction {
+  return {type: CLOSE_MODAL};
+}
 
 function addUser(): AddUserAction {
   return {type: ADD_USER};
@@ -59,6 +76,11 @@ function changeGroup(group: Group): AddUserAction {
 function changePassword(password: string): AddUserAction {
   return {type: CHANGE_PASSWORD, payload: {password}};
 }
+
+export const addUserModalActionCreators: AddUserModalActionCreatorsMapObject = {
+  openAddUserModal: openModal,
+  closeAddUserModal: closeModal,
+};
 
 const addUserActionCreators: AddUserActionCreatorsMapObject = {
   addUser, fetchGroups, changeEmail, changeName, changeGroup, changePassword

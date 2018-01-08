@@ -13,7 +13,6 @@ import Icon from '../../../Common/Icon';
 import { ButtonEvent, InputEvent } from '../../../../typings/html-shortcuts';
 
 export interface AddUserNotStateProps {
-  isOpen: boolean;
   onClose: (e: ButtonEvent) => void;
 }
 

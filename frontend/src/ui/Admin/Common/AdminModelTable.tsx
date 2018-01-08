@@ -7,7 +7,7 @@ import { User } from '../../../typings/api-models';
 
 interface AdminModelTableProps extends BootstrapTableProps {
   onDelete: Function;
-  onAdd: Function;
+  onAdd: (e: ButtonEvent) => void;
   onEdit: Function;
 }
 
@@ -15,10 +15,6 @@ export default injectIntl<AdminModelTableProps>(({
                                                    onDelete, onAdd, onEdit,
                                                    children, intl, ...props
                                                  }: AdminModelTableProps & IntlProps) => {
-  function handleAddClick(e: ButtonEvent) {
-    e.preventDefault();
-    onAdd();
-  }
 
   const actionsColumnFormatter = (cell: {}, user: User) => {
     function handleDeleteClick(e: ButtonEvent) {
@@ -49,7 +45,7 @@ export default injectIntl<AdminModelTableProps>(({
         {children}
         <TableHeaderColumn dataFormat={actionsColumnFormatter}/>
       </BootstrapTable>
-      <PrimaryButton className="m-t-sm" mWidth onClick={handleAddClick}>
+      <PrimaryButton className="m-t-sm" mWidth onClick={onAdd}>
         {intl('admin.modelTable.buttons.add')}
       </PrimaryButton>
     </div>

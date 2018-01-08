@@ -6,11 +6,10 @@ interface ModalProps extends ReactPropsWithClass {
   size?: 'lg' | 'sm';
 }
 
-export const Modal = ({isOpen, size, className = '', children}: ModalProps) => {
-  const modalClass = `modal inmodal fade ${isOpen ? 'in' : ''} ${className}`;
-  const modalStyle = {display: isOpen ? 'block' : 'none'};
+export const Modal = ({isOpen, size = 'md', className = '', children}: ModalProps) => {
+  const modalClass = `modal inmodal fade ${isOpen ? 'in open' : ''} ${className}`;
   return (
-    <div className={modalClass} style={modalStyle}>
+    <div className={modalClass}>
       <div className={`modal-dialog modal-${size}`}>
         <div className="modal-content">
           {children}
