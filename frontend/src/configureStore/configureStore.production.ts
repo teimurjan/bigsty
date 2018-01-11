@@ -4,10 +4,12 @@ import { createEpicMiddleware } from 'redux-observable';
 import { browserHistory } from 'react-router';
 import rootEpic from '../rootEpic';
 import { RootState } from '../rootReducer';
-
-const epicMiddleware = createEpicMiddleware(rootEpic);
-const enhancer = compose(applyMiddleware(epicMiddleware, routerMiddleware(browserHistory)));
+import { makeApiService } from '../api';
 
 export default function (rootReducer: Reducer<RootState>) {
+  const epicMiddleware = createEpicMiddleware(rootEpic, {
+    dependencies: {apiService: makeApiService()}
+  });
+  const enhancer = compose(applyMiddleware(epicMiddleware, routerMiddleware(browserHistory)));
   return createStore(rootReducer, enhancer);
 }
