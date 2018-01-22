@@ -3,31 +3,21 @@ import { ActionsObservable } from 'redux-observable';
 import { RootState } from '../../../../rootReducer';
 import { Observable } from 'rxjs/Observable';
 import {
-  DELETE_USER, DELETE_USER_FAILURE, DELETE_USER_SUCCESS, EDIT_USER, EDIT_USER_FAILURE, EDIT_USER_SUCCESS, FETCH_USERS,
+  EDIT_USER, EDIT_USER_FAILURE, EDIT_USER_SUCCESS, FETCH_USERS,
   FETCH_USERS_FAILURE,
   FETCH_USERS_SUCCESS
 } from './actions';
 import urls from '../../../../urls';
-import { ApiService, DataPayload } from '../../../../typings/api';
+import { DataPayload } from '../../../../typings/api';
+import { ApiService } from '../../../../services/api';
 
 function fetchUsersEpic(action$: ActionsObservable<AnyAction>, store: Store<RootState>,
                         {apiService}: { apiService: ApiService }) {
   return action$.ofType(FETCH_USERS)
     .mergeMap((action: AnyAction) => {
-        return Observable.fromPromise(apiService.get(urls.users))
+        return Observable.fromPromise(apiService.getJSON(urls.users))
           .map((payload: DataPayload) => ({type: FETCH_USERS_SUCCESS, payload: {users: payload.data}}))
           .catch(errors => Observable.of({type: FETCH_USERS_FAILURE, errors}));
-      }
-    );
-}
-
-function deleteUserEpic(action$: ActionsObservable<AnyAction>, store: Store<RootState>,
-                        {apiService}: { apiService: ApiService }) {
-  return action$.ofType(DELETE_USER)
-    .mergeMap((action: AnyAction) => {
-        return Observable.fromPromise(apiService.remove(`${urls.users}/${action.payload.userId}`))
-          .map((payload: DataPayload) => ({type: DELETE_USER_SUCCESS}))
-          .catch(errors => Observable.of({type: DELETE_USER_FAILURE, errors}));
       }
     );
 }
@@ -37,11 +27,11 @@ function editUserEpic(action$: ActionsObservable<AnyAction>, store: Store<RootSt
   return action$.ofType(EDIT_USER)
     .mergeMap((action: AnyAction) => {
         const {userId, ...userData} = action.payload;
-        return Observable.fromPromise(apiService.put(`${urls.users}/${userId}`, userData))
-          .map((payload: DataPayload) => ({type: EDIT_USER_SUCCESS, user: payload.data}))
+        return Observable.fromPromise(apiService.putJSON(`${urls.users}/${userId}`, userData))
+          .map((payload: DataPayload) => ({type: EDIT_USER_SUCCESS, payload: {user: payload.data}}))
           .catch(errors => Observable.of({type: EDIT_USER_FAILURE, errors}));
       }
     );
 }
 
-export default [fetchUsersEpic, deleteUserEpic, editUserEpic];
+export default [fetchUsersEpic, editUserEpic];

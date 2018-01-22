@@ -5,14 +5,14 @@ import { ActionsObservable } from 'redux-observable';
 import { AnyAction, Store } from 'redux';
 import { RootState } from '../../rootReducer';
 import urls from '../../urls';
-import { ApiService } from '../../typings/api';
+import { ApiService } from '../../services/api';
 
 function submitEpic(action$: ActionsObservable<AnyAction>, store: Store<RootState>,
                     {apiService}: { apiService: ApiService }) {
   return action$.ofType(SUBMIT)
     .mergeMap((action: AnyAction) => {
         const {name, email, password} = store.getState().registration.toJS();
-        return Observable.fromPromise(apiService.post(urls.register, {name, email, password}))
+        return Observable.fromPromise(apiService.postJSON(urls.register, {name, email, password}))
           .map(payload => ({type: SUBMIT_SUCCESS, payload}))
           .catch(errors => Observable.of({type: SUBMIT_FAILURE, errors}));
       }

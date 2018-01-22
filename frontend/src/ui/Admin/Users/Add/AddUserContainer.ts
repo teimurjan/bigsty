@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import AddUser, { AddUserNotStateProps } from './AddUser';
+import AddUser from './AddUser';
 import { RootState } from '../../../../rootReducer';
 import addUserActionCreators, { AddUserActionCreatorsMapObject } from './actions';
 import { AddUserState } from './reducer';
@@ -15,5 +15,7 @@ function mapDispatchToProps(dispatch: Dispatch<RootState>) {
   };
 }
 
-export default connect<AddUserState, { actions: AddUserActionCreatorsMapObject },
-  AddUserNotStateProps>(mapStateToProps, mapDispatchToProps)(AddUser);
+export default (
+  connect<AddUserState, { actions: AddUserActionCreatorsMapObject }>
+  (mapStateToProps, mapDispatchToProps)(AddUser)
+);

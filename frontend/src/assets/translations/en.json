@@ -43,5 +43,8 @@
   "errors.users.email.mustNotBeEmpty": "Email must not be empty",
   "errors.users.email.isEmail": "Invalid email format",
   "errors.users.group.required": "Group must not be empty",
-  "errors.users.password.regex": "Password must have at least 8 characters and include numbers, lowercase and uppercase letters"
+  "errors.users.password.regex": "Password must have at least 8 characters and include numbers, lowercase and uppercase letters",
+  "admin.deleteUser.description": "Are you sure want to delete this user?",
+  "admin.deleteModal.buttons.cancel": "Cancel",
+  "admin.deleteModal.buttons.delete": "Delete"
 }

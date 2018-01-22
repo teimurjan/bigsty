@@ -9,14 +9,15 @@ import rootReducer from '../../../../rootReducer';
 import { reduxAction } from '../../../../stories/utils';
 import { FETCH_USERS } from './actions';
 import withStore from '../../../../stories/withStore';
-import { CLOSE_MODAL, OPEN_MODAL } from '../Add/actions';
+import { OPEN as OPEN_ADD_USER_MODAL } from '../Add/actions';
+import { OPEN as OPEN_DELETE_USER_MODAL } from '../Delete/actions';
 
 const initialProps: UsersProps = {
   ...initialState,
   actions: {
     fetchUsers: reduxAction(FETCH_USERS),
-    openAddUserModal: reduxAction(OPEN_MODAL),
-    closeAddUserModal: reduxAction(CLOSE_MODAL)
+    openAddUserModal: reduxAction(OPEN_ADD_USER_MODAL),
+    openDeleteUserModal: reduxAction(OPEN_DELETE_USER_MODAL),
   }
 };
 

@@ -1,4 +1,13 @@
 import { updateIntl } from 'react-intl-redux';
+import { Action } from '../../typings/redux-custom';
+
+export type AppActionType =
+  'APP/LOG_OUT' |
+  'APP/LOG_IN';
+
+export const LOG_OUT: AppActionType = 'APP/LOG_OUT';
+export const LOG_IN: AppActionType = 'APP/LOG_IN';
+export type AppAction = Action<AppActionType>;
 
 const AVAILABLE_LOCALES: Array<string> = ['en'];
 

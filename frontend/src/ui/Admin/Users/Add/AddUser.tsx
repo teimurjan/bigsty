@@ -10,13 +10,9 @@ import FormGroup from '../../../Common/Forms/FormGroup';
 import Label from '../../../Common/Forms/Label';
 import { AddUserActionCreatorsMapObject } from './actions';
 import Icon from '../../../Common/Icon';
-import { ButtonEvent, InputEvent } from '../../../../typings/html-shortcuts';
+import { InputEvent } from '../../../../typings/html-shortcuts';
 
-export interface AddUserNotStateProps {
-  onClose: (e: ButtonEvent) => void;
-}
-
-export interface AddUserProps extends AddUserState, AddUserNotStateProps {
+export interface AddUserProps extends AddUserState {
   actions: AddUserActionCreatorsMapObject;
 }
 
@@ -110,20 +106,20 @@ export default injectIntl(class extends React.Component<AddUserProps & IntlProps
   }
 
   render() {
-    const {isOpen, intl, errors, isLoading, onClose} = this.props;
+    const {isOpen, intl, errors, isLoading, actions} = this.props;
 
     const hasFetchGroupsErrors = errors.fetchGroups !== undefined;
 
     return (
       <Modal isOpen={isOpen}>
         <ModalHeader className="p-xs">
-          <ModalClose onClick={onClose}/>
+          <ModalClose onClick={actions.close}/>
         </ModalHeader>
         <ModalBody>
           {hasFetchGroupsErrors ? this.renderRefetchGroups() : this.renderAddUserForm()}
         </ModalBody>
         <ModalFooter>
-          <Button onClick={onClose}>{intl('admin.addModal.buttons.cancel')}</Button>
+          <Button onClick={actions.close}>{intl('admin.addModal.buttons.cancel')}</Button>
           <PrimaryButton disabled={hasFetchGroupsErrors || isLoading} onClick={this.props.actions.addUser} outline>
             {intl('admin.addModal.buttons.add')}
           </PrimaryButton>

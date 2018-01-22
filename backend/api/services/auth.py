@@ -67,8 +67,8 @@ class AuthService(Service):
       data = self.request.parsed_data
       decoded_token = jwt.decode(data['refresh_token'], settings.SECRET_KEY)
       auth_credentials = UserAuthCredentials.objects.get(pk=decoded_token['jti'])
-      is_client_valid = decoded_token['client_id'] == auth_credentials.client_id
-      is_user_id_valid = decoded_token['user_id'] == auth_credentials.user_id
+      is_client_valid = int(decoded_token['client_id']) == auth_credentials.client_id
+      is_user_id_valid = int(decoded_token['user_id']) == auth_credentials.user_id
       if is_client_valid and is_user_id_valid:
         user = User.objects.get(pk=decoded_token['user_id'])
         return JsonResponse({'access_token': user.generate_access_token(),

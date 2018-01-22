@@ -3,7 +3,8 @@ import { bindActionCreators, Dispatch } from 'redux';
 import Users from './Users';
 import { RootState } from '../../../../rootReducer';
 import usersActionCreators from './actions';
-import { addUserModalActionCreators } from '../Add/actions';
+import { open as openAddUserModal } from '../Add/actions';
+import { open as openDeleteUserModal } from '../Delete/actions';
 
 function mapStateToProps(state: RootState) {
   return state.adminUsers.toJS();
@@ -12,7 +13,9 @@ function mapStateToProps(state: RootState) {
 function mapDispatchToProps(dispatch: Dispatch<RootState>) {
   return {
     actions: bindActionCreators({
-      ...usersActionCreators, ...addUserModalActionCreators
+      ...usersActionCreators,
+      openAddUserModal,
+      openDeleteUserModal,
     }, dispatch)
   };
 }
