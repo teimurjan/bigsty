@@ -32,9 +32,10 @@ export const initialState: AddUserState = {
   errors: {}
 };
 
+const immutableState = ImmutableMap(initialState);
 export default createReducer({
   [OPEN]: (state, action) => state.set('isOpen', true),
-  [CLOSE]: (state, action) => state.set('isOpen', false),
+  [CLOSE]: (state, action) => immutableState,
   [FETCH_GROUPS]: (state, action) => state.merge({
     isLoading: true,
     errors: {
@@ -66,4 +67,4 @@ export default createReducer({
   [CHANGE_EMAIL]: (state, action) => state.set('email', action.payload.email),
   [CHANGE_GROUP]: (state, action) => state.set('group', action.payload.group),
   [CHANGE_PASSWORD]: (state, action) => state.set('password', action.payload.password),
-}, ImmutableMap(initialState));
+}, immutableState);

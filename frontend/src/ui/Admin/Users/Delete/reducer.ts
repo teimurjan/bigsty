@@ -16,9 +16,10 @@ export const initialState: DeleteUserState = {
   userId: undefined
 };
 
+const immutableState = ImmutableMap(initialState);
 export default createReducer({
   [OPEN]: (state, action) => state.set('userId', action.payload.userId),
-  [CLOSE]: (state, action) => state.set('userId', undefined),
+  [CLOSE]: (state, action) => immutableState,
   [DELETE_USER]: (state, action) => state.merge({
     isLoading: true, errors: undefined
   }),
@@ -26,4 +27,4 @@ export default createReducer({
   [DELETE_USER_FAILURE]: (state, action) => state.merge({
     isLoading: false, errors: action.errors
   }),
-}, ImmutableMap(initialState));
+}, immutableState);

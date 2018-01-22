@@ -2,7 +2,7 @@ import { Map } from 'immutable';
 import { RootState } from './rootReducer';
 import { Action, ReducersMapObject } from 'redux';
 
-export default function (handlers: ReducersMapObject, defaultState: Map<string, {}>) {
+export default function (handlers: ReducersMapObject, defaultState: Map<{}, {}>) {
   return abstractReducer.bind(null, handlers, defaultState);
 }
 

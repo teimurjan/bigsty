@@ -18,8 +18,8 @@ export default injectIntl(({
 
   function renderBody() {
     return hasErrors ?
-      <small className="text-danger">{intl('errors.common')}</small> :
-      <p>{intl('admin.deleteUser.description')}</p>;
+      <p className="text-danger">{intl('errors.common')}</p> :
+      <h4>{intl('admin.deleteUser.description')}</h4>;
   }
 
   return (
