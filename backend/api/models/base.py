@@ -4,7 +4,7 @@ from django.db.models import Model
 
 from api.models.intl import IntlModel, IntlText
 from api.utils.langauges import DEFAULT_LANGUAGE
-from serializers.model_field import IntlFieldSerializer, FieldSerializer
+from api.serializers.model_field import IntlFieldSerializer, FieldSerializer
 
 
 class SerializableModel(Model):
