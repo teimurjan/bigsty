@@ -1,11 +1,12 @@
 import datetime
 import uuid
 
-from django.db import models
 import bcrypt
-from main.settings import SECRET_KEY
 import jwt
+from django.db import models
+
 from api.models.base import SerializableModel
+from main.settings import SECRET_KEY
 
 
 class Group(SerializableModel):
@@ -16,6 +17,8 @@ class Group(SerializableModel):
 
 
 class User(SerializableModel):
+  hidden_fields = ['password', 'auth_credentials']
+
   email = models.EmailField(unique=True, blank=False, null=False)
   name = models.CharField(max_length=60, blank=False, null=False)
   date_joined = models.DateTimeField(auto_now_add=True)
@@ -23,9 +26,6 @@ class User(SerializableModel):
   group = models.ForeignKey(Group, related_name='users', related_query_name='user',
                             db_column='group', on_delete=models.CASCADE)
   is_active = models.BooleanField(default=False)
-
-  def _should_hide(self, field_name: str) -> bool:
-    return field_name == 'password' or field_name == 'auth_credentials'
 
   @staticmethod
   def encrypt_password(password: str) -> str:
@@ -47,6 +47,12 @@ class User(SerializableModel):
     exp_date = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
     payload = {'user_id': self.pk, "exp": exp_date}
     return jwt.encode(payload, SECRET_KEY).decode()
+
+  def _get_field_value(self, field_name):
+    if field_name == 'date_joined':
+      return getattr(self, field_name).__str__()
+    else:
+      return super()._get_field_value(field_name)
 
   def __str__(self):
     return self.email

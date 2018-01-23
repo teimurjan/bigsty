@@ -56,7 +56,8 @@ class ProductImage(SerializableModel):
   def _get_field_value(self, field_name):
     if field_name == 'file':
       return self.file.url
-    return super()._get_field_value(field_name)
+    else:
+      return super()._get_field_value(field_name)
 
   class Meta:
     db_table = 'api_product_image'

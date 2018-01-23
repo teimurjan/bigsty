@@ -3,11 +3,11 @@ from typing import Dict
 from django.db import models
 
 from api.models import Category, ProductType, Product
-from api.models.base import SerializableModel, IntlModel
-from api.models.language import IntlText
+from api.models.base import IntlSerializableModel
+from api.models.intl import IntlText
 
 
-class FeatureType(SerializableModel, IntlModel):
+class FeatureType(IntlSerializableModel):
   categories = models.ManyToManyField(Category, related_name='feature_types',
                                       related_query_name='feature_type', db_table='api_feature_type_x_category')
 
@@ -21,7 +21,7 @@ class FeatureType(SerializableModel, IntlModel):
     db_table = 'api_feature_type'
 
 
-class FeatureValue(SerializableModel, IntlModel):
+class FeatureValue(IntlSerializableModel):
   feature_type = models.ForeignKey(FeatureType, related_name='feature_values',
                                    related_query_name='feature_value', on_delete=models.CASCADE)
   product_types = models.ManyToManyField(ProductType, related_name='feature_values', related_query_name='feature_value',

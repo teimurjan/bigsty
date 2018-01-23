@@ -8,23 +8,23 @@ from api.utils.http_constants import OK_CODE, FORBIDDEN_CODE, UNAUTHORIZED_CODE,
 
 
 class ListViewTestCase(ViewTestCase):
-  def should_get_all_succeed(self, url: str, Model: Type[SerializableModel], token: str = None) -> None:
-    expected = [model.serialize() for model in Model.objects.all()]
+  def should_get_all_succeed(self, url: str, model_cls: Type[SerializableModel], token: str = None) -> None:
+    expected = [model.serialize() for model in model_cls.objects.all()]
     self.should_get_succeed(url, expected, token)
 
-  def should_get_succeed_with_filter(self, url: str, Model: Type[SerializableModel], filter_dict: dict,
+  def should_get_succeed_with_filter(self, url: str, model_cls: Type[SerializableModel], filter_dict: dict,
                                      token: str = None) -> None:
-    expected = [model.serialize() for model in Model.objects.filter(**filter_dict)]
+    expected = [model.serialize() for model in model_cls.objects.filter(**filter_dict)]
     self.should_get_succeed(url, expected, token)
 
-  def should_get_succeed_with_serialize(self, url: str, Model: Type[SerializableModel], serialize: list,
+  def should_get_succeed_with_serialize(self, url: str, model_cls: Type[SerializableModel], serialize: list,
                                         token: str = None) -> None:
-    expected = [model.serialize(serialize=serialize) for model in Model.objects.all()]
+    expected = [model.serialize(serialize=serialize) for model in model_cls.objects.all()]
     self.should_get_succeed(url, expected, token)
 
-  def should_get_succeed_with_exclude(self, url: str, Model: Type[SerializableModel], exclude: list,
+  def should_get_succeed_with_exclude(self, url: str, model_cls: Type[SerializableModel], exclude: list,
                                       token: str = None) -> None:
-    expected = [model.serialize(exclude=exclude) for model in Model.objects.all()]
+    expected = [model.serialize(exclude=exclude) for model in model_cls.objects.all()]
     self.should_get_succeed(url, expected, token)
 
   def should_post_succeed(self, url: str, data: dict, token: str, expected: dict) -> dict:

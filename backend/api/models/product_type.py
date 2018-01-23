@@ -1,11 +1,11 @@
 from django.db import models
 
-from api.models.base import SerializableModel, IntlModel
+from api.models.base import IntlSerializableModel
 from api.models.category import Category
-from api.models.language import IntlText
+from api.models.intl import IntlText
 
 
-class ProductType(SerializableModel, IntlModel):
+class ProductType(IntlSerializableModel):
   image = models.FileField(upload_to="product_types/", null=True, blank=True)
   category = models.ForeignKey(Category, related_name="product_types",
                                related_query_name="product_types", on_delete=models.CASCADE)

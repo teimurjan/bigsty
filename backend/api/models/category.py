@@ -2,11 +2,11 @@ from typing import Dict
 
 from django.db import models
 
-from api.models.base import SerializableModel, IntlModel
-from api.models.language import IntlText
+from api.models.base import IntlSerializableModel
+from api.models.intl import IntlText
 
 
-class Category(SerializableModel, IntlModel):
+class Category(IntlSerializableModel):
   def add_names(self, names: Dict[str, str]):
     self._add_intl_texts(names, CategoryName)
     return self
