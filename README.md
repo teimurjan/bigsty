@@ -1,39 +1,20 @@
 # About
-##### This project is a skeleton of an online store. It promises to be the tool which can be applied in any selling area.
-* Backend developed using Django but with custom auth system and validations. 
-* Frontend is developed using Typescript/React bundle with such technologies as: [Redux](https://redux.js.org/), [redux-observable](https://redux-observable.js.org/), [Immutable](https://facebook.github.io/immutable-js/docs/), [Storybook](https://storybook.js.org/) and [react-intl](https://github.com/yahoo/react-intl).
+##### This project is going to be an online store which can be applied in any area.
+* Backend is developed using Django according to Clean Architecture principles. 
 # Installation
-#### Dependencies
-* ##### [Yarn](https://yarnpkg.com/lang/en/docs/install/)
-* ##### [Node](https://nodejs.org/en/download/)
-* ##### [Python 3.6.3](https://www.python.org/downloads/release/python-363/)
-* ##### [Docker](https://docs.docker.com/engine/installation/)
-#### Install backend dependencies
+* Install [Docker](https://docs.docker.com/engine/installation/)
+* Create .env.development with the content like(suffix `development` may be any other you like)
+```
+DJANGO_SECRET=secret
+DJANGO_DB_HOST=db
+DJANGO_DB_PORT=5432
+POSTGRES_PASSWORD=password
+POSTGRES_USER=user
+POSTGRES_DB=online-store
+DB_HOST=localhost
+DB_PORT=5432
+```
+* Run
 ```sh
-cd backend
-python3 -m venv virtualenv
-source virtualenv/bin/activate
-pip install -r requirements.txt
+ENV=development docker-compose up -d
 ```
-* __Create database container (from root folder)__
-``` sh
-docker-compose up -d
-```
-* __Run migrations__
-``` sh
-cd backend
-python3 manage.py makemigrations
-python3 manage.py migrate
-```
-#### Install frontend dependencies
-``` sh
-cd frontend
-yarn
-```
-#### Develop
-```sh 
-python3 backend/manage.py runserver
-cd frontend
-yarn start
-```
-

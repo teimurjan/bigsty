@@ -1,49 +1,71 @@
 from django.db import IntegrityError
-
-from api.models import *
-from api.services.base import DetailService, ListService
-from api.services.utils import is_uniqueness_exception
-from api.utils.errors.error_constants import SAME_EMAIL_ERR
-from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.json_responses import DataJsonResponse, JsonResponseBadRequest, JsonResponseNotFound
-
-
-class UserService(DetailService):
-  def __init__(self, model_id, request):
-    super().__init__(User, model_id, request)
-
-  def update(self):
-    try:
-      data = self.request.parsed_data
-      user = User.objects.get(pk=self.model_id)
-      group = Group.objects.get(pk=data['group'])
-      user.name = data['name']
-      password = data['password']
-      user.password = User.encrypt_password(password)
-      user.group = group
-      return DataJsonResponse(user.serialize(**self.request.serializer_data))
-    except User.DoesNotExist:
-      return JsonResponseNotFound([get_not_exist_msg(User)])
-    except Group.DoesNotExist:
-      return JsonResponseBadRequest([get_not_exist_msg(Group)])
+from django.conf import settings
+import bcrypt
+import jwt
+from api.utils.messages import INVALID_EMAIL_OR_PASSWORD_MSG, SAME_EMAIL_MSG
+from api.utils.http import UNPROCESSABLE_ENTITY_CODE, UNAUTHORIZED_CODE
+from api.factories.token import TokenFactory, ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE
 
 
-class UserListService(ListService):
-  def __init__(self, request):
-    super().__init__(User, request)
+class UserService:
+    def __init__(self, repo):
+        self._repo = repo
 
-  def create(self):
-    try:
-      data = self.request.parsed_data
-      group = Group.objects.get(pk=data['group'])
-      password = User.encrypt_password(data['password'])
-      user = User.objects.create(name=data['name'], email=data['email'],
-                                 password=password, group=group, is_active=True)
-      return DataJsonResponse(user.serialize(**self.request.serializer_data))
-    except Group.DoesNotExist:
-      return JsonResponseBadRequest([get_not_exist_msg(Group)])
-    except IntegrityError as e:
-      import re
-      if is_uniqueness_exception(e, 'email'):
-        return JsonResponseBadRequest(key='email', err=[SAME_EMAIL_ERR])
-      raise e
+    def authorize(self, token):
+        try:
+            decoded_token = jwt.decode(token, settings.SECRET_KEY)
+            user = self._repo.get_by_id(decoded_token['user_id'])
+            return user
+        except (jwt.InvalidTokenError, self._repo.DoesNotExist):
+            return None
+
+
+    def authenticate(self, data):
+        try:
+            user = self._repo.get_first_by(email=data['email'])
+            if not bcrypt.checkpw(data['password'].encode(), user.password.encode()):
+                  raise self.AuthCredsInvalid()
+
+            return (
+                TokenFactory.create(ACCESS_TOKEN_TYPE, user),
+                TokenFactory.create(REFRESH_TOKEN_TYPE, user)
+            )
+        except self._repo.DoesNotExist:
+            raise self.AuthCredsInvalid()
+
+    def register(self, data):
+        email, password = data['email'], data['password']
+        is_user_exists = len(self._repo.filter_by(email=email)) > 0
+        if is_user_exists:
+            raise self.SameEmailError()
+
+        user = self._repo.create(
+            email=email, 
+            password=password
+        )
+        return (
+            TokenFactory.create(ACCESS_TOKEN_TYPE, user),
+            TokenFactory.create(REFRESH_TOKEN_TYPE, user)
+        )
+
+    def refresh_token(self, data):
+        try:
+            decoded_token = jwt.decode(
+                data['refresh_token'], settings.SECRET_KEY
+            )
+            user = self._repo.get_by_id(decoded_token['user_id'])
+            return (
+                TokenFactory.create(ACCESS_TOKEN_TYPE, user),
+                TokenFactory.create(REFRESH_TOKEN_TYPE, user)
+            )
+        except (jwt.InvalidTokenError, self._repo.DoesNotExist):
+            raise self.TokenInvalid()
+
+    class AuthCredsInvalid(Exception):
+        pass
+
+    class SameEmailError(Exception):
+        pass
+
+    class TokenInvalid(Exception):
+        pass

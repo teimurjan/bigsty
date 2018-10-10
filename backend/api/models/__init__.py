@@ -1,6 +1,15 @@
-from api.models.intl import Language, IntlText
-from api.models.auth import User, Group
-from api.models.category import Category, CategoryName
-from api.models.product_type import ProductType, ProductTypeName, ProductTypeDescription, ProductTypeShortDescription
-from api.models.product import Product, ProductImage
-from api.models.feature import FeatureType, FeatureTypeName, FeatureValue, FeatureValueName
+from api.models.intl import Language
+from api.models.user import User
+from api.models.group import Group
+from api.models.category import Category
+from api.models.category.name import CategoryName
+from api.models.product_type import ProductType
+from api.models.product_type.name import ProductTypeName
+from api.models.product_type.description import ProductTypeDescription
+from api.models.product_type.short_description import ProductTypeShortDescription
+from api.models.product import Product
+from api.models.product.image import ProductImage
+from api.models.feature_type import FeatureType
+from api.models.feature_type.name import FeatureTypeName
+from api.models.feature_value import FeatureValue
+from api.models.feature_value.name import FeatureValueName

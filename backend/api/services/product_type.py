@@ -1,66 +1,99 @@
-from api.models import *
-from api.services.base import ListService, DetailService
-from api.utils.errors.error_constants import NOT_VALID_IMAGE
-from api.utils.errors.error_messages import get_not_exist_msg
-from api.utils.image_utils import base64_to_image, Base64ToImageConversionException
-from api.utils.json_responses import DataJsonResponse, JsonResponseBadRequest, JsonResponseNotFound
+from api.utils.image import base64_to_image, Base64ToImageConversionException
 
 
-class ProductTypeListService(ListService):
-  def __init__(self, request):
-    super().__init__(ProductType, request)
+class ProductTypeService:
+    def __init__(
+        self,
+        repo,
+        name_repo,
+        description_repo,
+        short_description_repo,
+        category_repo,
+        feature_value_repo,
+        language_repo,
+    ):
+        self._repo = repo
+        self._name_repo = name_repo
+        self._description_repo = description_repo
+        self._short_description_repo = short_description_repo
+        self._category_repo = category_repo
+        self._feature_value_repo = feature_value_repo
+        self._language_repo = language_repo
 
-  def create(self):
-    try:
-      data = self.request.parsed_data
-      category = Category.objects.get(pk=data['category'])
-      feature_values = [FeatureValue.objects.get(pk=pk) for pk in data['feature_values']]
-      ProductType.validate_relations(feature_values, category)
-      names = data['name']
-      descriptions = data['description']
-      short_descriptions = data['short_description']
-      image = base64_to_image(data['image'], names['en'])
-      product_type = ProductType.objects.create(image=image, category=category) \
-        .add_names(names).add_descriptions(descriptions).add_short_descriptions(short_descriptions)
-      product_type.feature_values.set(feature_values)
-      return DataJsonResponse(product_type.serialize(**self.request.serializer_data))
-    except FeatureValue.DoesNotExist:
-      return JsonResponseBadRequest([get_not_exist_msg(FeatureValue)])
-    except Category.DoesNotExist:
-      return JsonResponseBadRequest([get_not_exist_msg(Category)])
-    except (ProductType.SameFeatureValues, ProductType.FeatureValuesNotAcceptable):
-      return JsonResponseBadRequest(['Invalid feature values'])
-    except Base64ToImageConversionException:
-      return JsonResponseBadRequest([NOT_VALID_IMAGE])
+    def create(self, data):
+        try:
+            image = base64_to_image(data['image'])
+            category = self._category_repo.get_by_id(
+                data['category_id']
+            )
 
+            feature_values = self._feature_value_repo.filter_by(
+                id__in=data['feature_values']
+            )
+            invalid_id_given = (
+                len(feature_values) != len(data['feature_values'])
+            )
+            if invalid_id_given or not self._feature_values_valid(category, feature_values):
+                raise self.FeatureValuesInvalid()
 
-class ProductTypeService(DetailService):
-  def __init__(self, model_id, request):
-    super().__init__(ProductType, model_id, request)
+            languages_ids = [l.id for l in self._language_repo.get_all()]
+            names_languages_valid = languages_ids == [
+                n['language_id'] for n in data['names']
+            ]
+            s_descriptions_languages_valid = languages_ids == [
+                s['language_id'] for s in data['short_descriptions']
+            ]
+            descriptions_languages_valid = languages_ids == [
+                d['language_id'] for d in data['descriptions']
+            ]
+            if not (names_languages_valid and s_descriptions_languages_valid and descriptions_languages_valid):
+                raise self.LanguageInvalid()
 
-  def update(self):
-    try:
-      data = self.request.parsed_data
-      product_type = ProductType.objects.get(pk=self.model_id)
-      names = data['name']
-      category = Category.objects.get(pk=data['category'])
-      feature_values = [FeatureValue.objects.get(pk=pk) for pk in data['feature_values']]
-      ProductType.validate_relations(feature_values, category)
-      image = base64_to_image(data['image'], names['en'])
-      product_type.image = image
-      product_type.category = category
-      product_type.update_names(names) \
-        .update_short_descriptions(data['short_description']) \
-        .update_descriptions(data['description']) \
-        .feature_values.set(feature_values)
-      return DataJsonResponse(product_type.serialize(**self.request.serializer_data))
-    except ProductType.DoesNotExist:
-      return JsonResponseNotFound([get_not_exist_msg(ProductType)])
-    except FeatureValue.DoesNotExist:
-      return JsonResponseBadRequest([get_not_exist_msg(FeatureValue)])
-    except Category.DoesNotExist:
-      return JsonResponseBadRequest([get_not_exist_msg(Category)])
-    except (ProductType.SameFeatureValues, ProductType.FeatureValuesNotAcceptable):
-      return JsonResponseBadRequest(['Invalid feature values'])
-    except Base64ToImageConversionException:
-      return JsonResponseBadRequest([NOT_VALID_IMAGE])
+            product_type = self._repo.create(
+                category_id=category.id,
+                image=image,
+            )
+
+            for fv in feature_values:
+                self._feature_value_repo.associate_with_product_type(
+                    product_type, fv
+                )
+            for name in data['names']:
+                self._name_repo.create(
+                    language_id=name['language_id'],
+                    value=name['value'],
+                    product_type_id=product_type.id
+                )
+            return product_type
+        except self._category_repo.DoesNotExist:
+            raise self.CategoryInvalid()
+        except Base64ToImageConversionException:
+            raise self.ProductImageInvalid()
+
+    def _feature_values_valid(self, category, feature_values):
+        valid_feature_types_ids = {
+            ft.id for ft in category.feature_types}
+        return all(
+            fv.feature_type.id in valid_feature_types_ids for fv in feature_values
+        )
+
+    def get_all(self):
+        return self._repo.get_all()
+
+    class CategoryInvalid(Exception):
+        pass
+
+    class FeatureValuesInvalid(Exception):
+        pass
+
+    class FeatureValuesOfTheSameType(Exception):
+        pass
+
+    class ProductTypeInvalid(Exception):
+        pass
+
+    class ProductImageInvalid(Exception):
+        pass
+
+    class LanguageInvalid(Exception):
+        pass

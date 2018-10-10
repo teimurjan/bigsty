@@ -1,31 +1,47 @@
-from django.conf.urls import url
+from django.urls import path
 
-from api.views import *
-from api.views.auth import RefreshTokenView
-from api.views.group import GroupListView
+from api.utils.view_wrapper import ViewWrapper
+from api.factories.views.authentication import AuthenticationViewFactory
+from api.factories.views.registration import RegistrationViewFactory
+from api.factories.views.refresh_token import RefreshTokenViewFactory
+from api.factories.views.category.list import CategoryListViewFactory
+from api.factories.views.feature_type.list import FeatureTypeListViewFactory
+from api.factories.views.feature_value.list import FeatureValueListViewFactory
+from api.factories.views.product.list import ProductListViewFactory
+from api.factories.views.product_type.list import ProductTypeListViewFactory
+from api.factories.middlewares.http.authorize import AuthorizeHttpMiddlewareFactory
 
 urlpatterns = [
-  url(r'^login$', LoginView.as_view(), name='login'),
-  url(r'^register$', RegistrationView.as_view(), name='register'),
-  url(r'^refresh$', RefreshTokenView.as_view(), name='refresh'),
+    path('auth/login', ViewWrapper.as_view(view_factory=AuthenticationViewFactory)),
+    path('auth/register', ViewWrapper.as_view(view_factory=RegistrationViewFactory)),
+    path('auth/refresh', ViewWrapper.as_view(
+        view_factory=RefreshTokenViewFactory,
+        middleware_factories=[AuthorizeHttpMiddlewareFactory]
+    )),
 
-  url(r'^categories$', CategoryListView.as_view(), name='categories'),
-  url(r'^categories/(?P<model_id>\d+)$', CategoryView.as_view(), name='categories'),
+    path('categories', ViewWrapper.as_view(
+        view_factory=CategoryListViewFactory,
+        middleware_factories=[AuthorizeHttpMiddlewareFactory]
+    )),
 
-  url(r'^product_types$', ProductTypeListView.as_view(), name='product_types'),
-  url(r'^product_types/(?P<model_id>\d+)$', ProductTypeView.as_view(), name='product_type'),
 
-  url(r'^feature_types$', FeatureTypeListView.as_view(), name='feature_types'),
-  url(r'^feature_types/(?P<model_id>\d+)$', FeatureTypeView.as_view(), name='feature_type'),
+    path('feature_types', ViewWrapper.as_view(
+        view_factory=FeatureTypeListViewFactory,
+        middleware_factories=[AuthorizeHttpMiddlewareFactory]
+    )),
 
-  url(r'^feature_values$', FeatureValueListView.as_view(), name='feature_values'),
-  url(r'^feature_values/(?P<model_id>\d+)$', FeatureValueView.as_view(), name='feature_value'),
+    path('feature_values', ViewWrapper.as_view(
+        view_factory=FeatureValueListViewFactory,
+        middleware_factories=[AuthorizeHttpMiddlewareFactory]
+    )),
 
-  url(r'^users$', UserListView.as_view(), name='users'),
-  url(r'^users/(?P<model_id>\d+)$', UserView.as_view(), name='user'),
+    path('products', ViewWrapper.as_view(
+        view_factory=ProductListViewFactory,
+        middleware_factories=[AuthorizeHttpMiddlewareFactory]
+    )),
 
-  url(r'^products$', ProductListView.as_view(), name='products'),
-  url(r'^products/(?P<model_id>\d+)$', ProductView.as_view(), name='product'),
-
-  url(r'^groups$', GroupListView.as_view(), name='groups')
+    path('product_types', ViewWrapper.as_view(
+        view_factory=ProductTypeListViewFactory,
+        middleware_factories=[AuthorizeHttpMiddlewareFactory]
+    )),
 ]
