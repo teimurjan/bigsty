@@ -11,7 +11,7 @@ class CategoryName(IntlText):
                               related_query_name="name", on_delete=models.CASCADE)
 
     def to_dto(self):
-        return CategoryNameDTO(self.pk, self.category.to_dto(), self.value, self.language.to_dto())
+        return CategoryNameDTO(self.pk, self.category.pk, self.value, self.language.to_dto())
 
     def __str__(self):
         return self.value

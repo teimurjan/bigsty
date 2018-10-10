@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 
 if __name__ == "__main__":
-    load_dotenv(os.environ.get('ENV'))
+    load_dotenv(os.environ.get('ENV_FILE'))
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "main.settings")
     try:

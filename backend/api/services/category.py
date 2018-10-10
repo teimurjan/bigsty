@@ -14,11 +14,14 @@ class CategoryService:
 
         category = self._repo.create()
         for name in data['names']:
-            self._name_repo.create(
-                language_id=name['language_id'],
-                value=name['value'],
-                category_id=category.id
+            category.names.append(
+                self._name_repo.create(
+                    language_id=name['language_id'],
+                    value=name['value'],
+                    category_id=category.id
+                )
             )
+
         return category
 
     class LanguageInvalid(Exception):
