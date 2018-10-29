@@ -1,9 +1,6 @@
-from django.db import IntegrityError
 from django.conf import settings
 import bcrypt
 import jwt
-from api.utils.messages import INVALID_EMAIL_OR_PASSWORD_MSG, SAME_EMAIL_MSG
-from api.utils.http import UNPROCESSABLE_ENTITY_CODE, UNAUTHORIZED_CODE
 from api.factories.token import TokenFactory, ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE
 
 
@@ -35,7 +32,7 @@ class UserService:
 
     def register(self, data):
         email, password = data['email'], data['password']
-        is_user_exists = len(self._repo.filter_by(email=email)) > 0
+        is_user_exists = len(tuple(self._repo.filter_by(email=email))) > 0
         if is_user_exists:
             raise self.SameEmailError()
 

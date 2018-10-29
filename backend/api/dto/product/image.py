@@ -2,14 +2,14 @@ from api.dto.base import DTO
 
 
 class ProductImageDTO(DTO):
-    def __init__(self, id_, file, product):
+    def __init__(self, id_, image, product):
         super().__init__(id_)
-        self._file = file
+        self._image = image
         self._product = product
 
     @property
-    def file(self):
-        return self._file
+    def image(self):
+        return self._image
 
     @property
     def product(self):

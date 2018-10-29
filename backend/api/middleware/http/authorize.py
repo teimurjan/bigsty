@@ -1,4 +1,4 @@
-from api.utils.http import AUTHORIZATION_HEADER, JSONResponseUnauthorized
+from api.http.headers import AUTHORIZATION_HEADER
 
 
 class AuthorizeHttpMiddleware:

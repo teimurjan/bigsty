@@ -16,10 +16,12 @@ class FeatureValueService:
             )
             feature_value = self._repo.create(feature_type_id=feature_type.id)
             for name in data['names']:
-                self._name_repo.create(
-                    language_id=name['language_id'],
-                    value=name['value'],
-                    feature_value_id=feature_value.id
+                feature_value.names.append(
+                    self._name_repo.create(
+                        language_id=name['language_id'],
+                        value=name['value'],
+                        feature_value_id=feature_value.id
+                    )
                 )
             return feature_value
         except self._feature_type_repo.DoesNotExist:
@@ -27,9 +29,6 @@ class FeatureValueService:
 
     def get_all(self):
         return self._repo.get_all()
-
-    class FeatureValueNotFound(Exception):
-        pass
 
     class FeatureTypeInvalid(Exception):
         pass

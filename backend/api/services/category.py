@@ -5,7 +5,7 @@ class CategoryService:
         self._language_repo = language_repo
 
     def get_all(self):
-        return self._repo.get_all()
+        return tuple(self._repo.get_all())
 
     def create(self, data):
         languages = self._language_repo.get_all()

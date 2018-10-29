@@ -4,6 +4,7 @@ from api.repos.product_type.name import ProductTypeNameRepo
 from api.repos.product_type.description import ProductTypeDescriptionRepo
 from api.repos.product_type.short_description import ProductTypeShortDescriptionRepo
 from api.repos.category import CategoryRepo
+from api.repos.feature_type import FeatureTypeRepo
 from api.repos.feature_value import FeatureValueRepo
 from api.repos.language import LanguageRepo
 
@@ -16,6 +17,7 @@ class ProductTypeServiceFactory:
         description_repo = ProductTypeDescriptionRepo()
         short_description_repo = ProductTypeShortDescriptionRepo()
         category_repo = CategoryRepo()
+        feature_type_repo = FeatureTypeRepo()
         feature_value_repo = FeatureValueRepo()
         language_repo = LanguageRepo()
         return ProductTypeService(
@@ -24,6 +26,7 @@ class ProductTypeServiceFactory:
             description_repo=description_repo,
             short_description_repo=short_description_repo,
             category_repo=category_repo,
+            feature_type_repo=feature_type_repo,
             feature_value_repo=feature_value_repo,
             language_repo=language_repo
         )

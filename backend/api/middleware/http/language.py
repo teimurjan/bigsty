@@ -1,4 +1,4 @@
-from api.utils.http import ACCEPT_LANGUAGE_HEADER
+from api.http.headers import ACCEPT_LANGUAGE_HEADER
 
 
 class LanguageHttpMiddleware:
@@ -9,5 +9,5 @@ class LanguageHttpMiddleware:
         language_name = request.META.get(
             ACCEPT_LANGUAGE_HEADER, 'en-US'
         ).split(',')[0]
-        languages = self._language_repo.filter_by(name=language_name)
-        request.language = None if len(languages) == 0 else languages[0]
+        languages = tuple(self._language_repo.filter_by(name=language_name))
+        request.language = None if not languages else languages[0]

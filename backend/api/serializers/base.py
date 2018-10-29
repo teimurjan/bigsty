@@ -17,8 +17,7 @@ class Serializer:
                 if field in self._only_fields:
                     filtered_dict[field] = serialized_dict[field]
             return filtered_dict
-        else:
-            return serialized_dict
+        return serialized_dict
 
     @abstractmethod
     def serialize(self):

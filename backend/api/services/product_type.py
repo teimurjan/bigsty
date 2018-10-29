@@ -1,4 +1,4 @@
-from api.utils.image import base64_to_image, Base64ToImageConversionException
+from api.utils.image import validate_image
 
 
 class ProductTypeService:
@@ -9,6 +9,7 @@ class ProductTypeService:
         description_repo,
         short_description_repo,
         category_repo,
+        feature_type_repo,
         feature_value_repo,
         language_repo,
     ):
@@ -17,65 +18,103 @@ class ProductTypeService:
         self._description_repo = description_repo
         self._short_description_repo = short_description_repo
         self._category_repo = category_repo
+        self._feature_type_repo = feature_type_repo
         self._feature_value_repo = feature_value_repo
         self._language_repo = language_repo
 
     def create(self, data):
         try:
-            image = base64_to_image(data['image'])
-            category = self._category_repo.get_by_id(
-                data['category_id']
-            )
-
-            feature_values = self._feature_value_repo.filter_by(
+            category = self._category_repo.get_by_id(data['category_id'])
+            feature_values = tuple(self._feature_value_repo.filter_by(
                 id__in=data['feature_values']
-            )
-            invalid_id_given = (
+            ))
+
+            invalid_feature_value_given = (
                 len(feature_values) != len(data['feature_values'])
             )
-            if invalid_id_given or not self._feature_values_valid(category, feature_values):
+            if invalid_feature_value_given:
                 raise self.FeatureValuesInvalid()
 
-            languages_ids = [l.id for l in self._language_repo.get_all()]
-            names_languages_valid = languages_ids == [
-                n['language_id'] for n in data['names']
-            ]
-            s_descriptions_languages_valid = languages_ids == [
-                s['language_id'] for s in data['short_descriptions']
-            ]
-            descriptions_languages_valid = languages_ids == [
-                d['language_id'] for d in data['descriptions']
-            ]
-            if not (names_languages_valid and s_descriptions_languages_valid and descriptions_languages_valid):
+            if not self._are_feature_values_allowed(category, feature_values):
+                raise self.FeatureValuesOfInvalidType()
+
+            if not self._are_intl_fields_valid(
+                data['names'],
+                data['descriptions'],
+                data['short_descriptions']
+            ):
                 raise self.LanguageInvalid()
 
+            validate_image(data['image'])
             product_type = self._repo.create(
                 category_id=category.id,
-                image=image,
+                image=data['image'],
             )
 
             for fv in feature_values:
-                self._feature_value_repo.associate_with_product_type(
+                self._feature_value_repo.add_to_product_type(
                     product_type, fv
                 )
-            for name in data['names']:
+
+            self._add_intl_fields(
+                product_type,
+                data['names'],
+                data['descriptions'],
+                data['short_descriptions'],
+            )
+
+            return product_type
+        except self._category_repo.DoesNotExist:
+            raise self.CategoryInvalid()
+        except IOError:
+            raise self.ProductImageInvalid()
+
+    def _are_feature_values_allowed(self, category, feature_values):
+        category_feature_types = self._feature_type_repo.get_for_category(
+            category
+        )
+        valid_feature_types_ids = {ft.id for ft in category_feature_types}
+        return all(
+            fv.feature_type.id in valid_feature_types_ids for fv in feature_values
+        )
+
+    def _are_intl_fields_valid(self, names, descriptions, short_descriptions):
+        languages_ids = [l.id for l in self._language_repo.get_all()]
+        return (
+            languages_ids == [
+                n['language_id'] for n in names
+            ] and languages_ids == [
+                s['language_id'] for s in short_descriptions
+            ] and languages_ids == [
+                d['language_id'] for d in descriptions
+            ]
+        )
+
+    def _add_intl_fields(self, product_type, names, descriptions, short_descriptions):
+        for i, name in enumerate(names):
+            description = descriptions[i]
+            short_description = short_descriptions[i]
+            product_type.names.append(
                 self._name_repo.create(
                     language_id=name['language_id'],
                     value=name['value'],
                     product_type_id=product_type.id
                 )
-            return product_type
-        except self._category_repo.DoesNotExist:
-            raise self.CategoryInvalid()
-        except Base64ToImageConversionException:
-            raise self.ProductImageInvalid()
-
-    def _feature_values_valid(self, category, feature_values):
-        valid_feature_types_ids = {
-            ft.id for ft in category.feature_types}
-        return all(
-            fv.feature_type.id in valid_feature_types_ids for fv in feature_values
-        )
+            )
+            product_type.descriptions.append(
+                self._description_repo.create(
+                    language_id=description['language_id'],
+                    value=description['value'],
+                    product_type_id=product_type.id
+                )
+            )
+            product_type.short_descriptions.append(
+                self._short_description_repo.create(
+                    language_id=short_description['language_id'],
+                    value=short_description['value'],
+                    product_type_id=product_type.id
+                )
+            )
 
     def get_all(self):
         return self._repo.get_all()
@@ -86,10 +125,7 @@ class ProductTypeService:
     class FeatureValuesInvalid(Exception):
         pass
 
-    class FeatureValuesOfTheSameType(Exception):
-        pass
-
-    class ProductTypeInvalid(Exception):
+    class FeatureValuesOfInvalidType(Exception):
         pass
 
     class ProductImageInvalid(Exception):

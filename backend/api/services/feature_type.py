@@ -9,17 +9,20 @@ class FeatureTypeService:
         if [l.id for l in languages] != [n['language_id'] for n in data['names']]:
             raise self.LanguageInvalid()
 
+
         feature_type = self._repo.create()
         for name in data['names']:
-            self._name_repo.create(
-                language_id=name['language_id'],
-                value=name['value'],
-                feature_type_id=feature_type.id
+            feature_type.names.append(
+                self._name_repo.create(
+                    language_id=name['language_id'],
+                    value=name['value'],
+                    feature_type_id=feature_type.id
+                )
             )
         return feature_type
 
     def get_all(self):
-        return self._repo.get_all()
+        return tuple(self._repo.get_all())
 
     def get_one(self, id_):
         try:

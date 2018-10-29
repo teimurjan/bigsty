@@ -1,6 +1,6 @@
 from api.views.base import ValidatableView
-from api.utils.http import OK_CODE
-from api.utils.errors import InvalidEntityFormat
+from api.http.status_codes import OK_CODE
+from api.errors import InvalidEntityFormat
 
 
 class RegistrationView(ValidatableView):

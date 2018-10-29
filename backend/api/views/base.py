@@ -1,5 +1,4 @@
-from api.utils.errors import InvalidEntityFormat
-
+from api.errors import InvalidEntityFormat
 
 class ValidatableView:
     def __init__(self, validator):

@@ -16,3 +16,8 @@ def base64_to_image(data, file_name=random.getrandbits(64)):
         return ContentFile(base64.b64decode(img_base64), name=f'{file_name}.{ext}')
     except Exception as e:
         raise Base64ToImageConversionException
+
+
+def validate_image(uploaded_image):
+    from PIL import Image
+    Image.open(uploaded_image).verify()

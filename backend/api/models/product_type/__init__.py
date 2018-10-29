@@ -11,20 +11,25 @@ class ProductType(models.Model):
                                  related_query_name="product_types", on_delete=models.CASCADE)
 
     def to_dto(self):
-        names = [name.to_dto() for name in self.names]
+        names = [name.to_dto() for name in self.names.all()]
         descriptions = [
-            description.to_dto() for description in self.descriptions
+            description.to_dto() for description in self.descriptions.all()
         ]
         short_descriptions = [
-            short_description.to_dto() for short_description in self.short_descriptions
+            short_description.to_dto() for short_description in self.short_descriptions.all()
         ]
         feature_values = [
-            feature_value.to_dto() for feature_value in self.feature_values
+            feature_value.to_dto() for feature_value in self.feature_values.all()
         ]
-        products = [product.to_dto() for product in self.products]
+
         return ProductTypeDTO(
-            self.pk, names, descriptions, short_descriptions, self.image,
-            self.category.to_dto(), feature_values, products
+            self.pk,
+            names,
+            descriptions,
+            short_descriptions,
+            self.image,
+            self.category.to_dto(),
+            feature_values
         )
 
     class Meta:

@@ -1,4 +1,4 @@
-from api.utils.image import base64_to_image, Base64ToImageConversionException
+from api.utils.image import validate_image
 
 
 class ProductService:
@@ -16,15 +16,12 @@ class ProductService:
 
     def create(self, data):
         try:
-            images = [
-                base64_to_image(image) for image in data['images']
-            ]
             product_type = self._product_type_repo.get_by_id(
                 data['product_type_id']
             )
-            feature_values = self._feature_value_repo.filter_by(
+            feature_values = tuple(self._feature_value_repo.filter_by(
                 id__in=data['feature_values']
-            )
+            ))
             invalid_id_given = (
                 len(feature_values) != len(data['feature_values'])
             )
@@ -33,15 +30,20 @@ class ProductService:
             if self._the_same_type_feature_values(feature_values):
                 raise self.FeatureValuesOfTheSameType()
 
+            for image in data['images']:
+                validate_image(image)
+
             product = self._repo.create(
                 product_type_id=product_type.id,
                 price=data['price'],
                 discount=data['discount'],
                 quantity=data['quantity'],
             )
+
             for fv in feature_values:
-                self._feature_value_repo.associate_with_product(product, fv)
-            for image in images:
+                self._feature_value_repo.add_to_product(product, fv)
+
+            for image in data['images']:
                 self._product_image_repo.create(
                     product_id=product.id,
                     image=image
@@ -50,7 +52,7 @@ class ProductService:
             return product
         except self._product_type_repo.DoesNotExist:
             raise self.ProductTypeInvalid()
-        except Base64ToImageConversionException:
+        except IOError:
             raise self.ProductImageInvalid()
 
     def _feature_values_valid(self, product_type, feature_values):

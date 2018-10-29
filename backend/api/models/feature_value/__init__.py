@@ -16,12 +16,9 @@ class FeatureValue(models.Model):
                                       db_table='api_feature_value_x_product')
 
     def to_dto(self):
-        names = [name.to_dto() for name in self.names]
-        products = [product.to_dto() for product in self.products]
-        product_types = [
-            product_type.to_dto() for product_type in self.product_types
-        ]
-        return FeatureValueDTO(self.pk, names, product_types, self.feature_type.to_dto(), products)
+        names = [name.to_dto() for name in self.names.all()]
+        feature_type = self.feature_type.to_dto()
+        return FeatureValueDTO(self.pk, names, feature_type)
 
     class Meta:
         db_table = 'api_feature_value'

@@ -3,15 +3,14 @@ from api.dto.base import DTO
 
 class ProductTypeDTO(DTO):
     def __init__(self, id_, names, descriptions, short_descriptions,
-                 image, category, feature_values, products):
-        super().__init__(id)
+                 image, category, feature_values):
+        super().__init__(id_)
         self._names = names
         self._descriptions = descriptions
         self._short_descriptions = short_descriptions
         self._image = image
         self._category = category
         self._feature_values = feature_values
-        self._products = products
 
     @property
     def names(self):
@@ -36,7 +35,3 @@ class ProductTypeDTO(DTO):
     @property
     def feature_values(self):
         return self._feature_values
-
-    @property
-    def products(self):
-        return self._products

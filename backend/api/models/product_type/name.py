@@ -7,11 +7,11 @@ from api.models.intl import IntlText
 
 class ProductTypeName(IntlText):
     value = models.CharField(max_length=50, null=False, blank=False)
-    owner = models.ForeignKey(ProductType, related_name="names", related_query_name='name',
-                              on_delete=models.CASCADE)
+    product_type = models.ForeignKey(ProductType, related_name="names", related_query_name='name',
+                                     on_delete=models.CASCADE)
 
     def to_dto(self):
-        return ProductTypeNameDTO(self.pk, self.owner.to_dto(), self.value, self.language.to_dto())
+        return ProductTypeNameDTO(self.pk, self.product_type.pk, self.value, self.language.to_dto())
 
     class Meta:
         db_table = 'api_product_type_name'

@@ -13,6 +13,12 @@ class IntlSerializer(Serializer):
             self._language = language
         return self
 
+    def _get_intl_field_from(self, all_fields):
+        values = [
+            field.value for field in all_fields if field.language.name == self._language.name
+        ]
+        return "" if len(values) == 0 else values[0]
+
     @abstractmethod
     def serialize(self):
         raise NotImplementedError()

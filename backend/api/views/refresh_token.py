@@ -1,4 +1,4 @@
-from api.utils.http import OK_CODE
+from api.http.status_codes import OK_CODE
 from api.views.base import ValidatableView
 
 

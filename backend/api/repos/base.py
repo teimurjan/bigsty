@@ -38,7 +38,7 @@ class Repo:
         return model_obj.to_dto()
 
     def get_all(self):
-        return tuple(obj.to_dto() for obj in self.model_cls.objects.all().order_by('pk'))
+        return (obj.to_dto() for obj in self.model_cls.objects.all().order_by('pk'))
 
     def get_first_by(self, **kwargs):
         objects = self.model_cls.objects.filter(**kwargs)
@@ -48,7 +48,7 @@ class Repo:
             return objects[0].to_dto()
 
     def filter_by(self, **kwargs):
-        return tuple(obj.to_dto() for obj in self.model_cls.objects.filter(**kwargs).order_by('pk'))
+        return (obj.to_dto() for obj in self.model_cls.objects.filter(**kwargs).order_by('pk'))
 
     def delete(self, id_):
         try:

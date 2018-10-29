@@ -12,12 +12,19 @@ class Product(models.Model):
                                      related_query_name='product', on_delete=models.CASCADE)
 
     def to_dto(self):
-        images = [image.to_dto() for image in self.images]
+        images = [image.to_dto() for image in self.images.all()]
         feature_values = [
-            feature_value.to_dto() for feature_value in self.feature_values
+            feature_value.to_dto() for feature_value in self.feature_values.all()
         ]
-        return ProductDTO(self.pk, self.discount, self.price, self.quantity,
-                          self.product_type.to_dto(), images, feature_values)
+        return ProductDTO(
+            self.pk,
+            self.discount,
+            self.price,
+            self.quantity,
+            self.product_type.to_dto(),
+            images,
+            feature_values
+        )
 
     class FeatureValuesOfTheSameType(Exception):
         pass

@@ -7,11 +7,11 @@ from api.models.intl import IntlText
 
 class FeatureTypeName(IntlText):
     value = models.CharField(max_length=100, null=False, blank=False)
-    owner = models.ForeignKey(FeatureType, related_name="names",
+    feature_type = models.ForeignKey(FeatureType, related_name="names",
                               related_query_name="name", on_delete=models.CASCADE)
 
     def to_dto(self):
-        return FeatureTypeNameDTO(self.pk, self.owner.to_dto(), self.value, self.language.to_dto())
+        return FeatureTypeNameDTO(self.pk, self.feature_type.pk, self.value, self.language.to_dto())
 
     class Meta:
         db_table = 'api_feature_type_name'

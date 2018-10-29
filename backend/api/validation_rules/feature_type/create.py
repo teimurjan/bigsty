@@ -1,5 +1,5 @@
 CREATE_FEATURE_TYPE_VALIDATION_RULES = {
-  'names': {
+    'names': {
         'type': 'list',
         'schema': {
             'language_id': {'type': 'integer', 'required': True,
@@ -12,5 +12,4 @@ CREATE_FEATURE_TYPE_VALIDATION_RULES = {
         'nullable': False,
         'minlength': 1,
     },
-    'category_id': {'type': 'integer', 'required': True, 'nullable': False},
 }

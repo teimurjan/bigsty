@@ -1,9 +1,11 @@
 from api.dto.product_type import ProductTypeDTO
 from api.dto.feature_value import FeatureValueDTO
-from api.serializers.base import Serializer
+from api.serializers.intl import IntlSerializer
 
-class ProductSerializer(Serializer):
+
+class ProductSerializer(IntlSerializer):
     def __init__(self, product):
+        super().__init__()
         self._id = product.id
         self._discount = product.discount
         self._price = product.price
@@ -28,30 +30,32 @@ class ProductSerializer(Serializer):
         if isinstance(self._product_type, ProductTypeDTO):
             self._product_type = ProductTypeSerializer(
                 self._product_type
-            ).serialize()
+            ).in_language(self._language).serialize()
         return self
 
     def _serialize_product_type(self):
-        return self._product_type.id if isinstance(self._product_type, ProductTypeDTO) else self._product_type
+        if isinstance(self._product_type, ProductTypeDTO):
+            return  self._product_type.id
+        return self._product_type
 
     def _serialize_images(self):
         images = []
-        for image in self._images:
+        for image_dto in self._images:
             try:
-                images.append(image.url)
+                images.append(image_dto.image.url)
             except (AttributeError, ValueError):
                 pass
         return images
 
     def with_serialized_feature_values(self):
         from api.serializers.feature_value import FeatureValueSerializer
-        self._feature_types = [
-            FeatureValueSerializer(feature_type).serialize() for feature_type in self._feature_types
+        self._feature_values = [
+            FeatureValueSerializer(fv).in_language(self._language).serialize() 
+            for fv in self._feature_values
         ]
         return self
 
     def _serialize_feature_values(self):
-        if len(self._feature_values) > 0 and isinstance(self._feature_values[0], FeatureValueDTO):
+        if self._feature_values and isinstance(self._feature_values[0], FeatureValueDTO):
             return [feature_value.id for feature_value in self._feature_values]
-        else:
-            return self._feature_types
+        return self._feature_values

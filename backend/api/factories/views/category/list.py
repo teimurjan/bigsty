@@ -14,6 +14,6 @@ class CategoryListViewFactory(ViewFactory):
         category_service = CategoryServiceFactory.create()
         return CategoryListView(
             validator=validator,
-            category_service=category_service,
+            service=category_service,
             serializer_cls=CategorySerializer
         )
