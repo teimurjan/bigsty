@@ -1,4 +1,5 @@
 from api.utils.image import validate_image
+from api.services.decorators import allow_roles
 
 
 class ProductTypeService:
@@ -22,7 +23,8 @@ class ProductTypeService:
         self._feature_value_repo = feature_value_repo
         self._language_repo = language_repo
 
-    def create(self, data):
+    @allow_roles(['admin', 'manager'])
+    def create(self, data, *args, **kwargs):
         try:
             category = self._category_repo.get_by_id(data['category_id'])
             feature_values = tuple(self._feature_value_repo.filter_by(

@@ -1,7 +1,11 @@
 from django.http import JsonResponse
 from django.views import View
-from api.errors import InvalidEntityFormat
-from api.http.status_codes import UNPROCESSABLE_ENTITY_CODE, METHOD_NOT_ALLOWED_CODE
+from api.errors import InvalidEntityFormat, AccessRoleError
+from api.http.status_codes import (
+    UNPROCESSABLE_ENTITY_CODE,
+    METHOD_NOT_ALLOWED_CODE,
+    FORBIDDEN_CODE
+)
 
 
 class AbstractView(View):
@@ -21,9 +25,11 @@ class AbstractView(View):
                 body or {},
                 status=status,
             )
-        except InvalidEntityFormat as exception:
-            errors = exception.errors or {}
+        except InvalidEntityFormat as exc:
+            errors = exc.errors or {}
             return JsonResponse(errors, status=UNPROCESSABLE_ENTITY_CODE)
+        except AccessRoleError:
+            return JsonResponse({}, status=FORBIDDEN_CODE)
 
     def _handle_with_middlewares(self, request):
         for factory in self.middleware_factories:

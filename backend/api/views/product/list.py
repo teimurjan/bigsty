@@ -23,7 +23,7 @@ class ProductListView(ValidatableView):
                 'images': request.files.getlist('images')
             }
             self._validate(data)
-            product = self._service.create(data)
+            product = self._service.create(data, user=request.user)
             serialized_product = self._serializer_cls(
                 product
             ).in_language(request.language).serialize()

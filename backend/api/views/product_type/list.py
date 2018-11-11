@@ -23,7 +23,7 @@ class ProductTypeListView(ValidatableView):
                 **{k: file_ for k, file_ in request.files.items()}
             }
             self._validate(data)
-            product_type = self._service.create(data)
+            product_type = self._service.create(data, user=request.user)
             serialized_product_type = self._serializer_cls(
                 product_type
             ).in_language(request.language).serialize()

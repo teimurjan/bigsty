@@ -1,5 +1,5 @@
 from api.utils.image import validate_image
-
+from api.services.decorators import allow_roles
 
 class ProductService:
     def __init__(
@@ -14,7 +14,8 @@ class ProductService:
         self._product_type_repo = product_type_repo
         self._feature_value_repo = feature_value_repo
 
-    def create(self, data):
+    @allow_roles(['admin', 'manager'])
+    def create(self, data, *args, **kwargs):
         try:
             product_type = self._product_type_repo.get_by_id(
                 data['product_type_id']

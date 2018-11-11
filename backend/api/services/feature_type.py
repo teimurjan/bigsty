@@ -1,14 +1,18 @@
+
+from api.services.decorators import allow_roles
+
+
 class FeatureTypeService:
     def __init__(self, repo, name_repo, language_repo):
         self._repo = repo
         self._name_repo = name_repo
         self._language_repo = language_repo
 
-    def create(self, data):
+    @allow_roles(['admin', 'manager'])
+    def create(self, data, *args, **kwargs):
         languages = self._language_repo.get_all()
         if [l.id for l in languages] != [n['language_id'] for n in data['names']]:
             raise self.LanguageInvalid()
-
 
         feature_type = self._repo.create()
         for name in data['names']:

@@ -1,3 +1,6 @@
+from api.services.decorators import allow_roles
+
+
 class FeatureValueService:
     def __init__(self, repo, name_repo, language_repo, feature_type_repo):
         self._repo = repo
@@ -5,7 +8,8 @@ class FeatureValueService:
         self._language_repo = language_repo
         self._feature_type_repo = feature_type_repo
 
-    def create(self, data):
+    @allow_roles(['admin', 'manager'])
+    def create(self, data, *args, **kwargs):
         try:
             languages = self._language_repo.get_all()
             if [l.id for l in languages] != [n['language_id'] for n in data['names']]:

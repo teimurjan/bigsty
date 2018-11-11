@@ -19,7 +19,7 @@ class FeatureTypeListView(ValidatableView):
     def post(self, request):
         try:
             self._validate(request.data)
-            feature_type = self._service.create(request.data)
+            feature_type = self._service.create(request.data, user=request.user)
             serialized_feature_type = self._serializer_cls(
                 feature_type
             ).in_language(request.language).serialize()

@@ -1,3 +1,6 @@
+from api.services.decorators import allow_roles
+
+
 class CategoryService:
     def __init__(self, repo, name_repo, language_repo):
         self._repo = repo
@@ -7,7 +10,8 @@ class CategoryService:
     def get_all(self):
         return tuple(self._repo.get_all())
 
-    def create(self, data):
+    @allow_roles(['admin', 'manager'])
+    def create(self, data, *args, **kwargs):
         languages = self._language_repo.get_all()
         if [l.id for l in languages] != [n['language_id'] for n in data['names']]:
             raise self.LanguageInvalid()
