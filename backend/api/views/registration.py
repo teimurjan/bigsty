@@ -16,4 +16,4 @@ class RegistrationView(ValidatableView):
             )
             return {'access_token': access_token, 'refresh_token': refresh_token}, OK_CODE
         except self._user_service.SameEmailError:
-            raise InvalidEntityFormat(errors={'email': 'errors.same'})
+            raise InvalidEntityFormat({'email': 'errors.same'})
