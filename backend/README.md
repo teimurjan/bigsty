@@ -4,18 +4,18 @@
 
 Category of a product. Example: `Cellphones`.
 
-| Column | Type    | Collation | Nullable | Default                                  |
-| ------ | ------- | --------- | -------- | ---------------------------------------- |
-| id     | integer |           | not null | nextval('api_category_id_seq'::regclass) |
+| Column | Type    | Nullable |
+| ------ | ------- | -------- |
+| id     | integer | not null |
 
 Categoty has intl field `name`.
 
-| Column      | Type                  | Collation | Nullable | Default                                  |
-| ----------- | --------------------- | --------- | -------- | ---------------------------------------- |
-| id          | integer               |           | not null | nextval('api_category_id_seq'::regclass) |
-| value       | character varying(50) |           | not null |                                          |
-| category_id | integer               |           | not null |                                          |
-| language_id | integer               |           | not null |                                          |
+| Column      | Type                  | Nullable |
+| ----------- | --------------------- | -------- |
+| id          | integer               | not null |
+| value       | character varying(50) | not null |
+| category_id | integer               | not null |
+| language_id | integer               | not null |
 
 
 # API endpoints
