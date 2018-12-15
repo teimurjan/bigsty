@@ -14,7 +14,20 @@ class CategoryDetailView(ValidatableView):
             category = self._service.get_one(category_id)
             serialized_category = self._serializer_cls(
                 category).in_language(request.language).serialize()
-            return serialized_category, OK_CODE
+            return {'data': serialized_category}, OK_CODE
+        except self._service.CategoryNotFound:
+            return {}, NOT_FOUND_CODE
+
+    def put(self, request, category_id):
+        try:
+            self._validate(request.data)
+            category = self._service.update(
+                category_id, request.data, user=request.user)
+            serialized_category = self._serializer_cls(
+                category).in_language(request.language).serialize()
+            return {'data': serialized_category}, OK_CODE
+        except self._service.LanguageInvalid:
+            raise InvalidEntityFormat({'language_id': 'errors.invalidID'})
         except self._service.CategoryNotFound:
             return {}, NOT_FOUND_CODE
 

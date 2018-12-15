@@ -7,6 +7,7 @@ def parse_json(s):
     except Exception:
         return None
 
+
 def parse_json_from_form_data(form_data, key='json'):
     json_str = form_data.get(key)
     if json_str is None:

@@ -16,6 +16,10 @@ class CategoryNameDTO(DTO):
     def value(self):
         return self._value
 
+    @value.setter
+    def value(self, value):
+        self._value = value
+
     @property
     def language(self):
         return self._language

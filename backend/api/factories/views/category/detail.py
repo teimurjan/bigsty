@@ -9,7 +9,7 @@ class CategoryDetailViewFactory(ViewFactory):
     @staticmethod
     def create(http_method=None):
         validator = None
-        if http_method == 'post':
+        if http_method == 'put':
             validator = UpdateCategoryValidatorFactory.create()
         category_service = CategoryServiceFactory.create()
         return CategoryDetailView(
