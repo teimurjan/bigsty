@@ -13,7 +13,7 @@ class Language(models.Model):
 
 class IntlText(models.Model):
     language = models.ForeignKey(
-        Language, db_column="language", on_delete=models.CASCADE
+        Language, db_column="language_id", on_delete=models.CASCADE
     )
 
     class Meta:

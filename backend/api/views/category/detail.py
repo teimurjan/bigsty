@@ -31,12 +31,9 @@ class CategoryDetailView(ValidatableView):
         except self._service.CategoryNotFound:
             return {}, NOT_FOUND_CODE
 
-    def post(self, request):
+    def delete(self, request, category_id):
         try:
-            self._validate(request.data)
-            category = self._service.create(request.data, user=request.user)
-            serialized_category = self._serializer_cls(
-                category).in_language(request.language).serialize()
-            return {'data': serialized_category}, OK_CODE
-        except self._service.LanguageInvalid:
-            raise InvalidEntityFormat({'language_id': 'errors.invalidID'})
+            self._service.delete(category_id)
+            return {}, OK_CODE
+        except self._service.CategoryNotFound:
+            return {}, NOT_FOUND_CODE

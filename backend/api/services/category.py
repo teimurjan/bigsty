@@ -36,7 +36,7 @@ class CategoryService:
 
         return category
 
-    # @allow_roles(['admin', 'manager', 'reader'])
+    @allow_roles(['admin', 'manager'])
     def update(self, category_id, data, *args, **kwargs):
         languages = self._language_repo.get_all()
         not_all_languages_given = [l.id for l in languages] != [
@@ -55,6 +55,13 @@ class CategoryService:
             name.value = new_name['value']
 
         return category
+
+    @allow_roles(['admin', 'manager'])
+    def delete(self, id_):
+        try:
+            return self._repo.delete(id_)
+        except self._repo.DoesNotExist:
+            raise self.CategoryNotFound()
 
     class LanguageInvalid(Exception):
         pass
