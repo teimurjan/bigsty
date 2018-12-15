@@ -5,6 +5,7 @@ from api.factories.views.authentication import AuthenticationViewFactory
 from api.factories.views.registration import RegistrationViewFactory
 from api.factories.views.refresh_token import RefreshTokenViewFactory
 from api.factories.views.category.list import CategoryListViewFactory
+from api.factories.views.category.detail import CategoryDetailViewFactory
 from api.factories.views.feature_type.list import FeatureTypeListViewFactory
 from api.factories.views.feature_value.list import FeatureValueListViewFactory
 from api.factories.views.product.list import ProductListViewFactory
@@ -36,6 +37,11 @@ urlpatterns = [
     )),
     path('categories', AbstractView.as_view(
         concrete_view_factory=CategoryListViewFactory,
+        request_data_parser_factory=RequestDataParserFactory,
+        middleware_factories=DEFAULT_MIDDLEWARE_FACTORIES
+    )),
+    path('categories/<int:category_id>', AbstractView.as_view(
+        concrete_view_factory=CategoryDetailViewFactory,
         request_data_parser_factory=RequestDataParserFactory,
         middleware_factories=DEFAULT_MIDDLEWARE_FACTORIES
     )),

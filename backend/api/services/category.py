@@ -10,6 +10,12 @@ class CategoryService:
     def get_all(self):
         return tuple(self._repo.get_all())
 
+    def get_one(self, id_):
+        try:
+            return self._repo.get_by_id(id_)
+        except self._repo.DoesNotExist:
+            raise self.CategoryNotFound()
+
     @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
         languages = self._language_repo.get_all()
@@ -29,4 +35,7 @@ class CategoryService:
         return category
 
     class LanguageInvalid(Exception):
+        pass
+
+    class CategoryNotFound(Exception):
         pass
