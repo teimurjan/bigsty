@@ -1,5 +1,6 @@
 from api.dto.base import DTO
 
+
 class ProductTypeDescriptionDTO(DTO):
     def __init__(self, id_, product_type, value, language):
         super().__init__(id_)
@@ -14,6 +15,10 @@ class ProductTypeDescriptionDTO(DTO):
     @property
     def value(self):
         return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
 
     @property
     def language(self):

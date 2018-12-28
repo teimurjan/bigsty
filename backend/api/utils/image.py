@@ -1,5 +1,6 @@
 import base64
 import random
+from PIL import Image
 from django.core.files.base import ContentFile
 
 
@@ -19,5 +20,4 @@ def base64_to_image(data, file_name=random.getrandbits(64)):
 
 
 def validate_image(uploaded_image):
-    from PIL import Image
     Image.open(uploaded_image).verify()

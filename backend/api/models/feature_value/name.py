@@ -11,7 +11,12 @@ class FeatureValueName(IntlText):
                                       related_query_name="name", on_delete=models.CASCADE)
 
     def to_dto(self):
-        return FeatureValueNameDTO(self.pk, self.feature_value.pk, self.value, self.language.to_dto())
+        return FeatureValueNameDTO(
+            self.pk,
+            self.feature_value.to_dto(names_to_dto=False),
+            self.value,
+            self.language.to_dto()
+        )
 
     class Meta:
         db_table = 'api_feature_value_name'

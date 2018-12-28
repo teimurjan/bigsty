@@ -1,5 +1,6 @@
 from api.dto.feature_type import FeatureTypeDTO
 from api.serializers.intl import IntlSerializer
+from api.serializers.feature_type import FeatureTypeSerializer
 
 
 class FeatureValueSerializer(IntlSerializer):
@@ -20,7 +21,6 @@ class FeatureValueSerializer(IntlSerializer):
         return self._get_intl_field_from(self._names)
 
     def with_serialized_feature_type(self):
-        from api.serializers.feature_type import FeatureTypeSerializer
         self._feature_type = FeatureTypeSerializer(
             self._feature_type
         ).in_language(self._language).serialize()

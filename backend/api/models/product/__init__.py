@@ -12,9 +12,11 @@ class Product(models.Model):
                                      related_query_name='product', on_delete=models.CASCADE)
 
     def to_dto(self):
-        images = [image.to_dto() for image in self.images.all()]
+        images = [
+            image.to_dto() for image in self.images.order_by('id').all()
+        ]
         feature_values = [
-            feature_value.to_dto() for feature_value in self.feature_values.all()
+            feature_value.to_dto() for feature_value in self.feature_values.order_by('id').all()
         ]
         return ProductDTO(
             self.pk,
@@ -25,12 +27,6 @@ class Product(models.Model):
             images,
             feature_values
         )
-
-    class FeatureValuesOfTheSameType(Exception):
-        pass
-
-    class FeatureValuesNotAcceptable(Exception):
-        pass
 
     class Meta:
         db_table = 'api_product'

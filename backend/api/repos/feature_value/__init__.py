@@ -6,10 +6,9 @@ class FeatureValueRepo(Repo):
     def __init__(self):
         super().__init__(FeatureValue)
 
-    def add_to_product_type(self, product_type, feature_value):
-        fv = self._get_model_obj_by_id(feature_value.id)
-        fv.product_types.add(product_type.id)
+    def create(self, feature_type):
+        return super()._create(feature_type_id=feature_type.id)
 
-    def add_to_product(self, product, feature_value):
-        fv = self._get_model_obj_by_id(feature_value.id)
-        fv.products.add(product.id)
+    def update(self, feature_value, feature_type):
+        self._update(feature_value.id, feature_type_id=feature_type.id)
+        feature_value.feature_type = feature_type

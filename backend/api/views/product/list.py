@@ -3,6 +3,7 @@ from api.http.status_codes import OK_CODE
 from api.utils.json import parse_json_from_form_data
 from api.errors import InvalidEntityFormat
 
+
 class ProductListView(ValidatableView):
     def __init__(self, validator, service, serializer_cls):
         super().__init__(validator)
@@ -32,7 +33,5 @@ class ProductListView(ValidatableView):
             raise InvalidEntityFormat({'images': 'errors.invalidImage'})
         except self._service.FeatureValuesInvalid:
             raise InvalidEntityFormat({'feature_values': 'errors.invalidID'})
-        except self._service.FeatureValuesOfTheSameType:
-            raise InvalidEntityFormat({'feature_values': 'errors.sameFeatureType'})
         except self._service.ProductTypeInvalid:
             raise InvalidEntityFormat({'product_type': 'errors.invalidID'})

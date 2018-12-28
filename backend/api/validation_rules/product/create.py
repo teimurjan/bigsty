@@ -6,6 +6,7 @@ CREATE_PRODUCT_VALIDATION_RULES = {
         'required': True,
         'nullable': False,
         'minlength': 1,
+        'maxlength': 4,
     },
     'price': {'type': 'integer', 'required': True, 'min': 1, 'nullable': False},
     'discount': {'type': 'integer', 'required': True, 'min': -1, 'max': 100, 'nullable': True},

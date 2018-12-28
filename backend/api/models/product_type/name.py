@@ -11,7 +11,12 @@ class ProductTypeName(IntlText):
                                      on_delete=models.CASCADE)
 
     def to_dto(self):
-        return ProductTypeNameDTO(self.pk, self.product_type.pk, self.value, self.language.to_dto())
+        return ProductTypeNameDTO(
+            self.pk,
+            self.product_type.to_dto(intl_texts_to_dto=False),
+            self.value,
+            self.language.to_dto()
+        )
 
     class Meta:
         db_table = 'api_product_type_name'

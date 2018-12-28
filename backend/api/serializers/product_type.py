@@ -1,7 +1,7 @@
 from api.dto.category import CategoryDTO
 from api.dto.feature_value import FeatureValueDTO
 from api.serializers.intl import IntlSerializer
-
+from api.serializers.feature_value import FeatureValueSerializer
 
 class ProductTypeSerializer(IntlSerializer):
     def __init__(self, product_type):
@@ -52,9 +52,8 @@ class ProductTypeSerializer(IntlSerializer):
         return self._category.id if isinstance(self._category, CategoryDTO) else self._category
 
     def with_serialized_feature_values(self):
-        from api.serializers.feature_value import FeatureValueSerializer
-        self._feature_types = [
-            FeatureValueSerializer(feature_type).in_language(self._language).serialize() for feature_type in self._feature_types
+        self._feature_values = [
+            FeatureValueSerializer(feature_value).in_language(self._language).serialize() for feature_value in self._feature_values
         ]
         return self
 

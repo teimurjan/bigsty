@@ -1,5 +1,4 @@
 from cerberus import Validator
-
 from api.validation_rules.feature_type.create import CREATE_FEATURE_TYPE_VALIDATION_RULES
 
 

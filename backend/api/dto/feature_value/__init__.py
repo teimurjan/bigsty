@@ -14,3 +14,7 @@ class FeatureValueDTO(DTO):
     @property
     def feature_type(self):
         return self._feature_type
+
+    @feature_type.setter
+    def feature_type(self, feature_type):
+        self._feature_type = feature_type

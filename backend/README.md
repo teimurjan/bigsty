@@ -20,7 +20,9 @@ Categoty has intl field `name`.
 
 # API endpoints
 
-- <b>All requests require header `Content-Type: applicaiton/json`</b>
+- [Postman published API](https://documenter.getpostman.com/view/1604017/RznBLzAk)
+
+- <b>All requests require header `Content-Type: applicaiton/json` if it is JSON or `Content-Type: multipart/form-data`</b>
 
 - <b>All GET requests can have language header `Accept-Language: de-DE`. The intl fields of the requested resource will be returned in the provided language. If it's not provided `en-US` is used by default. The header's value should be language code of an existing language in your app's database.</b>
 - <b>All DELETE, PUT and POST requests require a user to be an admin or a manager.

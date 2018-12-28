@@ -15,8 +15,10 @@ class FeatureValue(models.Model):
     products = models.ManyToManyField(Product, related_name='feature_values', related_query_name='feature_value',
                                       db_table='api_feature_value_x_product')
 
-    def to_dto(self):
-        names = [name.to_dto() for name in self.names.all()]
+    def to_dto(self, names_to_dto=True):
+        names = [
+            name.to_dto() if names_to_dto else name.pk for name in self.names.all()
+        ]
         feature_type = self.feature_type.to_dto()
         return FeatureValueDTO(self.pk, names, feature_type)
 

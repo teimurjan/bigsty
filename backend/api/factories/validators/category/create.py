@@ -1,5 +1,4 @@
 from cerberus import Validator
-
 from api.validation_rules.category.create import CREATE_CATEGORY_VALIDATION_RULES
 
 

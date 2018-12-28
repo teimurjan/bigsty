@@ -3,6 +3,7 @@ from api.http.status_codes import OK_CODE
 from api.errors import InvalidEntityFormat
 from api.utils.json import parse_json_from_form_data
 
+
 class ProductTypeListView(ValidatableView):
     def __init__(self, validator, service, serializer_cls):
         super().__init__(validator)
@@ -12,7 +13,9 @@ class ProductTypeListView(ValidatableView):
     def get(self, request):
         product_types = self._service.get_all()
         serialized_product_types = [
-            self._serializer_cls(product_type).in_language(request.language).serialize() for product_type in product_types
+            self._serializer_cls(product_type).in_language(
+                request.language).serialize()
+            for product_type in product_types
         ]
         return {'data': serialized_product_types}, OK_CODE
 
@@ -20,17 +23,16 @@ class ProductTypeListView(ValidatableView):
         try:
             data = {
                 **parse_json_from_form_data(request.form_data),
-                **{k: file_ for k, file_ in request.files.items()}
+                **{key: file_ for key, file_ in request.files.items()}
             }
             self._validate(data)
             product_type = self._service.create(data, user=request.user)
-            serialized_product_type = self._serializer_cls(
-                product_type
-            ).in_language(request.language).serialize()
+            serialized_product_type = self._serializer_cls(product_type).in_language(
+                request.language).with_serialized_feature_values().serialize()
             return {'data': serialized_product_type}, OK_CODE
         except self._service.CategoryInvalid:
             raise InvalidEntityFormat({'category_id': 'errors.invalidID'})
-        except self._service.ProductImageInvalid:
+        except self._service.ProductTypeImageInvalid:
             raise InvalidEntityFormat({'image': 'errors.invalidImage'})
         except self._service.FeatureValuesInvalid:
             raise InvalidEntityFormat({'feature_values': 'errors.invalidID'})

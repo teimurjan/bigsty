@@ -1,4 +1,5 @@
 from django.db import models
+from django.dispatch import receiver
 
 from api.dto.product_type import ProductTypeDTO
 from api.models.category import Category
@@ -10,16 +11,21 @@ class ProductType(models.Model):
     category = models.ForeignKey(Category, related_name="product_types",
                                  related_query_name="product_types", on_delete=models.CASCADE)
 
-    def to_dto(self):
-        names = [name.to_dto() for name in self.names.all()]
+    def to_dto(self, intl_texts_to_dto=True):
+        names = [
+            name.to_dto() if intl_texts_to_dto else name.pk
+            for name in self.names.order_by('language_id').all()
+        ]
         descriptions = [
-            description.to_dto() for description in self.descriptions.all()
+            description.to_dto() if intl_texts_to_dto else description.pk
+            for description in self.descriptions.order_by('language_id').all()
         ]
         short_descriptions = [
-            short_description.to_dto() for short_description in self.short_descriptions.all()
+            short_description.to_dto() if intl_texts_to_dto else short_description.pk
+            for short_description in self.short_descriptions.order_by('language_id').all()
         ]
         feature_values = [
-            feature_value.to_dto() for feature_value in self.feature_values.all()
+            feature_value.to_dto() for feature_value in self.feature_values.order_by('id').all()
         ]
 
         return ProductTypeDTO(
@@ -34,3 +40,10 @@ class ProductType(models.Model):
 
     class Meta:
         db_table = 'api_product_type'
+
+
+@receiver(models.signals.post_delete, sender=ProductType)
+def post_delete_handler(sender, **kwargs):
+    product_type = kwargs['instance']
+    storage, path = product_type.image.storage, product_type.image.path
+    storage.delete(path)

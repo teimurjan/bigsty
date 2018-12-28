@@ -5,13 +5,21 @@ class Repo:
     def get_by_id(self, id_):
         return self._get_model_obj_by_id(id_).to_dto()
 
+    def get_by_ids(self, ids, raise_err_on_invalid_id=False):
+        models = tuple(self.filter_by(id__in=ids))
+        if raise_err_on_invalid_id:
+            if len(models) != len(ids):
+                raise self.DoesNotExist()
+        return models
+            
+
     def _get_model_obj_by_id(self, id_):
         try:
             return self.model_cls.objects.get(id=id_)
         except self.model_cls.DoesNotExist:
             raise self.DoesNotExist()
 
-    def update(self, id_, **kwargs):
+    def _update(self, id_, **kwargs):
         try:
             model_obj = self.model_cls.objects.get(id=id_)
             if not isinstance(model_obj, self.model_cls):
@@ -27,7 +35,7 @@ class Repo:
         except self.model_cls.DoesNotExist:
             raise self.DoesNotExist()
 
-    def create(self, **kwargs):
+    def _create(self, **kwargs):
         model_obj = self.model_cls()
         for attr, value in kwargs.items():
             if not hasattr(model_obj, attr):

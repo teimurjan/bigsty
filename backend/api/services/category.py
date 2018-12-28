@@ -2,10 +2,11 @@ from api.services.decorators import allow_roles
 
 
 class CategoryService:
-    def __init__(self, repo, name_repo, language_repo):
+    def __init__(self, repo, name_repo, feature_type_repo, intl_texts_policy):
         self._repo = repo
         self._name_repo = name_repo
-        self._language_repo = language_repo
+        self._intl_texts_policy = intl_texts_policy
+        self._feature_type_repo = feature_type_repo
 
     def get_all(self):
         return tuple(self._repo.get_all())
@@ -16,47 +17,54 @@ class CategoryService:
         except self._repo.DoesNotExist:
             raise self.CategoryNotFound()
 
-    @allow_roles(['admin', 'manager'])
+    # @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
-        languages = self._language_repo.get_all()
-        not_all_languages_given = [l.id for l in languages] != [
-            n['language_id'] for n in data['names']]
-        if not_all_languages_given:
-            raise self.LanguageInvalid()
+        try:
+            if not self._intl_texts_policy.are_valid(data['names']):
+                raise self.LanguageInvalid()
 
-        category = self._repo.create()
-        for name in data['names']:
-            category.names.append(
+            feature_types = self._feature_type_repo.get_by_ids(
+                data['feature_types']
+            )
+
+            category = self._repo.create()
+            for language_id, value in data['names'].items():
                 self._name_repo.create(
-                    language_id=name['language_id'],
-                    value=name['value'],
-                    category_id=category.id
+                    language_id=language_id,
+                    value=value,
+                    category=category
                 )
-            )
 
-        return category
+            self._repo.set_feature_types(category, feature_types)
 
-    @allow_roles(['admin', 'manager'])
+            return category
+        except self._feature_type_repo.DoesNotExist:
+            raise self.FeatureTypeInvalid()
+
+    # @allow_roles(['admin', 'manager'])
     def update(self, category_id, data, *args, **kwargs):
-        languages = self._language_repo.get_all()
-        not_all_languages_given = [l.id for l in languages] != [
-            n['language_id'] for n in data['names']]
-        if not_all_languages_given:
-            raise self.LanguageInvalid()
+        try:
+            category = self.get_one(category_id)
 
-        category = self.get_one(category_id)
+            if not self._intl_texts_policy.are_valid(data['names']):
+                raise self.LanguageInvalid()
 
-        for name in category.names:
-            new_name = next(filter(lambda n: n['language_id'] == name.language.id, data['names']))
-            self._name_repo.update(
-                name.id,
-                value=new_name['value']
+            feature_types = self._feature_type_repo.get_by_ids(
+                data['feature_types']
             )
-            name.value = new_name['value']
 
-        return category
+            for name in category.names:
+                new_name = data['names'][str(name.language.id)]
+                if new_name != name.value:
+                    self._name_repo.update(name, new_name)
 
-    @allow_roles(['admin', 'manager'])
+            self._repo.set_feature_types(category, feature_types)
+
+            return category
+        except self._repo.DoesNotExist:
+            raise self.CategoryNotFound()
+
+    # @allow_roles(['admin', 'manager'])
     def delete(self, id_):
         try:
             return self._repo.delete(id_)
@@ -67,4 +75,7 @@ class CategoryService:
         pass
 
     class CategoryNotFound(Exception):
+        pass
+
+    class FeatureTypeInvalid(Exception):
         pass

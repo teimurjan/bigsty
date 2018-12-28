@@ -1,7 +1,8 @@
 from api.repos.category import CategoryRepo
 from api.services.category import CategoryService
 from api.repos.category.name import CategoryNameRepo
-from api.repos.language import LanguageRepo
+from api.repos.feature_type import FeatureTypeRepo
+from api.factories.policies.intl_texts import IntlTextsPolicyFactory
 
 
 class CategoryServiceFactory:
@@ -9,9 +10,11 @@ class CategoryServiceFactory:
     def create():
         repo = CategoryRepo()
         name_repo = CategoryNameRepo()
-        language_repo = LanguageRepo()
+        feature_type_repo = FeatureTypeRepo()
+        intl_texts_policy = IntlTextsPolicyFactory.create()
         return CategoryService(
             repo=repo,
             name_repo=name_repo,
-            language_repo=language_repo
+            feature_type_repo=feature_type_repo,
+            intl_texts_policy=intl_texts_policy,
         )

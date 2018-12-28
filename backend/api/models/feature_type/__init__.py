@@ -8,11 +8,17 @@ from api.models.intl import IntlText
 
 
 class FeatureType(models.Model):
-    categories = models.ManyToManyField(Category, related_name='feature_types',
-                                        related_query_name='feature_type', db_table='api_feature_type_x_category')
+    categories = models.ManyToManyField(
+        Category,
+        related_name='feature_types',
+        related_query_name='feature_type',
+        db_table='api_feature_type_x_category'
+    )
 
-    def to_dto(self):
-        names = [name.to_dto() for name in self.names.all()]
+    def to_dto(self, names_to_dto=True):
+        names = [
+            name.to_dto() if names_to_dto else name.pk for name in self.names.all()
+        ]
         return FeatureTypeDTO(self.pk, names)
 
     class Meta:

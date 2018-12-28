@@ -19,10 +19,10 @@ class FeatureValueListView(ValidatableView):
     def post(self, request):
         try:
             self._validate(request.data)
-            feature_value = self._service.create(request.data, user=request.user)
-            serialized_feature_value = self._serializer_cls(
-                feature_value
-            ).in_language(request.language).serialize()
+            feature_value = self._service.create(
+                request.data, user=request.user)
+            serialized_feature_value = self._serializer_cls(feature_value).in_language(
+                request.language).with_serialized_feature_type().serialize()
             return {'data': serialized_feature_value}, OK_CODE
         except self._service.FeatureTypeInvalid:
             raise InvalidEntityFormat({'feature_type_id': 'errors.invalidID'})
