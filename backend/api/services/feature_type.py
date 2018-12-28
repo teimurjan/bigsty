@@ -7,7 +7,7 @@ class FeatureTypeService:
         self._name_repo = name_repo
         self._intl_texts_policy = intl_texts_policy
 
-    #@allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
         if not self._intl_texts_policy.are_valid(data['names']):
             raise self.LanguageInvalid()
@@ -21,7 +21,7 @@ class FeatureTypeService:
             )
         return feature_type
 
-    #@allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def update(self, feature_type_id, data, *args, **kwargs):
         feature_type = self.get_one(feature_type_id)
 
@@ -44,7 +44,7 @@ class FeatureTypeService:
         except self._repo.DoesNotExist:
             raise self.FeatureTypeNotFound()
 
-    #@allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def delete(self, id_):
         try:
             return self._repo.delete(id_)

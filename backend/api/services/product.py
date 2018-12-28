@@ -17,7 +17,7 @@ class ProductService:
         self._feature_value_repo = feature_value_repo
         self._feature_values_policy = feature_values_policy
 
-    #@allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
         try:
             product_type = self._product_type_repo.get_by_id(
@@ -60,7 +60,7 @@ class ProductService:
         except IOError:
             raise self.ProductImageInvalid()
 
-    #@allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def update(self, product_id, data, *args, **kwargs):
         try:
             product = self.get_one(product_id)
@@ -116,7 +116,7 @@ class ProductService:
         except self._repo.DoesNotExist:
             raise self.ProductNotFound()
 
-    #@allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def delete(self, id_):
         try:
             return self._repo.delete(id_)

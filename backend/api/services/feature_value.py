@@ -8,7 +8,7 @@ class FeatureValueService:
         self._feature_type_repo = feature_type_repo
         self._intl_texts_policy = intl_texts_policy
 
-    #@allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
         try:
             if not self._intl_texts_policy.are_valid(data['names']):
@@ -28,7 +28,7 @@ class FeatureValueService:
         except self._feature_type_repo.DoesNotExist:
             raise self.FeatureTypeInvalid()
 
-    #@allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def update(self, feature_value_id, data, *args, **kwargs):
         try:
             feature_value = self.get_one(feature_value_id)
@@ -60,7 +60,7 @@ class FeatureValueService:
         except self._repo.DoesNotExist:
             raise self.FeatureValueNotFound()
 
-    #@allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def delete(self, id_):
         try:
             return self._repo.delete(id_)
