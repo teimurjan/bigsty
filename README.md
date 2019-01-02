@@ -1,9 +1,12 @@
 # About
-##### This project is going to be an online store which can be applied in any area.
-* Backend is developed using Django according to Clean Architecture principles. 
+
+BIGSTY - is an open-source API providing much functionality for online stores.
+
 # Installation
-* Install [Docker](https://docs.docker.com/engine/installation/)
-* Create .env.development with the content like(suffix `development` may be any other you like)
+
+- Install [Docker](https://docs.docker.com/engine/installation/)
+- Create .env.development with the content like(suffix `development` may be any other you like)
+
 ```
 DJANGO_SECRET=secret
 DJANGO_DB_HOST=db
@@ -14,7 +17,9 @@ POSTGRES_DB=online-store
 DB_HOST=localhost
 DB_PORT=5432
 ```
-* Run
+
+- Run
+
 ```sh
 ENV=development docker-compose up -d
 ```
