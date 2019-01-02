@@ -1,9 +1,9 @@
-from api.views.base import ValidatableView
+from api.views.base import ValidatableView, PaginatableView
 from api.http.status_codes import OK_CODE
 from api.errors import InvalidEntityFormat
 
 
-class FeatureValueListView(ValidatableView):
+class FeatureValueListView(ValidatableView, PaginatableView):
     def __init__(self, validator, service, serializer_cls):
         super().__init__(validator)
         self._service = service
@@ -11,10 +11,17 @@ class FeatureValueListView(ValidatableView):
 
     def get(self, request):
         feature_values = self._service.get_all()
+        
+        meta = None
+        page = request.GET.get('page')
+        if page:
+            limit = request.GET.get('limit', 20)
+            feature_values, meta = self._paginate(feature_values, page, limit)
+
         serialized_feature_values = [
             self._serializer_cls(feature_value).in_language(request.language).serialize() for feature_value in feature_values
         ]
-        return {'data': serialized_feature_values}, OK_CODE
+        return {'data': serialized_feature_values, 'meta': meta}, OK_CODE
 
     def post(self, request):
         try:

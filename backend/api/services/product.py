@@ -108,7 +108,7 @@ class ProductService:
             raise self.ProductImageInvalid()
 
     def get_all(self):
-        return self._repo.get_all()
+        return tuple(self._repo.get_all())
 
     def get_one(self, id_):
         try:

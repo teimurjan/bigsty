@@ -23,7 +23,7 @@ class ProductTypeService:
         self._intl_texts_policy = intl_texts_policy
         self._feature_values_policy = feature_values_policy
 
-    # @allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
         try:
             validate_image(data['image'])
@@ -84,7 +84,7 @@ class ProductTypeService:
         except IOError:
             raise self.ProductTypeImageInvalid()
 
-    # @allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def update(self, product_type_id, data, *args, **kwargs):
         try:
             product_type = self.get_one(product_type_id)
@@ -142,7 +142,7 @@ class ProductTypeService:
             raise self.FeatureValuesInvalid()
 
     def get_all(self):
-        return self._repo.get_all()
+        return tuple(self._repo.get_all())
 
     def get_one(self, id_):
         try:
@@ -150,7 +150,7 @@ class ProductTypeService:
         except self._repo.DoesNotExist:
             raise self.ProductTypeNotFound()
 
-    # @allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def delete(self, id_):
         try:
             return self._repo.delete(id_)

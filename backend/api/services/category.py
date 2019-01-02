@@ -17,7 +17,7 @@ class CategoryService:
         except self._repo.DoesNotExist:
             raise self.CategoryNotFound()
 
-    # @allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
         try:
             if not self._intl_texts_policy.are_valid(data['names']):
@@ -41,7 +41,7 @@ class CategoryService:
         except self._feature_type_repo.DoesNotExist:
             raise self.FeatureTypeInvalid()
 
-    # @allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def update(self, category_id, data, *args, **kwargs):
         try:
             category = self.get_one(category_id)
@@ -64,7 +64,7 @@ class CategoryService:
         except self._repo.DoesNotExist:
             raise self.CategoryNotFound()
 
-    # @allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def delete(self, id_):
         try:
             return self._repo.delete(id_)

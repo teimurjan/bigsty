@@ -30,6 +30,8 @@ class CategoryDetailView(ValidatableView):
             raise InvalidEntityFormat({'language_id': 'errors.invalidID'})
         except self._service.CategoryNotFound:
             return {}, NOT_FOUND_CODE
+        except self._service.FeatureTypeInvalid:
+            raise InvalidEntityFormat({'feature_types': 'errors.invalidID'})
 
     def delete(self, request, category_id):
         try:

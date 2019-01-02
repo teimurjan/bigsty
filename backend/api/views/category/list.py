@@ -25,3 +25,5 @@ class CategoryListView(ValidatableView):
             return {'data': serialized_category}, OK_CODE
         except self._service.LanguageInvalid:
             raise InvalidEntityFormat({'language_id': 'errors.invalidID'})
+        except self._service.FeatureTypeInvalid:
+            raise InvalidEntityFormat({'feature_types': 'errors.invalidID'})

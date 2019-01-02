@@ -1,10 +1,10 @@
-from api.views.base import ValidatableView
+from api.views.base import ValidatableView, PaginatableView
 from api.http.status_codes import OK_CODE
 from api.utils.json import parse_json_from_form_data
 from api.errors import InvalidEntityFormat
 
 
-class ProductListView(ValidatableView):
+class ProductListView(ValidatableView, PaginatableView):
     def __init__(self, validator, service, serializer_cls):
         super().__init__(validator)
         self._service = service
@@ -12,10 +12,17 @@ class ProductListView(ValidatableView):
 
     def get(self, request):
         products = self._service.get_all()
+        
+        meta = None
+        page = request.GET.get('page')
+        if page:
+            limit = request.GET.get('limit', 20)
+            products, meta = self._paginate(products, page, limit)
+
         serialized_products = [
             self._serializer_cls(product).in_language(request.language).serialize() for product in products
         ]
-        return {'data': serialized_products}, OK_CODE
+        return {'data': serialized_products, 'meta': meta}, OK_CODE
 
     def post(self, request):
         try:
