@@ -1,17 +1,29 @@
 import * as React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { LoginFormContainer } from "./LoginForm/LoginFormContainer";
+import {
+  IContextValue as AppStateContextValue,
+  injectAppState
+} from "src/state/AppState";
+import { LoginPage } from "./LoginPage/LoginPage";
 import { NotFound } from "./NotFound";
 
-export class App extends React.Component<{}> {
-  public render() {
-    return (
-      <Router>
-        <Switch>
-          <Route exact={true} path="/login" component={LoginFormContainer} />
-          <Route component={NotFound} />
-        </Switch>
-      </Router>
-    );
+export const App = injectAppState(
+  class extends React.Component<AppStateContextValue> {
+    public render() {
+      const {
+        app: { isLoading }
+      } = this.props;
+      if (isLoading) {
+        return <p>Loading</p>;
+      }
+      return (
+        <Router>
+          <Switch>
+            <Route exact={true} path="/login" component={LoginPage} />
+            <Route component={NotFound} />
+          </Switch>
+        </Router>
+      );
+    }
   }
-}
+);

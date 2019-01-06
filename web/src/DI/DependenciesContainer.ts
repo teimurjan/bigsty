@@ -1,7 +1,9 @@
 import axios from "axios";
+import * as intlService from "src/services/IntlService";
 import * as authAPI from "../api/AuthAPI";
 import * as authService from "../services/AuthService";
 import * as authStorage from "../storage/AuthStorage";
+import * as intlStorage from "../storage/IntlStorage";
 
 export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
@@ -9,10 +11,12 @@ export interface IAPIsContainer {
 
 export interface IServicesContainer {
   auth: authService.IAuthService;
+  intl: intlService.IIntlService;
 }
 
 export interface IStoragesContainer {
   auth: authStorage.IAuthStorage;
+  intl: intlStorage.IIntlStorage;
 }
 
 export interface IDependenciesContainer {
@@ -44,14 +48,16 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
   };
 
   const storagesContainer = {
-    auth: new authStorage.AuthStorage(localStorage)
+    auth: new authStorage.AuthStorage(localStorage),
+    intl: new intlStorage.IntlStorage(localStorage)
   };
 
   const servicesContainer = {
     auth: new authService.AuthService(
       APIsContainer.auth,
       storagesContainer.auth
-    )
+    ),
+    intl: new intlService.IntlService(storagesContainer.intl)
   };
 
   return new DependenciesContainer(

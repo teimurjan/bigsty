@@ -1,11 +1,14 @@
 import * as React from "react";
+import { withRouter } from "react-router";
 import { injectDependencies } from "src/DI/DI";
-import LoginFormPresenter from "./LoginFormPresenter";
-import LoginFormView from "./LoginFormView";
+import { IProps, LoginFormPresenter } from "./LoginFormPresenter";
+import { LoginFormView } from "./LoginFormView";
+
+const ConnectedLoginFormPresenter = withRouter<IProps>(LoginFormPresenter);
 
 export const LoginFormContainer = injectDependencies(({ dependencies }) => (
-  <LoginFormPresenter
+  <ConnectedLoginFormPresenter
     service={dependencies.services.auth}
-    view={LoginFormView}
+    View={LoginFormView}
   />
 ));

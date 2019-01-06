@@ -10,9 +10,9 @@ export class SchemaValidator implements ISchemaValidator {
     this.schema = schema;
   }
 
-  public validate = async (values: object) => {
+  public validate = (values: object) => {
     try {
-      await this.schema.validateSync(values, { abortEarly: false });
+      this.schema.validateSync(values, { abortEarly: false });
       return {};
     } catch (e) {
       return e.inner.reduce(

@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
 import * as React from "react";
 import {
   Field,
@@ -5,9 +7,13 @@ import {
   Form,
   FormRenderProps
 } from "react-final-form";
+import { textCenterMixin } from "src/styles/mixins";
+import { Button } from "../common/Button/Button";
+import { FormTextField } from "../common/FormTextField/FormTextField";
+import { HelpText } from "../common/HelpText/HelpText";
 import { IViewProps as IProps } from "./LoginFormPresenter";
 
-class LoginFormView extends React.Component<IProps> {
+export class LoginFormView extends React.Component<IProps> {
   public render() {
     const { onSubmit, validate } = this.props;
     return (
@@ -25,30 +31,55 @@ class LoginFormView extends React.Component<IProps> {
       <form onSubmit={handleSubmit}>
         <Field name="email" render={this.renderEmailField} />
         <Field name="password" render={this.renderPasswordField} />
-        <button type="submit" disabled={submitting}>
-          Log in
-        </button>
-        {globalError && <small>{globalError}</small>}
+        <div css={textCenterMixin}>
+          <Button color="is-success" disabled={submitting} type="submit">
+            Log in
+          </Button>
+          {globalError && <HelpText type="is-danger">{globalError}</HelpText>}
+        </div>
       </form>
     );
   };
 
-  private renderEmailField = ({ input, meta }: FieldRenderProps) => (
-    <div>
-      <input {...input} type="text" placeholder="Email" />
-      {meta.touched && meta.error && (
-        <small style={{ color: "red" }}>{meta.error}</small>
-      )}
-    </div>
-  );
-  private renderPasswordField = ({ input, meta }: FieldRenderProps) => (
-    <div>
-      <input {...input} type="password" placeholder="Password" />
-      {meta.touched && meta.error && (
-        <small style={{ color: "red" }}>{meta.error}</small>
-      )}
-    </div>
-  );
-}
+  private renderEmailField = ({ input, meta }: FieldRenderProps) => {
+    const showError = meta.touched && meta.error;
+    return (
+      <FormTextField
+        labelProps={{
+          children: "Email"
+        }}
+        inputProps={{
+          ...input,
+          isDanger: showError,
+          placeholder: "Enter your email",
+          type: "text"
+        }}
+        helpTextProps={{
+          children: showError ? meta.error : undefined,
+          type: "is-danger"
+        }}
+      />
+    );
+  };
 
-export default LoginFormView;
+  private renderPasswordField = ({ input, meta }: FieldRenderProps) => {
+    const showError = meta.touched && meta.error;
+    return (
+      <FormTextField
+        labelProps={{
+          children: "Password"
+        }}
+        inputProps={{
+          ...input,
+          isDanger: showError,
+          placeholder: "Enter your password",
+          type: "password"
+        }}
+        helpTextProps={{
+          children: showError ? meta.error : undefined,
+          type: "is-danger"
+        }}
+      />
+    );
+  };
+}

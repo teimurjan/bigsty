@@ -1,12 +1,12 @@
 import * as React from "react";
-import * as AuthService from "src/services/AuthService";
+import { RouteComponentProps } from "react-router";
+import * as authService from "src/services/AuthService";
 import * as yup from "yup";
 import * as schemaValidator from "../SchemaValidator";
-import LoginFormView from "./LoginFormView";
 
-interface IProps {
-  service: AuthService.IAuthService;
-  view: React.ComponentClass<IViewProps>
+export interface IProps extends RouteComponentProps<any> {
+  service: authService.IAuthService;
+  View: React.ComponentClass<IViewProps>;
 }
 
 export interface IViewProps {
@@ -20,7 +20,7 @@ interface IState {
   isLoading: boolean;
 }
 
-class LoginFormPresenter extends React.Component<IProps, IState> {
+export class LoginFormPresenter extends React.Component<IProps, IState> {
   public state = {
     error: undefined,
     isLoading: false
@@ -43,8 +43,9 @@ class LoginFormPresenter extends React.Component<IProps, IState> {
 
   public render() {
     const { error } = this.state;
+    const { View } = this.props;
     return (
-      <LoginFormView
+      <View
         onSubmit={this.onSubmit}
         globalError={error}
         validate={this.validator.validate}
@@ -55,19 +56,20 @@ class LoginFormPresenter extends React.Component<IProps, IState> {
   private onSubmit = async (values: { email: string; password: string }) => {
     this.startLoading();
 
-    const { service } = this.props;
+    const { service, history } = this.props;
 
     try {
       await service.logIn(values.email, values.password);
+      this.stopLoading();
+      history.push("/");
     } catch (e) {
-      if (e instanceof AuthService.InvalidCredentialsError) {
+      if (e instanceof authService.InvalidCredentialsError) {
         this.setGlobalError("Email or/and password are incorrect.");
       } else {
         this.setGlobalError("Something went wrong");
       }
+      this.stopLoading();
     }
-
-    this.stopLoading();
   };
 
   private startLoading = () =>
@@ -78,5 +80,3 @@ class LoginFormPresenter extends React.Component<IProps, IState> {
   private setGlobalError = (error: string | undefined) =>
     this.setState({ error });
 }
-
-export default LoginFormPresenter;
