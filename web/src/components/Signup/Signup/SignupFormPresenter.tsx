@@ -2,7 +2,7 @@ import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import * as authService from "src/services/AuthService";
 import * as yup from "yup";
-import * as schemaValidator from "../SchemaValidator";
+import * as schemaValidator from "../../SchemaValidator";
 
 export interface IProps extends RouteComponentProps<any> {
   service: authService.IAuthService;
@@ -20,7 +20,7 @@ interface IState {
   isLoading: boolean;
 }
 
-export class LoginFormPresenter extends React.Component<IProps, IState> {
+export class SignupFormPresenter extends React.Component<IProps, IState> {
   public state = {
     error: undefined,
     isLoading: false
@@ -34,9 +34,15 @@ export class LoginFormPresenter extends React.Component<IProps, IState> {
       yup.object().shape({
         email: yup
           .string()
-          .email("Invalid email format")
-          .required("Email is required"),
-        password: yup.string().required("Password is required")
+          .email("SignupForm.errors.email.format")
+          .required("SignupForm.errors.email.empty"),
+        name: yup.string().required("SignupForm.errors.name.empty"),
+        password: yup
+          .string()
+          .matches(
+            /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+            "SignupForm.errors.password.regex"
+          )
       })
     );
   }
@@ -53,20 +59,24 @@ export class LoginFormPresenter extends React.Component<IProps, IState> {
     );
   }
 
-  private onSubmit = async (values: { email: string; password: string }) => {
+  private onSubmit = async (values: {
+    email: string;
+    name: string;
+    password: string;
+  }) => {
     this.startLoading();
 
     const { service, history } = this.props;
 
     try {
-      await service.logIn(values.email, values.password);
+      await service.signUp(values.name, values.email, values.password);
       this.stopLoading();
       history.push("/");
     } catch (e) {
-      if (e instanceof authService.InvalidCredentialsError) {
-        this.setGlobalError("Email or/and password are incorrect.");
+      if (e instanceof authService.EmailExistsError) {
+        this.setGlobalError("SignupForm.errors.emailExists");
       } else {
-        this.setGlobalError("Something went wrong");
+        this.setGlobalError("errors.common");
       }
       this.stopLoading();
     }

@@ -20,7 +20,7 @@ export interface IAuthService {
     email: string,
     password: string
   ): Promise<{ error: string | undefined }>;
-  register(
+  signUp(
     name: string,
     email: string,
     password: string
@@ -56,9 +56,9 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async register(name: string, email: string, password: string) {
+  public async signUp(name: string, email: string, password: string) {
     try {
-      const { accessToken, refreshToken } = await this.API.register(
+      const { accessToken, refreshToken } = await this.API.signUp(
         name,
         email,
         password

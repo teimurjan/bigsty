@@ -22,7 +22,7 @@ export interface IAuthAPI {
     accessToken: string;
     refreshToken: string;
   }>;
-  register(
+  signUp(
     name: string,
     email: string,
     password: string
@@ -67,7 +67,7 @@ export class AuthAPI implements IAuthAPI {
     }
   }
 
-  public async register(name: string, email: string, password: string) {
+  public async signUp(name: string, email: string, password: string) {
     try {
       const response = await this.client.post("/api/auth/register", {
         email,
@@ -83,7 +83,7 @@ export class AuthAPI implements IAuthAPI {
         refreshToken
       };
     } catch (e) {
-      if (e.response.email) {
+      if (e.response.data.email) {
         throw new DuplicateEmailError();
       }
       throw e;
