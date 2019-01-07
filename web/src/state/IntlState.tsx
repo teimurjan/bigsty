@@ -24,6 +24,56 @@ interface IProviderState {
   messages: { [key: string]: string };
 }
 
+const pluralRuleFunctionOf = {
+  "en-US": (n: number, isOrdinal: boolean) => {
+    if (isOrdinal) {
+      if (n === 1) {
+        return "first";
+      }
+      if (n === 2) {
+        return "second";
+      }
+      if (n === 3) {
+        return "third";
+      }
+      return `${n}th`;
+    }
+
+    if (n === 0) {
+      return "zero";
+    }
+    if (n === 1) {
+      return "one";
+    }
+    if (n === 2) {
+      return "two";
+    }
+    if (n < 10) {
+      return "few";
+    }
+    return "many";
+  },
+  "ru-RU": (n: number, isOrdinal: boolean) => {
+    if (isOrdinal) {
+      return `${n}-й`;
+    }
+
+    if (n === 0) {
+      return "ноль";
+    }
+    if (n === 1) {
+      return "один";
+    }
+    if (n === 2) {
+      return "два";
+    }
+    if (n < 10) {
+      return "несколько";
+    }
+    return "много";
+  }
+};
+
 export const IntlStateProvider = injectAppState(
   class extends React.Component<
     IProviderProps & AppStateContextValue,
@@ -33,6 +83,10 @@ export const IntlStateProvider = injectAppState(
       locale: "en-US",
       messages: defaultMessages
     };
+
+    public componentDidMount() {
+      this.changeLocale("ru-RU");
+    }
 
     public render() {
       const { changeLocale } = this;
@@ -52,7 +106,10 @@ export const IntlStateProvider = injectAppState(
       const { app } = this.props;
       app.setLoading();
       const messages = await import(`../assets/translations/${locale}.json`);
-      addLocaleData({ locale });
+      addLocaleData({
+        locale,
+        pluralRuleFunction: pluralRuleFunctionOf[locale]
+      });
       app.setIdle();
       this.setState({ messages, locale });
     };

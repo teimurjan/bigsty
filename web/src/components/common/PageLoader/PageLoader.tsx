@@ -29,6 +29,7 @@ const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
   ${positionAbsoluteMixin};
   ${fullWidthMixin};
   ${fullHeightMixin};
+  top: 0;
 
   > div {
     border-width: 5px;
@@ -38,11 +39,12 @@ const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
 
 export class PageLoader extends React.Component<IProps> {
   public render() {
-    const { isActive, className, timeout = 300, ...props } = this.props;
+    const { isActive, className, timeout = 500, ...props } = this.props;
     return ReactDOM.createPortal(
-      <Transition in={isActive} timeout={timeout}>
+      <Transition in={isActive} timeout={timeout} unmountOnExit={true}>
         {status => {
           const shouldShow = status === "entering" || status === "entered";
+          console.log(shouldShow);
           return (
             <div
               css={getCSS(timeout, shouldShow)}

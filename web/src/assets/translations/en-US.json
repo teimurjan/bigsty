@@ -3,7 +3,7 @@
   "LoginPage.title": "Hello!",
   "LoginForm.emailInput.label": "Email",
   "LoginForm.emailInput.placeholder": "Enter email",
-  "LoginForm.passwordInput.label": "Passwor",
+  "LoginForm.passwordInput.label": "Password",
   "LoginForm.passwordInput.placeholder": "Enter password",
   "LoginForm.submitButton.text": "Log in",
   "LoginForm.signUpLink": "Sign up",
@@ -23,6 +23,6 @@
   "SignupForm.nameInput.placeholder": "Enter your name",
   "SignupForm.emailInput.label": "Email",
   "SignupForm.emailInput.placeholder": "Enter email",
-  "SignupForm.passwordInput.label": "Passwor",
+  "SignupForm.passwordInput.label": "Password",
   "SignupForm.passwordInput.placeholder": "Enter password"
 }

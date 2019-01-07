@@ -12,17 +12,21 @@ interface IProps {
 export class AppView extends React.Component<IProps> {
   public render() {
     const { isLoading } = this.props;
-    if (isLoading) {
-      return <PageLoader isActive={true} />;
-    }
     return (
-      <Router>
-        <Switch>
-          <Route exact={true} path="/login" component={LoginPageContainer} />
-          <Route exact={true} path="/signup" component={SignupPageContainer} />
-          <Route component={NotFound} />
-        </Switch>
-      </Router>
+      <React.Fragment>
+        <Router>
+          <Switch>
+            <Route exact={true} path="/login" component={LoginPageContainer} />
+            <Route
+              exact={true}
+              path="/signup"
+              component={SignupPageContainer}
+            />
+            <Route component={NotFound} />
+          </Switch>
+        </Router>
+        <PageLoader isActive={isLoading} />
+      </React.Fragment>
     );
   }
 }
