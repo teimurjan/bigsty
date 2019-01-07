@@ -44,7 +44,6 @@ export class PageLoader extends React.Component<IProps> {
       <Transition in={isActive} timeout={timeout} unmountOnExit={true}>
         {status => {
           const shouldShow = status === "entering" || status === "entered";
-          console.log(shouldShow);
           return (
             <div
               css={getCSS(timeout, shouldShow)}
