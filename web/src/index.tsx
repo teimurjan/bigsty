@@ -11,15 +11,15 @@ import { IntlStateProvider } from "./state/IntlState";
 import { defaultTheme } from "./themes";
 
 ReactDOM.render(
-  <ThemeProvider theme={defaultTheme}>
-    <AppStateProvider>
-      <IntlStateProvider>
-        <DIProvider value={makeDependenciesContainer()}>
+  <DIProvider value={{ dependencies: makeDependenciesContainer() }}>
+    <ThemeProvider theme={defaultTheme}>
+      <AppStateProvider>
+        <IntlStateProvider>
           <AppContainer />
-        </DIProvider>
-      </IntlStateProvider>
-    </AppStateProvider>
-  </ThemeProvider>,
+        </IntlStateProvider>
+      </AppStateProvider>
+    </ThemeProvider>
+  </DIProvider>,
   document.getElementById("root") as HTMLElement
 );
 

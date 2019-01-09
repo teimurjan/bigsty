@@ -30,6 +30,7 @@ const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
   ${fullWidthMixin};
   ${fullHeightMixin};
   top: 0;
+  z-index: 777;
 
   > div {
     border-width: 5px;

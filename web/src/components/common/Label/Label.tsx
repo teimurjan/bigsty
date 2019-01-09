@@ -7,7 +7,11 @@ export interface IProps extends React.HTMLAttributes<HTMLLabelElement> {
 
 export class Label extends React.Component<IProps> {
   public render() {
-    const { children, className } = this.props;
-    return <label className={classNames("label", className)}>{children}</label>;
+    const { children, className, ...props } = this.props;
+    return (
+      <label className={classNames("label", className)} {...props}>
+        {children}
+      </label>
+    );
   }
 }

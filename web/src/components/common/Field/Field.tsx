@@ -7,7 +7,11 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export class Field extends React.Component<IProps> {
   public render() {
-    const { children, className } = this.props;
-    return <div className={classNames("field", className)}>{children}</div>;
+    const { children, className, ...props } = this.props;
+    return (
+      <div className={classNames("field", className)} {...props}>
+        {children}
+      </div>
+    );
   }
 }

@@ -24,5 +24,8 @@
   "SignupForm.emailInput.label": "Email",
   "SignupForm.emailInput.placeholder": "Введите email",
   "SignupForm.passwordInput.label": "Пароль",
-  "SignupForm.passwordInput.placeholder": "Введите пароль"
+  "SignupForm.passwordInput.placeholder": "Введите пароль",
+  "NotFound.title": "404 - Не найдено",
+  "NotFound.goHome.text": "Домой",
+  "Header.categories.title": "Категории"  
 }

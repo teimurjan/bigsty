@@ -1,23 +1,25 @@
 import * as React from "react";
 import { IDependenciesContainer } from "./DependenciesContainer";
 
-const { Provider, Consumer } = React.createContext<
-  IDependenciesContainer | undefined
->(undefined);
+export interface IContextValue {
+  dependencies: IDependenciesContainer;
+}
+
+const { Provider, Consumer } = React.createContext<IContextValue | null>(null);
 
 export { Provider as DIProvider };
 
 export const injectDependencies = <P extends object>(
   Component:
-    | React.ComponentClass<P & { dependencies: IDependenciesContainer }>
-    | React.StatelessComponent<P & { dependencies: IDependenciesContainer }>
+    | React.ComponentClass<P & IContextValue>
+    | React.StatelessComponent<P & IContextValue>
 ): React.ComponentClass<P> =>
-  class extends React.Component<P & { dependencies: IDependenciesContainer }> {
+  class extends React.Component<P & IContextValue> {
     public render() {
       return (
         <Consumer>
-          {(dependencies: IDependenciesContainer) => (
-            <Component {...this.props} dependencies={dependencies} />
+          {(context: IContextValue) => (
+            <Component {...this.props} dependencies={context.dependencies} />
           )}
         </Consumer>
       );

@@ -8,7 +8,11 @@ export interface IProps extends React.HTMLAttributes<HTMLParagraphElement> {
 
 export class HelpText extends React.Component<IProps> {
   public render() {
-    const { children, type, className } = this.props;
-    return <p className={classNames("help", className, type)}>{children}</p>;
+    const { children, type, className, ...props } = this.props;
+    return (
+      <p className={classNames("help", className, type)} {...props}>
+        {children}
+      </p>
+    );
   }
 }

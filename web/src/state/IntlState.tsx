@@ -1,6 +1,8 @@
 import * as React from "react";
 import { addLocaleData, IntlProvider as ReactIntlProvider } from "react-intl";
 import defaultMessages from "../assets/translations/en-US.json";
+import { injectDependencies } from "../DI/DI";
+import { IIntlService } from "../services/IntlService";
 import {
   IContextValue as AppStateContextValue,
   injectAppState
@@ -13,10 +15,11 @@ export interface IContextValue {
   };
 }
 
-const { Provider, Consumer } = React.createContext<IContextValue | null>(null);
+const Context = React.createContext<IContextValue | null>(null);
 
 interface IProviderProps {
   children: React.ReactNode;
+  service: IIntlService;
 }
 
 interface IProviderState {
@@ -74,46 +77,58 @@ const pluralRuleFunctionOf = {
   }
 };
 
-export const IntlStateProvider = injectAppState(
-  class extends React.Component<
-    IProviderProps & AppStateContextValue,
-    IProviderState
-  > {
-    public state = {
-      locale: "en-US",
-      messages: defaultMessages
-    };
+class Provider extends React.Component<
+  IProviderProps & AppStateContextValue,
+  IProviderState
+> {
+  public state = {
+    locale: "en-US",
+    messages: defaultMessages
+  };
 
-    public componentDidMount() {
-      this.changeLocale("ru-RU");
+  public componentDidMount() {
+    const { service } = this.props;
+    const { locale } = this.state;
+    const savedLocale = service.getLocale();
+    if (savedLocale !== locale) {
+      this.changeLocale(savedLocale);
     }
-
-    public render() {
-      const { changeLocale } = this;
-      const { children } = this.props;
-      const { locale, messages } = this.state;
-
-      return (
-        <Provider value={{ intl: { locale, changeLocale } }}>
-          <ReactIntlProvider locale={locale} messages={messages}>
-            {children}
-          </ReactIntlProvider>
-        </Provider>
-      );
-    }
-
-    private changeLocale = async (locale: string) => {
-      const { app } = this.props;
-      app.setLoading();
-      const messages = await import(`../assets/translations/${locale}.json`);
-      addLocaleData({
-        locale,
-        pluralRuleFunction: pluralRuleFunctionOf[locale]
-      });
-      app.setIdle();
-      this.setState({ messages, locale });
-    };
   }
+
+  public render() {
+    const { changeLocale } = this;
+    const { children } = this.props;
+    const { locale, messages } = this.state;
+
+    return (
+      <Context.Provider value={{ intl: { locale, changeLocale } }}>
+        <ReactIntlProvider locale={locale} messages={messages}>
+          {children}
+        </ReactIntlProvider>
+      </Context.Provider>
+    );
+  }
+
+  private changeLocale = async (locale: string) => {
+    const { app, service } = this.props;
+    app.setLoading();
+    const messages = await import(`../assets/translations/${locale}.json`);
+    addLocaleData({
+      locale,
+      pluralRuleFunction: pluralRuleFunctionOf[locale]
+    });
+    service.setLocale(locale);
+    app.setIdle();
+    this.setState({ messages, locale });
+  };
+}
+
+const ProviderWithAppState = injectAppState(Provider);
+
+export const IntlStateProvider = injectDependencies(
+  ({ dependencies, ...props }) => (
+    <ProviderWithAppState {...props} service={dependencies.services.intl} />
+  )
 );
 
 export const injectIntlState = (
@@ -122,11 +137,11 @@ export const injectIntlState = (
   class extends React.Component<any> {
     public render() {
       return (
-        <Consumer>
+        <Context.Consumer>
           {(value: IContextValue) => (
             <Component {...{ ...this.props, ...value }} />
           )}
-        </Consumer>
+        </Context.Consumer>
       );
     }
   };

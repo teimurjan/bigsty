@@ -1,16 +1,21 @@
 import axios from "axios";
+import { HeadersManager } from "src/manager/HeadersManager";
+import * as categoryService from "src/services/CategoryService";
 import * as intlService from "src/services/IntlService";
 import * as authAPI from "../api/AuthAPI";
+import * as categoryAPI from "../api/CategoryAPI";
 import * as authService from "../services/AuthService";
 import * as authStorage from "../storage/AuthStorage";
 import * as intlStorage from "../storage/IntlStorage";
 
 export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
+  category: categoryAPI.ICategoryAPI;
 }
 
 export interface IServicesContainer {
   auth: authService.IAuthService;
+  category: categoryService.ICategoryService;
   intl: intlService.IIntlService;
 }
 
@@ -41,15 +46,19 @@ class DependenciesContainer implements IDependenciesContainer {
 }
 
 export const makeDependenciesContainer = (): IDependenciesContainer => {
-  const APIClient = axios.create({});
-
-  const APIsContainer = {
-    auth: new authAPI.AuthAPI(APIClient)
-  };
-
   const storagesContainer = {
     auth: new authStorage.AuthStorage(localStorage),
     intl: new intlStorage.IntlStorage(localStorage)
+  };
+
+  const headersManager = new HeadersManager(
+    storagesContainer.auth,
+    storagesContainer.intl
+  );
+  const APIClient = axios.create({});
+  const APIsContainer = {
+    auth: new authAPI.AuthAPI(APIClient),
+    category: new categoryAPI.CategoryAPI(APIClient, headersManager)
   };
 
   const servicesContainer = {
@@ -57,6 +66,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
       APIsContainer.auth,
       storagesContainer.auth
     ),
+    category: new categoryService.CategoryService(APIsContainer.category),
     intl: new intlService.IntlService(storagesContainer.intl)
   };
 

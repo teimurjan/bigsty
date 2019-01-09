@@ -50,7 +50,9 @@ export class AppStateProvider extends React.Component<
 }
 
 export const injectAppState = (
-  Component: React.ComponentClass<IContextValue>
+  Component:
+    | React.ComponentClass<IContextValue>
+    | React.StatelessComponent<IContextValue>
 ): React.ComponentClass<any> =>
   class extends React.Component<any> {
     public render() {

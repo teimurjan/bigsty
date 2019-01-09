@@ -5,13 +5,11 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
 }
 
-export class Control extends React.Component<IProps> {
+export class NavbarBrand extends React.Component<IProps> {
   public render() {
-    const { children, className, ...props } = this.props;
+    const { children, className } = this.props;
     return (
-      <div className={classNames("control", className)} {...props}>
-        {children}
-      </div>
+      <div className={classNames("navbar-brand", className)}>{children}</div>
     );
   }
 }

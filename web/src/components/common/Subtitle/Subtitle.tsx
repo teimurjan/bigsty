@@ -8,10 +8,10 @@ export interface IProps extends React.HTMLAttributes<HTMLHeadingElement> {
 
 export class Subtitle extends React.Component<IProps> {
   public render() {
-    const { children, size, className } = this.props;
+    const { children, size, className, ...props } = this.props;
     return React.createElement(
       `h${size}`,
-      { className: classNames("subtitle", className, `is-${size}`) },
+      { className: classNames("subtitle", className, `is-${size}`), ...props },
       children
     );
   }

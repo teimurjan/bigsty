@@ -2,7 +2,8 @@ import * as React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { PageLoader } from "../common/PageLoader/PageLoader";
 import { LoginPageContainer } from "../Login/LoginPage/LoginPageContainer";
-import { NotFound } from "../NotFound";
+import { MainPage } from "../MainPage";
+import { NotFoundContainer } from "../NotFound/NotFoundContainer";
 import { SignupPageContainer } from "../Signup/SignupPage/SignupPageContainer";
 
 interface IProps {
@@ -22,7 +23,8 @@ export class AppView extends React.Component<IProps> {
               path="/signup"
               component={SignupPageContainer}
             />
-            <Route component={NotFound} />
+            <Route exact={true} path="/" component={MainPage} />
+            <Route component={NotFoundContainer} />
           </Switch>
         </Router>
         <PageLoader isActive={isLoading} />
