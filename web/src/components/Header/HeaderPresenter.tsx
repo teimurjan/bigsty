@@ -1,15 +1,21 @@
 import * as React from "react";
 import { ICategoryResponseData } from "src/api/CategoryAPI";
-import * as categoryService from "src/services/CategoryService";
+import { ICategoryService } from "src/services/CategoryService";
 import { IContextValue as AppStateContextValue } from "../../state/AppState";
+import {
+  IContextValue as UserStateContextValue,
+  IUser
+} from "../../state/UserState";
 
-export interface IProps extends AppStateContextValue {
-  service: categoryService.ICategoryService;
+export interface IProps extends UserStateContextValue, AppStateContextValue {
+  categoryService: ICategoryService;
   View: React.ComponentClass<IViewProps>;
 }
 
 export interface IViewProps {
   categories: ICategoryResponseData[];
+  user: IUser | null;
+  onLogOutClick: () => void;
 }
 
 interface IState {
@@ -31,19 +37,21 @@ export class HeaderPresenter extends React.Component<IProps, IState> {
 
   public render() {
     const { categories, categoriesOrder } = this.state;
-    const { View } = this.props;
+    const { View, userState } = this.props;
     return (
       <View
+        user={userState.user}
         categories={categoriesOrder.map(categoryId => categories[categoryId])}
+        onLogOutClick={this.onLogoutClick}
       />
     );
   }
 
-  private async getCategories() {
-    const { service, app } = this.props;
-    app.setLoading();
+  private getCategories = async () => {
+    const { categoryService, appState } = this.props;
+    appState.setLoading();
     try {
-      const { entities, result } = await service.getAll();
+      const { entities, result } = await categoryService.getAll();
       this.setState({
         categories: entities.categories,
         categoriesOrder: result
@@ -51,6 +59,11 @@ export class HeaderPresenter extends React.Component<IProps, IState> {
     } catch (e) {
       this.setState({ error: "errors.common" });
     }
-    app.setIdle();
-  }
+    appState.setIdle();
+  };
+
+  private onLogoutClick = () => {
+    const { userState } = this.props;
+    userState.clearUser();
+  };
 }

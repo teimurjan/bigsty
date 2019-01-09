@@ -27,6 +27,7 @@ export interface IAuthService {
   ): Promise<{ error: string | undefined }>;
   refreshTokens(refreshToken: string): void;
   getAccessToken(): string | null;
+  logOut(): void;
 }
 
 export class AuthService implements IAuthService {
@@ -88,5 +89,10 @@ export class AuthService implements IAuthService {
 
   public getAccessToken() {
     return this.storage.getAccessToken();
+  }
+
+  public logOut() {
+    this.storage.clearAccessToken();
+    this.storage.clearRefreshToken();
   }
 }

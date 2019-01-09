@@ -5,8 +5,10 @@ import * as React from "react";
 import { InjectedIntlProps, injectIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
+import { Button } from "../common/Button/Button";
 import { Dropdown, ITriggerProps } from "../common/Dropdown/Dropdown";
 import { DropdownItemLink } from "../common/DropdownItemLink/DropdownItemLink";
+import { LinkButton } from "../common/LinkButton/LinkButton";
 import { Navbar } from "../common/Navbar/Navbar";
 import { NavbarBrand } from "../common/NavbarBrand/NavbarBrand";
 import { NavbarBurger } from "../common/NavbarBurger/NavbarBurger";
@@ -31,14 +33,17 @@ const DropdownTrigger = injectIntl(
   )
 );
 
-export class HeaderView extends React.Component<IProps, IState> {
+export class HeaderView extends React.Component<
+  IProps & InjectedIntlProps,
+  IState
+> {
   public state = {
     isOpen: false
   };
 
   public render() {
     const { isOpen } = this.state;
-    const { categories } = this.props;
+    const { categories, user, intl, onLogOutClick } = this.props;
     return (
       <Navbar>
         <NavbarBrand>
@@ -67,7 +72,24 @@ export class HeaderView extends React.Component<IProps, IState> {
               </Dropdown>
             </NavbarItem>
           </NavbarStart>
-          <NavbarEnd />
+          <NavbarEnd>
+            <NavbarItem>
+              {user ? (
+                <Button onClick={onLogOutClick} color="is-primary">
+                  {intl.formatMessage({ id: "Header.logOut" })}
+                </Button>
+              ) : (
+                <div className="buttons">
+                  <LinkButton color="is-primary" to="/login">
+                    {intl.formatMessage({ id: "Header.logIn" })}
+                  </LinkButton>
+                  <LinkButton color="is-info" to="/signup">
+                    {intl.formatMessage({ id: "Header.signUp" })}
+                  </LinkButton>
+                </div>
+              )}
+            </NavbarItem>
+          </NavbarEnd>
         </NavbarMenu>
       </Navbar>
     );

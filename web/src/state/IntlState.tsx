@@ -9,7 +9,7 @@ import {
 } from "./AppState";
 
 export interface IContextValue {
-  intl: {
+  intlState: {
     locale: string;
     changeLocale: (locale: string) => void;
   };
@@ -101,7 +101,7 @@ class Provider extends React.Component<
     const { locale, messages } = this.state;
 
     return (
-      <Context.Provider value={{ intl: { locale, changeLocale } }}>
+      <Context.Provider value={{ intlState: { locale, changeLocale } }}>
         <ReactIntlProvider locale={locale} messages={messages}>
           {children}
         </ReactIntlProvider>
@@ -110,15 +110,15 @@ class Provider extends React.Component<
   }
 
   private changeLocale = async (locale: string) => {
-    const { app, service } = this.props;
-    app.setLoading();
+    const { appState, service } = this.props;
+    appState.setLoading();
     const messages = await import(`../assets/translations/${locale}.json`);
     addLocaleData({
       locale,
       pluralRuleFunction: pluralRuleFunctionOf[locale]
     });
     service.setLocale(locale);
-    app.setIdle();
+    appState.setIdle();
     this.setState({ messages, locale });
   };
 }

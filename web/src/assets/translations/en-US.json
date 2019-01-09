@@ -27,5 +27,8 @@
   "SignupForm.passwordInput.placeholder": "Enter password",
   "NotFound.title": "404 - Not Found",
   "NotFound.goHome.text": "Home",
-  "Header.categories.title": "Categories"
+  "Header.categories.title": "Categories",
+  "Header.logIn": "Log in",
+  "Header.signUp": "Sign up",
+  "Header.logOut": "Log out"
 }

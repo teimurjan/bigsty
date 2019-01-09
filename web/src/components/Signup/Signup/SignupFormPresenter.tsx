@@ -2,9 +2,12 @@ import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import * as authService from "src/services/AuthService";
 import * as yup from "yup";
+import { IContextValue as UserStateContextValue } from "../../../state/UserState";
 import * as schemaValidator from "../../SchemaValidator";
 
-export interface IProps extends RouteComponentProps<any> {
+export interface IProps
+  extends RouteComponentProps<any>,
+    UserStateContextValue {
   service: authService.IAuthService;
   View: React.ComponentClass<IViewProps>;
 }
@@ -66,11 +69,14 @@ export class SignupFormPresenter extends React.Component<IProps, IState> {
   }) => {
     this.startLoading();
 
-    const { service, history } = this.props;
+    const { service, history, userState } = this.props;
 
     try {
       await service.signUp(values.name, values.email, values.password);
+      userState.syncUser();
+
       this.stopLoading();
+
       history.push("/");
     } catch (e) {
       if (e instanceof authService.EmailExistsError) {

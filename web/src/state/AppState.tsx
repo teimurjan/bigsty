@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export interface IContextValue {
-  app: {
+  appState: {
     isLoading: boolean;
     setIdle: () => void;
     setLoading: () => void;
@@ -33,7 +33,7 @@ export class AppStateProvider extends React.Component<
     return (
       <Provider
         value={{
-          app: {
+          appState: {
             isLoading,
             setIdle,
             setLoading

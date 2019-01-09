@@ -27,5 +27,8 @@
   "SignupForm.passwordInput.placeholder": "Введите пароль",
   "NotFound.title": "404 - Не найдено",
   "NotFound.goHome.text": "Домой",
-  "Header.categories.title": "Категории"  
+  "Header.categories.title": "Категории",
+  "Header.logIn": "Войти",
+  "Header.signUp": "Зарегистрироваться",
+  "Header.logOut": "Выйти"
 }

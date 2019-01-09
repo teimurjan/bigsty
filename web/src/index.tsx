@@ -8,6 +8,7 @@ import { DIProvider } from "./DI/DI";
 import registerServiceWorker from "./registerServiceWorker";
 import { AppStateProvider } from "./state/AppState";
 import { IntlStateProvider } from "./state/IntlState";
+import { UserStateProvider } from "./state/UserState";
 import { defaultTheme } from "./themes";
 
 ReactDOM.render(
@@ -15,7 +16,9 @@ ReactDOM.render(
     <ThemeProvider theme={defaultTheme}>
       <AppStateProvider>
         <IntlStateProvider>
-          <AppContainer />
+          <UserStateProvider>
+            <AppContainer />
+          </UserStateProvider>
         </IntlStateProvider>
       </AppStateProvider>
     </ThemeProvider>

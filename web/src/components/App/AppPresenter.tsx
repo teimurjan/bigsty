@@ -13,7 +13,7 @@ export class AppPresenter extends React.Component<IProps> {
   public render() {
     const {
       View,
-      app: { isLoading }
+      appState: { isLoading }
     } = this.props;
     return <View isLoading={isLoading} />;
   }

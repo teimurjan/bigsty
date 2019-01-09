@@ -9,12 +9,12 @@ const { Provider, Consumer } = React.createContext<IContextValue | null>(null);
 
 export { Provider as DIProvider };
 
-export const injectDependencies = <P extends object>(
+export const injectDependencies = (
   Component:
-    | React.ComponentClass<P & IContextValue>
-    | React.StatelessComponent<P & IContextValue>
-): React.ComponentClass<P> =>
-  class extends React.Component<P & IContextValue> {
+    | React.ComponentClass<IContextValue>
+    | React.StatelessComponent<IContextValue>
+): React.ComponentClass<any> =>
+  class extends React.Component<any> {
     public render() {
       return (
         <Consumer>
