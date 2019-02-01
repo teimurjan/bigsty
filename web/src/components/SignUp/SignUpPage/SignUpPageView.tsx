@@ -9,7 +9,7 @@ import { ModalClose } from "src/components/common/ModalClose/ModalClose";
 import { ModalContent } from "src/components/common/ModalContent/ModalContent";
 import { textCenterMixin } from "src/styles/mixins";
 import { Title } from "../../common/Title/Title";
-import { SignUpFormContainer } from "../SignUp/SignUpFormContainer";
+import { SignUpFormContainer } from "../SignUpForm/SignUpFormContainer";
 import { IViewProps } from "./SignUpPagePresenter";
 
 export class SignUpPageView extends React.Component<
