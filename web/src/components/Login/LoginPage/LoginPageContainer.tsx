@@ -1,4 +1,11 @@
+import * as React from "react";
 import { injectIntl } from "react-intl";
-import { LoginPage } from "./LoginPage";
+import { withRouter } from "react-router";
+import { IProps, LoginPagePresenter } from "./LoginPagePresenter";
+import { LoginPageView } from "./LoginPageView";
 
-export const LoginPageContainer = injectIntl(LoginPage);
+const ConnectedLoginPagePresenter = withRouter<IProps>(LoginPagePresenter);
+
+export const LoginPageContainer = () => (
+  <ConnectedLoginPagePresenter View={injectIntl(LoginPageView)} />
+);

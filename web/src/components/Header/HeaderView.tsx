@@ -6,6 +6,7 @@ import { InjectedIntlProps, injectIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import { Button } from "../common/Button/Button";
+import { Container } from "../common/Container/Container";
 import { Dropdown, ITriggerProps } from "../common/Dropdown/Dropdown";
 import { DropdownItemLink } from "../common/DropdownItemLink/DropdownItemLink";
 import { LinkButton } from "../common/LinkButton/LinkButton";
@@ -46,51 +47,53 @@ export class HeaderView extends React.Component<
     const { categories, user, intl, onLogOutClick } = this.props;
     return (
       <Navbar>
-        <NavbarBrand>
-          <Link className="navbar-item" to="/">
-            <img
-              css={css`
-                max-height: 3rem !important;
-              `}
-              src={logo}
-            />
-          </Link>
-          <NavbarBurger isActive={isOpen} onClick={this.toggleIsOpen} />
-        </NavbarBrand>
-        <NavbarMenu isActive={isOpen}>
-          <NavbarStart>
-            <NavbarItem className="is-uppercase">
-              <Dropdown Trigger={DropdownTrigger}>
-                {categories.map(category => (
-                  <DropdownItemLink
-                    key={category.id}
-                    to={`/categories/${category.id}`}
-                  >
-                    {category.name}
-                  </DropdownItemLink>
-                ))}
-              </Dropdown>
-            </NavbarItem>
-          </NavbarStart>
-          <NavbarEnd>
-            <NavbarItem>
-              {user ? (
-                <Button onClick={onLogOutClick} color="is-primary">
-                  {intl.formatMessage({ id: "Header.logOut" })}
-                </Button>
-              ) : (
-                <div className="buttons">
-                  <LinkButton color="is-primary" to="/login">
-                    {intl.formatMessage({ id: "Header.logIn" })}
-                  </LinkButton>
-                  <LinkButton color="is-info" to="/signup">
-                    {intl.formatMessage({ id: "Header.signUp" })}
-                  </LinkButton>
-                </div>
-              )}
-            </NavbarItem>
-          </NavbarEnd>
-        </NavbarMenu>
+        <Container>
+          <NavbarBrand>
+            <Link className="navbar-item" to="/">
+              <img
+                css={css`
+                  max-height: 3rem !important;
+                `}
+                src={logo}
+              />
+            </Link>
+            <NavbarBurger isActive={isOpen} onClick={this.toggleIsOpen} />
+          </NavbarBrand>
+          <NavbarMenu isActive={isOpen}>
+            <NavbarStart>
+              <NavbarItem className="is-uppercase">
+                <Dropdown Trigger={DropdownTrigger}>
+                  {categories.map(category => (
+                    <DropdownItemLink
+                      key={category.id}
+                      to={`/categories/${category.id}`}
+                    >
+                      {category.name}
+                    </DropdownItemLink>
+                  ))}
+                </Dropdown>
+              </NavbarItem>
+            </NavbarStart>
+            <NavbarEnd>
+              <NavbarItem>
+                {user ? (
+                  <Button onClick={onLogOutClick} color="is-primary">
+                    {intl.formatMessage({ id: "Header.logOut" })}
+                  </Button>
+                ) : (
+                  <div className="buttons">
+                    <LinkButton color="is-primary" to="/login">
+                      {intl.formatMessage({ id: "Header.logIn" })}
+                    </LinkButton>
+                    <LinkButton color="is-info" to="/signup">
+                      {intl.formatMessage({ id: "Header.signUp" })}
+                    </LinkButton>
+                  </div>
+                )}
+              </NavbarItem>
+            </NavbarEnd>
+          </NavbarMenu>
+        </Container>
       </Navbar>
     );
   }

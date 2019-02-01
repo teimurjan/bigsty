@@ -33,7 +33,7 @@ export class LoginFormView extends React.Component<IProps & InjectedIntlProps> {
       <form onSubmit={handleSubmit}>
         <Field name="email" render={this.renderEmailField} />
         <Field name="password" render={this.renderPasswordField} />
-        <div className="level">
+        <div className="level is-mobile">
           <Button
             className="level-left is-uppercase"
             color="is-success"
