@@ -24,6 +24,7 @@ from api.factories.views.product.detail import ProductDetailViewFactory
 
 from api.factories.views.product_type.list import ProductTypeListViewFactory
 from api.factories.views.product_type.detail import ProductTypeDetailViewFactory
+from api.factories.views.product_type.by_category import ProductTypeByCategoryViewFactory
 
 
 DEFAULT_MIDDLEWARE_FACTORIES = [
@@ -54,6 +55,11 @@ urlpatterns = [
     )),
     path('categories/<int:category_id>', AbstractView.as_view(
         concrete_view_factory=CategoryDetailViewFactory,
+        request_data_parser_factory=RequestDataParserFactory,
+        middleware_factories=DEFAULT_MIDDLEWARE_FACTORIES
+    )),
+    path('categories/<int:category_id>/product_types', AbstractView.as_view(
+        concrete_view_factory=ProductTypeByCategoryViewFactory,
         request_data_parser_factory=RequestDataParserFactory,
         middleware_factories=DEFAULT_MIDDLEWARE_FACTORIES
     )),

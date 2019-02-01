@@ -26,3 +26,6 @@ class ProductTypeRepo(Repo):
             feature_values_ids.add(feature_value.id)
             product_type.feature_values.append(feature_value)
         model_obj.feature_values.set(feature_values_ids)
+
+    def get_by_category_id(self, category_id):
+        return self.filter_by(category_id=category_id)

@@ -144,6 +144,9 @@ class ProductTypeService:
     def get_all(self):
         return tuple(self._repo.get_all())
 
+    def get_by_category_id(self, category_id):
+        return tuple(self._repo.get_by_category_id(category_id))
+
     def get_one(self, id_):
         try:
             return self._repo.get_by_id(id_)
