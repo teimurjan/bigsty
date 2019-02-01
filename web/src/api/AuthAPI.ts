@@ -14,6 +14,11 @@ export class EmailOrPasswordInvalidError extends Error {
   }
 }
 
+export interface IAuthResponseData {
+  access_token: string;
+  refresh_token: string;
+}
+
 export interface IAuthAPI {
   logIn(
     email: string,
@@ -47,10 +52,13 @@ export class AuthAPI implements IAuthAPI {
 
   public async logIn(email: string, password: string) {
     try {
-      const response = await this.client.post("/api/auth/login", {
-        email,
-        password
-      });
+      const response = await this.client.post<IAuthResponseData>(
+        "/api/auth/login",
+        {
+          email,
+          password
+        }
+      );
       const {
         access_token: accessToken,
         refresh_token: refreshToken
@@ -69,11 +77,14 @@ export class AuthAPI implements IAuthAPI {
 
   public async signUp(name: string, email: string, password: string) {
     try {
-      const response = await this.client.post("/api/auth/register", {
-        email,
-        name,
-        password
-      });
+      const response = await this.client.post<IAuthResponseData>(
+        "/api/auth/register",
+        {
+          email,
+          name,
+          password
+        }
+      );
       const {
         access_token: accessToken,
         refresh_token: refreshToken
@@ -91,9 +102,12 @@ export class AuthAPI implements IAuthAPI {
   }
 
   public async refreshTokens(refreshToken: string) {
-    const response = await this.client.post("/api/auth/refresh", {
-      refresh_token: refreshToken
-    });
+    const response = await this.client.post<IAuthResponseData>(
+      "/api/auth/refresh",
+      {
+        refresh_token: refreshToken
+      }
+    );
     const {
       access_token: accessToken,
       refresh_token: newRefreshToken

@@ -4,18 +4,22 @@ import * as categoryService from "src/services/CategoryService";
 import * as intlService from "src/services/IntlService";
 import * as authAPI from "../api/AuthAPI";
 import * as categoryAPI from "../api/CategoryAPI";
+import * as productTypeAPI from "../api/ProductTypeAPI";
 import * as authService from "../services/AuthService";
+import * as productTypeService from "../services/ProductTypeService";
 import * as authStorage from "../storage/AuthStorage";
 import * as intlStorage from "../storage/IntlStorage";
 
 export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
   category: categoryAPI.ICategoryAPI;
+  productType: productTypeAPI.IProductTypeAPI;
 }
 
 export interface IServicesContainer {
   auth: authService.IAuthService;
   category: categoryService.ICategoryService;
+  productType: productTypeService.IProductTypeService;
   intl: intlService.IIntlService;
 }
 
@@ -58,7 +62,8 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
   const APIClient = axios.create({});
   const APIsContainer = {
     auth: new authAPI.AuthAPI(APIClient),
-    category: new categoryAPI.CategoryAPI(APIClient, headersManager)
+    category: new categoryAPI.CategoryAPI(APIClient, headersManager),
+    productType: new productTypeAPI.ProductTypeAPI(APIClient, headersManager)
   };
 
   const servicesContainer = {
@@ -67,7 +72,10 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
       storagesContainer.auth
     ),
     category: new categoryService.CategoryService(APIsContainer.category),
-    intl: new intlService.IntlService(storagesContainer.intl)
+    intl: new intlService.IntlService(storagesContainer.intl),
+    productType: new productTypeService.ProductTypeService(
+      APIsContainer.productType
+    )
   };
 
   return new DependenciesContainer(

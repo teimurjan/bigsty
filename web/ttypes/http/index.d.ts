@@ -1,10 +1,10 @@
 declare module "ttypes/http" {
   export interface Client {
-    get: (...args: Array<any>) => Promise<any>;
-    post: (...args: Array<any>) => Promise<any>;
-    put: (...args: Array<any>) => Promise<any>;
-    patch: (...args: Array<any>) => Promise<any>;
-    delete: (...args: Array<any>) => Promise<any>;
-    head: (...args: Array<any>) => Promise<any>;
+    get: <T>(...args: any[]) => Promise<{ data: T }>;
+    post: <T>(...args: any[]) => Promise<{ data: T }>;
+    put: <T>(...args: any[]) => Promise<{ data: T }>;
+    patch: <T>(...args: any[]) => Promise<{ data: T }>;
+    delete: <T>(...args: any[]) => Promise<{ data: T }>;
+    head: <T>(...args: any[]) => Promise<{ data: T }>;
   }
 }

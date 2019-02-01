@@ -13,6 +13,6 @@ export class CategoryService implements ICategoryService {
 
   public async getAll() {
     const categories = await this.API.getAll();
-    return normalize(categories, [new schema.Entity("categories")]);
+    return normalize(categories.data, [new schema.Entity("categories")]);
   }
 }

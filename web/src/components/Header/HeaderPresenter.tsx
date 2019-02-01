@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ICategoryResponseData } from "src/api/CategoryAPI";
+import { ICategoryListResponseItem } from "src/api/CategoryAPI";
 import { ICategoryService } from "src/services/CategoryService";
 import { IContextValue as AppStateContextValue } from "../../state/AppState";
 import {
@@ -13,13 +13,13 @@ export interface IProps extends UserStateContextValue, AppStateContextValue {
 }
 
 export interface IViewProps {
-  categories: ICategoryResponseData[];
+  categories: ICategoryListResponseItem[];
   user: IUser | null;
   onLogOutClick: () => void;
 }
 
 interface IState {
-  categories: { [key: string]: ICategoryResponseData };
+  categories: { [key: string]: ICategoryListResponseItem };
   categoriesOrder: number[];
   error: string | undefined;
 }

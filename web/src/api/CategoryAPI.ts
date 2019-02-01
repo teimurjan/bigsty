@@ -1,14 +1,18 @@
 import { IHeadersManager } from "src/manager/HeadersManager";
 import { Client } from "ttypes/http";
 
-export interface ICategoryResponseData {
+export interface ICategoryListResponseItem {
   id: number;
   name: string;
   feature_types: number[];
 }
 
+export interface ICategoryListResponseData {
+  data: ICategoryListResponseItem[];
+}
+
 export interface ICategoryAPI {
-  getAll(): Promise<ICategoryResponseData[]>;
+  getAll(): Promise<ICategoryListResponseData>;
 }
 
 export class CategoryAPI implements ICategoryAPI {
@@ -22,11 +26,13 @@ export class CategoryAPI implements ICategoryAPI {
 
   public async getAll() {
     try {
-      const response = await this.client.get("/api/categories", {
-        headers: this.headersManager.getHeaders()
-      });
-      const { data } = response.data;
-      return data;
+      const response = await this.client.get<ICategoryListResponseData>(
+        "/api/categories",
+        {
+          headers: this.headersManager.getHeaders()
+        }
+      );
+      return response.data;
     } catch (e) {
       throw e;
     }
