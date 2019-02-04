@@ -1,0 +1,2 @@
+class ProductTypeNameRepo:
+    pass
