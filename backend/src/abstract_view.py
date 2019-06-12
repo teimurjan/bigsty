@@ -9,13 +9,17 @@ from src.constants.status_codes import (
 
 
 class AbstractView(View):
-    concrete_view_factory = None
-    middleware_factories = []
+    def __init__(self, concrete_view_factory, middlewares):
+        self._concrete_view_factory = concrete_view_factory
+        self._middlewares = middlewares
 
     def dispatch_request(self):
         self._handle_with_middlewares(request)
 
         handler = self._get_handler(request.method.lower())
+        if handler is None:
+            return None, METHOD_NOT_ALLOWED_CODE
+
         try:
             body, status = handler(request)
             return jsonify(
@@ -28,15 +32,12 @@ class AbstractView(View):
             return jsonify({}), FORBIDDEN_CODE
 
     def _handle_with_middlewares(self, request):
-        for factory in self.middleware_factories:
-            factory.create().handle(request)
+        for middleware in self._middlewares:
+            middleware.handle(request)
 
     def _get_handler(self, http_method):
-        if http_method in self.http_method_names:
-            if self.concrete_view_factory is not None:
-                view = self.concrete_view_factory.create(http_method)
-                return getattr(view, http_method, self.http_method_not_allowed)
-            else:
-                raise Exception('You must specify a view factory')
+        if self._concrete_view_factory is not None:
+            view = self._concrete_view_factory.create(http_method)
+            return getattr(view, http_method)
         else:
-            return None, METHOD_NOT_ALLOWED_CODE
+            raise Exception('You must specify a view factory')

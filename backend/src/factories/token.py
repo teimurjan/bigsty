@@ -17,13 +17,13 @@ class TokenFactory:
                 'group': user.group.name,
                 'exp': exp_date
             }
-            return jwt.encode(payload, app.config.SECRET_KEY).decode()
+            return jwt.encode(payload, app.config['SECRET_KEY']).decode()
         elif type_ == REFRESH_TOKEN_TYPE:
             exp_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
             payload = {
                 'user_id': user.id,
                 'exp': exp_date
             }
-            return jwt.encode(payload, app.config.SECRET_KEY).decode()
+            return jwt.encode(payload, app.config['SECRET_KEY']).decode()
         else:
             raise Exception('Unknown token type')

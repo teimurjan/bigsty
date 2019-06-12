@@ -3,6 +3,7 @@ from src.models.base import BaseModel
 
 feature_types_m2m_table = Table(
     'category_x_feature_type',
+    BaseModel.metadata,
     Column('category_id', Integer, ForeignKey(
         'category.id'), primary_key=True),
     Column('feature_type_id', Integer, ForeignKey(

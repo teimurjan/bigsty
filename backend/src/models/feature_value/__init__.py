@@ -3,6 +3,7 @@ from src.models.base import BaseModel
 
 product_types_m2m_table = Table(
     'product_type_x_feature_value',
+    BaseModel.metadata,
     Column('product_type_id', Integer, ForeignKey(
         'product_type.id'), primary_key=True),
     Column('feature_value_id', Integer, ForeignKey(
@@ -11,6 +12,7 @@ product_types_m2m_table = Table(
 
 products_m2m_table = Table(
     'product_x_feature_value',
+    BaseModel.metadata,
     Column('product_id', Integer, ForeignKey(
         'product.id'), primary_key=True),
     Column('feature_value_id', Integer, ForeignKey(

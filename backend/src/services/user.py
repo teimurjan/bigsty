@@ -12,36 +12,35 @@ class UserService:
 
     def authorize(self, token):
         try:
-            decoded_token = jwt.decode(token, app.config.SECRET_KEY)
+            decoded_token = jwt.decode(token, app.config['SECRET_KEY'])
             user = self._repo.get_by_id(decoded_token['user_id'])
             return user
         except (jwt.InvalidTokenError, self._repo.DoesNotExist):
             return None
 
-
     def authenticate(self, data):
-        try:
-            user = self._repo.get_first_by(email=data['email'])
-            if not bcrypt.checkpw(data['password'].encode(), user.password.encode()):
-                  raise self.AuthCredsInvalid()
+        user = self._repo.get_first_by_email(data['email'])
 
-            return (
-                TokenFactory.create(ACCESS_TOKEN_TYPE, user),
-                TokenFactory.create(REFRESH_TOKEN_TYPE, user)
+        if (
+            user is None or
+            not bcrypt.checkpw(
+                data['password'].encode(),
+                user.password.encode()
             )
-        except self._repo.DoesNotExist:
+        ):
             raise self.AuthCredsInvalid()
 
+        return (
+            TokenFactory.create(ACCESS_TOKEN_TYPE, user),
+            TokenFactory.create(REFRESH_TOKEN_TYPE, user)
+        )
+
     def register(self, data):
-        email, password = data['email'], data['password']
-        is_user_exists = len(tuple(self._repo.filter_by(email=email))) > 0
-        if is_user_exists:
+        name, email, password = data['name'], data['email'], data['password']
+        if self._repo.is_email_used(email):
             raise self.SameEmailError()
 
-        user = self._repo.create(
-            email=email, 
-            password=password
-        )
+        user = self._repo.add_user(name, email, password)
         return (
             TokenFactory.create(ACCESS_TOKEN_TYPE, user),
             TokenFactory.create(REFRESH_TOKEN_TYPE, user)
@@ -50,7 +49,7 @@ class UserService:
     def refresh_token(self, data):
         try:
             decoded_token = jwt.decode(
-                data['refresh_token'], settings.SECRET_KEY
+                data['refresh_token'], app.config['SECRET_KEY']
             )
             user = self._repo.get_by_id(decoded_token['user_id'])
             return (

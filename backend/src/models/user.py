@@ -1,4 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
+
 from src.models.base import BaseModel
 
 
@@ -15,3 +17,4 @@ class User(BaseModel):
         ),
         nullable=False
     )
+    group = relationship("Group", lazy='joined')

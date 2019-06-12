@@ -6,8 +6,7 @@ class AuthorizeHttpMiddleware:
         self._user_service = user_service
 
     def handle(self, request):
-        try:
-            token = request.META[AUTHORIZATION_HEADER].replace('Bearer ', '')
+        authorization = request.headers.get('Authorization')
+        if authorization is not None:
+            token = authorization.replace('Bearer ', '')
             request.user = self._user_service.authorize(token)
-        except KeyError:
-            request.user = None
