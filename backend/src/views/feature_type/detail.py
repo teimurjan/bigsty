@@ -12,22 +12,32 @@ class FeatureTypeDetailView(ValidatableView):
     def get(self, request, feature_type_id):
         try:
             feature_type = self._service.get_one(feature_type_id)
-            serialized_feature_type = self._serializer_cls(
-                feature_type).in_language(request.language).serialize()
+            serialized_feature_type = (
+                self
+                ._serializer_cls(feature_type)
+                .in_language(request.language)
+                .serialize()
+            )
             return {'data': serialized_feature_type}, OK_CODE
         except self._service.FeatureTypeNotFound:
             return {}, NOT_FOUND_CODE
 
     def put(self, request, feature_type_id):
         try:
-            self._validate(request.data)
+            data = request.get_json()
+            self._validate(data)
             feature_type = self._service.update(
-                feature_type_id, request.data, user=request.user)
-            serialized_feature_type = self._serializer_cls(
-                feature_type).in_language(request.language).serialize()
+                feature_type_id,
+                data,
+                user=request.user
+            )
+            serialized_feature_type = (
+                self
+                ._serializer_cls(feature_type)
+                .in_language(request.language)
+                .serialize()
+            )
             return {'data': serialized_feature_type}, OK_CODE
-        except self._service.LanguageInvalid:
-            raise InvalidEntityFormat({'language_id': 'errors.invalidID'})
         except self._service.FeatureTypeNotFound:
             return {}, NOT_FOUND_CODE
 

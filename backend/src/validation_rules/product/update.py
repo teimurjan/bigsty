@@ -2,10 +2,10 @@ UPDATE_PRODUCT_VALIDATION_RULES = {
     'product_type_id': {'type': 'integer', 'required': True, 'nullable': False},
     'images': {
         'type': 'list',
-        'schema': {'required': True, 'nullable': False},
+        'schema': {'required': False, 'nullable': True},
         'required': True,
         'nullable': False,
-        'minlength': 1,
+        'minlength': 0,
         'maxlength': 4,
     },
     'price': {'type': 'integer', 'required': True, 'min': 1, 'nullable': False},

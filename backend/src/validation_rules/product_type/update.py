@@ -27,5 +27,5 @@ UPDATE_PRODUCT_TYPE_VALIDATION_RULES = {
         'nullable': False,
     },
     'category_id': {'required': True, 'type': 'integer'},
-    'image': {'required': True, 'nullable': False}
+    'image': {'required': True, 'nullable': True}
 }

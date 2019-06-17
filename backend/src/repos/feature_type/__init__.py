@@ -1,2 +1,0 @@
-class FeatureTypeRepo:
-    pass

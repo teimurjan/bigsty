@@ -12,22 +12,31 @@ class CategoryDetailView(ValidatableView):
     def get(self, request, category_id):
         try:
             category = self._service.get_one(category_id)
-            serialized_category = self._serializer_cls(category).in_language(
-                request.language).with_serialized_feature_types().serialize()
+            serialized_category = (
+                self
+                ._serializer_cls(category)
+                .in_language(request.language)
+                .with_serialized_feature_types()
+                .serialize()
+            )
             return {'data': serialized_category}, OK_CODE
         except self._service.CategoryNotFound:
             return {}, NOT_FOUND_CODE
 
     def put(self, request, category_id):
         try:
-            self._validate(request.data)
-            category = self._service.update(
-                category_id, request.data, user=request.user)
-            serialized_category = self._serializer_cls(category).in_language(
-                request.language).with_serialized_feature_types().serialize()
+            data = request.get_json()
+            self._validate(data)
+            category = \
+                self._service.update(category_id, data, user=request.user)
+            serialized_category = (
+                self
+                ._serializer_cls(category)
+                .in_language(request.language)
+                .with_serialized_feature_types()
+                .serialize()
+            )
             return {'data': serialized_category}, OK_CODE
-        except self._service.LanguageInvalid:
-            raise InvalidEntityFormat({'language_id': 'errors.invalidID'})
         except self._service.CategoryNotFound:
             return {}, NOT_FOUND_CODE
         except self._service.FeatureTypeInvalid:

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, orm, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.orm import relationship
 from src.models.base import BaseModel
 
 
@@ -15,6 +16,11 @@ class IntlText(BaseModel):
             ),
             nullable=False
         )
+
+    @declared_attr
+    def language(cls):
+        return relationship("Language", lazy='joined')
+
 
 
 class Language(BaseModel):

@@ -12,29 +12,32 @@ def encrypt_password(password):
 
 
 class UserRepo(Repo):
-    def get_by_id(self, id_):
-        with self.session_scope() as s:
-            return s.query(User).get(id_)
+    def __init__(self, db_conn):
+        super().__init__(db_conn, User)
 
-    def get_first_by_email(self, email):
-        with self.session_scope() as s:
-            return s.query(User).filter(User.email == email).first()
+    @Repo.with_session
+    def get_first_by_email(self, email, session):
+        return session.query(User).filter(User.email == email).first()
 
-    def is_email_used(self, email):
-        with self.session_scope() as s:
-            return s.query(User).filter(User.email == email).count() > 0
-
-    def add_user(self, name, email, password):
+    @Repo.with_session
+    def is_email_used(self, email, session):
+        return session.query(User).filter(User.email == email).count() > 0
+    
+    @Repo.with_session
+    def create_user(self, email, session):
         user = User()
         user.name = name
         user.email = email
         user.password = encrypt_password(password)
         user.group_id = 1
-        with self.session_scope() as s:
-            s.add(user)
-            s.flush()
 
-            # fetch group within the session for the future use
-            user.group
+        session.add(user)
+        session.flush()
+
+        # fetch group within the session for the future use
+        user.group
 
         return user
+
+    class DoesNotExist(Exception):
+        pass

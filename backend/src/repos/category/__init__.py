@@ -1,2 +1,0 @@
-class CategoryRepo:
-    pass

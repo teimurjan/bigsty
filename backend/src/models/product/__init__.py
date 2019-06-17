@@ -15,8 +15,10 @@ class Product(BaseModel):
         ),
         nullable=False
     )
+    product_type = orm.relationship('ProductType', lazy='joined')
     images = orm.relationship(
         'ProductImage',
         backref='product',
-        lazy=True
+        lazy='joined',
+        cascade="all, delete, delete-orphan"
     )

@@ -1,3 +1,5 @@
+import math
+
 from src.errors import InvalidEntityFormat
 
 
@@ -15,7 +17,7 @@ class PaginatableView:
     def _paginate(self, items, page, limit):
         return items, {
             'count': len(items),
-            'pages_count': 1,
-            'page': 1,
-            'limit': 1,
+            'pages_count': math.ceil(len(items) / limit),
+            'page': page,
+            'limit': limit,
         }

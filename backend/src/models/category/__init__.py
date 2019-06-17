@@ -1,7 +1,7 @@
 from sqlalchemy import Table, Column, String, Integer, ForeignKey, orm
 from src.models.base import BaseModel
 
-feature_types_m2m_table = Table(
+CategoryXFeatureType = Table(
     'category_x_feature_type',
     BaseModel.metadata,
     Column('category_id', Integer, ForeignKey(
@@ -14,11 +14,15 @@ feature_types_m2m_table = Table(
 class Category(BaseModel):
     __tablename__ = 'category'
 
-    names = orm.relationship('CategoryName', backref='category', lazy=True)
-    product_types = orm.relationship('ProductType', backref='category', lazy=True)
+    names = orm.relationship(
+        'CategoryName',
+        backref='category',
+        lazy='joined',
+        cascade="all, delete, delete-orphan"
+    )
+    product_types = orm.relationship('ProductType',lazy=True)
     feature_types = orm.relationship(
         'FeatureType',
-        secondary=feature_types_m2m_table,
+        secondary=CategoryXFeatureType,
         lazy='subquery',
-        backref=orm.backref('categories', lazy=True)
     )

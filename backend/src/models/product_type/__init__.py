@@ -1,27 +1,30 @@
 from sqlalchemy import Column, String, orm, Integer, ForeignKey
 from src.models.base import BaseModel
 
+
 class ProductType(BaseModel):
     __tablename__ = 'product_type'
 
     names = orm.relationship(
         'ProductTypeName',
         backref='product_type',
-        lazy=True
+        lazy='joined',
+        cascade="all, delete, delete-orphan"
     )
     descriptions = orm.relationship(
         'ProductTypeDescription',
         backref='product_type',
-        lazy=True
+        lazy='joined',
+        cascade="all, delete, delete-orphan"
     )
     short_descriptions = orm.relationship(
         'ProductTypeShortDescription',
         backref='product_type',
-        lazy=True
+        lazy='joined',
+        cascade="all, delete, delete-orphan"
     )
     products = orm.relationship(
         'Product',
-        backref='product_type',
         lazy=True
     )
     image = Column(String(255), nullable=True)
@@ -32,3 +35,4 @@ class ProductType(BaseModel):
         ),
         nullable=False
     )
+    category = orm.relationship("Category", lazy='joined')

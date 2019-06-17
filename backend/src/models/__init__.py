@@ -2,6 +2,7 @@ from src.models.group import Group
 from src.models.user import User
 from src.models.intl import Language
 from src.models.category import Category
+from src.models.category import CategoryXFeatureType
 from src.models.category.name import CategoryName
 from src.models.feature_type import FeatureType
 from src.models.feature_type.name import FeatureTypeName

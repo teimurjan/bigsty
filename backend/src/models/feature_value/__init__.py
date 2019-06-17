@@ -24,22 +24,26 @@ class FeatureValue(BaseModel):
     __tablename__ = 'feature_value'
 
     names = orm.relationship(
-        'FeatureValueName', backref='feature_value', lazy=True
+        'FeatureValueName',
+        backref='feature_value',
+        lazy='joined',
+        cascade="all, delete, delete-orphan"
     )
     feature_type_id = Column(
         Integer,
         ForeignKey('feature_type.id'),
         nullable=False
     )
+    feature_type = orm.relationship("FeatureType", lazy='joined')
     product_types = orm.relationship(
         'ProductType',
         secondary=product_types_m2m_table,
         lazy='subquery',
-        backref=orm.backref('feature_values', lazy=True)
+        backref=orm.backref('feature_values', lazy='joined')
     )
     products = orm.relationship(
         'Product',
         secondary=products_m2m_table,
         lazy='subquery',
-        backref=orm.backref('feature_values', lazy=True)
+        backref=orm.backref('feature_values', lazy='joined')
     )

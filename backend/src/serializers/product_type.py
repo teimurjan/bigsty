@@ -22,7 +22,7 @@ class ProductTypeSerializer(IntlSerializer):
             'name': self._serialize_name(),
             'description': self._serialize_description(),
             'short_description': self._serialize_short_description(),
-            'image': self._serialize_image(),
+            'image': self._image,
             'category': self._serialize_category(),
             'feature_values': self._serialize_feature_values(),
         })
@@ -36,17 +36,13 @@ class ProductTypeSerializer(IntlSerializer):
     def _serialize_short_description(self):
         return self._get_intl_field_from(self._short_descriptions)
 
-    def _serialize_image(self):
-        try:
-            return self._image.url
-        except (AttributeError, ValueError):
-            return None
-
     def with_serialized_category(self):
         if isinstance(self._category, Category):
-            self._category = CategorySerializer(
-                self._category
-            ).in_language(self._language).serialize()
+            self._category = (
+                CategorySerializer(self._category)
+                .in_language(self._language)
+                .serialize()
+            )
         return self
 
     def _serialize_category(self):
@@ -54,7 +50,10 @@ class ProductTypeSerializer(IntlSerializer):
 
     def with_serialized_feature_values(self):
         self._feature_values = [
-            FeatureValueSerializer(feature_value).in_language(self._language).serialize() for feature_value in self._feature_values
+            FeatureValueSerializer(feature_value)
+            .in_language(self._language)
+            .serialize()
+            for feature_value in self._feature_values
         ]
         return self
 

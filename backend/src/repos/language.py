@@ -1,10 +1,14 @@
-from sqlalchemy.orm import sessionmaker
-
 from src.repos.base import Repo
-from src.models.intl import Language
+from src.models import Language
 
 
 class LanguageRepo(Repo):
-    def filter_by(self, **kwargs):
-        with self.session_scope() as s:
-            return s.query(Language).filter(Language.name == kwargs['name']).all()
+    def __init__(self, db_conn):
+        super().__init__(db_conn, Language)
+
+    @Repo.with_session
+    def filter_by_name(self, name: str, session):
+        return session.query(Language).filter(Language.name == name).all()
+
+    class DoesNotExist(Exception):
+        pass

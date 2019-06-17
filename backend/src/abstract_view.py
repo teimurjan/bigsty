@@ -13,7 +13,7 @@ class AbstractView(View):
         self._concrete_view_factory = concrete_view_factory
         self._middlewares = middlewares
 
-    def dispatch_request(self):
+    def dispatch_request(self, *args, **kwargs):
         self._handle_with_middlewares(request)
 
         handler = self._get_handler(request.method.lower())
@@ -21,12 +21,12 @@ class AbstractView(View):
             return None, METHOD_NOT_ALLOWED_CODE
 
         try:
-            body, status = handler(request)
+            body, status = handler(request, **kwargs)
             return jsonify(
                 body or {},
             ), status
-        except InvalidEntityFormat as exc:
-            errors = exc.errors or {}
+        except InvalidEntityFormat as e:
+            errors = e.errors or {}
             return jsonify(errors), UNPROCESSABLE_ENTITY_CODE
         except AccessRoleError:
             return jsonify({}), FORBIDDEN_CODE

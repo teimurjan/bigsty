@@ -19,6 +19,7 @@ class DevelopmentConfig(Config):
     ENV = "development"
     DEVELOPMENT = True
     DEBUG = True
+    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER')
 
 
 class TestingConfig(Config):

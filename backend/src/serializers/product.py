@@ -35,22 +35,16 @@ class ProductSerializer(IntlSerializer):
 
     def _serialize_product_type(self):
         if isinstance(self._product_type, ProductType):
-            return  self._product_type.id
+            return self._product_type.id
         return self._product_type
 
     def _serialize_images(self):
-        images = []
-        for image in self._images:
-            try:
-                images.append(image.image.url)
-            except (AttributeError, ValueError):
-                pass
-        return images
+        return [image.image for image in self._images]
 
     def with_serialized_feature_values(self):
         from src.serializers.feature_value import FeatureValueSerializer
         self._feature_values = [
-            FeatureValueSerializer(fv).in_language(self._language).serialize() 
+            FeatureValueSerializer(fv).in_language(self._language).serialize()
             for fv in self._feature_values
         ]
         return self

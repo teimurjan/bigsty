@@ -1,58 +1,52 @@
 from src.services.decorators import allow_roles
+from src.repos.feature_value import FeatureValueRepo
+from src.repos.feature_type import FeatureTypeRepo
 
 
 class FeatureValueService:
-    def __init__(self, repo, name_repo, feature_type_repo, intl_texts_policy):
+    def __init__(self, repo: FeatureValueRepo, feature_type_repo: FeatureTypeRepo):
         self._repo = repo
-        self._name_repo = name_repo
         self._feature_type_repo = feature_type_repo
-        self._intl_texts_policy = intl_texts_policy
 
     @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
         try:
-            if not self._intl_texts_policy.are_valid(data['names']):
-                raise self.LanguageInvalid()
-
-            feature_type = self._feature_type_repo.get_by_id(
-                data['feature_type_id']
-            )
-            feature_value = self._repo.create(feature_type=feature_type)
-            for language_id, value in data['names'].items():
-                self._name_repo.create(
-                    language_id=language_id,
-                    value=value,
-                    feature_value=feature_value
+            with self._repo.session() as s:
+                feature_type = self._feature_type_repo.get_by_id(
+                    data['feature_type_id'],
+                    session=s
                 )
-            return feature_value
+
+                feature_value = self._repo.add_feature_value(
+                    data['names'],
+                    feature_type,
+                    session=s
+                )
+
+                return feature_value
         except self._feature_type_repo.DoesNotExist:
             raise self.FeatureTypeInvalid()
 
     @allow_roles(['admin', 'manager'])
-    def update(self, feature_value_id, data, *args, **kwargs):
+    def update(self, id_, data, *args, **kwargs):
         try:
-            feature_value = self.get_one(feature_value_id)
+            with self._repo.session() as s:
+                feature_type = self._feature_type_repo.get_by_id(
+                    data['feature_type_id'],
+                    session=s
+                )
 
-            if not self._intl_texts_policy.are_valid(data['names']):
-                raise self.LanguageInvalid()
-
-            feature_type = self._feature_type_repo.get_by_id(
-                data['feature_type_id']
-            )
-
-            self._repo.update(feature_value, feature_type=feature_type)
-
-            for name in feature_value.names:
-                new_name = data['names'][str(name.language.id)]
-                if new_name != name.value:
-                    self._name_repo.update(name, new_name)
-
-            return feature_value
+                return self._repo.update_feature_value(
+                    id_,
+                    data['names'],
+                    feature_type=feature_type,
+                    session=s
+                )
         except self._feature_type_repo.DoesNotExist:
             raise self.FeatureTypeInvalid()
 
     def get_all(self):
-        return tuple(self._repo.get_all())
+        return self._repo.get_all()
 
     def get_one(self, id_):
         try:
