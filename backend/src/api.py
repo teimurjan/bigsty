@@ -1,3 +1,6 @@
+import os
+from flask import send_from_directory
+
 from src.abstract_view import AbstractView
 from src.factories.views.authentication import AuthenticationViewFactory
 from src.factories.views.registration import RegistrationViewFactory
@@ -16,7 +19,7 @@ from src.factories.views.product_type.by_category import ProductTypeByCategoryVi
 
 
 class API:
-    def __init__(self, app, db_conn, middlewares):
+    def __init__(self, app, db_conn, middlewares):    
         app.add_url_rule(
             '/api/auth/login',
             view_func=AbstractView.as_view(
