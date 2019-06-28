@@ -1,9 +1,11 @@
 import * as React from "react";
+
 import { RouteComponentProps } from "react-router";
-import * as authService from "src/services/AuthService";
 import * as yup from "yup";
-import { IContextValue as UserStateContextValue } from "../../../state/UserState";
-import * as schemaValidator from "../../SchemaValidator";
+
+import * as schemaValidator from "src/components/SchemaValidator";
+import * as authService from "src/services/AuthService";
+import { IContextValue as UserStateContextValue } from "src/state/UserState";
 
 export interface IProps
   extends RouteComponentProps<any>,

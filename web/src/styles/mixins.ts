@@ -35,3 +35,7 @@ export const justifyContentCenterMixin = css`
 export const positionAbsoluteMixin = css`
   position: absolute;
 `;
+
+export const marginAutoMixin = css`
+  margin: auto;
+`;

@@ -7,20 +7,18 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
 }
 
-export class Modal extends React.Component<IProps> {
-  public render() {
-    const { children, className, isOpen, ...props } = this.props;
-    const modalRoot = document.getElementById("modalRoot");
-    return modalRoot
-      ? ReactDOM.createPortal(
-          <div
-            className={classNames("modal", { "is-active": isOpen }, className)}
-            {...props}
-          >
-            {children}
-          </div>,
-          modalRoot
-        )
-      : null;
-  }
-}
+export const Modal = ({ children, className, isOpen, ...props }: IProps) => {
+  const modalRoot = document.getElementById("modalRoot");
+
+  return modalRoot
+    ? ReactDOM.createPortal(
+        <div
+          className={classNames("modal", { "is-active": isOpen }, className)}
+          {...props}
+        >
+          {children}
+        </div>,
+        modalRoot
+      )
+    : null;
+};

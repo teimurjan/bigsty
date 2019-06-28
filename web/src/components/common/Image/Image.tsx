@@ -1,17 +1,13 @@
-import classNames from "classnames";
 import * as React from "react";
 
+import classNames from "classnames";
+
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
-  imgProps: React.HTMLAttributes<HTMLImageElement>;
+  imgProps: React.ImgHTMLAttributes<HTMLImageElement>;
 }
 
-export class Image extends React.Component<IProps> {
-  public render() {
-    const { imgProps, className, ...props } = this.props;
-    return (
-      <figure className={classNames("image", className)} {...props}>
-        <img {...imgProps} />
-      </figure>
-    );
-  }
-}
+export const Image = ({ imgProps, className, ...props }: IProps) => (
+  <figure className={classNames("image", className)} {...props}>
+    <img {...imgProps} />
+  </figure>
+);

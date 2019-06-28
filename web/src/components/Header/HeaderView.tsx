@@ -1,27 +1,29 @@
 /** @jsx jsx */
+import * as React from "react";
+import { Link } from "react-router-dom";
+
 import { css, jsx } from "@emotion/core";
 import classNames from "classnames";
-import * as React from "react";
 import { InjectedIntlProps, injectIntl } from "react-intl";
-import { Link } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
-import { Button } from "../common/Button/Button";
-import { Container } from "../common/Container/Container";
-import { Dropdown, ITriggerProps } from "../common/Dropdown/Dropdown";
-import { DropdownItemLink } from "../common/DropdownItemLink/DropdownItemLink";
-import { LinkButton } from "../common/LinkButton/LinkButton";
-import { Navbar } from "../common/Navbar/Navbar";
-import { NavbarBrand } from "../common/NavbarBrand/NavbarBrand";
-import { NavbarBurger } from "../common/NavbarBurger/NavbarBurger";
-import { NavbarEnd } from "../common/NavbarEnd/NavbarEnd";
-import { NavbarItem } from "../common/NavbarItem/NavbarItem";
-import { NavbarMenu } from "../common/NavbarMenu/NavbarMenu";
-import { NavbarStart } from "../common/NavbarStart/NavbarStart";
-import { IViewProps as IProps } from "./HeaderPresenter";
 
-interface IState {
-  isOpen: boolean;
-}
+import logo from "src/assets/images/logo.png";
+import { Button } from "src/components/common/Button/Button";
+import { Container } from "src/components/common/Container/Container";
+import {
+  Dropdown,
+  ITriggerProps
+} from "src/components/common/Dropdown/Dropdown";
+import { DropdownItemLink } from "src/components/common/DropdownItemLink/DropdownItemLink";
+import { LinkButton } from "src/components/common/LinkButton/LinkButton";
+import { Navbar } from "src/components/common/Navbar/Navbar";
+import { NavbarBrand } from "src/components/common/NavbarBrand/NavbarBrand";
+import { NavbarBurger } from "src/components/common/NavbarBurger/NavbarBurger";
+import { NavbarEnd } from "src/components/common/NavbarEnd/NavbarEnd";
+import { NavbarItem } from "src/components/common/NavbarItem/NavbarItem";
+import { NavbarMenu } from "src/components/common/NavbarMenu/NavbarMenu";
+import { NavbarStart } from "src/components/common/NavbarStart/NavbarStart";
+
+import { IViewProps as IProps } from "./HeaderPresenter";
 
 const DropdownTrigger = injectIntl(
   ({ intl, className, ...props }: ITriggerProps & InjectedIntlProps) => (
@@ -34,69 +36,65 @@ const DropdownTrigger = injectIntl(
   )
 );
 
-export class HeaderView extends React.Component<
-  IProps & InjectedIntlProps,
-  IState
-> {
-  public state = {
-    isOpen: false
-  };
+export const HeaderView = ({
+  categories,
+  user,
+  intl,
+  onLogOutClick
+}: IProps & InjectedIntlProps) => {
+  const [isOpen, setOpen] = React.useState(false);
 
-  public render() {
-    const { isOpen } = this.state;
-    const { categories, user, intl, onLogOutClick } = this.props;
-    return (
-      <Navbar>
-        <Container>
-          <NavbarBrand>
-            <Link className="navbar-item" to="/">
-              <img
-                css={css`
-                  max-height: 3rem !important;
-                `}
-                src={logo}
-              />
-            </Link>
-            <NavbarBurger isActive={isOpen} onClick={this.toggleIsOpen} />
-          </NavbarBrand>
-          <NavbarMenu isActive={isOpen}>
-            <NavbarStart>
-              <NavbarItem className="is-uppercase">
-                <Dropdown Trigger={DropdownTrigger}>
-                  {categories.map(category => (
-                    <DropdownItemLink
-                      key={category.id}
-                      to={`/categories/${category.id}`}
-                    >
-                      {category.name}
-                    </DropdownItemLink>
-                  ))}
-                </Dropdown>
-              </NavbarItem>
-            </NavbarStart>
-            <NavbarEnd>
-              <NavbarItem>
-                {user ? (
-                  <Button onClick={onLogOutClick} color="is-primary">
-                    {intl.formatMessage({ id: "Header.logOut" })}
-                  </Button>
-                ) : (
-                  <div className="buttons">
-                    <LinkButton color="is-primary" to="/login">
-                      {intl.formatMessage({ id: "Header.logIn" })}
-                    </LinkButton>
-                    <LinkButton color="is-info" to="/signup">
-                      {intl.formatMessage({ id: "Header.signUp" })}
-                    </LinkButton>
-                  </div>
-                )}
-              </NavbarItem>
-            </NavbarEnd>
-          </NavbarMenu>
-        </Container>
-      </Navbar>
-    );
-  }
+  const toggleOpen = () => setOpen(!isOpen);
 
-  private toggleIsOpen = () => this.setState({ isOpen: !this.state.isOpen });
-}
+  return (
+    <Navbar>
+      <Container>
+        <NavbarBrand>
+          <Link className="navbar-item" to="/">
+            <img
+              css={css`
+                max-height: 3rem !important;
+              `}
+              src={logo}
+            />
+          </Link>
+          <NavbarBurger isActive={isOpen} onClick={toggleOpen} />
+        </NavbarBrand>
+        <NavbarMenu isActive={isOpen}>
+          <NavbarStart>
+            <NavbarItem className="is-uppercase">
+              <Dropdown Trigger={DropdownTrigger}>
+                {categories.map(category => (
+                  <DropdownItemLink
+                    key={category.id}
+                    to={`/categories/${category.id}/productTypes`}
+                  >
+                    {category.name}
+                  </DropdownItemLink>
+                ))}
+              </Dropdown>
+            </NavbarItem>
+          </NavbarStart>
+          <NavbarEnd>
+            <NavbarItem>
+              {user ? (
+                <Button onClick={onLogOutClick} color="is-primary">
+                  {intl.formatMessage({ id: "Header.logOut" })}
+                </Button>
+              ) : (
+                <div className="buttons">
+                  <LinkButton color="is-primary" to="/login">
+                    {intl.formatMessage({ id: "Header.logIn" })}
+                  </LinkButton>
+                  <LinkButton color="is-info" to="/signup">
+                    {intl.formatMessage({ id: "Header.signUp" })}
+                  </LinkButton>
+                </div>
+              )}
+            </NavbarItem>
+          </NavbarEnd>
+        </NavbarMenu>
+      </Container>
+    </Navbar>
+  );
+};

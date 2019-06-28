@@ -1,11 +1,12 @@
 import * as React from "react";
+
 import { ICategoryListResponseItem } from "src/api/CategoryAPI";
 import { ICategoryService } from "src/services/CategoryService";
-import { IContextValue as AppStateContextValue } from "../../state/AppState";
+import { IContextValue as AppStateContextValue } from "src/state/AppState";
 import {
   IContextValue as UserStateContextValue,
   IUser
-} from "../../state/UserState";
+} from "src/state/UserState";
 
 export interface IProps extends UserStateContextValue, AppStateContextValue {
   categoryService: ICategoryService;

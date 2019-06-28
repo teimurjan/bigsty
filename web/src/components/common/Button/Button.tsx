@@ -1,5 +1,6 @@
-import classNames from "classnames";
 import * as React from "react";
+
+import classNames from "classnames";
 
 export interface IProps extends React.HTMLProps<HTMLButtonElement> {
   children?: React.ReactNode;
@@ -13,13 +14,8 @@ export interface IProps extends React.HTMLProps<HTMLButtonElement> {
     | "is-dark";
 }
 
-export class Button extends React.Component<IProps> {
-  public render() {
-    const { children, color, className, ...props } = this.props;
-    return (
-      <button className={classNames("button", className, color)} {...props}>
-        {children}
-      </button>
-    );
-  }
-}
+export const Button = ({ children, color, className, ...props }: IProps) => (
+  <button className={classNames("button", className, color)} {...props}>
+    {children}
+  </button>
+);

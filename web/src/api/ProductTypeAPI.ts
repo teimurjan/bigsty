@@ -10,13 +10,28 @@ export interface IProductTypeListResponseItem {
   category: number;
   feature_values: number[];
 }
+export interface IProductTypeListResponseMeta {
+  count: number;
+  pages_count: number;
+  page: number;
+  limit: number;
+}
 
 export interface IProductTypeListResponseData {
   data: IProductTypeListResponseItem[];
+  meta: {
+    count: number;
+    pages_count: number;
+    page: number;
+    limit: number;
+  };
 }
 
 export interface IProductTypeAPI {
-  getForCategory(categoryId: number, page: number): Promise<IProductTypeListResponseData>;
+  getForCategory(
+    categoryId: number,
+    page: number
+  ): Promise<IProductTypeListResponseData>;
 }
 
 export class ProductTypeAPI implements IProductTypeAPI {

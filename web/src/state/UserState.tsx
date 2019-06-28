@@ -79,18 +79,9 @@ export const UserStateProvider = injectDependencies(
 );
 
 export const injectUserState = (
-  Component:
-    | React.ComponentClass<IContextValue>
-    | React.StatelessComponent<IContextValue>
-): React.ComponentClass<any> =>
-  class extends React.Component<any> {
-    public render() {
-      return (
-        <Context.Consumer>
-          {(context: IContextValue) => (
-            <Component {...{ ...this.props, ...context }} />
-          )}
-        </Context.Consumer>
-      );
-    }
-  };
+  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>
+): React.SFC<any> => props => (
+  <Context.Consumer>
+    {(context: IContextValue) => <Component {...{ ...props, ...context }} />}
+  </Context.Consumer>
+);

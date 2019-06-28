@@ -1,17 +1,13 @@
-import classNames from "classnames";
 import * as React from "react";
+
+import classNames from "classnames";
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
 }
 
-export class Field extends React.Component<IProps> {
-  public render() {
-    const { children, className, ...props } = this.props;
-    return (
-      <div className={classNames("field", className)} {...props}>
-        {children}
-      </div>
-    );
-  }
-}
+export const Field = ({ children, className, ...props }: IProps) => (
+  <div className={classNames("field", className)} {...props}>
+    {children}
+  </div>
+);

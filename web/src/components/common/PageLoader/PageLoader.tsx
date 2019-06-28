@@ -1,10 +1,12 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import classNames from "classnames";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+
+import { css, jsx } from "@emotion/core";
+import classNames from "classnames";
 import ClipLoader from "react-spinners/ClipLoader";
 import Transition from "react-transition-group/Transition";
+
 import {
   alignItemsCenterMixin,
   flexMixin,
@@ -38,30 +40,26 @@ const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
   }
 `;
 
-export class PageLoader extends React.Component<IProps> {
-  public render() {
-    const { isActive, className, timeout = 500, ...props } = this.props;
-    return ReactDOM.createPortal(
-      <Transition in={isActive} timeout={timeout} unmountOnExit={true}>
-        {status => {
-          const shouldShow = status === "entering" || status === "entered";
-          return (
-            <div
-              css={getCSS(timeout, shouldShow)}
-              className={classNames(className, "has-background-primary")}
-              {...props}
-            >
-              <ClipLoader
-                color="white"
-                sizeUnit="vw"
-                size={15}
-                loading={true}
-              />
-            </div>
-          );
-        }}
-      </Transition>,
-      document.body
-    );
-  }
-}
+export const PageLoader = ({
+  isActive,
+  className,
+  timeout = 500,
+  ...props
+}: IProps) =>
+  ReactDOM.createPortal(
+    <Transition in={isActive} timeout={timeout} unmountOnExit={true}>
+      {status => {
+        const shouldShow = status === "entering" || status === "entered";
+        return (
+          <div
+            css={getCSS(timeout, shouldShow)}
+            className={classNames(className, "has-background-primary")}
+            {...props}
+          >
+            <ClipLoader color="white" sizeUnit="vw" size={15} loading={true} />
+          </div>
+        );
+      }}
+    </Transition>,
+    document.body
+  );

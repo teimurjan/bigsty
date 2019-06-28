@@ -9,12 +9,6 @@ export interface IViewProps {
   isLoading: boolean;
 }
 
-export class AppPresenter extends React.Component<IProps> {
-  public render() {
-    const {
-      View,
-      appState: { isLoading }
-    } = this.props;
-    return <View isLoading={isLoading} />;
-  }
-}
+export const AppPresenter = ({ View, appState: { isLoading } }: IProps) => (
+  <View isLoading={isLoading} />
+);

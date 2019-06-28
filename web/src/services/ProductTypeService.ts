@@ -1,11 +1,19 @@
 import { normalize, schema } from "normalizr";
-import { IProductTypeAPI } from "src/api/ProductTypeAPI";
+import {
+  IProductTypeAPI,
+  IProductTypeListResponseItem,
+  IProductTypeListResponseMeta
+} from "src/api/ProductTypeAPI";
 
 export interface IProductTypeService {
   getForCategory(
     categoryId: number,
     page: number
-  ): Promise<{ entities: any; result: any }>;
+  ): Promise<{
+    entities: { productTypes: { [key: string]: IProductTypeListResponseItem } };
+    result: number[];
+    meta: IProductTypeListResponseMeta;
+  }>;
 }
 
 export class ProductTypeService implements IProductTypeService {
@@ -16,6 +24,9 @@ export class ProductTypeService implements IProductTypeService {
 
   public async getForCategory(categoryId: number, page: number) {
     const productTypes = await this.API.getForCategory(categoryId, page);
-    return normalize(productTypes.data, [new schema.Entity("productTypes")]);
+    return {
+      ...normalize(productTypes.data, [new schema.Entity("productTypes")]),
+      meta: productTypes.meta
+    };
   }
 }

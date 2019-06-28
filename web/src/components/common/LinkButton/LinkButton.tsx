@@ -1,6 +1,7 @@
-import classNames from "classnames";
 import * as React from "react";
 import { Link, LinkProps } from "react-router-dom";
+
+import classNames from "classnames";
 
 export interface IProps extends LinkProps {
   color:
@@ -13,13 +14,13 @@ export interface IProps extends LinkProps {
     | "is-dark";
 }
 
-export class LinkButton extends React.Component<IProps> {
-  public render() {
-    const { children, color, className, ...props } = this.props;
-    return (
-      <Link className={classNames("button", className, color)} {...props}>
-        {children}
-      </Link>
-    );
-  }
-}
+export const LinkButton = ({
+  children,
+  color,
+  className,
+  ...props
+}: IProps) => (
+  <Link className={classNames("button", className, color)} {...props}>
+    {children}
+  </Link>
+);

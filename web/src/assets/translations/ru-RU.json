@@ -30,5 +30,7 @@
   "Header.categories.title": "Категории",
   "Header.logIn": "Войти",
   "Header.signUp": "Зарегистрироваться",
-  "Header.logOut": "Выйти"
+  "Header.logOut": "Выйти",
+  "Pagination.next": "След.",
+  "Pagination.prev": "Пред."
 }

@@ -30,5 +30,7 @@
   "Header.categories.title": "Categories",
   "Header.logIn": "Log in",
   "Header.signUp": "Sign up",
-  "Header.logOut": "Log out"
+  "Header.logOut": "Log out",
+  "Pagination.next": "Next",
+  "Pagination.prev": "Prev"
 }

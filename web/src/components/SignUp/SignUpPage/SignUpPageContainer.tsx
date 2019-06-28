@@ -1,6 +1,8 @@
 import * as React from "react";
+
 import { injectIntl } from "react-intl";
 import { withRouter } from "react-router";
+
 import { IProps, SignUpPagePresenter } from "./SignUpPagePresenter";
 import { SignUpPageView } from "./SignUpPageView";
 

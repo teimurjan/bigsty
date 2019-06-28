@@ -1,14 +1,17 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
 import * as React from "react";
+
+import { jsx } from "@emotion/core";
 import { InjectedIntlProps } from "react-intl";
+
 import { Box } from "src/components/common/Box/Box";
 import { Modal } from "src/components/common/Modal/Modal";
 import { ModalBackground } from "src/components/common/ModalBackground/ModalBackground";
 import { ModalClose } from "src/components/common/ModalClose/ModalClose";
 import { ModalContent } from "src/components/common/ModalContent/ModalContent";
+import { Title } from "src/components/common/Title/Title";
 import { textCenterMixin } from "src/styles/mixins";
-import { Title } from "../../common/Title/Title";
+
 import { SignUpFormContainer } from "../SignUpForm/SignUpFormContainer";
 import { IViewProps } from "./SignUpPagePresenter";
 

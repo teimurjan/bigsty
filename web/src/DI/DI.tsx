@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { IDependenciesContainer } from "./DependenciesContainer";
 
 export interface IContextValue {
@@ -9,19 +10,14 @@ const { Provider, Consumer } = React.createContext<IContextValue | null>(null);
 
 export { Provider as DIProvider };
 
-export const injectDependencies = (
+export const injectDependencies = <P extends object>(
   Component:
-    | React.ComponentClass<IContextValue>
-    | React.StatelessComponent<IContextValue>
-): React.ComponentClass<any> =>
-  class extends React.Component<any> {
-    public render() {
-      return (
-        <Consumer>
-          {(context: IContextValue) => (
-            <Component {...this.props} dependencies={context.dependencies} />
-          )}
-        </Consumer>
-      );
-    }
-  };
+    | React.ComponentClass<P & IContextValue>
+    | React.StatelessComponent<P & IContextValue>
+): React.SFC<P> => props => (
+  <Consumer>
+    {(context: IContextValue) => (
+      <Component {...props} dependencies={context.dependencies} />
+    )}
+  </Consumer>
+);

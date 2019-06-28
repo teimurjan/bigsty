@@ -1,14 +1,18 @@
 import axios from "axios";
+
+import * as authAPI from "src/api/AuthAPI";
+import * as categoryAPI from "src/api/CategoryAPI";
+import * as productTypeAPI from "src/api/ProductTypeAPI";
+
 import { HeadersManager } from "src/manager/HeadersManager";
+
+import * as authService from "src/services/AuthService";
 import * as categoryService from "src/services/CategoryService";
 import * as intlService from "src/services/IntlService";
-import * as authAPI from "../api/AuthAPI";
-import * as categoryAPI from "../api/CategoryAPI";
-import * as productTypeAPI from "../api/ProductTypeAPI";
-import * as authService from "../services/AuthService";
-import * as productTypeService from "../services/ProductTypeService";
-import * as authStorage from "../storage/AuthStorage";
-import * as intlStorage from "../storage/IntlStorage";
+import * as productTypeService from "src/services/ProductTypeService";
+
+import * as authStorage from "src/storage/AuthStorage";
+import * as intlStorage from "src/storage/IntlStorage";
 
 export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
