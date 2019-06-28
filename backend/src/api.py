@@ -12,7 +12,7 @@ from src.factories.views.product.list import ProductListViewFactory
 from src.factories.views.product.detail import ProductDetailViewFactory
 from src.factories.views.product_type.list import ProductTypeListViewFactory
 from src.factories.views.product_type.detail import ProductTypeDetailViewFactory
-# from src.factories.views.product_type.by_category import ProductTypeByCategoryViewFactory
+from src.factories.views.product_type.by_category import ProductTypeByCategoryViewFactory
 
 
 class API:
@@ -63,13 +63,15 @@ class API:
             ),
             methods=['GET', 'PUT', 'DELETE']
         )
-        # app.add_url_rule(
-        #     '/api/categories/<int:category_id>/product_types',
-        #     view_func=AbstractView.as_view(
-        #         concrete_view_factory=ProductTypeByCategoryViewFactory(db_conn),
-        #         middleware_factories=DEFAULT_MIDDLEWARE_FACTORIES
-        #     )
-        # )
+        app.add_url_rule(
+            '/api/categories/<int:category_id>/product_types',
+            view_func=AbstractView.as_view(
+                'category_product_types',
+                concrete_view_factory=ProductTypeByCategoryViewFactory(db_conn),
+                middlewares=middlewares
+            ),
+            methods=['GET']
+        )
         app.add_url_rule(
             '/api/feature_types',
             view_func=AbstractView.as_view(

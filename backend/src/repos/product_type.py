@@ -1,5 +1,5 @@
 from src.repos.base import Repo
-from src.models import ProductType, ProductTypeName, ProductTypeDescription, ProductTypeShortDescription
+from src.models import ProductType, ProductTypeName, ProductTypeDescription, ProductTypeShortDescription, Category
 from src.file_storage import FileStorage
 
 
@@ -79,7 +79,8 @@ class ProductTypeRepo(Repo):
                 description.value = new_description
 
         for short_description in product_type.short_descriptions:
-            new_short_description = short_descriptions[str(short_description.language_id)]
+            new_short_description = short_descriptions[str(
+                short_description.language_id)]
             if short_description.value != new_short_description:
                 short_description.value = new_short_description
 
@@ -91,6 +92,15 @@ class ProductTypeRepo(Repo):
             product_type.image = self.__file_storage.save_file(image)
 
         return product_type
+
+    @Repo.with_session
+    def filter_by_category_id(self, category_id, session):
+        return (
+            session
+            .query(ProductType)
+            .filter(Category.id == category_id)
+            .order_by(ProductType.id).all()
+        )
 
     class DoesNotExist(Exception):
         pass
