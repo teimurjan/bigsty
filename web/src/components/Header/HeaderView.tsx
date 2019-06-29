@@ -78,9 +78,16 @@ export const HeaderView = ({
           <NavbarEnd>
             <NavbarItem>
               {user ? (
-                <Button onClick={onLogOutClick} color="is-primary">
-                  {intl.formatMessage({ id: "Header.logOut" })}
-                </Button>
+                <div className="buttons">
+                  <Button onClick={onLogOutClick} color="is-primary">
+                    {intl.formatMessage({ id: "Header.logOut" })}
+                  </Button>
+                  {user.name && (
+                    <LinkButton color="is-info" to="/admin">
+                      {intl.formatMessage({ id: "Header.admin" })}
+                    </LinkButton>
+                  )}
+                </div>
               ) : (
                 <div className="buttons">
                   <LinkButton color="is-primary" to="/login">

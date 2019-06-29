@@ -30,6 +30,7 @@
   "Header.categories.title": "Категории",
   "Header.logIn": "Войти",
   "Header.signUp": "Зарегистрироваться",
+  "Header.admin": "Панель Администратора",
   "Header.logOut": "Выйти",
   "Pagination.next": "След.",
   "Pagination.prev": "Пред."
