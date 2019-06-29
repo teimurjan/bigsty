@@ -24,7 +24,7 @@ class UserRepo(Repo):
         return session.query(User).filter(User.email == email).count() > 0
     
     @Repo.with_session
-    def create_user(self, email, session):
+    def create_user(self, name, email, password, session):
         user = User()
         user.name = name
         user.email = email

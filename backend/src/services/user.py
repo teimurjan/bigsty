@@ -40,7 +40,7 @@ class UserService:
         if self._repo.is_email_used(email):
             raise self.SameEmailError()
 
-        user = self._repo.add_user(name, email, password)
+        user = self._repo.create_user(name, email, password)
         return (
             TokenFactory.create(ACCESS_TOKEN_TYPE, user),
             TokenFactory.create(REFRESH_TOKEN_TYPE, user)

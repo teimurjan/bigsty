@@ -6,6 +6,7 @@ import { IAuthService } from "src/services/AuthService";
 export interface IUser {
   id: number;
   name: string;
+  group: string;
 }
 
 export interface IContextValue {

@@ -82,7 +82,7 @@ export const HeaderView = ({
                   <Button onClick={onLogOutClick} color="is-primary">
                     {intl.formatMessage({ id: "Header.logOut" })}
                   </Button>
-                  {user.name && (
+                  {user.group === 'admin' && (
                     <LinkButton color="is-info" to="/admin">
                       {intl.formatMessage({ id: "Header.admin" })}
                     </LinkButton>

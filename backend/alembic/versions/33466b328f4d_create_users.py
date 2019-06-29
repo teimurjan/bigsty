@@ -29,8 +29,8 @@ def upgrade():
 
     conn.execute(
         f"""
-            INSERT INTO \"user\" (id,email,name,password,group_id) 
-            VALUES (1,'{email}','Admin','{password}',3);
+            INSERT INTO \"user\" (email,name,password,group_id) 
+            VALUES ('{email}','Admin','{password}',3);
         """
     )
 
@@ -38,8 +38,10 @@ def upgrade():
 def downgrade():
     conn = op.get_bind()
 
-    conn.execute("""
+    email = os.environ.get('ADMIN_EMAIL')
+
+    conn.execute(f"""
         DELETE FROM "user"
-        WHERE id=1;
+        WHERE email={email};
     """)
 
