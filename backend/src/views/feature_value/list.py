@@ -43,5 +43,3 @@ class FeatureValueListView(ValidatableView, PaginatableView):
             return {'data': serialized_feature_value}, OK_CODE
         except self._service.FeatureTypeInvalid:
             raise InvalidEntityFormat({'feature_type_id': 'errors.invalidID'})
-        except self._service.LanguageInvalid:
-            raise InvalidEntityFormat({'language_id': 'errors.invalidID'})

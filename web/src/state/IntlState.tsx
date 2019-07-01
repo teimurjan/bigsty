@@ -1,8 +1,12 @@
 import * as React from "react";
+
 import { addLocaleData, IntlProvider as ReactIntlProvider } from "react-intl";
-import defaultMessages from "../assets/translations/en-US.json";
-import { injectDependencies } from "../DI/DI";
-import { IIntlService } from "../services/IntlService";
+
+import { IIntlListResponseItem } from "src/api/IntlAPI.js";
+import defaultMessages from "src/assets/translations/en-US.json";
+import { injectDependencies } from "src/DI/DI";
+import { IIntlService } from "src/services/IntlService";
+
 import {
   IContextValue as AppStateContextValue,
   injectAppState
@@ -12,6 +16,7 @@ export interface IContextValue {
   intlState: {
     locale: string;
     changeLocale: (locale: string) => void;
+    availableLocales: IIntlListResponseItem[];
   };
 }
 
@@ -25,6 +30,8 @@ interface IProviderProps {
 interface IProviderState {
   locale: string;
   messages: { [key: string]: string };
+  availableLocales: IIntlListResponseItem[];
+  error?: string;
 }
 
 const pluralRuleFunctionOf = {
@@ -82,6 +89,7 @@ class Provider extends React.Component<
   IProviderState
 > {
   public state = {
+    availableLocales: [],
     locale: "en-US",
     messages: defaultMessages
   };
@@ -93,15 +101,18 @@ class Provider extends React.Component<
     if (savedLocale !== locale) {
       this.changeLocale(savedLocale);
     }
+    this.getAvailableLocales();
   }
 
   public render() {
     const { changeLocale } = this;
     const { children } = this.props;
-    const { locale, messages } = this.state;
+    const { locale, messages, availableLocales } = this.state;
 
     return (
-      <Context.Provider value={{ intlState: { locale, changeLocale } }}>
+      <Context.Provider
+        value={{ intlState: { locale, changeLocale, availableLocales } }}
+      >
         <ReactIntlProvider locale={locale} messages={messages}>
           {children}
         </ReactIntlProvider>
@@ -120,6 +131,18 @@ class Provider extends React.Component<
     service.setLocale(locale);
     appState.setIdle();
     this.setState({ messages, locale });
+  };
+
+  private getAvailableLocales = async () => {
+    const { appState, service } = this.props;
+    appState.setLoading();
+    try {
+      const locales = await service.getAvailableLocales();
+      this.setState({ availableLocales: locales });
+    } catch (e) {
+      this.setState({ error: e });
+    }
+    appState.setIdle();
   };
 }
 

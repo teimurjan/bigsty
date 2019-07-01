@@ -5,7 +5,7 @@ import { ICategoryService } from "src/services/CategoryService";
 import { IContextValue as AppStateContextValue } from "src/state/AppState";
 import {
   IContextValue as UserStateContextValue,
-  IUser
+  User
 } from "src/state/UserState";
 
 export interface IProps extends UserStateContextValue, AppStateContextValue {
@@ -15,7 +15,7 @@ export interface IProps extends UserStateContextValue, AppStateContextValue {
 
 export interface IViewProps {
   categories: ICategoryListResponseItem[];
-  user: IUser | null;
+  user: User;
   onLogOutClick: () => void;
 }
 

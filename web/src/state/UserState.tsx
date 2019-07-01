@@ -3,17 +3,20 @@ import * as React from "react";
 import { injectDependencies } from "src/DI/DI";
 import { IAuthService } from "src/services/AuthService";
 
-export interface IUser {
-  id: number;
-  name: string;
-  group: string;
-}
+export type User =
+  | {
+      id: number;
+      name: string;
+      group: string;
+    }
+  | null
+  | {};
 
 export interface IContextValue {
   userState: {
     clearUser: () => void;
     syncUser: () => void;
-    user: IUser | null;
+    user: User;
   };
 }
 
@@ -25,12 +28,15 @@ interface IProviderProps {
 }
 
 interface IProviderState {
-  user: IUser | null;
+  user: User;
 }
+
+const USER_NOT_SET_STATE = null;
+const USER_ANONYMOUSE_STATE = null;
 
 class Provider extends React.Component<IProviderProps, IProviderState> {
   public state = {
-    user: null
+    user: USER_NOT_SET_STATE
   };
 
   public componentDidMount() {
@@ -56,20 +62,18 @@ class Provider extends React.Component<IProviderProps, IProviderState> {
     );
   }
 
-  private setUser = (user: IUser | null) => this.setState({ user });
+  private setUser = (user: User) => this.setState({ user });
 
   private syncUser = () => {
     const { service } = this.props;
     const accessToken = service.getAccessToken();
-    if (accessToken) {
-      this.setUser(jwtDecode(accessToken));
-    }
+    this.setUser(accessToken ? jwtDecode(accessToken) : USER_ANONYMOUSE_STATE);
   };
 
   private clearUser = () => {
     const { service } = this.props;
     service.logOut();
-    this.setUser(null);
+    this.setUser(USER_ANONYMOUSE_STATE);
   };
 }
 

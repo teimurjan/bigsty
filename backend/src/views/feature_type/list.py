@@ -29,16 +29,14 @@ class FeatureTypeListView(ValidatableView, PaginatableView):
         return {'data': serialized_feature_types, 'meta': meta}, OK_CODE
 
     def post(self, request):
-        try:
-            data = request.get_json()
-            self._validate(data)
-            feature_type = self._service.create(data, user=request.user)
-            serialized_feature_type = (
-                self
-                ._serializer_cls(feature_type)
-                .in_language(request.language)
-                .serialize()
-            )
-            return {'data': serialized_feature_type}, OK_CODE
-        except self._service.LanguageInvalid:
-            raise InvalidEntityFormat({'language_id': 'errors.invalidID'})
+        data = request.get_json()
+        self._validate(data)
+        feature_type = self._service.create(data, user=request.user)
+        serialized_feature_type = (
+            self
+            ._serializer_cls(feature_type)
+            .in_language(request.language)
+            .serialize()
+        )
+        return {'data': serialized_feature_type}, OK_CODE
+   

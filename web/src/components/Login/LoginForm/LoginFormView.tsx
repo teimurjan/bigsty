@@ -1,6 +1,7 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
 import * as React from "react";
+
+import { jsx } from "@emotion/core";
 import {
   Field,
   FieldRenderProps,
@@ -9,10 +10,13 @@ import {
 } from "react-final-form";
 import { InjectedIntlProps } from "react-intl";
 import { Link } from "react-router-dom";
+
 import { textCenterMixin } from "src/styles/mixins";
-import { Button } from "../../common/Button/Button";
-import { FormTextField } from "../../common/FormTextField/FormTextField";
-import { HelpText } from "../../common/HelpText/HelpText";
+
+import { Button } from "src/components/common/Button/Button";
+import { FormTextField } from "src/components/common/FormTextField/FormTextField";
+import { HelpText } from "src/components/common/HelpText/HelpText";
+
 import { IViewProps as IProps } from "./LoginFormPresenter";
 
 export class LoginFormView extends React.Component<IProps & InjectedIntlProps> {

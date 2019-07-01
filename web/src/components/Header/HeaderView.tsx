@@ -23,6 +23,7 @@ import { NavbarItem } from "src/components/common/NavbarItem/NavbarItem";
 import { NavbarMenu } from "src/components/common/NavbarMenu/NavbarMenu";
 import { NavbarStart } from "src/components/common/NavbarStart/NavbarStart";
 
+import { isUserAdmin } from "src/helpers/user";
 import { IViewProps as IProps } from "./HeaderPresenter";
 
 const DropdownTrigger = injectIntl(
@@ -82,7 +83,7 @@ export const HeaderView = ({
                   <Button onClick={onLogOutClick} color="is-primary">
                     {intl.formatMessage({ id: "Header.logOut" })}
                   </Button>
-                  {user.group === 'admin' && (
+                  {isUserAdmin(user) && (
                     <LinkButton color="is-info" to="/admin">
                       {intl.formatMessage({ id: "Header.admin" })}
                     </LinkButton>

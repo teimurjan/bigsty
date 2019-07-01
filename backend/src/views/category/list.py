@@ -11,10 +11,11 @@ class CategoryListView(ValidatableView):
 
     def get(self, request):
         categories = self._service.get_all()
+        should_get_raw_intl_field = request.args.get('raw_intl') == '1'
         serialized_categories = [
             self
             ._serializer_cls(category)
-            .in_language(request.language)
+            .in_language(None if should_get_raw_intl_field else request.language)
             .serialize()
             for category in categories
         ]

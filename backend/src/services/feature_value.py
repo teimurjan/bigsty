@@ -67,5 +67,3 @@ class FeatureValueService:
     class FeatureTypeInvalid(Exception):
         pass
 
-    class LanguageInvalid(Exception):
-        pass

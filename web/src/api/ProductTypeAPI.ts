@@ -1,5 +1,6 @@
-import { IHeadersManager } from "src/manager/HeadersManager";
 import { Client } from "ttypes/http";
+
+import { IHeadersManager } from "src/manager/HeadersManager";
 
 export interface IProductTypeListResponseItem {
   id: number;

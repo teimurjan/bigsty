@@ -2,6 +2,7 @@ import os
 from flask import send_from_directory
 
 from src.abstract_view import AbstractView
+
 from src.factories.views.authentication import AuthenticationViewFactory
 from src.factories.views.registration import RegistrationViewFactory
 from src.factories.views.refresh_token import RefreshTokenViewFactory
@@ -16,10 +17,11 @@ from src.factories.views.product.detail import ProductDetailViewFactory
 from src.factories.views.product_type.list import ProductTypeListViewFactory
 from src.factories.views.product_type.detail import ProductTypeDetailViewFactory
 from src.factories.views.product_type.by_category import ProductTypeByCategoryViewFactory
+from src.factories.views.language.list import LanguageListViewFactory
 
 
 class API:
-    def __init__(self, app, db_conn, middlewares):    
+    def __init__(self, app, db_conn, middlewares):
         app.add_url_rule(
             '/api/auth/login',
             view_func=AbstractView.as_view(
@@ -70,7 +72,8 @@ class API:
             '/api/categories/<int:category_id>/product_types',
             view_func=AbstractView.as_view(
                 'category_product_types',
-                concrete_view_factory=ProductTypeByCategoryViewFactory(db_conn),
+                concrete_view_factory=ProductTypeByCategoryViewFactory(
+                    db_conn),
                 middlewares=middlewares
             ),
             methods=['GET']
@@ -146,4 +149,13 @@ class API:
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
+        )
+        app.add_url_rule(
+            '/api/languages',
+            view_func=AbstractView.as_view(
+                'languages',
+                concrete_view_factory=LanguageListViewFactory(db_conn),
+                middlewares=middlewares
+            ),
+            methods=['GET']
         )

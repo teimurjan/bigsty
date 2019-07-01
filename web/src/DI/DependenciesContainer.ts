@@ -2,6 +2,7 @@ import axios from "axios";
 
 import * as authAPI from "src/api/AuthAPI";
 import * as categoryAPI from "src/api/CategoryAPI";
+import * as intlAPI from "src/api/IntlAPI";
 import * as productTypeAPI from "src/api/ProductTypeAPI";
 
 import { HeadersManager } from "src/manager/HeadersManager";
@@ -18,6 +19,7 @@ export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
   category: categoryAPI.ICategoryAPI;
   productType: productTypeAPI.IProductTypeAPI;
+  intl: intlAPI.IIntlAPI;
 }
 
 export interface IServicesContainer {
@@ -67,6 +69,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
   const APIsContainer = {
     auth: new authAPI.AuthAPI(APIClient),
     category: new categoryAPI.CategoryAPI(APIClient, headersManager),
+    intl: new intlAPI.IntlAPI(APIClient, headersManager),
     productType: new productTypeAPI.ProductTypeAPI(APIClient, headersManager)
   };
 
@@ -76,7 +79,10 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
       storagesContainer.auth
     ),
     category: new categoryService.CategoryService(APIsContainer.category),
-    intl: new intlService.IntlService(storagesContainer.intl),
+    intl: new intlService.IntlService(
+      APIsContainer.intl,
+      storagesContainer.intl
+    ),
     productType: new productTypeService.ProductTypeService(
       APIsContainer.productType
     )

@@ -53,15 +53,8 @@ export const injectAppState = (
   Component:
     | React.ComponentClass<IContextValue>
     | React.StatelessComponent<IContextValue>
-): React.ComponentClass<any> =>
-  class extends React.Component<any> {
-    public render() {
-      return (
-        <Consumer>
-          {(context: IContextValue) => (
-            <Component {...{ ...this.props, ...context }} />
-          )}
-        </Consumer>
-      );
-    }
-  };
+): React.SFC<any> => props => (
+  <Consumer>
+    {(context: IContextValue) => <Component {...{ ...props, ...context }} />}
+  </Consumer>
+);

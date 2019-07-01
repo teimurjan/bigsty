@@ -14,6 +14,9 @@ class IntlSerializer(Serializer):
         return self
 
     def _get_intl_field_from(self, all_fields):
+        if self._language is None:
+            return {field.language_id: field.value for field in all_fields}
+
         values = [
             field.value for field in all_fields if field.language_id == self._language.id
         ]
