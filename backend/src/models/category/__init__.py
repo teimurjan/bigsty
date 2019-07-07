@@ -20,9 +20,14 @@ class Category(BaseModel):
         lazy='joined',
         cascade="all, delete, delete-orphan"
     )
-    product_types = orm.relationship('ProductType',lazy=True)
+    product_types = orm.relationship('ProductType', lazy=True)
     feature_types = orm.relationship(
         'FeatureType',
         secondary=CategoryXFeatureType,
         lazy='subquery',
+    )
+    parent_category_id = Column(
+        Integer,
+        ForeignKey('category.id'),
+        nullable=True
     )
