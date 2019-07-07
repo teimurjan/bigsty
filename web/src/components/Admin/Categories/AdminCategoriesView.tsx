@@ -29,6 +29,7 @@ export const AdminCategoriesView = ({ categories, locales }: IProps) => (
         <Table.Head>
           <Table.Row>
             <Table.HeadCell>ID</Table.HeadCell>
+            <Table.HeadCell>Parent Category ID</Table.HeadCell>
             <Table.HeadCell colSpan={locales.length}>Names</Table.HeadCell>
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Row>
@@ -41,9 +42,12 @@ export const AdminCategoriesView = ({ categories, locales }: IProps) => (
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {categories.map(({ id, name }) => (
+          {categories.map(({ id, name, parent_category_id }) => (
             <Table.Row key={id}>
               <Table.Cell>{id}</Table.Cell>
+              <Table.Cell>
+                {parent_category_id ? parent_category_id : "null"}
+              </Table.Cell>
               {locales.map(locale => (
                 <Table.Cell key={locale}>{name[locale]}</Table.Cell>
               ))}

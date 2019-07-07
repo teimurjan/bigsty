@@ -6,6 +6,7 @@ export interface ICategoryListResponseItem {
   id: number;
   name: string;
   feature_types: number[];
+  parent_category_id: number | null;
 }
 
 export interface ICategoryListRawIntlResponseItem {
@@ -14,6 +15,7 @@ export interface ICategoryListRawIntlResponseItem {
     [key: string]: string;
   };
   feature_types: number[];
+  parent_category_id: number | null;
 }
 
 export interface ICategoryListResponseData {
