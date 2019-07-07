@@ -6,6 +6,7 @@ UPDATE_CATEGORY_VALIDATION_RULES = {
         'required': True,
         'nullable': False,
     },
+    'parent_category_id': {'type': 'integer', 'nullable': True, 'required': False},
     "feature_types": {
         'type': 'list',
         'schema': {'type': 'integer', 'nullable': False},

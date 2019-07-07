@@ -41,6 +41,8 @@ class CategoryDetailView(ValidatableView):
             return {}, NOT_FOUND_CODE
         except self._service.FeatureTypeInvalid:
             raise InvalidEntityFormat({'feature_types': 'errors.invalidID'})
+        except self._service.CircularCategoryConnection:
+            raise InvalidEntityFormat({'parent_category_id': 'errors.circularConnection'})
 
     def delete(self, request, category_id):
         try:

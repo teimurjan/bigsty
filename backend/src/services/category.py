@@ -30,14 +30,20 @@ class CategoryService:
 
             return self._repo.add_category(
                 data['names'],
+                data.get('parent_category_id'),
                 feature_types,
                 session=s
             )
 
-    @allow_roles(['admin', 'manager'])
+    # @allow_roles(['admin', 'manager'])
     def update(self, id_, data, *args, **kwargs):
         try:
             with self._repo.session() as s:
+                parent_category_id = data.get('parent_category_id')
+                if (parent_category_id != None and parent_category_id == id_):
+                    raise self.CircularCategoryConnection()
+                    
+
                 feature_types = self._feature_type_repo.filter_by_ids(
                     data['feature_types'],
                     session=s
@@ -49,6 +55,7 @@ class CategoryService:
                 return self._repo.update_category(
                     id_,
                     data['names'],
+                    parent_category_id,
                     feature_types,
                     session=s
                 )
@@ -66,4 +73,7 @@ class CategoryService:
         pass
 
     class FeatureTypeInvalid(Exception):
+        pass
+
+    class CircularCategoryConnection(Exception):
         pass

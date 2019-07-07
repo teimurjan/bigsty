@@ -7,8 +7,9 @@ class CategoryRepo(Repo):
         super().__init__(db_conn, Category)
 
     @Repo.with_session
-    def add_category(self, names, feature_types, session):
+    def add_category(self, names, parent_category_id, feature_types, session):
         category = Category()
+        category.parent_category_id = parent_category_id
 
         for feature_type in feature_types:
             category.feature_types.append(feature_type)
@@ -25,10 +26,11 @@ class CategoryRepo(Repo):
         session.flush()
 
         return category
-    
+
     @Repo.with_session
-    def update_category(self, id_, names, feature_types, session):
+    def update_category(self, id_, names, parent_category_id, feature_types, session):
         category = self.get_by_id(id_, session=session)
+        category.parent_category_id = parent_category_id
 
         category.feature_types = feature_types
 
