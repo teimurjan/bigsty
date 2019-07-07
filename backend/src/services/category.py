@@ -35,7 +35,7 @@ class CategoryService:
                 session=s
             )
 
-    # @allow_roles(['admin', 'manager'])
+    @allow_roles(['admin', 'manager'])
     def update(self, id_, data, *args, **kwargs):
         try:
             with self._repo.session() as s:

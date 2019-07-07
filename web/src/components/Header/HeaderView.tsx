@@ -37,6 +37,37 @@ const DropdownTrigger = injectIntl(
   )
 );
 
+const renderCategories = (
+  categories: IProps["categories"],
+  level = 1
+): React.ReactNode => {
+  return (level === 1
+    ? categories.filter(({ parent_category_id }) => !parent_category_id)
+    : categories
+  ).map(({ id, name }) => (
+    <React.Fragment key={id}>
+      <DropdownItemLink
+        key={id}
+        to={`/categories/${id}/productTypes`}
+        level={level}
+      >
+        {name}
+      </DropdownItemLink>
+      {renderCategories(
+        categories.filter(category => category.parent_category_id === id),
+        level + 1
+      )}
+      {level === 1 && (
+        <hr
+          css={css`
+            margin: 0 0.75rem;
+          `}
+        />
+      )}
+    </React.Fragment>
+  ));
+};
+
 export const HeaderView = ({
   categories,
   user,
@@ -65,14 +96,7 @@ export const HeaderView = ({
           <NavbarStart>
             <NavbarItem className="is-uppercase">
               <Dropdown Trigger={DropdownTrigger}>
-                {categories.map(category => (
-                  <DropdownItemLink
-                    key={category.id}
-                    to={`/categories/${category.id}/productTypes`}
-                  >
-                    {category.name}
-                  </DropdownItemLink>
-                ))}
+                {renderCategories(categories)}
               </Dropdown>
             </NavbarItem>
           </NavbarStart>
