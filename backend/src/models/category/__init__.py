@@ -31,3 +31,9 @@ class Category(BaseModel):
         ForeignKey('category.id'),
         nullable=True
     )
+
+    def __getitem__(self, key):
+        if key == 'names':
+            return self.names
+
+        return super().__getitem__(key)

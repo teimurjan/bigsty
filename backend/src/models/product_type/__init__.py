@@ -36,3 +36,13 @@ class ProductType(BaseModel):
         nullable=False
     )
     category = orm.relationship("Category", lazy='joined')
+
+    def __getitem__(self, key):
+        if key == 'names':
+            return self.descriptions
+        if key == 'descriptions':
+            return self.descriptions
+        if key == 'short_descriptions':
+            return self.short_descriptions
+
+        return super().__getitem__(key)

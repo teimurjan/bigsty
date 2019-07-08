@@ -33,5 +33,9 @@
   "Header.admin": "Панель Администратора",
   "Header.logOut": "Выйти",
   "Pagination.next": "След.",
-  "Pagination.prev": "Пред."
+  "Pagination.prev": "Пред.",
+  "common.ID": "ID",
+  "AdminCategories.ParentCategoryID": "ID Категории Родителя",
+  "AdminCategories.Names": "Названия",
+  "common.Actions": "Действия"
 }

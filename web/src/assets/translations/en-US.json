@@ -33,5 +33,9 @@
   "Header.admin": "Admin Panel",
   "Header.logOut": "Log out",
   "Pagination.next": "Next",
-  "Pagination.prev": "Prev"
+  "Pagination.prev": "Prev",
+  "common.ID": "ID",
+  "AdminCategories.ParentCategoryID": "Parent Category ID",
+  "AdminCategories.Names": "Names",
+  "common.Actions": "Actions"
 }

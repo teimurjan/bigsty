@@ -17,3 +17,9 @@ class FeatureType(BaseModel):
         secondary=CategoryXFeatureType,
         lazy='subquery',
     )
+
+    def __getitem__(self, key):
+        if key == 'names':
+            return self.names
+
+        return super().__getitem__(key)

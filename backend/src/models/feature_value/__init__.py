@@ -47,3 +47,9 @@ class FeatureValue(BaseModel):
         lazy='subquery',
         backref=orm.backref('feature_values', lazy='joined')
     )
+
+    def __getitem__(self, key):
+        if key == 'names':
+            return self.names
+
+        return super().__getitem__(key)

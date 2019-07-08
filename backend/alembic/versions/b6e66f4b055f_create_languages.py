@@ -19,7 +19,7 @@ depends_on = None
 def upgrade():
     conn = op.get_bind()
 
-    conn.execute("""INSERT INTO "language" (name) VALUES ('en-US');""")
+    conn.execute("""INSERT INTO "language" (name) VALUES ('en-US'),('ru-RU');""")
 
 
 def downgrade():
@@ -27,5 +27,5 @@ def downgrade():
 
     conn.execute("""
         DELETE FROM "language"
-        WHERE name IN ('en-US');
+        WHERE name IN ('en-US','ru-RU');
     """)
