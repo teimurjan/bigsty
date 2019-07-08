@@ -41,7 +41,7 @@ export class LoginFormView extends React.Component<IProps & InjectedIntlProps> {
           <Button
             className="level-left is-uppercase"
             color="is-success"
-            disabled={submitting}
+            isLoading={submitting}
             type="submit"
           >
             {intl.formatMessage({ id: "LoginForm.submitButton.text" })}

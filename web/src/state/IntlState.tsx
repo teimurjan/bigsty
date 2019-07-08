@@ -155,16 +155,9 @@ export const IntlStateProvider = injectDependencies(
 );
 
 export const injectIntlState = (
-  Component: React.ComponentClass<IContextValue>
-): React.ComponentClass<any> =>
-  class extends React.Component<any> {
-    public render() {
-      return (
-        <Context.Consumer>
-          {(value: IContextValue) => (
-            <Component {...{ ...this.props, ...value }} />
-          )}
-        </Context.Consumer>
-      );
-    }
-  };
+  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>
+): React.SFC<any> => (props: any) => (
+  <Context.Consumer>
+    {(value: IContextValue) => <Component {...{ ...props, ...value }} />}
+  </Context.Consumer>
+);

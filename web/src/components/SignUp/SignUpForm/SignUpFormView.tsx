@@ -43,7 +43,7 @@ export class SignUpFormView extends React.Component<
           <Button
             className="level-left is-uppercase"
             color="is-success"
-            disabled={submitting}
+            isLoading={submitting}
             type="submit"
           >
             {intl.formatMessage({ id: "SignUpForm.submitButton.text" })}

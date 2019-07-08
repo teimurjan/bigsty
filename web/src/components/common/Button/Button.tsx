@@ -12,10 +12,22 @@ export interface IProps extends React.HTMLProps<HTMLButtonElement> {
     | "is-warning"
     | "is-danger"
     | "is-dark";
+  isLoading?: boolean;
 }
 
-export const Button = ({ children, color, className, ...props }: IProps) => (
-  <button className={classNames("button", className, color)} {...props}>
+export const Button = ({
+  children,
+  color,
+  className,
+  isLoading = false,
+  ...props
+}: IProps) => (
+  <button
+    className={classNames("button", className, color, {
+      "is-loading": isLoading
+    })}
+    {...props}
+  >
     {children}
   </button>
 );

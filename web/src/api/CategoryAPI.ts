@@ -29,6 +29,7 @@ export interface ICategoryListRawIntlResponseData {
 export interface ICategoryAPI {
   getAll(): Promise<ICategoryListResponseData>;
   getAllRawIntl(): Promise<ICategoryListRawIntlResponseData>;
+  delete(id: number): Promise<{}>;
 }
 
 export class CategoryAPI implements ICategoryAPI {
@@ -58,6 +59,20 @@ export class CategoryAPI implements ICategoryAPI {
     try {
       const response = await this.client.get<ICategoryListRawIntlResponseData>(
         "/api/categories?raw_intl=1",
+        {
+          headers: this.headersManager.getHeaders()
+        }
+      );
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async delete(id: number) {
+    try {
+      const response = await this.client.delete<{}>(
+        `/api/categories/${id}`,
         {
           headers: this.headersManager.getHeaders()
         }

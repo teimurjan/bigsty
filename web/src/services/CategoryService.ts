@@ -17,6 +17,7 @@ export interface ICategoryService {
     };
     result: number[];
   }>;
+  delete(id: number): Promise<{}>;
 }
 
 export class CategoryService implements ICategoryService {
@@ -33,5 +34,9 @@ export class CategoryService implements ICategoryService {
   public async getAllRawIntl() {
     const categories = await this.API.getAllRawIntl();
     return normalize(categories.data, [new schema.Entity("categories")]);
+  }
+
+  public async delete(id: number) {
+    return await this.API.delete(id);
   }
 }

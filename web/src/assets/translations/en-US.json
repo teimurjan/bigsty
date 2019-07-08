@@ -35,7 +35,10 @@
   "Pagination.next": "Next",
   "Pagination.prev": "Prev",
   "common.ID": "ID",
-  "AdminCategories.ParentCategoryID": "Parent Category ID",
-  "AdminCategories.Names": "Names",
-  "common.Actions": "Actions"
+  "AdminCategories.parentCategoryID": "Parent Category ID",
+  "AdminCategories.names": "Names",
+  "common.actions": "Actions",
+  "common.deleteApproval": "Are you sure want to delete this item?",
+  "common.yes": "Yes",
+  "common.no": "No"
 }

@@ -35,7 +35,10 @@
   "Pagination.next": "След.",
   "Pagination.prev": "Пред.",
   "common.ID": "ID",
-  "AdminCategories.ParentCategoryID": "ID Категории Родителя",
-  "AdminCategories.Names": "Названия",
-  "common.Actions": "Действия"
+  "AdminCategories.parentCategoryID": "ID Категории Родителя",
+  "AdminCategories.names": "Названия",
+  "common.actions": "Действия",
+  "common.deleteApproval": "Вы уверены, что хотите удалить этот элемент?",
+  "common.yes": "Да",
+  "common.no": "Нет"
 }
