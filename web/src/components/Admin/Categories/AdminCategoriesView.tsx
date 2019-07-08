@@ -35,6 +35,7 @@ export const AdminCategoriesView = ({ categories, locales }: IProps) => (
           </Table.Row>
           <Table.Row>
             <Table.HeadCell />
+            <Table.HeadCell />
             {locales.map(locale => (
               <Table.HeadCell key={locale}>{locale}</Table.HeadCell>
             ))}
