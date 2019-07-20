@@ -16,10 +16,10 @@ import { Table } from "src/components/common/Table/Table";
 
 import { textCenterMixin } from "src/styles/mixins";
 
-import { IViewProps as IProps } from "./AdminCategoriesListPresenter";
+import { IViewProps as IProps } from "./AdminFeatureTypesListPresenter";
 
-export const AdminCategoriesListView = ({
-  categories,
+export const AdminFeatureTypesListView = ({
+  featureTypes,
   locales,
   intl,
   openDeletion,
@@ -29,20 +29,20 @@ export const AdminCategoriesListView = ({
   <Section>
     <Container>
       {isLoading && <LoaderLayout />}
-      {categories.length === 0 && isDataLoaded && (
+      {featureTypes.length === 0 && isDataLoaded && (
         <NoDataAvailable
-          title={intl.formatMessage({ id: "AdminCategories.notFound.title" })}
+          title={intl.formatMessage({ id: "AdminFeatureTypes.notFound.title" })}
           description={intl.formatMessage({
-            id: "AdminCategories.notFound.description"
+            id: "AdminFeatureTypes.notFound.description"
           })}
           CTA={
-            <LinkButton to="/admin/categories/new" color="is-primary">
-              {intl.formatMessage({ id: "AdminCategories.notFound.cta" })}
+            <LinkButton to="/admin/featureTypes/new" color="is-primary">
+              {intl.formatMessage({ id: "AdminFeatureTypes.notFound.cta" })}
             </LinkButton>
           }
         />
       )}
-      {categories.length > 0 && (
+      {featureTypes.length > 0 && (
         <Table
           className={classNames(
             "is-bordered",
@@ -57,18 +57,14 @@ export const AdminCategoriesListView = ({
               <Table.HeadCell>
                 {intl.formatMessage({ id: "common.ID" })}
               </Table.HeadCell>
-              <Table.HeadCell>
-                {intl.formatMessage({ id: "AdminCategories.parentCategoryID" })}
-              </Table.HeadCell>
               <Table.HeadCell colSpan={locales.length}>
-                {intl.formatMessage({ id: "AdminCategories.names" })}
+                {intl.formatMessage({ id: "AdminFeatureTypes.names" })}
               </Table.HeadCell>
               <Table.HeadCell>
                 {intl.formatMessage({ id: "common.actions" })}
               </Table.HeadCell>
             </Table.Row>
             <Table.Row>
-              <Table.HeadCell />
               <Table.HeadCell />
               {locales.map(locale => (
                 <Table.HeadCell key={locale}>{locale}</Table.HeadCell>
@@ -77,15 +73,12 @@ export const AdminCategoriesListView = ({
             </Table.Row>
           </Table.Head>
           <Table.Body>
-            {categories.map(({ id, name, parent_category_id }) => {
+            {featureTypes.map(({ id, name }) => {
               const onDeleteClick = () => openDeletion(id);
 
               return (
                 <Table.Row key={id}>
                   <Table.Cell>{id}</Table.Cell>
-                  <Table.Cell>
-                    {parent_category_id ? parent_category_id : "null"}
-                  </Table.Cell>
                   {locales.map(locale => (
                     <Table.Cell key={locale}>{name[locale]}</Table.Cell>
                   ))}

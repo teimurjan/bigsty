@@ -28,7 +28,7 @@ export const AppView = ({ isLoading }: IProps) => (
             path="/categories/:categoryId/productTypes"
             component={ProductTypesPageContainer}
           />
-          <PrivateRoute exact={true} path="/admin" component={Admin} />
+          <PrivateRoute path="/admin" component={Admin} />
 
           <Route component={NotFoundContainer} />
         </Switch>

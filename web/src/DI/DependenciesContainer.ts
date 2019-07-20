@@ -2,23 +2,26 @@ import axios from "axios";
 
 import * as authAPI from "src/api/AuthAPI";
 import * as categoryAPI from "src/api/CategoryAPI";
+import * as featureTypeAPI from "src/api/FeatureTypeAPI";
 import * as intlAPI from "src/api/IntlAPI";
 import * as productTypeAPI from "src/api/ProductTypeAPI";
 
-import { HeadersManager } from "src/manager/HeadersManager";
-
 import * as authService from "src/services/AuthService";
 import * as categoryService from "src/services/CategoryService";
+import * as featureTypeService from "src/services/FeatureTypeService";
 import * as intlService from "src/services/IntlService";
 import * as productTypeService from "src/services/ProductTypeService";
 
 import * as authStorage from "src/storage/AuthStorage";
 import * as intlStorage from "src/storage/IntlStorage";
 
+import { HeadersManager } from "src/manager/HeadersManager";
+
 export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
   category: categoryAPI.ICategoryAPI;
   productType: productTypeAPI.IProductTypeAPI;
+  featureType: featureTypeAPI.IFeatureTypeAPI;
   intl: intlAPI.IIntlAPI;
 }
 
@@ -26,6 +29,7 @@ export interface IServicesContainer {
   auth: authService.IAuthService;
   category: categoryService.ICategoryService;
   productType: productTypeService.IProductTypeService;
+  featureType: featureTypeService.IFeatureTypeService;
   intl: intlService.IIntlService;
 }
 
@@ -69,6 +73,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
   const APIsContainer = {
     auth: new authAPI.AuthAPI(APIClient),
     category: new categoryAPI.CategoryAPI(APIClient, headersManager),
+    featureType: new featureTypeAPI.FeatureTypeAPI(APIClient, headersManager),
     intl: new intlAPI.IntlAPI(APIClient, headersManager),
     productType: new productTypeAPI.ProductTypeAPI(APIClient, headersManager)
   };
@@ -79,6 +84,9 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
       storagesContainer.auth
     ),
     category: new categoryService.CategoryService(APIsContainer.category),
+    featureType: new featureTypeService.FeatureTypeService(
+      APIsContainer.featureType
+    ),
     intl: new intlService.IntlService(
       APIsContainer.intl,
       storagesContainer.intl

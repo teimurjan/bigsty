@@ -1,25 +1,25 @@
 import * as React from "react";
 
-import { ICategoryListRawIntlResponseItem } from "src/api/CategoryAPI";
+import { IFeatureTypeListRawIntlResponseItem } from "src/api/FeatureTypeAPI";
 import { injectDependencies } from "src/DI/DI";
 import { extendIntlTextWithLocaleNames } from "src/helpers/intl";
-import { ICategoryService } from "src/services/CategoryService";
+import { IFeatureTypeService } from "src/services/FeatureTypeService";
 import {
   IContextValue as IntlStateContextValue,
   injectIntlState
 } from "src/state/IntlState";
 
 export interface IContextValue {
-  adminCategoriesState: {
-    categories: ICategoryListRawIntlResponseItem[];
+  adminFeatureTypesState: {
+    featureTypes: IFeatureTypeListRawIntlResponseItem[];
     isListLoading: boolean;
     hasListLoaded: boolean;
     listError: undefined | string;
     isDeleteLoading: boolean;
     isDeleteOpen: boolean;
     deleteError: undefined | string;
-    getCategories: () => Promise<void>;
-    deleteCategory: () => Promise<void>;
+    getFeatureTypes: () => Promise<void>;
+    deleteFeatureType: () => Promise<void>;
     openDeletion: (id: number) => void;
     closeDeletion: () => void;
   };
@@ -29,14 +29,14 @@ const Context = React.createContext<IContextValue | null>(null);
 
 interface IProviderProps {
   children?: React.ReactNode;
-  service: ICategoryService;
+  service: IFeatureTypeService;
 }
 
 interface IProviderState {
-  categories: { [key: string]: ICategoryListRawIntlResponseItem };
-  categoriesOrder: number[];
+  featureTypes: { [key: string]: IFeatureTypeListRawIntlResponseItem };
+  featureTypesOrder: number[];
   deleteError: undefined | string;
-  deletingCategoryID: number | null;
+  deletingFeatureTypeID: number | null;
   isDeleteLoading: boolean;
   isListLoading: boolean;
   listError: undefined | string;
@@ -48,10 +48,10 @@ class Provider extends React.Component<
   IProviderState
 > {
   public state = {
-    categories: {},
-    categoriesOrder: [],
     deleteError: undefined,
-    deletingCategoryID: null,
+    deletingFeatureTypeID: null,
+    featureTypes: {},
+    featureTypesOrder: [],
     hasListLoaded: false,
     isDeleteLoading: false,
     isListLoading: false,
@@ -60,10 +60,10 @@ class Provider extends React.Component<
 
   public render() {
     const {
-      categories,
-      categoriesOrder,
+      featureTypes,
+      featureTypesOrder,
       deleteError,
-      deletingCategoryID,
+      deletingFeatureTypeID,
       isDeleteLoading,
       isListLoading,
       listError,
@@ -73,31 +73,36 @@ class Provider extends React.Component<
       children,
       intlState: { availableLocales }
     } = this.props;
-    const { getCategories, deleteCategory, openDeletion, closeDeletion } = this;
+    const {
+      getFeatureTypes,
+      deleteFeatureType,
+      openDeletion,
+      closeDeletion
+    } = this;
 
     return (
       <Context.Provider
         value={{
-          adminCategoriesState: {
-            categories: categoriesOrder.map(categoryId => {
-              const category: ICategoryListRawIntlResponseItem =
-                categories[categoryId];
+          adminFeatureTypesState: {
+            closeDeletion,
+            deleteError,
+            deleteFeatureType,
+            featureTypes: featureTypesOrder.map(featureTypeId => {
+              const featureType: IFeatureTypeListRawIntlResponseItem =
+                featureTypes[featureTypeId];
 
               return {
-                ...category,
+                ...featureType,
                 name: extendIntlTextWithLocaleNames(
-                  category.name,
+                  featureType.name,
                   availableLocales
                 )
               };
             }),
-            closeDeletion,
-            deleteCategory,
-            deleteError,
-            getCategories,
+            getFeatureTypes,
             hasListLoaded,
             isDeleteLoading,
-            isDeleteOpen: !!deletingCategoryID,
+            isDeleteOpen: !!deletingFeatureTypeID,
             isListLoading,
             listError,
             openDeletion
@@ -109,14 +114,14 @@ class Provider extends React.Component<
     );
   }
 
-  private getCategories = async () => {
+  private getFeatureTypes = async () => {
     const { service } = this.props;
     this.setState({ isListLoading: true });
     try {
       const { entities, result } = await service.getAllRawIntl();
       this.setState({
-        categories: entities.categories,
-        categoriesOrder: result,
+        featureTypes: entities.featureTypes,
+        featureTypesOrder: result,
         hasListLoaded: true,
         isListLoading: false
       });
@@ -129,26 +134,30 @@ class Provider extends React.Component<
     }
   };
 
-  private deleteCategory = async () => {
-    const { deletingCategoryID, categories, categoriesOrder } = this.state;
-    if (!deletingCategoryID) {
+  private deleteFeatureType = async () => {
+    const {
+      deletingFeatureTypeID,
+      featureTypes,
+      featureTypesOrder
+    } = this.state;
+    if (!deletingFeatureTypeID) {
       return;
     }
 
     const { service } = this.props;
     this.setState({ isDeleteLoading: true });
     try {
-      await service.delete(deletingCategoryID!);
+      await service.delete(deletingFeatureTypeID!);
 
-      const newCategories = { ...categories };
-      delete newCategories[deletingCategoryID!];
+      const newFeatureTypes = { ...featureTypes };
+      delete newFeatureTypes[deletingFeatureTypeID!];
 
       this.setState({
-        categories: newCategories,
-        categoriesOrder: categoriesOrder.filter(
-          id => id !== deletingCategoryID
+        deletingFeatureTypeID: null,
+        featureTypes: newFeatureTypes,
+        featureTypesOrder: featureTypesOrder.filter(
+          id => id !== deletingFeatureTypeID
         ),
-        deletingCategoryID: null,
         isDeleteLoading: false
       });
     } catch (e) {
@@ -157,21 +166,21 @@ class Provider extends React.Component<
   };
 
   private openDeletion = (id: number) => {
-    this.setState({ deletingCategoryID: id });
+    this.setState({ deletingFeatureTypeID: id });
   };
 
   private closeDeletion = () => {
-    this.setState({ deletingCategoryID: null });
+    this.setState({ deletingFeatureTypeID: null });
   };
 }
 
-export const AdminCategoriesStateProvider = injectIntlState(
+export const AdminFeatureTypesStateProvider = injectIntlState(
   injectDependencies(({ dependencies, ...props }) => (
-    <Provider {...props} service={dependencies.services.category} />
+    <Provider {...props} service={dependencies.services.featureType} />
   ))
 );
 
-export const injectAdminCategoriesState = (
+export const injectAdminFeatureTypesState = (
   Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>
 ): React.SFC<any> => props => (
   <Context.Consumer>
