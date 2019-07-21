@@ -1,22 +1,32 @@
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
+import * as React from "react";
 
-import { faPencilAlt, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import classNames from "classnames";
-import { InjectedIntlProps } from "react-intl";
+import { InjectedIntlProps, injectIntl } from "react-intl";
 
-import { Button } from "src/components/common/Button/Button";
+import { AdminTable, IntlRenderer } from "src/components/Admin/AdminTable";
 import { Container } from "src/components/common/Container/Container";
 import { LinkButton } from "src/components/common/LinkButton/LinkButton";
-import { LoaderLayout } from "src/components/common/LoaderLayout/LoaderLayout";
 import { NoDataAvailable } from "src/components/common/NoDataAvailable/NoDataAvaiable";
 import { Section } from "src/components/common/Section/Section";
-import { Table } from "src/components/common/Table/Table";
-
-import { textCenterMixin } from "src/styles/mixins";
 
 import { IViewProps as IProps } from "./AdminFeatureTypesListPresenter";
+
+const NoFeatureTypesAvialable = injectIntl(({ intl }) => (
+  <NoDataAvailable
+    title={intl.formatMessage({ id: "AdminFeatureTypes.notFound.title" })}
+    description={intl.formatMessage({
+      id: "AdminFeatureTypes.notFound.description"
+    })}
+    CTA={
+      <LinkButton to="/admin/featureTypes/new" color="is-primary">
+        {intl.formatMessage({ id: "AdminFeatureTypes.notFound.cta" })}
+      </LinkButton>
+    }
+  />
+));
+
+const renderNoData = () => <NoFeatureTypesAvialable />;
+
+type Category = IProps["featureTypes"][0];
 
 export const AdminFeatureTypesListView = ({
   featureTypes,
@@ -28,84 +38,24 @@ export const AdminFeatureTypesListView = ({
 }: IProps & InjectedIntlProps) => (
   <Section>
     <Container>
-      {isLoading && <LoaderLayout />}
-      {featureTypes.length === 0 && isDataLoaded && (
-        <NoDataAvailable
-          title={intl.formatMessage({ id: "AdminFeatureTypes.notFound.title" })}
-          description={intl.formatMessage({
-            id: "AdminFeatureTypes.notFound.description"
-          })}
-          CTA={
-            <LinkButton to="/admin/featureTypes/new" color="is-primary">
-              {intl.formatMessage({ id: "AdminFeatureTypes.notFound.cta" })}
-            </LinkButton>
-          }
+      <AdminTable<Category>
+        isLoading={isLoading}
+        isDataLoaded={isDataLoaded}
+        onDelete={openDeletion}
+        entities={featureTypes}
+        renderNoData={renderNoData}
+        intl={intl}
+      >
+        <AdminTable.Col<Category>
+          key_="id"
+          title={intl.formatMessage({ id: "common.ID" })}
         />
-      )}
-      {featureTypes.length > 0 && (
-        <Table
-          className={classNames(
-            "is-bordered",
-            "is-striped",
-            "is-narrow",
-            "is-hoverable",
-            "is-fullwidth"
-          )}
-        >
-          <Table.Head>
-            <Table.Row>
-              <Table.HeadCell>
-                {intl.formatMessage({ id: "common.ID" })}
-              </Table.HeadCell>
-              <Table.HeadCell colSpan={locales.length}>
-                {intl.formatMessage({ id: "AdminFeatureTypes.names" })}
-              </Table.HeadCell>
-              <Table.HeadCell>
-                {intl.formatMessage({ id: "common.actions" })}
-              </Table.HeadCell>
-            </Table.Row>
-            <Table.Row>
-              <Table.HeadCell />
-              {locales.map(locale => (
-                <Table.HeadCell key={locale}>{locale}</Table.HeadCell>
-              ))}
-              <Table.HeadCell />
-            </Table.Row>
-          </Table.Head>
-          <Table.Body>
-            {featureTypes.map(({ id, name }) => {
-              const onDeleteClick = () => openDeletion(id);
-
-              return (
-                <Table.Row key={id}>
-                  <Table.Cell>{id}</Table.Cell>
-                  {locales.map(locale => (
-                    <Table.Cell key={locale}>{name[locale]}</Table.Cell>
-                  ))}
-                  <Table.Cell
-                    css={css`
-                      ${textCenterMixin};
-                      width: 15%;
-                    `}
-                  >
-                    <Button
-                      css={css`
-                        margin-right: 0.5rem;
-                      `}
-                      color="is-info"
-                    >
-                      <FontAwesomeIcon icon={faPencilAlt} />
-                    </Button>
-                    <Button color="is-danger" onClick={onDeleteClick}>
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </Button>
-                  </Table.Cell>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table>
-      )}
+        <AdminTable.Col<Category>
+          key_="name"
+          title={intl.formatMessage({ id: "AdminFeatureTypes.names" })}
+          renderer={new IntlRenderer(locales)}
+        />
+      </AdminTable>
     </Container>
   </Section>
 );
