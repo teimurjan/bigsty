@@ -26,7 +26,7 @@ const NoFeatureTypesAvialable = injectIntl(({ intl }) => (
 
 const renderNoData = () => <NoFeatureTypesAvialable />;
 
-type Category = IProps["featureTypes"][0];
+type FeatureType = IProps["featureTypes"][0];
 
 export const AdminFeatureTypesListView = ({
   featureTypes,
@@ -38,7 +38,7 @@ export const AdminFeatureTypesListView = ({
 }: IProps & InjectedIntlProps) => (
   <Section>
     <Container>
-      <AdminTable<Category>
+      <AdminTable<FeatureType>
         isLoading={isLoading}
         isDataLoaded={isDataLoaded}
         onDelete={openDeletion}
@@ -46,11 +46,11 @@ export const AdminFeatureTypesListView = ({
         renderNoData={renderNoData}
         intl={intl}
       >
-        <AdminTable.Col<Category>
+        <AdminTable.Col<FeatureType>
           key_="id"
           title={intl.formatMessage({ id: "common.ID" })}
         />
-        <AdminTable.Col<Category>
+        <AdminTable.Col<FeatureType>
           key_="name"
           title={intl.formatMessage({ id: "AdminFeatureTypes.names" })}
           renderer={new IntlRenderer(locales)}
