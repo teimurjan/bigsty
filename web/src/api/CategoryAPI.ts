@@ -1,6 +1,7 @@
 import { Client } from "ttypes/http";
 
 import { IHeadersManager } from "src/manager/HeadersManager";
+import { buildQueryString } from "src/utils/queryString";
 
 export interface ICategoryListResponseItem {
   id: number;
@@ -58,7 +59,7 @@ export class CategoryAPI implements ICategoryAPI {
   public async getAllRawIntl() {
     try {
       const response = await this.client.get<ICategoryListRawIntlResponseData>(
-        "/api/categories?raw_intl=1",
+        `/api/categories${buildQueryString({ raw_intl: 1 })}`,
         {
           headers: this.headersManager.getHeaders()
         }
@@ -71,12 +72,9 @@ export class CategoryAPI implements ICategoryAPI {
 
   public async delete(id: number) {
     try {
-      const response = await this.client.delete<{}>(
-        `/api/categories/${id}`,
-        {
-          headers: this.headersManager.getHeaders()
-        }
-      );
+      const response = await this.client.delete<{}>(`/api/categories/${id}`, {
+        headers: this.headersManager.getHeaders()
+      });
       return response.data;
     } catch (e) {
       throw e;

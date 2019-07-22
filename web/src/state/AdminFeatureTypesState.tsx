@@ -1,6 +1,9 @@
 import * as React from "react";
 
-import { IFeatureTypeListRawIntlResponseItem } from "src/api/FeatureTypeAPI";
+import {
+  IFeatureTypeCreatePayload,
+  IFeatureTypeListRawIntlResponseItem
+} from "src/api/FeatureTypeAPI";
 import { injectDependencies } from "src/DI/DI";
 import { extendIntlTextWithLocaleNames } from "src/helpers/intl";
 import { IFeatureTypeService } from "src/services/FeatureTypeService";
@@ -11,10 +14,12 @@ import {
 
 export interface IContextValue {
   adminFeatureTypesState: {
+    createError: undefined | string;
     featureTypes: IFeatureTypeListRawIntlResponseItem[];
     isListLoading: boolean;
     hasListLoaded: boolean;
     listError: undefined | string;
+    isCreateLoading: boolean;
     isDeleteLoading: boolean;
     isDeleteOpen: boolean;
     deleteError: undefined | string;
@@ -22,6 +27,7 @@ export interface IContextValue {
     deleteFeatureType: () => Promise<void>;
     openDeletion: (id: number) => void;
     closeDeletion: () => void;
+    createFeatureType: (payload: IFeatureTypeCreatePayload) => Promise<boolean>;
   };
 }
 
@@ -33,10 +39,12 @@ interface IProviderProps {
 }
 
 interface IProviderState {
+  createError: undefined | string;
   featureTypes: { [key: string]: IFeatureTypeListRawIntlResponseItem };
   featureTypesOrder: number[];
   deleteError: undefined | string;
   deletingFeatureTypeID: number | null;
+  isCreateLoading: boolean;
   isDeleteLoading: boolean;
   isListLoading: boolean;
   listError: undefined | string;
@@ -48,11 +56,13 @@ class Provider extends React.Component<
   IProviderState
 > {
   public state = {
+    createError: undefined,
     deleteError: undefined,
     deletingFeatureTypeID: null,
     featureTypes: {},
     featureTypesOrder: [],
     hasListLoaded: false,
+    isCreateLoading: false,
     isDeleteLoading: false,
     isListLoading: false,
     listError: undefined
@@ -60,11 +70,13 @@ class Provider extends React.Component<
 
   public render() {
     const {
+      createError,
       featureTypes,
       featureTypesOrder,
       deleteError,
       deletingFeatureTypeID,
       isDeleteLoading,
+      isCreateLoading,
       isListLoading,
       listError,
       hasListLoaded
@@ -77,7 +89,8 @@ class Provider extends React.Component<
       getFeatureTypes,
       deleteFeatureType,
       openDeletion,
-      closeDeletion
+      closeDeletion,
+      createFeatureType
     } = this;
 
     return (
@@ -85,6 +98,8 @@ class Provider extends React.Component<
         value={{
           adminFeatureTypesState: {
             closeDeletion,
+            createError,
+            createFeatureType,
             deleteError,
             deleteFeatureType,
             featureTypes: featureTypesOrder.map(featureTypeId => {
@@ -101,6 +116,7 @@ class Provider extends React.Component<
             }),
             getFeatureTypes,
             hasListLoaded,
+            isCreateLoading,
             isDeleteLoading,
             isDeleteOpen: !!deletingFeatureTypeID,
             isListLoading,
@@ -162,6 +178,35 @@ class Provider extends React.Component<
       });
     } catch (e) {
       this.setState({ deleteError: "errors.common", isDeleteLoading: false });
+    }
+  };
+
+  // Returns boolean to track if a feature type has been created or not
+  private createFeatureType = async (
+    payload: IFeatureTypeCreatePayload
+  ): Promise<boolean> => {
+    const { featureTypes, featureTypesOrder } = this.state;
+    const { service } = this.props;
+    this.setState({ isCreateLoading: true });
+    try {
+      const newFeatureType = await service.create(payload);
+
+      const newFeatureTypes = {
+        ...featureTypes,
+        [newFeatureType.id]: newFeatureType
+      };
+
+      this.setState({
+        featureTypes: newFeatureTypes,
+        featureTypesOrder: [...featureTypesOrder, newFeatureType.id],
+        isCreateLoading: false
+      });
+
+      return true;
+    } catch (e) {
+      this.setState({ createError: "errors.common", isCreateLoading: false });
+
+      return false;
     }
   };
 

@@ -2,6 +2,7 @@ import { normalize, schema } from "normalizr";
 
 import {
   IFeatureTypeAPI,
+  IFeatureTypeCreatePayload,
   IFeatureTypeListRawIntlResponseItem,
   IFeatureTypeListResponseItem
 } from "src/api/FeatureTypeAPI";
@@ -18,6 +19,9 @@ export interface IFeatureTypeService {
     result: number[];
   }>;
   delete(id: number): Promise<{}>;
+  create(
+    payload: IFeatureTypeCreatePayload
+  ): Promise<IFeatureTypeListRawIntlResponseItem>;
 }
 
 export class FeatureTypeService implements IFeatureTypeService {
@@ -36,7 +40,11 @@ export class FeatureTypeService implements IFeatureTypeService {
     return normalize(featureTypes.data, [new schema.Entity("featureTypes")]);
   }
 
-  public async delete(id: number) {
-    return await this.API.delete(id);
+  public delete(id: number) {
+    return this.API.delete(id);
+  }
+
+  public async create(payload: IFeatureTypeCreatePayload) {
+    return (await this.API.create(payload)).data;
   }
 }

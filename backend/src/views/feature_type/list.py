@@ -36,8 +36,6 @@ class FeatureTypeListView(ValidatableView, PaginatableView):
         serialized_feature_type = (
             self
             ._serializer_cls(feature_type)
-            .in_language(request.language)
             .serialize()
         )
         return {'data': serialized_feature_type}, OK_CODE
-   

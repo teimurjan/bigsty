@@ -10,17 +10,19 @@ import { Section } from "src/components/common/Section/Section";
 
 import { IViewProps as IProps } from "./AdminFeatureTypesListPresenter";
 
+const NewFeatureTypeButton = injectIntl(({ intl }) => (
+  <LinkButton to="/admin/featureTypes/new" color="is-primary">
+    {intl.formatMessage({ id: "AdminFeatureTypes.notFound.cta" })}
+  </LinkButton>
+));
+
 const NoFeatureTypesAvialable = injectIntl(({ intl }) => (
   <NoDataAvailable
     title={intl.formatMessage({ id: "AdminFeatureTypes.notFound.title" })}
     description={intl.formatMessage({
       id: "AdminFeatureTypes.notFound.description"
     })}
-    CTA={
-      <LinkButton to="/admin/featureTypes/new" color="is-primary">
-        {intl.formatMessage({ id: "AdminFeatureTypes.notFound.cta" })}
-      </LinkButton>
-    }
+    CTA={<NewFeatureTypeButton />}
   />
 ));
 
@@ -56,6 +58,8 @@ export const AdminFeatureTypesListView = ({
           renderer={new IntlRenderer(locales)}
         />
       </AdminTable>
+
+      {isDataLoaded && featureTypes.length > 0 && <NewFeatureTypeButton />}
     </Container>
   </Section>
 );

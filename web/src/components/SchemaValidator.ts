@@ -1,12 +1,12 @@
 import * as yup from "yup";
 
 export interface ISchemaValidator {
-  validate(values: object): object | Promise<object>;
+  validate(values: object): object;
 }
 
 export class SchemaValidator implements ISchemaValidator {
-  private schema: yup.ObjectSchema<object>;
-  constructor(schema: yup.ObjectSchema<object>) {
+  private schema: yup.ObjectSchema<object> | yup.Lazy;
+  constructor(schema: yup.ObjectSchema<object> | yup.Lazy) {
     this.schema = schema;
   }
 

@@ -47,5 +47,11 @@
   "common.actions": "Действия",
   "common.deleteApproval": "Вы уверены, что хотите удалить этот элемент?",
   "common.yes": "Да",
-  "common.no": "Нет"
+  "common.no": "Нет",
+  "common.create": "Создать",
+  "common.cancel": "Отменить",
+  "AdminFeatureTypes.create.title": "Создание типа характеристики",
+  "AdminFeatureTypes.nameInput.placeholder": "Введите имя",
+  "common.errors.field.empty": "Поле не может быть пустым",
+  "AdminFeatureTypes.nameInput.label": "Имя"
 }

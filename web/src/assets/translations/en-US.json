@@ -47,5 +47,11 @@
   "common.actions": "Actions",
   "common.deleteApproval": "Are you sure want to delete this item?",
   "common.yes": "Yes",
-  "common.no": "No"
+  "common.no": "No",
+  "common.create": "Create",
+  "common.cancel": "Cancel",
+  "AdminFeatureTypes.create.title": "Feature type creation",
+  "AdminFeatureTypes.nameInput.placeholder": "Enter a name",
+  "common.errors.field.empty": "Field cannot be empty",
+  "AdminFeatureTypes.nameInput.label": "Name"
 }
