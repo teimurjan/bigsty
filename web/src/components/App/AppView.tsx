@@ -15,24 +15,31 @@ interface IProps {
   isLoading: boolean;
 }
 
+const Client = () => (
+  <>
+    <HeaderContainer />
+    <Route exact={true} path="/login" component={LoginPageContainer} />
+    <Route exact={true} path="/signup" component={SignUpPageContainer} />
+    <Switch>
+      <Route
+        exact={true}
+        path="/categories/:categoryId/productTypes"
+        component={ProductTypesPageContainer}
+      />
+
+      <Route component={NotFoundContainer} />
+    </Switch>
+  </>
+);
+
 export const AppView = ({ isLoading }: IProps) => (
   <>
     <Router>
-      <>
-        <HeaderContainer />
-        <Route exact={true} path="/login" component={LoginPageContainer} />
-        <Route exact={true} path="/signup" component={SignUpPageContainer} />
-        <Switch>
-          <Route
-            exact={true}
-            path="/categories/:categoryId/productTypes"
-            component={ProductTypesPageContainer}
-          />
-          <PrivateRoute path="/admin" component={Admin} />
+      <Switch>
+        <PrivateRoute path="/admin" component={Admin} />
 
-          <Route component={NotFoundContainer} />
-        </Switch>
-      </>
+        <Route component={Client} />
+      </Switch>
     </Router>
     <PageLoader isActive={isLoading} />
   </>

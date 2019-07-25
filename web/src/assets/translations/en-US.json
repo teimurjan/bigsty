@@ -61,5 +61,8 @@
   "AdminCategories.create.title": "Category creation",
   "NativeSelect.multipleHint": "Hold CMD/Ctrl and click on the items you want to add.",
   "AdminCategories.parentCategorySelect.label": "Parent Category",
-  "AdminCategories.parentCategorySelect.defaultOption.title": "No Parent Category"
+  "AdminCategories.parentCategorySelect.defaultOption.title": "No Parent Category",
+  "AdminMenu.modelsLabel": "Models",
+  "AdminMenu.categoriesLinkText": "Categories",
+  "AdminMenu.featureTypesLinkText": "Feature Types"
 }

@@ -61,5 +61,8 @@
   "AdminCategories.create.title": "Создагие категории",
   "NativeSelect.multipleHint": "Зажмите CMD/Ctrl и кликайте на объекты для добавления.",
   "AdminCategories.parentCategorySelect.label": "Категория родитель",
-  "AdminCategories.parentCategorySelect.defaultOption.title": "Без категории родителя"
+  "AdminCategories.parentCategorySelect.defaultOption.title": "Без категории родителя",
+  "AdminMenu.modelsLabel": "Модели",
+  "AdminMenu.categoriesLinkText": "Категории",
+  "AdminMenu.featureTypesLinkText": "Типы характеристик"
 }

@@ -10,7 +10,6 @@ export const Navbar = ({ children, className, ...props }: IProps) => (
   <nav
     className={classNames("navbar", className)}
     role="navigation"
-    aria-label="main navigation"
     {...props}
   >
     {children}

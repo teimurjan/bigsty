@@ -11,6 +11,8 @@ export interface IProps extends React.HTMLProps<HTMLButtonElement> {
     | "is-success"
     | "is-warning"
     | "is-danger"
+    | "is-white"
+    | "is-light"
     | "is-dark";
   isLoading?: boolean;
 }
