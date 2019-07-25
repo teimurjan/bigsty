@@ -27,10 +27,25 @@ export interface ICategoryListRawIntlResponseData {
   data: ICategoryListRawIntlResponseItem[];
 }
 
+export interface ICategoryRawIntlResponseData {
+  data: ICategoryListRawIntlResponseItem;
+}
+
+export interface ICategoryCreatePayload {
+  names: {
+    [key: string]: string;
+  };
+  feature_types: number[];
+  parent_category_id?: number;
+}
+
 export interface ICategoryAPI {
   getAll(): Promise<ICategoryListResponseData>;
   getAllRawIntl(): Promise<ICategoryListRawIntlResponseData>;
   delete(id: number): Promise<{}>;
+  create(
+    payload: ICategoryCreatePayload
+  ): Promise<ICategoryRawIntlResponseData>;
 }
 
 export class CategoryAPI implements ICategoryAPI {
@@ -75,6 +90,21 @@ export class CategoryAPI implements ICategoryAPI {
       const response = await this.client.delete<{}>(`/api/categories/${id}`, {
         headers: this.headersManager.getHeaders()
       });
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async create(payload: ICategoryCreatePayload) {
+    try {
+      const response = await this.client.post<ICategoryRawIntlResponseData>(
+        `/api/categories`,
+        payload,
+        {
+          headers: this.headersManager.getHeaders()
+        }
+      );
       return response.data;
     } catch (e) {
       throw e;

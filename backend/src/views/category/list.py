@@ -29,7 +29,6 @@ class CategoryListView(ValidatableView):
             serialized_category = (
                 self
                 ._serializer_cls(category)
-                .in_language(request.language)
                 .with_serialized_feature_types()
                 .serialize()
             )

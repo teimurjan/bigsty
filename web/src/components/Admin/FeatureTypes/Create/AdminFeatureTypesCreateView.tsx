@@ -1,65 +1,35 @@
 import * as React from "react";
 
-import { Field, FieldRenderProps } from "react-final-form";
-import { InjectedIntl, InjectedIntlProps, injectIntl } from "react-intl";
-
-import { FormTextField } from "src/components/common/FormTextField/FormTextField";
+import { InjectedIntlProps, injectIntl } from "react-intl";
 
 import { CreateModal } from "../../CreateModal";
+import { IntlField } from "../../IntlField";
 
-import { Tag } from "src/components/common/Tag/Tag";
-import { IViewProps as IProps } from "./AdminFeatureTypesCreatePresenter";
+import {
+  FEATURE_TYPE_NAME_FIELD_KEY,
+  IViewProps as IProps
+} from "./AdminFeatureTypesCreatePresenter";
 
-const getIntlFieldRenderer = (
-  locale: IProps["availableLocales"][0],
-  intl: InjectedIntl
-) => ({ input, meta }: FieldRenderProps) => {
-  const showError = meta.touched && meta.error;
-  return (
-    <FormTextField
-      labelProps={{
-        children: (
-          <>
-            {intl.formatMessage({
-              id: "AdminFeatureTypes.nameInput.label"
-            })}{" "}
-            <Tag color="is-info">{locale.name}</Tag>
-          </>
-        )
-      }}
-      inputProps={{
-        ...input,
-        isDanger: showError,
-        placeholder: intl.formatMessage({
-          id: "AdminFeatureTypes.nameInput.placeholder"
-        }),
-        type: "text"
-      }}
-      helpTextProps={{
-        children: showError
-          ? intl.formatMessage({ id: meta.error })
-          : undefined,
-        type: "is-danger"
-      }}
+interface IFieldsProps {
+  availableLocales: IProps["availableLocales"];
+}
+
+const Fields = injectIntl(
+  ({ availableLocales, intl }: IFieldsProps & InjectedIntlProps) => (
+    <IntlField
+      key_={FEATURE_TYPE_NAME_FIELD_KEY}
+      locales={availableLocales}
+      label={intl.formatMessage({
+        id: "AdminFeatureTypes.nameInput.label"
+      })}
+      placeholder={intl.formatMessage({
+        id: "AdminFeatureTypes.nameInput.placeholder"
+      })}
     />
-  );
-};
-
-const getFieldsRenderer = (
-  availableLocales: IProps["availableLocales"],
-  getFieldName: IProps["getFieldName"],
-  intl: InjectedIntl
-) => () => (
-  <>
-    {availableLocales.map(locale => (
-      <Field
-        key={locale.id}
-        name={getFieldName(locale)}
-        render={getIntlFieldRenderer(locale, intl)}
-      />
-    ))}
-  </>
+  )
 );
+
+const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
 
 export const AdminFeatureTypesCreateView = injectIntl(
   ({
@@ -70,8 +40,7 @@ export const AdminFeatureTypesCreateView = injectIntl(
     error,
     intl,
     availableLocales,
-    validate,
-    getFieldName
+    validate
   }: IProps & InjectedIntlProps) => (
     <CreateModal
       formID="adminFeatureTypesCreateForm"
@@ -81,7 +50,7 @@ export const AdminFeatureTypesCreateView = injectIntl(
       isLoading={isLoading}
       globalError={error}
       title={intl.formatMessage({ id: "AdminFeatureTypes.create.title" })}
-      renderFields={getFieldsRenderer(availableLocales, getFieldName, intl)}
+      renderFields={getFieldsRenderer({ availableLocales })}
       validate={validate}
     />
   )

@@ -10,6 +10,12 @@ import { Section } from "src/components/common/Section/Section";
 import { AdminTable, IntlRenderer } from "../../AdminTable";
 import { IViewProps as IProps } from "./AdminCategoriesListPresenter";
 
+const NewCategoryButton = injectIntl(({ intl }) => (
+  <LinkButton to="/admin/categories/new" color="is-primary">
+    {intl.formatMessage({ id: "AdminCategories.notFound.cta" })}
+  </LinkButton>
+));
+
 const NoCategoriesAvialable = injectIntl(({ intl }) => (
   <NoDataAvailable
     title={intl.formatMessage({ id: "AdminCategories.notFound.title" })}
@@ -62,6 +68,8 @@ export const AdminCategoriesListView = ({
           renderer={new IntlRenderer(locales)}
         />
       </AdminTable>
+
+      {isDataLoaded && categories.length > 0 && <NewCategoryButton />}
     </Container>
   </Section>
 );

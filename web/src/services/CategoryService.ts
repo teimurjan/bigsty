@@ -2,6 +2,7 @@ import { normalize, schema } from "normalizr";
 
 import {
   ICategoryAPI,
+  ICategoryCreatePayload,
   ICategoryListRawIntlResponseItem,
   ICategoryListResponseItem
 } from "src/api/CategoryAPI";
@@ -18,6 +19,9 @@ export interface ICategoryService {
     result: number[];
   }>;
   delete(id: number): Promise<{}>;
+  create(
+    payload: ICategoryCreatePayload
+  ): Promise<ICategoryListRawIntlResponseItem>;
 }
 
 export class CategoryService implements ICategoryService {
@@ -38,5 +42,9 @@ export class CategoryService implements ICategoryService {
 
   public async delete(id: number) {
     return await this.API.delete(id);
+  }
+
+  public async create(payload: ICategoryCreatePayload) {
+    return (await this.API.create(payload)).data;
   }
 }

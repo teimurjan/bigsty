@@ -18,7 +18,7 @@ export class HeadersManager implements IHeadersManager {
     const locale = this.intlStorage.getLocale();
     const accessToken = this.authStorage.getAccessToken();
     return {
-      "Accept-Language": locale,
+      "Accept-Language": locale || 'en-US',
       Authorization: accessToken ? `Bearer ${accessToken}` : null
     };
   }

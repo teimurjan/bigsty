@@ -53,5 +53,13 @@
   "AdminFeatureTypes.create.title": "Feature type creation",
   "AdminFeatureTypes.nameInput.placeholder": "Enter a name",
   "common.errors.field.empty": "Field cannot be empty",
-  "AdminFeatureTypes.nameInput.label": "Name"
+  "AdminFeatureTypes.nameInput.label": "Name",
+  "AdminCategories.errors.noFeatureTypes": "You should choose at least one feature type",
+  "AdminCategories.nameInput.label": "Name",
+  "AdminCategories.nameInput.placeholder": "Enter a name",
+  "AdminCategories.featureTypesSelect.label": "Feature types",
+  "AdminCategories.create.title": "Category creation",
+  "NativeSelect.multipleHint": "Hold CMD/Ctrl and click on the items you want to add.",
+  "AdminCategories.parentCategorySelect.label": "Parent Category",
+  "AdminCategories.parentCategorySelect.defaultOption.title": "No Parent Category"
 }
