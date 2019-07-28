@@ -8,14 +8,16 @@ import { IViewProps as IProps } from "./AdminFeatureTypesDeletePresenter";
 
 export const AdminFeatureTypesDeleteView = ({
   isOpen,
-  delete_,
+  remove,
   close,
-  isLoading
+  isLoading,
+  error
 }: IProps & InjectedIntlProps) => (
   <DeleteModal
     isOpen={isOpen}
-    onConfirm={delete_}
+    onConfirm={remove}
     onClose={close}
     isLoading={isLoading}
+    error={error}
   />
 );

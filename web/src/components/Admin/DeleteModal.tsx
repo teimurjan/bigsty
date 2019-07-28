@@ -7,12 +7,14 @@ import { Modal } from "src/components/common/Modal/Modal";
 import { ModalBackground } from "src/components/common/ModalBackground/ModalBackground";
 import { ModalCard } from "src/components/common/ModalCard/ModalCard";
 import { ModalContent } from "src/components/common/ModalContent/ModalContent";
+import { Message } from "../common/Message/Message";
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
   onClose: () => any;
   onConfirm: () => any;
   isLoading?: boolean;
+  error: string | undefined;
 }
 
 export const DeleteModal = injectIntl(
@@ -22,6 +24,7 @@ export const DeleteModal = injectIntl(
     intl,
     onConfirm,
     isLoading = false,
+    error,
     ...props
   }: IProps & InjectedIntlProps) => {
     const onConfirmClick = React.useCallback(
@@ -40,6 +43,15 @@ export const DeleteModal = injectIntl(
               </ModalCard.Title>
               <ModalCard.Close onClick={onClose} />
             </ModalCard.Head>
+            {error && (
+              <ModalCard.Body>
+                <Message color="is-danger">
+                  <Message.Body>
+                    {intl.formatMessage({ id: error })}
+                  </Message.Body>
+                </Message>
+              </ModalCard.Body>
+            )}
             <ModalCard.Foot>
               <Button
                 color="is-primary"

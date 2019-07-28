@@ -8,13 +8,15 @@ import { IViewProps as IProps } from "./AdminCategoriesDeletePresenter";
 
 export const AdminCategoriesDeleteView = ({
   isOpen,
-  delete_,
+  remove,
   close,
-  isLoading
+  isLoading,
+  error
 }: IProps & InjectedIntlProps) => (
   <DeleteModal
+    error={error}
     isOpen={isOpen}
-    onConfirm={delete_}
+    onConfirm={remove}
     onClose={close}
     isLoading={isLoading}
   />

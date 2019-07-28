@@ -5,6 +5,7 @@ import { withRouter } from "react-router";
 import { injectAdminCategoriesState } from "src/state/AdminCategoriesState";
 import { injectIntlState } from "src/state/IntlState";
 
+import { injectDependencies } from "src/DI/DI";
 import { injectAdminFeatureTypesState } from "src/state/AdminFeatureTypesState";
 import {
   AdminCategoriesCreatePresenter,
@@ -20,6 +21,11 @@ const ConnectedAdminCategoriesCreatePresenter = injectIntlState(
   )
 );
 
-export const AdminCategoriesCreateContainer = () => (
-  <ConnectedAdminCategoriesCreatePresenter View={AdminCategoriesCreateView} />
+export const AdminCategoriesCreateContainer = injectDependencies(
+  ({ dependencies }) => (
+    <ConnectedAdminCategoriesCreatePresenter
+      View={AdminCategoriesCreateView}
+      service={dependencies.services.category}
+    />
+  )
 );

@@ -3,6 +3,7 @@ import { normalize, schema } from "normalizr";
 import {
   IFeatureTypeAPI,
   IFeatureTypeCreatePayload,
+  IFeatureTypeEditPayload,
   IFeatureTypeListRawIntlResponseItem,
   IFeatureTypeListResponseItem
 } from "src/api/FeatureTypeAPI";
@@ -46,5 +47,9 @@ export class FeatureTypeService implements IFeatureTypeService {
 
   public async create(payload: IFeatureTypeCreatePayload) {
     return (await this.API.create(payload)).data;
+  }
+
+  public async edit(id: number, payload: IFeatureTypeEditPayload) {
+    return (await this.API.edit(id, payload)).data;
   }
 }

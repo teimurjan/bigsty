@@ -5,6 +5,7 @@ import { withRouter } from "react-router";
 import { injectAdminFeatureTypesState } from "src/state/AdminFeatureTypesState";
 import { injectIntlState } from "src/state/IntlState";
 
+import { injectDependencies } from "src/DI/DI";
 import {
   AdminFeatureTypesCreatePresenter,
   IProps
@@ -17,8 +18,11 @@ const ConnectedAdminFeatureTypesCreatePresenter = injectIntlState(
   )
 );
 
-export const AdminFeatureTypesCreateContainer = () => (
-  <ConnectedAdminFeatureTypesCreatePresenter
-    View={AdminFeatureTypesCreateView}
-  />
+export const AdminFeatureTypesCreateContainer = injectDependencies(
+  ({ dependencies }) => (
+    <ConnectedAdminFeatureTypesCreatePresenter
+      View={AdminFeatureTypesCreateView}
+      service={dependencies.services.featureType}
+    />
+  )
 );

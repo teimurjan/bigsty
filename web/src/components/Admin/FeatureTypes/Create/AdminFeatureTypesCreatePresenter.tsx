@@ -3,16 +3,25 @@ import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import * as yup from "yup";
 
+import { IFeatureTypeService } from "src/services/FeatureTypeService";
+
 import * as schemaValidator from "src/components/SchemaValidator";
 import { IContextValue as AdminFeatureTypesStateContextValue } from "src/state/AdminFeatureTypesState";
 import { IContextValue as IntlStateContextValue } from "src/state/IntlState";
+
 import { getFieldName, parseFieldName } from "../../IntlField";
+
+interface IState {
+  isCreating: boolean;
+  error: string | undefined;
+}
 
 export interface IProps
   extends RouteComponentProps<any>,
     AdminFeatureTypesStateContextValue,
     IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
+  service: IFeatureTypeService;
 }
 
 export interface IViewProps {
@@ -31,7 +40,15 @@ const DEFAULT_SCHEMA_VALIDATOR = {
 
 export const FEATURE_TYPE_NAME_FIELD_KEY = "name";
 
-export class AdminFeatureTypesCreatePresenter extends React.Component<IProps> {
+export class AdminFeatureTypesCreatePresenter extends React.Component<
+  IProps,
+  IState
+> {
+  public state = {
+    error: undefined,
+    isCreating: false
+  };
+
   private validator: schemaValidator.ISchemaValidator = DEFAULT_SCHEMA_VALIDATOR;
 
   public componentDidMount() {
@@ -51,9 +68,9 @@ export class AdminFeatureTypesCreatePresenter extends React.Component<IProps> {
   }
 
   public render() {
+    const { isCreating, error } = this.state;
     const {
       View,
-      adminFeatureTypesState: { isCreateLoading, createError },
       intlState: { availableLocales }
     } = this.props;
 
@@ -61,8 +78,8 @@ export class AdminFeatureTypesCreatePresenter extends React.Component<IProps> {
       <View
         isOpen={true}
         create={this.create}
-        error={createError}
-        isLoading={isCreateLoading}
+        error={error}
+        isLoading={isCreating}
         close={this.close}
         availableLocales={availableLocales}
         validate={this.validator.validate}
@@ -92,7 +109,8 @@ export class AdminFeatureTypesCreatePresenter extends React.Component<IProps> {
 
   private create: IViewProps["create"] = async values => {
     const {
-      adminFeatureTypesState: { createFeatureType }
+      service,
+      adminFeatureTypesState: { addFeatureType }
     } = this.props;
 
     const formattedValues = Object.keys(values).reduce(
@@ -105,14 +123,18 @@ export class AdminFeatureTypesCreatePresenter extends React.Component<IProps> {
         return acc;
       },
       {
-        names: {},
+        names: {}
       }
     );
 
-    const isCreated = await createFeatureType(formattedValues);
-
-    if (isCreated) {
+    try {
+      const featureType = await service.create(formattedValues);
+      addFeatureType(featureType);
       this.close();
+    } catch (e) {
+      this.setState({ error: "errors.common" });
+    } finally {
+      this.setState({ isCreating: false });
     }
   };
 }

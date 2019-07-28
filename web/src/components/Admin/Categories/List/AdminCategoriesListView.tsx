@@ -38,16 +38,15 @@ export const AdminCategoriesListView = ({
   categories,
   locales,
   intl,
-  openDeletion,
   isLoading,
   isDataLoaded
 }: IProps & InjectedIntlProps) => (
   <Section>
     <Container>
       <AdminTable<Category>
+        relPath="categories"
         isLoading={isLoading}
         isDataLoaded={isDataLoaded}
-        onDelete={openDeletion}
         entities={categories}
         renderNoData={renderNoData}
         intl={intl}

@@ -14,14 +14,12 @@ export interface IViewProps {
   isDataLoaded: boolean;
   isLoading: boolean;
   locales: string[];
-  openDeletion: (id: number) => any;
 }
 
 export const AdminFeatureTypesListPresenter = ({
   View,
   adminFeatureTypesState: {
     isListLoading,
-    openDeletion,
     featureTypes,
     getFeatureTypes,
     hasListLoaded
@@ -37,7 +35,6 @@ export const AdminFeatureTypesListPresenter = ({
   return (
     <View
       isDataLoaded={hasListLoaded}
-      openDeletion={openDeletion}
       isLoading={isListLoading && isLoadingTimeoutExpired}
       locales={availableLocales.map(({ name }) => name)}
       featureTypes={featureTypes}

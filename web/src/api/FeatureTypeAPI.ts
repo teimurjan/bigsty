@@ -33,12 +33,22 @@ export interface IFeatureTypeCreatePayload {
   };
 }
 
+export interface IFeatureTypeEditPayload {
+  names: {
+    [key: string]: string;
+  };
+}
+
 export interface IFeatureTypeAPI {
   getAll(): Promise<IFeatureTypeListResponseData>;
   getAllRawIntl(): Promise<IFeatureTypeListRawIntlResponseData>;
   delete(id: number): Promise<{}>;
   create(
     payload: IFeatureTypeCreatePayload
+  ): Promise<IFeatureTypeRawIntlResponseData>;
+  edit(
+    id: number,
+    payload: IFeatureTypeEditPayload
   ): Promise<IFeatureTypeRawIntlResponseData>;
 }
 
@@ -97,6 +107,21 @@ export class FeatureTypeAPI implements IFeatureTypeAPI {
     try {
       const response = await this.client.post<IFeatureTypeRawIntlResponseData>(
         `/api/feature_types`,
+        payload,
+        {
+          headers: this.headersManager.getHeaders()
+        }
+      );
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async edit(id: number, payload: IFeatureTypeEditPayload) {
+    try {
+      const response = await this.client.put<IFeatureTypeRawIntlResponseData>(
+        `/api/feature_types/${id}`,
         payload,
         {
           headers: this.headersManager.getHeaders()

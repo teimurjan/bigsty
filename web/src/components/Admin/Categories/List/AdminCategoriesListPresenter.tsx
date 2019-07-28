@@ -14,14 +14,12 @@ export interface IViewProps {
   isDataLoaded: boolean;
   isLoading: boolean;
   locales: string[];
-  openDeletion: (id: number) => any;
 }
 
 export const AdminCategoriesListPresenter = ({
   View,
   adminCategoriesState: {
     isListLoading,
-    openDeletion,
     categories,
     getCategories,
     hasListLoaded
@@ -37,7 +35,6 @@ export const AdminCategoriesListPresenter = ({
   return (
     <View
       isDataLoaded={hasListLoaded}
-      openDeletion={openDeletion}
       isLoading={isListLoading && isLoadingTimeoutExpired}
       locales={availableLocales.map(({ name }) => name)}
       categories={categories}

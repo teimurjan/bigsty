@@ -5,11 +5,17 @@ import * as yup from "yup";
 
 import * as schemaValidator from "src/components/SchemaValidator";
 
+import { ICategoryService } from "src/services/CategoryService";
 import { IContextValue as AdminCategoriesStateContextValue } from "src/state/AdminCategoriesState";
 import { IContextValue as AdminFeatureTypesStateContextValue } from "src/state/AdminFeatureTypesState";
 import { IContextValue as IntlStateContextValue } from "src/state/IntlState";
 
 import { getFieldName, parseFieldName } from "../../IntlField";
+
+interface IState {
+  isCreating: boolean;
+  error: string | undefined;
+}
 
 export interface IProps
   extends RouteComponentProps<any>,
@@ -17,6 +23,7 @@ export interface IProps
     AdminFeatureTypesStateContextValue,
     IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
+  service: ICategoryService;
 }
 
 export interface IViewProps {
@@ -41,7 +48,14 @@ const DEFAULT_SCHEMA_VALIDATOR = {
 
 export const CATEGORY_NAME_FIELD_KEY = "name";
 
-export class AdminCategoriesCreatePresenter extends React.Component<IProps> {
+export class AdminCategoriesCreatePresenter extends React.Component<
+  IProps,
+  IState
+> {
+  public state = {
+    error: undefined,
+    isCreating: false
+  };
   private validator: schemaValidator.ISchemaValidator = DEFAULT_SCHEMA_VALIDATOR;
 
   public componentDidMount() {
@@ -68,19 +82,21 @@ export class AdminCategoriesCreatePresenter extends React.Component<IProps> {
   public render() {
     const {
       View,
-      adminCategoriesState: { isCreateLoading, createError, categories },
+      adminCategoriesState: { categories },
       // TODO: pass feature types loading state to show spinner till they are loaded
       adminFeatureTypesState: { featureTypes },
       intlState: { availableLocales }
     } = this.props;
+
+    const { error, isCreating } = this.state;
 
     return (
       <View
         categories={categories}
         isOpen={true}
         create={this.create}
-        error={createError}
-        isLoading={isCreateLoading}
+        error={error}
+        isLoading={isCreating}
         close={this.close}
         availableLocales={availableLocales}
         validate={this.validator.validate}
@@ -117,9 +133,7 @@ export class AdminCategoriesCreatePresenter extends React.Component<IProps> {
   private close = () => this.props.history.goBack();
 
   private create: IViewProps["create"] = async values => {
-    const {
-      adminCategoriesState: { createCategory }
-    } = this.props;
+    const { service, adminCategoriesState } = this.props;
 
     const formattedValues = Object.keys(values).reduce(
       (acc, fieldName) => {
@@ -139,10 +153,13 @@ export class AdminCategoriesCreatePresenter extends React.Component<IProps> {
       }
     );
 
-    const isCreated = await createCategory(formattedValues);
-
-    if (isCreated) {
-      this.close();
+    try {
+      const category = await service.create(formattedValues);
+      adminCategoriesState.addCategory(category);
+    } catch (e) {
+      this.setState({ error: "errors.common" });
+    } finally {
+      this.setState({ isCreating: false });
     }
   };
 }

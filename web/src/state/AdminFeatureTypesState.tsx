@@ -1,9 +1,6 @@
 import * as React from "react";
 
-import {
-  IFeatureTypeCreatePayload,
-  IFeatureTypeListRawIntlResponseItem
-} from "src/api/FeatureTypeAPI";
+import { IFeatureTypeListRawIntlResponseItem } from "src/api/FeatureTypeAPI";
 import { injectDependencies } from "src/DI/DI";
 import { extendIntlTextWithLocaleNames } from "src/helpers/intl";
 import { IFeatureTypeService } from "src/services/FeatureTypeService";
@@ -14,20 +11,13 @@ import {
 
 export interface IContextValue {
   adminFeatureTypesState: {
-    createError: undefined | string;
     featureTypes: IFeatureTypeListRawIntlResponseItem[];
     isListLoading: boolean;
     hasListLoaded: boolean;
     listError: undefined | string;
-    isCreateLoading: boolean;
-    isDeleteLoading: boolean;
-    isDeleteOpen: boolean;
-    deleteError: undefined | string;
     getFeatureTypes: () => Promise<void>;
-    deleteFeatureType: () => Promise<void>;
-    openDeletion: (id: number) => void;
-    closeDeletion: () => void;
-    createFeatureType: (payload: IFeatureTypeCreatePayload) => Promise<boolean>;
+    deleteFeatureType: (id: number) => void;
+    addFeatureType: (featureType: IFeatureTypeListRawIntlResponseItem) => void;
   };
 }
 
@@ -39,13 +29,8 @@ interface IProviderProps {
 }
 
 interface IProviderState {
-  createError: undefined | string;
   featureTypes: { [key: string]: IFeatureTypeListRawIntlResponseItem };
   featureTypesOrder: number[];
-  deleteError: undefined | string;
-  deletingFeatureTypeID: number | null;
-  isCreateLoading: boolean;
-  isDeleteLoading: boolean;
   isListLoading: boolean;
   listError: undefined | string;
   hasListLoaded: boolean;
@@ -56,27 +41,17 @@ class Provider extends React.Component<
   IProviderState
 > {
   public state = {
-    createError: undefined,
-    deleteError: undefined,
-    deletingFeatureTypeID: null,
     featureTypes: {},
     featureTypesOrder: [],
     hasListLoaded: false,
-    isCreateLoading: false,
-    isDeleteLoading: false,
     isListLoading: false,
     listError: undefined
   };
 
   public render() {
     const {
-      createError,
       featureTypes,
       featureTypesOrder,
-      deleteError,
-      deletingFeatureTypeID,
-      isDeleteLoading,
-      isCreateLoading,
       isListLoading,
       listError,
       hasListLoaded
@@ -85,22 +60,13 @@ class Provider extends React.Component<
       children,
       intlState: { availableLocales }
     } = this.props;
-    const {
-      getFeatureTypes,
-      deleteFeatureType,
-      openDeletion,
-      closeDeletion,
-      createFeatureType
-    } = this;
+    const { addFeatureType, getFeatureTypes, deleteFeatureType } = this;
 
     return (
       <Context.Provider
         value={{
           adminFeatureTypesState: {
-            closeDeletion,
-            createError,
-            createFeatureType,
-            deleteError,
+            addFeatureType,
             deleteFeatureType,
             featureTypes: featureTypesOrder.map(featureTypeId => {
               const featureType: IFeatureTypeListRawIntlResponseItem =
@@ -116,12 +82,8 @@ class Provider extends React.Component<
             }),
             getFeatureTypes,
             hasListLoaded,
-            isCreateLoading,
-            isDeleteLoading,
-            isDeleteOpen: !!deletingFeatureTypeID,
             isListLoading,
-            listError,
-            openDeletion
+            listError
           }
         }}
       >
@@ -150,72 +112,34 @@ class Provider extends React.Component<
     }
   };
 
-  private deleteFeatureType = async () => {
-    const {
-      deletingFeatureTypeID,
-      featureTypes,
-      featureTypesOrder
-    } = this.state;
-    if (!deletingFeatureTypeID) {
-      return;
-    }
-
-    const { service } = this.props;
-    this.setState({ isDeleteLoading: true });
-    try {
-      await service.delete(deletingFeatureTypeID!);
-
-      const newFeatureTypes = { ...featureTypes };
-      delete newFeatureTypes[deletingFeatureTypeID!];
-
-      this.setState({
-        deletingFeatureTypeID: null,
-        featureTypes: newFeatureTypes,
-        featureTypesOrder: featureTypesOrder.filter(
-          id => id !== deletingFeatureTypeID
-        ),
-        isDeleteLoading: false
-      });
-    } catch (e) {
-      this.setState({ deleteError: "errors.common", isDeleteLoading: false });
-    }
-  };
-
-  // Returns boolean to track if a feature type has been created or not
-  private createFeatureType = async (
-    payload: IFeatureTypeCreatePayload
-  ): Promise<boolean> => {
+  private addFeatureType = (
+    featureType: IFeatureTypeListRawIntlResponseItem
+  ) => {
     const { featureTypes, featureTypesOrder } = this.state;
-    const { service } = this.props;
-    this.setState({ isCreateLoading: true });
-    try {
-      const newFeatureType = await service.create(payload);
 
-      const newFeatureTypes = {
-        ...featureTypes,
-        [newFeatureType.id]: newFeatureType
-      };
+    const newFeatureTypes = {
+      ...featureTypes,
+      [featureType.id]: featureType
+    };
 
-      this.setState({
-        featureTypes: newFeatureTypes,
-        featureTypesOrder: [...featureTypesOrder, newFeatureType.id],
-        isCreateLoading: false
-      });
-
-      return true;
-    } catch (e) {
-      this.setState({ createError: "errors.common", isCreateLoading: false });
-
-      return false;
-    }
+    this.setState({
+      featureTypes: newFeatureTypes,
+      featureTypesOrder: [...featureTypesOrder, featureType.id]
+    });
   };
 
-  private openDeletion = (id: number) => {
-    this.setState({ deletingFeatureTypeID: id });
-  };
+  private deleteFeatureType = (id: number) => {
+    const { featureTypes, featureTypesOrder } = this.state;
 
-  private closeDeletion = () => {
-    this.setState({ deletingFeatureTypeID: null });
+    const newFeatureTypes = { ...featureTypes };
+    delete newFeatureTypes[id!];
+
+    this.setState({
+      featureTypes: newFeatureTypes,
+      featureTypesOrder: featureTypesOrder.filter(
+        idFromOrder => idFromOrder !== id
+      )
+    });
   };
 }
 

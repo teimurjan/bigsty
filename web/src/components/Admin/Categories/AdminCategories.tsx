@@ -9,11 +9,14 @@ import { AdminCategoriesListContainer } from "./List/AdminCategoriesListContaine
 export const AdminCategories = ({ match }: RouteComponentProps) => (
   <>
     <AdminCategoriesListContainer />
-    <AdminCategoriesDeleteContainer />
 
     <Route
       path={`${match.path}/new`}
       component={AdminCategoriesCreateContainer}
+    />
+    <Route
+      path={`${match.path}/delete/:id`}
+      component={AdminCategoriesDeleteContainer}
     />
   </>
 );

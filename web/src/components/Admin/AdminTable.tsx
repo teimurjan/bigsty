@@ -8,8 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import { InjectedIntlProps } from "react-intl";
 
-import { Button } from "src/components/common/Button/Button";
 import { Container } from "src/components/common/Container/Container";
+import { LinkButton } from "src/components/common/LinkButton/LinkButton";
 import { LoaderLayout } from "src/components/common/LoaderLayout/LoaderLayout";
 import { Section } from "src/components/common/Section/Section";
 import { Table } from "src/components/common/Table/Table";
@@ -101,8 +101,7 @@ export class IntlRenderer<T> implements IRenderer<T> {
 interface IProps<T> {
   isLoading: boolean;
   isDataLoaded: boolean;
-  onDelete?: (id: number) => any;
-  onEdit?: (id: number) => void;
+  relPath: string;
   renderNoData: () => React.ReactNode;
   entities: T[];
   children: Array<React.ReactElement<IAdminTableColProps<T>>>;
@@ -111,14 +110,13 @@ interface IProps<T> {
 const defaultRenderer = new DefaultRenderer();
 
 export const AdminTable = <T extends { id: number }>({
-  onDelete,
-  onEdit,
   renderNoData,
   isLoading,
   isDataLoaded,
   entities,
   children,
-  intl
+  intl,
+  relPath
 }: IProps<T> & InjectedIntlProps) => (
   <Section>
     <Container>
@@ -175,27 +173,23 @@ export const AdminTable = <T extends { id: number }>({
                     width: 15%;
                   `}
                 >
-                  {onEdit && (
-                    <Button
-                      css={css`
-                        margin-right: 0.5rem;
-                      `}
-                      color="is-info"
-                      /* tslint:disable-next-line jsx-no-lambda */
-                      onClick={() => onEdit(entity.id)}
-                    >
-                      <FontAwesomeIcon icon={faPencilAlt} />
-                    </Button>
-                  )}
-                  {onDelete && (
-                    <Button
-                      color="is-danger"
-                      /* tslint:disable-next-line jsx-no-lambda */
-                      onClick={() => onDelete(entity.id)}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </Button>
-                  )}
+                  <LinkButton
+                    to={`${relPath}/edit/${entity.id}`}
+                    css={css`
+                      margin-right: 0.5rem;
+                    `}
+                    color="is-info"
+                    /* tslint:disable-next-line jsx-no-lambda */
+                  >
+                    <FontAwesomeIcon icon={faPencilAlt} />
+                  </LinkButton>
+                  <LinkButton
+                    to={`${relPath}/delete/${entity.id}`}
+                    color="is-danger"
+                    /* tslint:disable-next-line jsx-no-lambda */
+                  >
+                    <FontAwesomeIcon icon={faTrashAlt} />
+                  </LinkButton>
                 </Table.Cell>
               </Table.Row>
             ))}

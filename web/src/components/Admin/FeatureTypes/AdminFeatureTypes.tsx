@@ -9,11 +9,14 @@ import { AdminFeatureTypesListContainer } from "./List/AdminFeatureTypesListCont
 export const AdminFeatureTypes = ({ match }: RouteComponentProps<any>) => (
   <>
     <AdminFeatureTypesListContainer />
-    <AdminFeatureTypesDeleteContainer />
 
     <Route
       path={`${match.path}/new`}
       component={AdminFeatureTypesCreateContainer}
+    />
+    <Route
+      path={`${match.path}/delete/:id`}
+      component={AdminFeatureTypesDeleteContainer}
     />
   </>
 );

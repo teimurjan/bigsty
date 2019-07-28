@@ -34,16 +34,15 @@ export const AdminFeatureTypesListView = ({
   featureTypes,
   locales,
   intl,
-  openDeletion,
   isLoading,
   isDataLoaded
 }: IProps & InjectedIntlProps) => (
   <Section>
     <Container>
       <AdminTable<FeatureType>
+        relPath="featureTypes"
         isLoading={isLoading}
         isDataLoaded={isDataLoaded}
-        onDelete={openDeletion}
         entities={featureTypes}
         renderNoData={renderNoData}
         intl={intl}
