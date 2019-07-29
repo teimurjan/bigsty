@@ -15,6 +15,7 @@ import { getFieldName, parseFieldName } from "../../IntlField";
 interface IState {
   isCreating: boolean;
   error: string | undefined;
+  validator?: schemaValidator.ISchemaValidator;
 }
 
 export interface IProps
@@ -37,14 +38,10 @@ export interface IViewProps {
   error: string | undefined;
   close: () => any;
   availableLocales: IntlStateContextValue["intlState"]["availableLocales"];
-  validate: (values: object) => object | Promise<object>;
+  validate?: (values: object) => object | Promise<object>;
   featureTypes: AdminFeatureTypesStateContextValue["adminFeatureTypesState"]["featureTypes"];
   categories: AdminCategoriesStateContextValue["adminCategoriesState"]["categories"];
 }
-
-const DEFAULT_SCHEMA_VALIDATOR = {
-  validate: () => ({ NOT: "INITIALIZED" })
-};
 
 export const CATEGORY_NAME_FIELD_KEY = "name";
 
@@ -54,12 +51,15 @@ export class AdminCategoriesCreatePresenter extends React.Component<
 > {
   public state = {
     error: undefined,
-    isCreating: false
+    isCreating: false,
+    validator: undefined
   };
-  private validator: schemaValidator.ISchemaValidator = DEFAULT_SCHEMA_VALIDATOR;
 
   public componentDidMount() {
-    this.initValidator();
+    const { intlState } = this.props;
+    if (intlState.availableLocales.length > 0) {
+      this.initValidator();
+    }
 
     const {
       adminFeatureTypesState: { getFeatureTypes }
@@ -88,7 +88,7 @@ export class AdminCategoriesCreatePresenter extends React.Component<
       intlState: { availableLocales }
     } = this.props;
 
-    const { error, isCreating } = this.state;
+    const { error, isCreating, validator } = this.state;
 
     return (
       <View
@@ -99,7 +99,7 @@ export class AdminCategoriesCreatePresenter extends React.Component<
         isLoading={isCreating}
         close={this.close}
         availableLocales={availableLocales}
-        validate={this.validator.validate}
+        validate={(validator || { validate: undefined }).validate}
         featureTypes={featureTypes}
       />
     );
@@ -107,27 +107,29 @@ export class AdminCategoriesCreatePresenter extends React.Component<
 
   private initValidator = () => {
     const { intlState } = this.props;
-    this.validator = new schemaValidator.SchemaValidator(
-      yup.object().shape(
-        intlState.availableLocales.reduce(
-          (acc, locale) => ({
-            ...acc,
-            [getFieldName(
-              CATEGORY_NAME_FIELD_KEY,
-              locale
-            )]: yup.string().required("common.errors.field.empty")
-          }),
-          {
-            feature_types: yup
-              .array()
-              .of(yup.number())
-              .required("AdminCategories.errors.noFeatureTypes")
-              .min(1, "AdminCategories.errors.noFeatureTypes"),
-            parent_category_id: yup.number()
-          }
+    this.setState({
+      validator: new schemaValidator.SchemaValidator(
+        yup.object().shape(
+          intlState.availableLocales.reduce(
+            (acc, locale) => ({
+              ...acc,
+              [getFieldName(
+                CATEGORY_NAME_FIELD_KEY,
+                locale
+              )]: yup.string().required("common.errors.field.empty")
+            }),
+            {
+              feature_types: yup
+                .array()
+                .of(yup.number())
+                .required("AdminCategories.errors.noFeatureTypes")
+                .min(1, "AdminCategories.errors.noFeatureTypes"),
+              parent_category_id: yup.number()
+            }
+          )
         )
       )
-    );
+    });
   };
 
   private close = () => this.props.history.goBack();

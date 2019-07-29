@@ -18,7 +18,7 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   onClose: () => any;
   onSubmit: (values: object) => any;
   isLoading?: boolean;
-  validate: (values: object) => object | Promise<object>;
+  validate?: (values: object) => object | Promise<object>;
   globalError: string | undefined;
   renderFields: () => React.ReactNode;
   title: string;
@@ -43,7 +43,7 @@ export const CreateModal = injectIntl(
       );
     }
 
-    private renderInnerForm = ({ handleSubmit, errors }: FormRenderProps) => {
+    private renderInnerForm = ({ handleSubmit, ...props }: FormRenderProps) => {
       const {
         onClose,
         intl,
@@ -53,7 +53,7 @@ export const CreateModal = injectIntl(
         renderFields,
         formID
       } = this.props;
-
+console.log(props);
       return (
         <ModalCard>
           <ModalCard.Head>

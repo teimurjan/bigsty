@@ -12,11 +12,11 @@ const ConnectedAdminFeatureTypesListPresenter = injectIntlState(
   AdminFeatureTypesListPresenter
 );
 
-export const AdminFeatureTypesListContainer = injectIntlState(
-  injectAdminFeatureTypesState(props => (
+export const AdminFeatureTypesListContainer = injectAdminFeatureTypesState(
+  props => (
     <ConnectedAdminFeatureTypesListPresenter
       View={injectIntl(AdminFeatureTypesListView)}
       {...props}
     />
-  ))
+  )
 );

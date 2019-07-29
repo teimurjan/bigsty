@@ -14,6 +14,7 @@ import { getFieldName, parseFieldName } from "../../IntlField";
 interface IState {
   isCreating: boolean;
   error: string | undefined;
+  validator?: schemaValidator.ISchemaValidator;
 }
 
 export interface IProps
@@ -31,12 +32,8 @@ export interface IViewProps {
   error: string | undefined;
   close: () => any;
   availableLocales: IntlStateContextValue["intlState"]["availableLocales"];
-  validate: (values: object) => object | Promise<object>;
+  validate?: (values: object) => object | Promise<object>;
 }
-
-const DEFAULT_SCHEMA_VALIDATOR = {
-  validate: () => ({ NOT: "INITIALIZED" })
-};
 
 export const FEATURE_TYPE_NAME_FIELD_KEY = "name";
 
@@ -46,13 +43,16 @@ export class AdminFeatureTypesCreatePresenter extends React.Component<
 > {
   public state = {
     error: undefined,
-    isCreating: false
+    isCreating: false,
+    validator: undefined
   };
 
-  private validator: schemaValidator.ISchemaValidator = DEFAULT_SCHEMA_VALIDATOR;
-
   public componentDidMount() {
-    this.initValidator();
+    const { intlState } = this.props;
+
+    if (intlState.availableLocales.length > 0) {
+      this.initValidator();
+    }
   }
 
   public componentDidUpdate(prevProps: IProps) {
@@ -68,7 +68,7 @@ export class AdminFeatureTypesCreatePresenter extends React.Component<
   }
 
   public render() {
-    const { isCreating, error } = this.state;
+    const { isCreating, error, validator } = this.state;
     const {
       View,
       intlState: { availableLocales }
@@ -82,27 +82,33 @@ export class AdminFeatureTypesCreatePresenter extends React.Component<
         isLoading={isCreating}
         close={this.close}
         availableLocales={availableLocales}
-        validate={this.validator.validate}
+        validate={(validator || { validate: undefined }).validate}
       />
     );
   }
 
   private initValidator = () => {
+    const { validator } = this.state;
     const { intlState } = this.props;
-    this.validator = new schemaValidator.SchemaValidator(
-      yup.object().shape(
-        intlState.availableLocales.reduce(
-          (acc, locale) => ({
-            ...acc,
-            [getFieldName(
-              FEATURE_TYPE_NAME_FIELD_KEY,
-              locale
-            )]: yup.string().required("common.errors.field.empty")
-          }),
-          {}
+
+    if (typeof validator === "undefined") {
+      this.setState({
+        validator: new schemaValidator.SchemaValidator(
+          yup.object().shape(
+            intlState.availableLocales.reduce(
+              (acc, locale) => ({
+                ...acc,
+                [getFieldName(
+                  FEATURE_TYPE_NAME_FIELD_KEY,
+                  locale
+                )]: yup.string().required("common.errors.field.empty")
+              }),
+              {}
+            )
+          )
         )
-      )
-    );
+      });
+    }
   };
 
   private close = () => this.props.history.goBack();

@@ -12,11 +12,11 @@ const ConnectedAdminCategoriesListPresenter = injectIntlState(
   AdminCategoriesListPresenter
 );
 
-export const AdminCategoriesListContainer = injectIntlState(
-  injectAdminCategoriesState(props => (
+export const AdminCategoriesListContainer = injectAdminCategoriesState(
+  props => (
     <ConnectedAdminCategoriesListPresenter
       View={injectIntl(AdminCategoriesListView)}
       {...props}
     />
-  ))
+  )
 );

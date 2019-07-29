@@ -1,23 +1,43 @@
 import * as React from "react";
 
-import { withRouter } from "react-router";
-
 import { injectDependencies } from "src/DI/DI";
-import { injectAdminFeatureTypesState } from "src/state/AdminFeatureTypesState";
 
-import { AdminFeatureTypesDeletePresenter } from "./AdminFeatureTypesDeletePresenter";
-import { AdminFeatureTypesDeleteView } from "./AdminFeatureTypesDeleteView";
+import { IDependenciesContainer } from "src/DI/DependenciesContainer";
+import {
+  IContextValue as AdminFeatureTypesContextValue,
+  injectAdminFeatureTypesState
+} from "src/state/AdminFeatureTypesState";
+import { DeleteModalContainer } from "../../DeleteModal/DeleteModalContainer";
 
-const ConnectedAdminFeatureTypesDelete = injectAdminFeatureTypesState(
-  withRouter(AdminFeatureTypesDeletePresenter)
-);
+export interface IProps extends AdminFeatureTypesContextValue {
+  dependencies: IDependenciesContainer;
+}
 
-export const AdminFeatureTypesDeleteContainer = injectDependencies(
-  ({ dependencies, ...props }) => (
-    <ConnectedAdminFeatureTypesDelete
-      View={AdminFeatureTypesDeleteView}
-      service={dependencies.services.featureType}
-      {...props}
-    />
+export const AdminFeatureTypesDeleteContainer = injectAdminFeatureTypesState(
+  injectDependencies(
+    ({
+      dependencies,
+      adminFeatureTypesState: { hasListLoaded, deleteFeatureType, featureTypes }
+    }: IProps) => {
+      const deleteEntity = React.useCallback(async (id: number) => {
+        await deleteFeatureType(id);
+        dependencies.services.featureType.delete(id);
+      }, []);
+
+      const doesEntityExists = React.useCallback(
+        (id: number) =>
+          hasListLoaded &&
+          featureTypes.some(featureType => featureType.id === id),
+        [hasListLoaded, featureTypes.length]
+      );
+
+      return (
+        <DeleteModalContainer
+          deleteEntity={deleteEntity}
+          doesEntityExists={doesEntityExists}
+          backPath="/admin/featureTypes"
+        />
+      );
+    }
   )
 );

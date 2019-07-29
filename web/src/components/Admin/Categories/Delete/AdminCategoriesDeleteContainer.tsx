@@ -1,23 +1,42 @@
 import * as React from "react";
 
-import { withRouter } from "react-router";
-
 import { injectDependencies } from "src/DI/DI";
-import { injectAdminCategoriesState } from "src/state/AdminCategoriesState";
 
-import { AdminCategoriesDeletePresenter } from "./AdminCategoriesDeletePresenter";
-import { AdminCategoriesDeleteView } from "./AdminCategoriesDeleteView";
+import { IDependenciesContainer } from "src/DI/DependenciesContainer";
+import {
+  IContextValue as AdminCategoriesContextValue,
+  injectAdminCategoriesState
+} from "src/state/AdminCategoriesState";
+import { DeleteModalContainer } from "../../DeleteModal/DeleteModalContainer";
 
-const ConnectedAdminCategoriesDelete = injectAdminCategoriesState(
-  withRouter(AdminCategoriesDeletePresenter)
-);
+export interface IProps extends AdminCategoriesContextValue {
+  dependencies: IDependenciesContainer;
+}
 
-export const AdminCategoriesDeleteContainer = injectDependencies(
-  ({ dependencies, ...props }) => (
-    <ConnectedAdminCategoriesDelete
-      View={AdminCategoriesDeleteView}
-      service={dependencies.services.category}
-      {...props}
-    />
+export const AdminCategoriesDeleteContainer = injectAdminCategoriesState(
+  injectDependencies(
+    ({
+      dependencies,
+      adminCategoriesState: { hasListLoaded, deleteCategory, categories }
+    }: IProps) => {
+      const deleteEntity = React.useCallback(async (id: number) => {
+        await deleteCategory(id);
+        dependencies.services.category.delete(id);
+      }, []);
+
+      const doesEntityExists = React.useCallback(
+        (id: number) =>
+          hasListLoaded && categories.some(category => category.id === id),
+        [hasListLoaded, categories.length]
+      );
+
+      return (
+        <DeleteModalContainer
+          deleteEntity={deleteEntity}
+          doesEntityExists={doesEntityExists}
+          backPath="/admin/categories"
+        />
+      );
+    }
   )
 );

@@ -31,17 +31,18 @@ const Fields = injectIntl(
 
 const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
 
-export const AdminFeatureTypesCreateView = injectIntl(
-  ({
-    isOpen,
-    create,
-    close,
-    isLoading,
-    error,
-    intl,
-    availableLocales,
-    validate
-  }: IProps & InjectedIntlProps) => (
+export const AdminFeatureTypesCreateView = ({
+  isOpen,
+  create,
+  close,
+  isLoading,
+  error,
+  intl,
+  availableLocales,
+  validate
+}: IProps & InjectedIntlProps) => {
+  console.log(validate);
+  return (
     <CreateModal
       formID="adminFeatureTypesCreateForm"
       isOpen={isOpen}
@@ -53,5 +54,5 @@ export const AdminFeatureTypesCreateView = injectIntl(
       renderFields={getFieldsRenderer({ availableLocales })}
       validate={validate}
     />
-  )
-);
+  );
+};
