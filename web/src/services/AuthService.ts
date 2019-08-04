@@ -1,20 +1,6 @@
 import * as authAPI from "../api/AuthAPI";
 import * as authStorage from "../storage/AuthStorage";
 
-export class EmailExistsError extends Error {
-  constructor() {
-    super();
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
-}
-
-export class InvalidCredentialsError extends Error {
-  constructor() {
-    super();
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
-}
-
 export interface IAuthService {
   logIn(
     email: string,
@@ -29,6 +15,21 @@ export interface IAuthService {
   getAccessToken(): string | null;
   logOut(): void;
 }
+
+export const errors = {
+  EmailExistsError: class extends Error {
+    constructor() {
+      super();
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
+  InvalidCredentialsError: class extends Error {
+    constructor() {
+      super();
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  }
+};
 
 export class AuthService implements IAuthService {
   private API: authAPI.IAuthAPI;
@@ -51,8 +52,8 @@ export class AuthService implements IAuthService {
 
       return { error: undefined };
     } catch (e) {
-      if (e instanceof authAPI.EmailOrPasswordInvalidError) {
-        throw new InvalidCredentialsError();
+      if (e instanceof authAPI.errors.EmailOrPasswordInvalidError) {
+        throw new errors.InvalidCredentialsError();
       }
       throw e;
     }
@@ -71,8 +72,8 @@ export class AuthService implements IAuthService {
 
       return { error: undefined };
     } catch (e) {
-      if (e instanceof authAPI.DuplicateEmailError) {
-        throw new EmailExistsError();
+      if (e instanceof authAPI.errors.DuplicateEmailError) {
+        throw new errors.EmailExistsError();
       }
       throw e;
     }

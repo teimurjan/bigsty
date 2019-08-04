@@ -3,7 +3,7 @@ import * as React from "react";
 import { Field, FieldRenderProps } from "react-final-form";
 import { InjectedIntlProps, injectIntl } from "react-intl";
 
-import { CreateModal } from "../../CreateModal";
+import { ModalForm } from "../../ModalForm";
 
 import { FormNativeSelectField } from "src/components/common/FormNativeSelectField/FormNativeSelectField";
 import { getMultipleValuesFromChangeEvent } from "src/components/common/NativeSelect/NativeSelect";
@@ -177,7 +177,7 @@ export const AdminCategoriesCreateView = injectIntl(
     featureTypes,
     categories
   }: IProps & InjectedIntlProps) => (
-    <CreateModal
+    <ModalForm
       formID="adminCategoriesCreateForm"
       isOpen={isOpen}
       onSubmit={create}

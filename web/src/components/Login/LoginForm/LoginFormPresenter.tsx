@@ -4,16 +4,13 @@ import { RouteComponentProps } from "react-router";
 import * as yup from "yup";
 
 import * as schemaValidator from "src/components/SchemaValidator";
-import {
-  IAuthService,
-  InvalidCredentialsError
-} from "src/services/AuthService";
+import * as authService from "src/services/AuthService";
 import { IContextValue as UserStateContextValue } from "src/state/UserState";
 
 export interface IProps
   extends RouteComponentProps<any>,
     UserStateContextValue {
-  authService: IAuthService;
+  service: authService.IAuthService;
   View: React.ComponentClass<IViewProps>;
 }
 
@@ -64,17 +61,17 @@ export class LoginFormPresenter extends React.Component<IProps, IState> {
   private onSubmit = async (values: { email: string; password: string }) => {
     this.startLoading();
 
-    const { authService, history, userState } = this.props;
+    const { service, history, userState } = this.props;
 
     try {
-      await authService.logIn(values.email, values.password);
+      await service.logIn(values.email, values.password);
       userState.syncUser();
 
       this.stopLoading();
 
       history.push("/");
     } catch (e) {
-      if (e instanceof InvalidCredentialsError) {
+      if (e instanceof authService.errors.InvalidCredentialsError) {
         this.setGlobalError("LoginForm.errors.invalidCredentials");
       } else {
         this.setGlobalError("errors.common");

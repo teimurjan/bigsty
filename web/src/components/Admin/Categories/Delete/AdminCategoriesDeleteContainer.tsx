@@ -15,25 +15,32 @@ export interface IProps extends AdminCategoriesContextValue {
 
 export const AdminCategoriesDeleteContainer = injectAdminCategoriesState(
   injectDependencies(
-    ({
-      dependencies,
-      adminCategoriesState: { hasListLoaded, deleteCategory, categories }
-    }: IProps) => {
+    ({ dependencies, adminCategoriesState: { deleteCategory } }: IProps) => {
       const deleteEntity = React.useCallback(async (id: number) => {
         await deleteCategory(id);
         dependencies.services.category.delete(id);
       }, []);
 
-      const doesEntityExists = React.useCallback(
-        (id: number) =>
-          hasListLoaded && categories.some(category => category.id === id),
-        [hasListLoaded, categories.length]
+      const preloadData = React.useCallback(
+        async ({ id, setError, setIsLoading }) => {
+          try {
+            setIsLoading(true);
+            const isExists = await dependencies.services.category.exists(id);
+            if (!isExists) {
+              setError("AdminCategories.notFound");
+            }
+          } catch (e) {
+            setError("errors.common");
+          } finally {
+            setIsLoading(false);
+          }
+        },
+        []
       );
-
       return (
         <DeleteModalContainer
           deleteEntity={deleteEntity}
-          doesEntityExists={doesEntityExists}
+          preloadData={preloadData}
           backPath="/admin/categories"
         />
       );

@@ -81,7 +81,7 @@ export class SignUpFormPresenter extends React.Component<IProps, IState> {
 
       history.push("/");
     } catch (e) {
-      if (e instanceof authService.EmailExistsError) {
+      if (e instanceof authService.errors.EmailExistsError) {
         this.setGlobalError("SignUpForm.errors.emailExists");
       } else {
         this.setGlobalError("errors.common");

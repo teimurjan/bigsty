@@ -1,11 +1,19 @@
 import * as React from "react";
 
 import { RouteComponentProps } from "react-router";
+import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+
+interface IPreloadDataArgs {
+  id: number;
+  setError: (error: string | undefined) => void;
+  setIsLoading: (isLoading: boolean) => void;
+  close: () => void;
+}
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   deleteEntity: (id: number) => Promise<any>;
-  doesEntityExists: (id: number) => boolean;
+  preloadData: (args: IPreloadDataArgs) => Promise<any>;
   backPath: string;
 }
 
@@ -21,7 +29,7 @@ export const DeleteModalPresenter = ({
   View,
   match,
   history,
-  doesEntityExists,
+  preloadData,
   backPath,
   deleteEntity
 }: IProps & RouteComponentProps<{ id: string }>) => {
@@ -29,14 +37,14 @@ export const DeleteModalPresenter = ({
 
   const id = parseInt(match.params.id, 10);
 
-  React.useEffect(() => {
-    if (!doesEntityExists(id)) {
-      close();
-    }
-  }, [doesEntityExists]);
-
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    preloadData({ id, close, setError, setIsLoading });
+  }, []);
+
+  const isPreloadingTimeoutExpired = useTimeoutExpired(1000);  
 
   const remove = React.useCallback(async () => {
     try {
@@ -56,7 +64,7 @@ export const DeleteModalPresenter = ({
       onConfirm={remove}
       onClose={close}
       error={error}
-      isLoading={isLoading}
+      isLoading={isPreloadingTimeoutExpired && isLoading}
     />
   );
 };

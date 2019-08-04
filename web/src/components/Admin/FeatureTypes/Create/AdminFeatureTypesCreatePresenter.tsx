@@ -111,7 +111,7 @@ export class AdminFeatureTypesCreatePresenter extends React.Component<
     }
   };
 
-  private close = () => this.props.history.goBack();
+  private close = () => this.props.history.push('/admin/featureTypes');
 
   private create: IViewProps["create"] = async values => {
     const {

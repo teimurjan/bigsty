@@ -132,7 +132,7 @@ export class AdminCategoriesCreatePresenter extends React.Component<
     });
   };
 
-  private close = () => this.props.history.goBack();
+  private close = () => this.props.history.push('/admin/categories');
 
   private create: IViewProps["create"] = async values => {
     const { service, adminCategoriesState } = this.props;

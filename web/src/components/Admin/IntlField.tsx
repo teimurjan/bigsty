@@ -14,8 +14,10 @@ interface IProps {
   locales: IIntlListResponseItem[];
 }
 
-export const getFieldName = (key: string, locale: IIntlListResponseItem): string =>
-  `${key}-${locale.name}-${locale.id}`;
+export const getFieldName = (
+  key: string,
+  locale: IIntlListResponseItem
+): string => `${key}-${locale.name}-${locale.id}`;
 export const parseFieldName = (
   fieldName: string
 ): { id: number; key: string } => {
@@ -33,7 +35,12 @@ export const IntlField = injectIntl(
         <Field
           key={locale.id}
           name={getFieldName(key_, locale)}
-          render={getIntlFieldRenderer({ label, placeholder, locale, intl })}
+          render={getIntlFieldRenderer({
+            intl,
+            label,
+            locale,
+            placeholder
+          })}
         />
       ))}
     </>
@@ -45,6 +52,7 @@ interface IIntlFieldRendererProps {
   placeholder: string;
   locale: IIntlListResponseItem;
   intl: InjectedIntl;
+  defaultValue?: string;
 }
 
 const getIntlFieldRenderer = ({

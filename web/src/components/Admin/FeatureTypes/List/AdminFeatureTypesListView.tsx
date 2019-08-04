@@ -40,7 +40,7 @@ export const AdminFeatureTypesListView = ({
   <Section>
     <Container>
       <AdminTable<FeatureType>
-        relPath="featureTypes"
+        pathPrefix="/admin/featureTypes"
         isLoading={isLoading}
         isDataLoaded={isDataLoaded}
         entities={featureTypes}

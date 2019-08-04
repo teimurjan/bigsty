@@ -101,7 +101,7 @@ export class IntlRenderer<T> implements IRenderer<T> {
 interface IProps<T> {
   isLoading: boolean;
   isDataLoaded: boolean;
-  relPath: string;
+  pathPrefix: string;
   renderNoData: () => React.ReactNode;
   entities: T[];
   children: Array<React.ReactElement<IAdminTableColProps<T>>>;
@@ -116,7 +116,7 @@ export const AdminTable = <T extends { id: number }>({
   entities,
   children,
   intl,
-  relPath
+  pathPrefix
 }: IProps<T> & InjectedIntlProps) => (
   <Section>
     <Container>
@@ -174,7 +174,7 @@ export const AdminTable = <T extends { id: number }>({
                   `}
                 >
                   <LinkButton
-                    to={`${relPath}/edit/${entity.id}`}
+                    to={`${pathPrefix}/edit/${entity.id}`}
                     css={css`
                       margin-right: 0.5rem;
                     `}
@@ -184,7 +184,7 @@ export const AdminTable = <T extends { id: number }>({
                     <FontAwesomeIcon icon={faPencilAlt} />
                   </LinkButton>
                   <LinkButton
-                    to={`${relPath}/delete/${entity.id}`}
+                    to={`${pathPrefix}/delete/${entity.id}`}
                     color="is-danger"
                     /* tslint:disable-next-line jsx-no-lambda */
                   >

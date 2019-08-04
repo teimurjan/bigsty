@@ -29,33 +29,37 @@ export const DeleteModalView = ({
     <Modal isOpen={isOpen} {...props}>
       <ModalBackground onClick={onClose} />
       <ModalContent>
-        <ModalCard>
-          <ModalCard.Head>
-            <ModalCard.Title>
-              {intl.formatMessage({ id: "common.deleteApproval" })}
-            </ModalCard.Title>
-            <ModalCard.Close onClick={onClose} />
-          </ModalCard.Head>
-          {error && (
-            <ModalCard.Body>
-              <Message color="is-danger">
-                <Message.Body>{intl.formatMessage({ id: error })}</Message.Body>
-              </Message>
-            </ModalCard.Body>
-          )}
-          <ModalCard.Foot>
-            <Button
-              color="is-primary"
-              onClick={onConfirmClick}
-              isLoading={isLoading}
-            >
-              {intl.formatMessage({ id: "common.yes" })}
-            </Button>
-            <Button color="is-danger" onClick={onClose}>
-              {intl.formatMessage({ id: "common.no" })}
-            </Button>
-          </ModalCard.Foot>
-        </ModalCard>
+        {error ? (
+          <Message color="is-danger">
+            <Message.Header>
+              {intl.formatMessage({ id: "common.error" })}
+              <ModalCard.Close onClick={onClose} />
+            </Message.Header>
+            <Message.Body>{intl.formatMessage({ id: error })}</Message.Body>
+          </Message>
+        ) : (
+          <ModalCard>
+            <ModalCard.Head>
+              <ModalCard.Title>
+                {intl.formatMessage({ id: "common.deleteApproval" })}
+              </ModalCard.Title>
+              <ModalCard.Close onClick={onClose} />
+            </ModalCard.Head>
+            <ModalCard.Foot>
+              <Button
+                color="is-primary"
+                onClick={onConfirmClick}
+                isLoading={isLoading}
+                disabled={!!error}
+              >
+                {intl.formatMessage({ id: "common.yes" })}
+              </Button>
+              <Button color="is-danger" onClick={onClose}>
+                {intl.formatMessage({ id: "common.no" })}
+              </Button>
+            </ModalCard.Foot>
+          </ModalCard>
+        )}
       </ModalContent>
     </Modal>
   );

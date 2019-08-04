@@ -15,7 +15,7 @@ const ConnectedLoginFormPresenter = injectUserState(
 
 export const LoginFormContainer = injectDependencies(({ dependencies }) => (
   <ConnectedLoginFormPresenter
-    authService={dependencies.services.auth}
+    service={dependencies.services.auth}
     View={injectIntl(LoginFormView)}
   />
 ));

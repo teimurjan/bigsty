@@ -1,4 +1,4 @@
-import { IIntlAPI, IIntlListResponseItem } from "src/api/IntlAPI";
+import * as intlAPI from "src/api/IntlAPI";
 import * as intlStorage from "src/storage/IntlStorage";
 
 export const DEFAULT_LOCALE = "en-US";
@@ -6,14 +6,14 @@ export const DEFAULT_LOCALE = "en-US";
 export interface IIntlService {
   getLocale(): string;
   setLocale(locale: string): void;
-  getAvailableLocales(): Promise<IIntlListResponseItem[]>;
+  getAvailableLocales(): Promise<intlAPI.IIntlListResponseItem[]>;
 }
 
 export class IntlService implements IIntlService {
   private storage: intlStorage.IIntlStorage;
-  private API: IIntlAPI;
+  private API: intlAPI.IIntlAPI;
 
-  constructor(API: IIntlAPI, storage: intlStorage.IIntlStorage) {
+  constructor(API: intlAPI.IIntlAPI, storage: intlStorage.IIntlStorage) {
     this.API = API;
     this.storage = storage;
   }

@@ -50,7 +50,18 @@ export interface IFeatureTypeAPI {
     id: number,
     payload: IFeatureTypeEditPayload
   ): Promise<IFeatureTypeRawIntlResponseData>;
+  status(id: number): Promise<{}>;
+  getOneRawIntl(id: number): Promise<IFeatureTypeRawIntlResponseData>;
 }
+
+export const errors = {
+  FeatureTypeNotFound: class extends Error {
+    constructor() {
+      super("Feature type not found");
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  }
+};
 
 export class FeatureTypeAPI implements IFeatureTypeAPI {
   private client: Client;
@@ -99,6 +110,9 @@ export class FeatureTypeAPI implements IFeatureTypeAPI {
       );
       return response.data;
     } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.FeatureTypeNotFound();
+      }
       throw e;
     }
   }
@@ -121,7 +135,7 @@ export class FeatureTypeAPI implements IFeatureTypeAPI {
   public async edit(id: number, payload: IFeatureTypeEditPayload) {
     try {
       const response = await this.client.put<IFeatureTypeRawIntlResponseData>(
-        `/api/feature_types/${id}`,
+        `/api/feature_types/${id}${buildQueryString({ raw_intl: 1 })}`,
         payload,
         {
           headers: this.headersManager.getHeaders()
@@ -129,6 +143,40 @@ export class FeatureTypeAPI implements IFeatureTypeAPI {
       );
       return response.data;
     } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.FeatureTypeNotFound();
+      }
+      throw e;
+    }
+  }
+
+  public async status(id: number) {
+    try {
+      const response = await this.client.head<{}>(`/api/feature_types/${id}`, {
+        headers: this.headersManager.getHeaders()
+      });
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.FeatureTypeNotFound();
+      }
+      throw e;
+    }
+  }
+
+  public async getOneRawIntl(id: number) {
+    try {
+      const response = await this.client.get<IFeatureTypeRawIntlResponseData>(
+        `/api/feature_types/${id}${buildQueryString({ raw_intl: 1 })}`,
+        {
+          headers: this.headersManager.getHeaders()
+        }
+      );
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.FeatureTypeNotFound();
+      }
       throw e;
     }
   }

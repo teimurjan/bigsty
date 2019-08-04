@@ -46,7 +46,17 @@ export interface ICategoryAPI {
   create(
     payload: ICategoryCreatePayload
   ): Promise<ICategoryRawIntlResponseData>;
+  status(id: number): Promise<{}>;
 }
+
+export const errors = {
+  CategoryNotFound: class extends Error {
+    constructor() {
+      super("Feature type not found");
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  }
+};
 
 export class CategoryAPI implements ICategoryAPI {
   private client: Client;
@@ -92,6 +102,24 @@ export class CategoryAPI implements ICategoryAPI {
       });
       return response.data;
     } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.CategoryNotFound();
+      }
+
+      throw e;
+    }
+  }
+
+  public async status(id: number) {
+    try {
+      const response = await this.client.head<{}>(`/api/categories/${id}`, {
+        headers: this.headersManager.getHeaders()
+      });
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.CategoryNotFound();
+      }
       throw e;
     }
   }

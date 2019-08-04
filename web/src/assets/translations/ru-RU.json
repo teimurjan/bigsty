@@ -64,5 +64,10 @@
   "AdminCategories.parentCategorySelect.defaultOption.title": "Без категории родителя",
   "AdminMenu.modelsLabel": "Модели",
   "AdminMenu.categoriesLinkText": "Категории",
-  "AdminMenu.featureTypesLinkText": "Типы характеристик"
+  "AdminMenu.featureTypesLinkText": "Типы характеристик",
+  "common.submit": "Отправить",
+  "AdminFeatureTypes.edit.title": "Редактирование типа характеристики",
+  "AdminFeatureTypes.notFound": "Тип характеристики не найден",
+  "AdminCategories.notFound": "Категория не найдена",
+  "common.error": "Ошибка"
 }

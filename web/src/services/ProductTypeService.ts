@@ -1,24 +1,24 @@
 import { normalize, schema } from "normalizr";
-import {
-  IProductTypeAPI,
-  IProductTypeListResponseItem,
-  IProductTypeListResponseMeta
-} from "src/api/ProductTypeAPI";
+import * as productTypeAPI from "src/api/ProductTypeAPI";
 
 export interface IProductTypeService {
   getForCategory(
     categoryId: number,
     page: number
   ): Promise<{
-    entities: { productTypes: { [key: string]: IProductTypeListResponseItem } };
+    entities: {
+      productTypes: {
+        [key: string]: productTypeAPI.IProductTypeListResponseItem;
+      };
+    };
     result: number[];
-    meta: IProductTypeListResponseMeta;
+    meta: productTypeAPI.IProductTypeListResponseMeta;
   }>;
 }
 
 export class ProductTypeService implements IProductTypeService {
-  private API: IProductTypeAPI;
-  constructor(API: IProductTypeAPI) {
+  private API: productTypeAPI.IProductTypeAPI;
+  constructor(API: productTypeAPI.IProductTypeAPI) {
     this.API = API;
   }
 

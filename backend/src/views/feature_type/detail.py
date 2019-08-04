@@ -12,10 +12,11 @@ class FeatureTypeDetailView(ValidatableView):
     def get(self, request, feature_type_id):
         try:
             feature_type = self._service.get_one(feature_type_id)
+            should_get_raw_intl_field = request.args.get('raw_intl') == '1'
             serialized_feature_type = (
                 self
                 ._serializer_cls(feature_type)
-                .in_language(request.language)
+                .in_language(None if should_get_raw_intl_field else request.language)
                 .serialize()
             )
             return {'data': serialized_feature_type}, OK_CODE
@@ -31,10 +32,11 @@ class FeatureTypeDetailView(ValidatableView):
                 data,
                 user=request.user
             )
+            should_get_raw_intl_field = request.args.get('raw_intl') == '1'
             serialized_feature_type = (
                 self
                 ._serializer_cls(feature_type)
-                .in_language(request.language)
+                .in_language(None if should_get_raw_intl_field else request.language)
                 .serialize()
             )
             return {'data': serialized_feature_type}, OK_CODE
@@ -44,6 +46,13 @@ class FeatureTypeDetailView(ValidatableView):
     def delete(self, request, feature_type_id):
         try:
             self._service.delete(feature_type_id)
+            return {}, OK_CODE
+        except self._service.FeatureTypeNotFound:
+            return {}, NOT_FOUND_CODE
+
+    def head(self, request, feature_type_id):
+        try:
+            feature_type = self._service.get_one(feature_type_id)
             return {}, OK_CODE
         except self._service.FeatureTypeNotFound:
             return {}, NOT_FOUND_CODE

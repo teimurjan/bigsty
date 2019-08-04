@@ -8,7 +8,7 @@ import { ModalForm } from "../../ModalForm";
 import {
   FEATURE_TYPE_NAME_FIELD_KEY,
   IViewProps as IProps
-} from "./AdminFeatureTypesCreatePresenter";
+} from "./AdminFeatureTypesEditPresenter";
 
 interface IFieldsProps {
   availableLocales: IProps["availableLocales"];
@@ -31,25 +31,31 @@ const Fields = injectIntl(
 
 const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
 
-export const AdminFeatureTypesCreateView = ({
+export const AdminFeatureTypesEditView = ({
   isOpen,
-  create,
+  edit,
   close,
   isLoading,
+  isUpdating,
   error,
   intl,
+  initialValues,
   availableLocales,
-  validate
+  validate,
+  preloadingError
 }: IProps & InjectedIntlProps) => (
   <ModalForm
-    formID="adminFeatureTypesCreateForm"
+    formID="adminFeatureTypesEditForm"
     isOpen={isOpen}
-    onSubmit={create}
+    onSubmit={edit}
     onClose={close}
-    isLoading={isLoading}
+    isLoading={isUpdating}
+    isPreloading={isLoading}
     globalError={error}
-    title={intl.formatMessage({ id: "AdminFeatureTypes.create.title" })}
+    title={intl.formatMessage({ id: "AdminFeatureTypes.edit.title" })}
     renderFields={getFieldsRenderer({ availableLocales })}
     validate={validate}
+    initialValues={initialValues}
+    preloadingError={preloadingError}
   />
 );

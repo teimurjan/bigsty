@@ -1,19 +1,5 @@
 import { Client } from "ttypes/http";
 
-export class DuplicateEmailError extends Error {
-  constructor() {
-    super("Given email already exists.");
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
-}
-
-export class EmailOrPasswordInvalidError extends Error {
-  constructor() {
-    super("Email or password are incorrect.");
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
-}
-
 export interface IAuthResponseData {
   access_token: string;
   refresh_token: string;
@@ -43,6 +29,21 @@ export interface IAuthAPI {
   }>;
 }
 
+export const errors = {
+  DuplicateEmailError: class extends Error {
+    constructor() {
+      super("Given email already exists.");
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
+  EmailOrPasswordInvalidError: class extends Error {
+    constructor() {
+      super("Email or password are incorrect.");
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  }
+};
+
 export class AuthAPI implements IAuthAPI {
   private client: Client;
 
@@ -69,7 +70,7 @@ export class AuthAPI implements IAuthAPI {
       };
     } catch (e) {
       if (e.response.data.credentials) {
-        throw new EmailOrPasswordInvalidError();
+        throw new errors.EmailOrPasswordInvalidError();
       }
       throw e;
     }
@@ -95,7 +96,7 @@ export class AuthAPI implements IAuthAPI {
       };
     } catch (e) {
       if (e.response.data.email) {
-        throw new DuplicateEmailError();
+        throw new errors.DuplicateEmailError();
       }
       throw e;
     }

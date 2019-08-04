@@ -44,7 +44,7 @@ export const AdminCategoriesListView = ({
   <Section>
     <Container>
       <AdminTable<Category>
-        relPath="categories"
+        pathPrefix="/admin/categories"
         isLoading={isLoading}
         isDataLoaded={isDataLoaded}
         entities={categories}

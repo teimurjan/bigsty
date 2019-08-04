@@ -18,6 +18,7 @@ export interface IContextValue {
     getFeatureTypes: () => Promise<void>;
     deleteFeatureType: (id: number) => void;
     addFeatureType: (featureType: IFeatureTypeListRawIntlResponseItem) => void;
+    setFeatureType: (featureType: IFeatureTypeListRawIntlResponseItem) => void;
   };
 }
 
@@ -60,7 +61,12 @@ class Provider extends React.Component<
       children,
       intlState: { availableLocales }
     } = this.props;
-    const { addFeatureType, getFeatureTypes, deleteFeatureType } = this;
+    const {
+      addFeatureType,
+      getFeatureTypes,
+      deleteFeatureType,
+      setFeatureType
+    } = this;
 
     return (
       <Context.Provider
@@ -83,7 +89,8 @@ class Provider extends React.Component<
             getFeatureTypes,
             hasListLoaded,
             isListLoading,
-            listError
+            listError,
+            setFeatureType
           }
         }}
       >
@@ -126,6 +133,19 @@ class Provider extends React.Component<
       featureTypes: newFeatureTypes,
       featureTypesOrder: [...featureTypesOrder, featureType.id]
     });
+  };
+
+  private setFeatureType = (
+    featureType: IFeatureTypeListRawIntlResponseItem
+  ) => {
+    const { featureTypes } = this.state;
+
+    const newFeatureTypes = {
+      ...featureTypes,
+      [featureType.id]: featureType
+    };
+
+    this.setState({ featureTypes: newFeatureTypes });
   };
 
   private deleteFeatureType = (id: number) => {

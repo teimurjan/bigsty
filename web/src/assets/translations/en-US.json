@@ -64,5 +64,10 @@
   "AdminCategories.parentCategorySelect.defaultOption.title": "No Parent Category",
   "AdminMenu.modelsLabel": "Models",
   "AdminMenu.categoriesLinkText": "Categories",
-  "AdminMenu.featureTypesLinkText": "Feature Types"
+  "AdminMenu.featureTypesLinkText": "Feature Types",
+  "common.submit": "Submit",
+  "AdminFeatureTypes.edit.title": "Feature type editing",
+  "AdminFeatureTypes.notFound": "Feature type not found.",
+  "AdminCategories.notFound": "Category not found.",
+  "common.error": "Error"
 }
