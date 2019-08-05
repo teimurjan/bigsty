@@ -18,6 +18,7 @@ export interface IContextValue {
     getCategories: () => Promise<void>;
     deleteCategory: (id: number) => void;
     addCategory: (category: ICategoryListRawIntlResponseItem) => void;
+    setCategory: (category: ICategoryListRawIntlResponseItem) => void;
   };
 }
 
@@ -60,7 +61,7 @@ class Provider extends React.Component<
       children,
       intlState: { availableLocales }
     } = this.props;
-    const { getCategories, deleteCategory, addCategory } = this;
+    const { getCategories, deleteCategory, addCategory, setCategory } = this;
 
     return (
       <Context.Provider
@@ -83,7 +84,8 @@ class Provider extends React.Component<
             getCategories,
             hasListLoaded,
             isListLoading,
-            listError
+            listError,
+            setCategory
           }
         }}
       >
@@ -136,6 +138,17 @@ class Provider extends React.Component<
       categories: newCategories,
       categoriesOrder: [...categoriesOrder, category.id]
     });
+  };
+
+  private setCategory = (category: ICategoryListRawIntlResponseItem) => {
+    const { categories } = this.state;
+
+    const newCategories = {
+      ...categories,
+      [category.id]: category
+    };
+
+    this.setState({ categories: newCategories });
   };
 }
 

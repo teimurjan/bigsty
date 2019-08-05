@@ -69,5 +69,6 @@
   "AdminFeatureTypes.edit.title": "Feature type editing",
   "AdminFeatureTypes.notFound": "Feature type not found.",
   "AdminCategories.notFound": "Category not found.",
-  "common.error": "Error"
+  "common.error": "Error",
+  "AdminCategories.edit.title": "Category editing"
 }

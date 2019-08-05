@@ -22,6 +22,13 @@ export interface ICategoryService {
     payload: categoryAPI.ICategoryCreatePayload
   ): Promise<categoryAPI.ICategoryListRawIntlResponseItem>;
   exists(id: number): Promise<boolean>;
+  getOneRawIntl(
+    id: number
+  ): Promise<categoryAPI.ICategoryListRawIntlResponseItem | undefined>;
+  edit(
+    id: number,
+    payload: categoryAPI.ICategoryCreatePayload
+  ): Promise<categoryAPI.ICategoryListRawIntlResponseItem>;
 }
 
 export const errors = {
@@ -72,6 +79,30 @@ export class CategoryService implements ICategoryService {
     } catch (e) {
       if (e instanceof categoryAPI.errors.CategoryNotFound) {
         return false;
+      }
+
+      throw e;
+    }
+  }
+
+  public async edit(id: number, payload: categoryAPI.ICategoryCreatePayload) {
+    try {
+      return (await this.API.edit(id, payload)).data;
+    } catch (e) {
+      if (e instanceof categoryAPI.errors.CategoryNotFound) {
+        throw new errors.CategoryNotExists();
+      }
+
+      throw e;
+    }
+  }
+
+  public async getOneRawIntl(id: number) {
+    try {
+      return (await this.API.getOneRawIntl(id)).data;
+    } catch (e) {
+      if (e instanceof categoryAPI.errors.CategoryNotFound) {
+        return undefined;
       }
 
       throw e;

@@ -46,7 +46,12 @@ export interface ICategoryAPI {
   create(
     payload: ICategoryCreatePayload
   ): Promise<ICategoryRawIntlResponseData>;
+  edit(
+    id: number,
+    payload: ICategoryCreatePayload
+  ): Promise<ICategoryRawIntlResponseData>;
   status(id: number): Promise<{}>;
+  getOneRawIntl(id: number): Promise<ICategoryRawIntlResponseData>;
 }
 
 export const errors = {
@@ -135,6 +140,41 @@ export class CategoryAPI implements ICategoryAPI {
       );
       return response.data;
     } catch (e) {
+      throw e;
+    }
+  }
+
+  public async edit(id: number, payload: ICategoryCreatePayload) {
+    try {
+      const response = await this.client.put<ICategoryRawIntlResponseData>(
+        `/api/categories/${id}${buildQueryString({ raw_intl: 1 })}`,
+        payload,
+        {
+          headers: this.headersManager.getHeaders()
+        }
+      );
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.CategoryNotFound();
+      }
+      throw e;
+    }
+  }
+
+  public async getOneRawIntl(id: number) {
+    try {
+      const response = await this.client.get<ICategoryRawIntlResponseData>(
+        `/api/categories/${id}${buildQueryString({ raw_intl: 1 })}`,
+        {
+          headers: this.headersManager.getHeaders()
+        }
+      );
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.CategoryNotFound();
+      }
       throw e;
     }
   }

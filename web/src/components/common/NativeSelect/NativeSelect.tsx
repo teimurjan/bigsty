@@ -57,14 +57,16 @@ export const NativeSelect = injectIntl(
         </select>
       </div>
 
-      <HelpText
-        css={css`
-          flex: 1;
-          padding-left: 10px;
-        `}
-      >
-        {intl.formatMessage({ id: "NativeSelect.multipleHint" })}
-      </HelpText>
+      {isMultiple && (
+        <HelpText
+          css={css`
+            flex: 1;
+            padding-left: 10px;
+          `}
+        >
+          {intl.formatMessage({ id: "NativeSelect.multipleHint" })}
+        </HelpText>
+      )}
     </div>
   )
 );

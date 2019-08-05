@@ -12,11 +12,11 @@ class CategoryDetailView(ValidatableView):
     def get(self, request, category_id):
         try:
             category = self._service.get_one(category_id)
+            should_get_raw_intl_field = request.args.get('raw_intl') == '1'
             serialized_category = (
                 self
                 ._serializer_cls(category)
-                .in_language(request.language)
-                .with_serialized_feature_types()
+                .in_language(None if should_get_raw_intl_field else request.language)
                 .serialize()
             )
             return {'data': serialized_category}, OK_CODE
@@ -29,11 +29,11 @@ class CategoryDetailView(ValidatableView):
             self._validate(data)
             category = \
                 self._service.update(category_id, data, user=request.user)
+            should_get_raw_intl_field = request.args.get('raw_intl') == '1'
             serialized_category = (
                 self
                 ._serializer_cls(category)
-                .in_language(request.language)
-                .with_serialized_feature_types()
+                .in_language(None if should_get_raw_intl_field else request.language)
                 .serialize()
             )
             return {'data': serialized_category}, OK_CODE

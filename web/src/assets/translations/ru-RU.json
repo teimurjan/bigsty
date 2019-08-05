@@ -69,5 +69,6 @@
   "AdminFeatureTypes.edit.title": "Редактирование типа характеристики",
   "AdminFeatureTypes.notFound": "Тип характеристики не найден",
   "AdminCategories.notFound": "Категория не найдена",
-  "common.error": "Ошибка"
+  "common.error": "Ошибка",
+  "AdminCategories.edit.title": "Редактирование категории"
 }
