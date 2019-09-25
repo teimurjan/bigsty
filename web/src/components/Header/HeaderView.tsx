@@ -24,6 +24,8 @@ import { NavbarMenu } from "src/components/common/NavbarMenu/NavbarMenu";
 import { NavbarStart } from "src/components/common/NavbarStart/NavbarStart";
 
 import { isUserAdmin } from "src/helpers/user";
+
+import { LanguageDropdownContainer as LanguageDropdown } from "../LanguageDropdown/LanguageDropdownContainer";
 import { IViewProps as IProps } from "./HeaderPresenter";
 
 const DropdownTrigger = injectIntl(
@@ -79,6 +81,7 @@ export const HeaderView = ({
             </NavbarItem>
           </NavbarStart>
           <NavbarEnd>
+            <LanguageDropdown />
             <NavbarItem>
               {user ? (
                 <div className="buttons">

@@ -22,6 +22,7 @@ import { NavbarItem } from "src/components/common/NavbarItem/NavbarItem";
 import { NavbarMenu } from "src/components/common/NavbarMenu/NavbarMenu";
 import { NavbarStart } from "src/components/common/NavbarStart/NavbarStart";
 
+import { LanguageDropdownContainer as LanguageDropdown } from "../../LanguageDropdown/LanguageDropdownContainer";
 import { IViewProps as IProps } from "./AdminHeaderPresenter";
 
 const DropdownTrigger = injectIntl(
@@ -71,6 +72,7 @@ export const AdminHeaderView = ({
             </NavbarItem>
           </NavbarStart>
           <NavbarEnd>
+            <LanguageDropdown />
             <NavbarItem>
               <Button onClick={onLogOutClick} color="is-info">
                 {intl.formatMessage({ id: "Header.logOut" })}
