@@ -29,7 +29,7 @@ interface IAdminTableColProps<T> {
 
 const AdminTableCol = <T extends any>(_: IAdminTableColProps<T>) => null;
 
-interface IRenderer<T> {
+export interface IRenderer<T> {
   renderHeader: (
     title: string,
     { componentKey }: IAdminTableRendererRequiredArgs

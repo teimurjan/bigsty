@@ -35,7 +35,6 @@ export const LanguageDropdownView = ({
       {locales.map(locale => {
         const onClick = async () => {
           await changeLocale(locale);
-          window.location.reload();
         };
         return (
           <DropdownItem

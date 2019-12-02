@@ -65,10 +65,22 @@
   "AdminMenu.modelsLabel": "Models",
   "AdminMenu.categoriesLinkText": "Categories",
   "AdminMenu.featureTypesLinkText": "Feature Types",
+  "AdminMenu.featureValuesLinkText": "Feature Values",
   "common.submit": "Submit",
   "AdminFeatureTypes.edit.title": "Feature type editing",
   "AdminFeatureTypes.notFound": "Feature type not found.",
   "AdminCategories.notFound": "Category not found.",
   "common.error": "Error",
-  "AdminCategories.edit.title": "Category editing"
+  "AdminCategories.edit.title": "Category editing",
+  "AdminFeatureValues.names": "Names",
+  "AdminFeatureValues.featureType": "Feature type",
+  "AdminFeatureValues.featureTypeSelect.label": "Feature type",
+  "AdminFeatureValues.featureTypeSelect.defaultOption.title": "No Feature Type",
+  "AdminFeatureValues.nameInput.label": "Name",
+  "AdminFeatureValues.nameInput.placeholder": "Enter a name",
+  "AdminFeatureValues.create.title": "Feature Value creation",
+  "AdminFeatureValues.edit.title": "Feature Value editing",
+  "AdminFeatureValues.notFound.cta": "Create a feature value",
+  "AdminFeatureValues.notFound.title": "No feature values found",
+  "AdminFeatureValues.notFound.description": "It seems that you've not added a feature value. Click below to fix it."
 }

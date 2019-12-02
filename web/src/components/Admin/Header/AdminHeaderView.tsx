@@ -68,6 +68,9 @@ export const AdminHeaderView = ({
                 <DropdownItemLink to="/admin/featureTypes">
                   {intl.formatMessage({ id: "AdminMenu.featureTypesLinkText" })}
                 </DropdownItemLink>
+                <DropdownItemLink to="/admin/featureValues">
+                  {intl.formatMessage({ id: "AdminMenu.featureValuesLinkText" })}
+                </DropdownItemLink>
               </Dropdown>
             </NavbarItem>
           </NavbarStart>

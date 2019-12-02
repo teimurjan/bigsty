@@ -65,10 +65,22 @@
   "AdminMenu.modelsLabel": "Модели",
   "AdminMenu.categoriesLinkText": "Категории",
   "AdminMenu.featureTypesLinkText": "Типы характеристик",
+  "AdminMenu.featureValuesLinkText": "Значения характеристик",
   "common.submit": "Отправить",
   "AdminFeatureTypes.edit.title": "Редактирование типа характеристики",
   "AdminFeatureTypes.notFound": "Тип характеристики не найден",
   "AdminCategories.notFound": "Категория не найдена",
   "common.error": "Ошибка",
-  "AdminCategories.edit.title": "Редактирование категории"
+  "AdminCategories.edit.title": "Редактирование категории",
+  "AdminFeatureValues.names": "Названия",
+  "AdminFeatureValues.featureType": "Тип характеристики",
+  "AdminFeatureValues.featureTypeSelect.label": "Тип характеристики",
+  "AdminFeatureValues.featureTypeSelect.defaultOption.title": "Без типа характеристики",
+  "AdminFeatureValues.nameInput.label": "Имя",
+  "AdminFeatureValues.nameInput.placeholder": "Введите имя",
+  "AdminFeatureValues.create.title": "Создание значения характеристики",
+  "AdminFeatureValues.edit.title": "Редактирование значения характеристики",
+  "AdminFeatureValues.notFound.cta": "Создать значение характеристики",
+  "AdminFeatureValues.notFound.title": "Значение характеристики не найдено",
+  "AdminFeatureValues.notFound.description": "Кажется, Вы не добавили ни одного значения характеристики. Нажмите ниже, чтобы исправить это."
 }

@@ -3,12 +3,14 @@ import axios from "axios";
 import * as authAPI from "src/api/AuthAPI";
 import * as categoryAPI from "src/api/CategoryAPI";
 import * as featureTypeAPI from "src/api/FeatureTypeAPI";
+import * as featureValueAPI from "src/api/FeatureValueAPI";
 import * as intlAPI from "src/api/IntlAPI";
 import * as productTypeAPI from "src/api/ProductTypeAPI";
 
 import * as authService from "src/services/AuthService";
 import * as categoryService from "src/services/CategoryService";
 import * as featureTypeService from "src/services/FeatureTypeService";
+import * as featureValueService from "src/services/FeatureValueService";
 import * as intlService from "src/services/IntlService";
 import * as productTypeService from "src/services/ProductTypeService";
 
@@ -22,6 +24,7 @@ export interface IAPIsContainer {
   category: categoryAPI.ICategoryAPI;
   productType: productTypeAPI.IProductTypeAPI;
   featureType: featureTypeAPI.IFeatureTypeAPI;
+  featureValue: featureValueAPI.IFeatureValueAPI;
   intl: intlAPI.IIntlAPI;
 }
 
@@ -30,6 +33,7 @@ export interface IServicesContainer {
   category: categoryService.ICategoryService;
   productType: productTypeService.IProductTypeService;
   featureType: featureTypeService.IFeatureTypeService;
+  featureValue: featureValueService.IFeatureValueService;
   intl: intlService.IIntlService;
 }
 
@@ -74,6 +78,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     auth: new authAPI.AuthAPI(APIClient),
     category: new categoryAPI.CategoryAPI(APIClient, headersManager),
     featureType: new featureTypeAPI.FeatureTypeAPI(APIClient, headersManager),
+    featureValue: new featureValueAPI.FeatureValueAPI(APIClient, headersManager),
     intl: new intlAPI.IntlAPI(APIClient, headersManager),
     productType: new productTypeAPI.ProductTypeAPI(APIClient, headersManager)
   };
@@ -86,6 +91,9 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     category: new categoryService.CategoryService(APIsContainer.category),
     featureType: new featureTypeService.FeatureTypeService(
       APIsContainer.featureType
+    ),
+    featureValue: new featureValueService.FeatureValueService(
+      APIsContainer.featureValue
     ),
     intl: new intlService.IntlService(
       APIsContainer.intl,
