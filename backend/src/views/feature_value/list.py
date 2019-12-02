@@ -15,6 +15,7 @@ class FeatureValueListView(ValidatableView, PaginatableView):
 
         meta = None
         page = parse_int(request.args.get('page'))
+        should_get_raw_intl_field = request.args.get('raw_intl') == '1'
         if page:
             limit = parse_int(request.args.get('limit', 20))
             feature_values, meta = self._paginate(feature_values, page, limit)
@@ -22,7 +23,8 @@ class FeatureValueListView(ValidatableView, PaginatableView):
         serialized_feature_values = [
             self
             ._serializer_cls(feature_value)
-            .in_language(request.language)
+            .in_language(None if should_get_raw_intl_field else request.language)
+            .with_serialized_feature_type()
             .serialize()
             for feature_value in feature_values
         ]
@@ -36,7 +38,6 @@ class FeatureValueListView(ValidatableView, PaginatableView):
             serialized_feature_value = (
                 self.
                 _serializer_cls(feature_value)
-                .in_language(request.language)
                 .with_serialized_feature_type()
                 .serialize()
             )

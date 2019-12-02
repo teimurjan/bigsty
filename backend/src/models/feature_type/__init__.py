@@ -12,6 +12,11 @@ class FeatureType(BaseModel):
         lazy='joined',
         cascade="all, delete, delete-orphan"
     )
+    feature_values = orm.relationship(
+        "FeatureValue",
+        lazy='subquery',
+        cascade="all, delete, delete-orphan"
+    )
     categories = orm.relationship(
         'Category',
         secondary=CategoryXFeatureType,
