@@ -52,7 +52,7 @@ export interface ICategoryAPI {
 export const errors = {
   CategoryNotFound: class extends Error {
     constructor() {
-      super('Feature type not found');
+      super('Category not found');
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },

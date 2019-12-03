@@ -20,12 +20,7 @@ export interface IProductTypeListResponseMeta {
 
 export interface IProductTypeListResponseData {
   data: IProductTypeListResponseItem[];
-  meta: {
-    count: number;
-    pages_count: number;
-    page: number;
-    limit: number;
-  };
+  meta: IProductTypeListResponseMeta;
 }
 
 export interface IProductTypeAPI {
