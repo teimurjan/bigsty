@@ -15,17 +15,9 @@ import { ICategoryService } from 'src/services/CategoryService';
 
 import { getNumberParam } from 'src/utils/url';
 
-import { IInjectedProp as TimeoutExpiredInjectedProp, withTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { getFieldName, parseFieldName } from '../../IntlField';
-
-interface IState {
-  isUpdating: boolean;
-  isLoading: boolean;
-  error?: string;
-  preloadingError?: string;
-  validator?: schemaValidator.ISchemaValidator;
-  category?: ICategoryListRawIntlResponseItem;
-}
+import { useLazy } from 'src/hooks/useLazy';
 
 export interface IProps
   extends RouteComponentProps<any>,
@@ -53,119 +45,80 @@ export interface IViewProps {
 
 export const CATEGORY_NAME_FIELD_KEY = 'name';
 
-export const AdminCategoriesEditPresenter = withTimeoutExpired(
-  class extends React.Component<IProps & TimeoutExpiredInjectedProp, IState> {
-    public state = {
-      category: undefined,
-      error: undefined,
-      isLoading: false,
-      isUpdating: false,
-      preloadingError: undefined,
-      validator: undefined,
-    };
+export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
+  intlState,
+  history,
+  adminFeatureTypesState: { getFeatureTypes, featureTypes },
+  adminCategoriesState: { getCategories, categories, setCategory: setCategoryToState },
+  intlState: { availableLocales },
+  service,
+  View,
+  match,
+}) => {
+  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [category, setCategory] = React.useState<ICategoryListRawIntlResponseItem | undefined>(undefined);
+  const [isUpdating, setUpdating] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
+  const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
-    public async componentDidMount() {
-      const { intlState } = this.props;
-      if (intlState.availableLocales.length > 0) {
-        this.initValidator();
-      }
+  const isTimeoutExpired = useTimeoutExpired(1000);
 
-      const {
-        adminFeatureTypesState: { getFeatureTypes },
-        adminCategoriesState: { getCategories },
-        service,
-        match,
-      } = this.props;
-
-      try {
-        this.setState({ isLoading: true });
-        const id = getNumberParam(match, 'id');
-        await getFeatureTypes();
-        await getCategories();
-        const category = await service.getOneRawIntl(id!);
-        if (category) {
-          this.setState({ category });
-        } else {
-          this.setState({
-            preloadingError: 'AdminCategories.notFound',
-          });
-        }
-      } catch (e) {
-        this.setState({ preloadingError: 'errors.common' });
-      } finally {
-        this.setState({ isLoading: false });
-      }
-    }
-
-    public componentDidUpdate(prevProps: IProps) {
-      const { intlState: newIntlState } = this.props;
-      const { intlState: oldIntlState } = prevProps;
-
-      if (newIntlState.availableLocales.length > 0 && oldIntlState.availableLocales.length === 0) {
-        this.initValidator();
-      }
-    }
-
-    public render() {
-      const {
-        View,
-        adminCategoriesState: { categories },
-        adminFeatureTypesState: { featureTypes },
-        intlState: { availableLocales },
-        isTimeoutExpired,
-        match,
-      } = this.props;
-
-      const { error, isUpdating, validator, isLoading, preloadingError } = this.state;
-
-      const id = getNumberParam(match, 'id');
-
-      return (
-        <View
-          categories={categories.filter(category => category.id !== id)}
-          isOpen={true}
-          edit={this.edit}
-          error={error}
-          isUpdating={isUpdating}
-          isLoading={isTimeoutExpired && isLoading}
-          close={this.close}
-          availableLocales={availableLocales}
-          validate={(validator || { validate: undefined }).validate}
-          featureTypes={featureTypes}
-          initialValues={this.getInitialValues()}
-          preloadingError={preloadingError}
-        />
-      );
-    }
-
-    private initValidator = () => {
-      const { intlState } = this.props;
-      this.setState({
-        validator: new schemaValidator.SchemaValidator(
-          yup.object().shape(
-            intlState.availableLocales.reduce(
-              (acc, locale) => ({
-                ...acc,
-                [getFieldName(CATEGORY_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
-              }),
-              {
-                feature_types: yup
-                  .array()
-                  .of(yup.number())
-                  .required('AdminCategories.errors.noFeatureTypes')
-                  .min(1, 'AdminCategories.errors.noFeatureTypes'),
-                parent_category_id: yup.number().nullable(true),
-              },
-            ),
+  const makeValidator = React.useCallback(
+    () =>
+      new schemaValidator.SchemaValidator(
+        yup.object().shape(
+          intlState.availableLocales.reduce(
+            (acc, locale) => ({
+              ...acc,
+              [getFieldName(CATEGORY_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
+            }),
+            {
+              feature_types: yup
+                .array()
+                .of(yup.number())
+                .required('AdminCategories.errors.noFeatureTypes')
+                .min(1, 'AdminCategories.errors.noFeatureTypes'),
+              parent_category_id: yup.number().nullable(true),
+            },
           ),
         ),
-      });
-    };
+      ),
+    [intlState],
+  );
 
-    private close = () => this.props.history.push('/admin/categories');
+  const validator = useLazy({
+    make: makeValidator,
+    trigger: availableLocales.length,
+  });
 
-    private edit: IViewProps['edit'] = async values => {
-      const { service, adminCategoriesState, match } = this.props;
+  const id = React.useMemo(() => getNumberParam(match, 'id'), [match]);
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        await Promise.all([getFeatureTypes(), getCategories()]);
+
+        const category = id ? await service.getOneRawIntl(id) : undefined;
+        if (category) {
+          setCategory(category);
+        } else {
+          setPreloadingError('AdminCategories.notFound');
+        }
+      } catch (e) {
+        setPreloadingError('errors.common');
+      } finally {
+        setLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const close = React.useCallback(() => history.push('/admin/categories'), [history]);
+
+  const edit: IViewProps['edit'] = React.useCallback(
+    async values => {
+      setUpdating(true);
 
       const formattedValues = Object.keys(values).reduce(
         (acc, fieldName) => {
@@ -184,41 +137,50 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
       );
 
       try {
-        const id = getNumberParam(match, 'id');
-        const category = await service.edit(id!, formattedValues);
-        adminCategoriesState.setCategory(category);
-        this.close();
+        const category = await service.edit(id as number, formattedValues);
+        setCategoryToState(category);
+        setUpdating(false);
+        close();
       } catch (e) {
-        this.setState({ error: 'errors.common' });
-      } finally {
-        this.setState({ isUpdating: false });
+        setError('errors.common');
+        setUpdating(false);
       }
-    };
+    },
+    [close, id, service, setCategoryToState],
+  );
 
-    private getInitialValues = () => {
-      const {
-        intlState: { availableLocales },
-      } = this.props;
-      const { category } = this.state;
-
-      if (!category) {
-        return {};
-      }
-
+  const initialValues = React.useMemo(() => {
+    if (category) {
       return {
         ...availableLocales.reduce(
           (acc, locale) => ({
             ...acc,
-            [getFieldName(CATEGORY_NAME_FIELD_KEY, locale)]: (category! as ICategoryListRawIntlResponseItem).name[
-              locale.id
-            ],
+            [getFieldName(CATEGORY_NAME_FIELD_KEY, locale)]: category.name[locale.id],
           }),
           {},
         ),
-        feature_types: (category! as ICategoryListRawIntlResponseItem).feature_types,
-        parent_category_id: (category! as ICategoryListRawIntlResponseItem).parent_category_id,
+        feature_types: category.feature_types,
+        parent_category_id: category.parent_category_id,
       };
-    };
-  },
-  1000,
-);
+    }
+
+    return {};
+  }, [availableLocales, category]);
+
+  return (
+    <View
+      categories={categories.filter(category => category.id !== id)}
+      isOpen={true}
+      edit={edit}
+      error={error}
+      isUpdating={isUpdating}
+      isLoading={isTimeoutExpired && isLoading}
+      close={close}
+      availableLocales={availableLocales}
+      validate={(validator || { validate: undefined }).validate}
+      featureTypes={featureTypes}
+      initialValues={initialValues}
+      preloadingError={preloadingError}
+    />
+  );
+};

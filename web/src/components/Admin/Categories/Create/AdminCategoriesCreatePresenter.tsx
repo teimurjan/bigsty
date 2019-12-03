@@ -83,15 +83,16 @@ export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
   });
 
   React.useEffect(() => {
-    try {
-      setLoading(true);
-      getFeatureTypes();
-      getCategories();
-    } catch (e) {
-      setPreloadingError('errors.common');
-    } finally {
-      setLoading(false);
-    }
+    (async () => {
+      try {
+        setLoading(true);
+        await Promise.all([getFeatureTypes(), getCategories()]);
+      } catch (e) {
+        setPreloadingError('errors.common');
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [getCategories, getFeatureTypes]);
 
   const close = React.useCallback(() => history.push('/admin/categories'), [history]);
