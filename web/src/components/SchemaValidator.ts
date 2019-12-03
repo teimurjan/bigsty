@@ -1,4 +1,4 @@
-import * as yup from "yup";
+import * as yup from 'yup';
 
 export interface ISchemaValidator {
   validate(values: object): object;
@@ -18,9 +18,9 @@ export class SchemaValidator implements ISchemaValidator {
       return e.inner.reduce(
         (errors: {}, innerError: yup.ValidationError) => ({
           ...errors,
-          [innerError.path]: innerError.message
+          [innerError.path]: innerError.message,
         }),
-        {}
+        {},
       );
     }
   };

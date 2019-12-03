@@ -1,14 +1,10 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Control, IProps as ControlProps } from "../Control/Control";
-import { Field, IProps as FieldProps } from "../Field/Field";
-import { HelpText, IProps as HelpTextProps } from "../HelpText/HelpText";
-import { IProps as LabelProps, Label } from "../Label/Label";
-import {
-  IProps as NativeSelectProps,
-  NativeSelect,
-  NativeSelectOption
-} from "../NativeSelect/NativeSelect";
+import { Control, IProps as ControlProps } from '../Control/Control';
+import { Field, IProps as FieldProps } from '../Field/Field';
+import { HelpText, IProps as HelpTextProps } from '../HelpText/HelpText';
+import { IProps as LabelProps, Label } from '../Label/Label';
+import { IProps as NativeSelectProps, NativeSelect, NativeSelectOption } from '../NativeSelect/NativeSelect';
 
 interface IProps {
   controlProps?: ControlProps;
@@ -17,7 +13,7 @@ interface IProps {
   selectProps: {
     options: Array<{ title: string; value: string }>;
     defaultOption?: { title: string };
-  } & Omit<NativeSelectProps, "children">;
+  } & Omit<NativeSelectProps, 'children'>;
   labelProps?: LabelProps;
 }
 
@@ -26,7 +22,7 @@ export const FormNativeSelectField = ({
   fieldProps = {},
   selectProps,
   labelProps = {},
-  helpTextProps = {}
+  helpTextProps = {},
 }: IProps) => {
   const { options, defaultOption, ...selectPropsToPass } = selectProps;
 
@@ -35,14 +31,14 @@ export const FormNativeSelectField = ({
       ? [
           <NativeSelectOption key="default" value={undefined}>
             {defaultOption.title}
-          </NativeSelectOption>
+          </NativeSelectOption>,
         ]
       : []),
     ...options.map(({ title, value }) => (
       <NativeSelectOption key={value} value={value}>
         {title}
       </NativeSelectOption>
-    ))
+    )),
   ];
 
   return (

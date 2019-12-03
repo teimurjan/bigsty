@@ -1,18 +1,11 @@
-export const buildQueryString = (queryObj: {
-  [key: string]: string | number | undefined;
-}) => {
+export const buildQueryString = (queryObj: { [key: string]: string | number | undefined }) => {
   const queryArr = Object.keys(queryObj).reduce(
     (acc, k) =>
-      typeof queryObj[k] !== "undefined"
-        ? [
-            ...acc,
-            `${encodeURIComponent(k)}=${encodeURIComponent(queryObj[
-              k
-            ] as string)}`
-          ]
+      typeof queryObj[k] !== 'undefined'
+        ? [...acc, `${encodeURIComponent(k)}=${encodeURIComponent(queryObj[k] as string)}`]
         : acc,
-    []
+    [],
   );
 
-  return queryArr.length > 0 ? `?${queryArr.join("&")}` : "";
+  return queryArr.length > 0 ? `?${queryArr.join('&')}` : '';
 };

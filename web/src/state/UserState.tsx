@@ -1,7 +1,7 @@
-import * as jwtDecode from "jwt-decode";
-import * as React from "react";
-import { injectDependencies } from "src/DI/DI";
-import { IAuthService } from "src/services/AuthService";
+import * as jwtDecode from 'jwt-decode';
+import * as React from 'react';
+import { injectDependencies } from 'src/DI/DI';
+import { IAuthService } from 'src/services/AuthService';
 
 export type User =
   | {
@@ -36,7 +36,7 @@ const USER_ANONYMOUSE_STATE = null;
 
 class Provider extends React.Component<IProviderProps, IProviderState> {
   public state = {
-    user: USER_NOT_SET_STATE
+    user: USER_NOT_SET_STATE,
   };
 
   public componentDidMount() {
@@ -53,8 +53,8 @@ class Provider extends React.Component<IProviderProps, IProviderState> {
           userState: {
             clearUser,
             syncUser,
-            user
-          }
+            user,
+          },
         }}
       >
         {children}
@@ -77,16 +77,12 @@ class Provider extends React.Component<IProviderProps, IProviderState> {
   };
 }
 
-export const UserStateProvider = injectDependencies(
-  ({ dependencies, ...props }) => (
-    <Provider {...props} service={dependencies.services.auth} />
-  )
-);
+export const UserStateProvider = injectDependencies(({ dependencies, ...props }) => (
+  <Provider {...props} service={dependencies.services.auth} />
+));
 
 export const injectUserState = (
-  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>
+  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>,
 ): React.SFC<any> => props => (
-  <Context.Consumer>
-    {(context: IContextValue) => <Component {...{ ...props, ...context }} />}
-  </Context.Consumer>
+  <Context.Consumer>{(context: IContextValue) => <Component {...{ ...props, ...context }} />}</Context.Consumer>
 );

@@ -1,19 +1,19 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { InjectedIntlProps, injectIntl } from "react-intl";
+import { InjectedIntlProps, injectIntl } from 'react-intl';
 
-import { Form, FormRenderProps } from "react-final-form";
+import { Form, FormRenderProps } from 'react-final-form';
 
-import { Button } from "src/components/common/Button/Button";
-import { HelpText } from "src/components/common/HelpText/HelpText";
-import { Modal } from "src/components/common/Modal/Modal";
-import { ModalBackground } from "src/components/common/ModalBackground/ModalBackground";
-import { ModalCard } from "src/components/common/ModalCard/ModalCard";
-import { ModalContent } from "src/components/common/ModalContent/ModalContent";
+import { Button } from 'src/components/common/Button/Button';
+import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { Modal } from 'src/components/common/Modal/Modal';
+import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
+import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
+import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 
-import { textCenterMixin } from "src/styles/mixins";
-import { LoaderLayout } from "../common/LoaderLayout/LoaderLayout";
-import { Message } from "../common/Message/Message";
+import { textCenterMixin } from 'src/styles/mixins';
+import { LoaderLayout } from '../common/LoaderLayout/LoaderLayout';
+import { Message } from '../common/Message/Message';
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
@@ -35,15 +35,7 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 export const ModalForm = injectIntl(
   class extends React.Component<IProps & InjectedIntlProps> {
     public render() {
-      const {
-        isOpen,
-        onClose,
-        onSubmit,
-        validate,
-        initialValues,
-        preloadingError,
-        intl
-      } = this.props;
+      const { isOpen, onClose, onSubmit, validate, initialValues, preloadingError, intl } = this.props;
       return (
         <Modal isOpen={isOpen}>
           <ModalBackground onClick={onClose} />
@@ -51,12 +43,10 @@ export const ModalForm = injectIntl(
             {preloadingError ? (
               <Message color="is-danger">
                 <Message.Header>
-                  {intl.formatMessage({ id: "common.error" })}
+                  {intl.formatMessage({ id: 'common.error' })}
                   <ModalCard.Close onClick={onClose} />
                 </Message.Header>
-                <Message.Body>
-                  {intl.formatMessage({ id: preloadingError })}
-                </Message.Body>
+                <Message.Body>{intl.formatMessage({ id: preloadingError })}</Message.Body>
               </Message>
             ) : (
               <Form
@@ -72,20 +62,11 @@ export const ModalForm = injectIntl(
     }
 
     private renderInnerForm = ({ handleSubmit }: FormRenderProps) => {
-      const {
-        onClose,
-        intl,
-        isLoading = false,
-        title,
-        globalError,
-        renderFields,
-        formID,
-        isPreloading
-      } = this.props;
+      const { onClose, intl, isLoading = false, title, globalError, renderFields, formID, isPreloading } = this.props;
 
       const {
-        submitText = intl.formatMessage({ id: "common.submit" }),
-        cancelText = intl.formatMessage({ id: "common.cancel" })
+        submitText = intl.formatMessage({ id: 'common.submit' }),
+        cancelText = intl.formatMessage({ id: 'common.cancel' }),
       } = this.props;
 
       return (
@@ -101,22 +82,13 @@ export const ModalForm = injectIntl(
               <form id={formID} onSubmit={handleSubmit}>
                 {renderFields()}
                 <div css={textCenterMixin}>
-                  {globalError && (
-                    <HelpText type="is-danger">
-                      {intl.formatMessage({ id: globalError })}
-                    </HelpText>
-                  )}
+                  {globalError && <HelpText type="is-danger">{intl.formatMessage({ id: globalError })}</HelpText>}
                 </div>
               </form>
             )}
           </ModalCard.Body>
           <ModalCard.Foot>
-            <Button
-              form={formID}
-              type="submit"
-              color="is-primary"
-              isLoading={isLoading || isPreloading}
-            >
+            <Button form={formID} type="submit" color="is-primary" isLoading={isLoading || isPreloading}>
               {submitText}
             </Button>
             <Button color="is-danger" onClick={onClose}>
@@ -126,5 +98,5 @@ export const ModalForm = injectIntl(
         </ModalCard>
       );
     };
-  }
+  },
 );

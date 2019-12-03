@@ -1,11 +1,11 @@
 /** @jsx jsx */
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
-import { css, jsx } from "@emotion/core";
-import classNames from "classnames";
-import ClipLoader from "react-spinners/ClipLoader";
-import Transition from "react-transition-group/Transition";
+import { css, jsx } from '@emotion/core';
+import classNames from 'classnames';
+import ClipLoader from 'react-spinners/ClipLoader';
+import Transition from 'react-transition-group/Transition';
 
 import {
   alignItemsCenterMixin,
@@ -13,9 +13,9 @@ import {
   fullHeightMixin,
   fullWidthMixin,
   justifyContentCenterMixin,
-  positionAbsoluteMixin
-} from "src/styles/mixins";
-import { ITheme } from "src/themes";
+  positionAbsoluteMixin,
+} from 'src/styles/mixins';
+import { ITheme } from 'src/themes';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   isActive: boolean;
@@ -40,26 +40,17 @@ const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
   }
 `;
 
-export const PageLoader = ({
-  isActive,
-  className,
-  timeout = 500,
-  ...props
-}: IProps) =>
+export const PageLoader = ({ isActive, className, timeout = 500, ...props }: IProps) =>
   ReactDOM.createPortal(
     <Transition in={isActive} timeout={timeout} unmountOnExit={true}>
       {status => {
-        const shouldShow = status === "entering" || status === "entered";
+        const shouldShow = status === 'entering' || status === 'entered';
         return (
-          <div
-            css={getCSS(timeout, shouldShow)}
-            className={classNames(className, "has-background-primary")}
-            {...props}
-          >
+          <div css={getCSS(timeout, shouldShow)} className={classNames(className, 'has-background-primary')} {...props}>
             <ClipLoader color="white" sizeUnit="vw" size={15} loading={true} />
           </div>
         );
       }}
     </Transition>,
-    document.body
+    document.body,
   );

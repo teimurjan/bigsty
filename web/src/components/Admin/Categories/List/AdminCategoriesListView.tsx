@@ -1,30 +1,30 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { InjectedIntlProps, injectIntl } from "react-intl";
+import { InjectedIntlProps, injectIntl } from 'react-intl';
 
-import { Container } from "src/components/common/Container/Container";
-import { LinkButton } from "src/components/common/LinkButton/LinkButton";
-import { NoDataAvailable } from "src/components/common/NoDataAvailable/NoDataAvaiable";
-import { Section } from "src/components/common/Section/Section";
+import { Container } from 'src/components/common/Container/Container';
+import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
+import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
+import { Section } from 'src/components/common/Section/Section';
 
-import { AdminTable, IntlRenderer } from "../../AdminTable";
-import { IViewProps as IProps } from "./AdminCategoriesListPresenter";
+import { AdminTable, IntlRenderer } from '../../AdminTable';
+import { IViewProps as IProps } from './AdminCategoriesListPresenter';
 
 const NewCategoryButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/categories/new" color="is-primary">
-    {intl.formatMessage({ id: "AdminCategories.notFound.cta" })}
+    {intl.formatMessage({ id: 'AdminCategories.notFound.cta' })}
   </LinkButton>
 ));
 
 const NoCategoriesAvialable = injectIntl(({ intl }) => (
   <NoDataAvailable
-    title={intl.formatMessage({ id: "AdminCategories.notFound.title" })}
+    title={intl.formatMessage({ id: 'AdminCategories.notFound.title' })}
     description={intl.formatMessage({
-      id: "AdminCategories.notFound.description"
+      id: 'AdminCategories.notFound.description',
     })}
     CTA={
       <LinkButton to="/admin/categories/new" color="is-primary">
-        {intl.formatMessage({ id: "AdminCategories.notFound.cta" })}
+        {intl.formatMessage({ id: 'AdminCategories.notFound.cta' })}
       </LinkButton>
     }
   />
@@ -32,14 +32,14 @@ const NoCategoriesAvialable = injectIntl(({ intl }) => (
 
 const renderNoData = () => <NoCategoriesAvialable />;
 
-type Category = IProps["categories"][0];
+type Category = IProps['categories'][0];
 
 export const AdminCategoriesListView = ({
   categories,
   locales,
   intl,
   isLoading,
-  isDataLoaded
+  isDataLoaded,
 }: IProps & InjectedIntlProps) => (
   <Section>
     <Container>
@@ -51,19 +51,16 @@ export const AdminCategoriesListView = ({
         renderNoData={renderNoData}
         intl={intl}
       >
-        <AdminTable.Col<Category>
-          key_="id"
-          title={intl.formatMessage({ id: "common.ID" })}
-        />
+        <AdminTable.Col<Category> key_="id" title={intl.formatMessage({ id: 'common.ID' })} />
         <AdminTable.Col<Category>
           key_="parent_category_id"
           title={intl.formatMessage({
-            id: "AdminCategories.parentCategoryID"
+            id: 'AdminCategories.parentCategoryID',
           })}
         />
         <AdminTable.Col<Category>
           key_="name"
-          title={intl.formatMessage({ id: "AdminCategories.names" })}
+          title={intl.formatMessage({ id: 'AdminCategories.names' })}
           renderer={new IntlRenderer(locales)}
         />
       </AdminTable>

@@ -1,8 +1,8 @@
-import { match } from "react-router";
+import { match } from 'react-router';
 
 export const getNumberParam = <T extends { [key: string]: string }>(
   m: match<T>,
-  paramKey: keyof T
+  paramKey: keyof T,
 ): number | undefined => {
   const paramStr = m.params[paramKey];
 

@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-import classNames from "classnames";
+import classNames from 'classnames';
 
 export interface IProps {
   children?: React.ReactNode;
@@ -9,12 +9,7 @@ export interface IProps {
   onClick?: () => any;
 }
 
-export const DropdownItem = ({
-  children,
-  className,
-  onClick,
-  href
-}: IProps) => {
+export const DropdownItem = ({ children, className, onClick, href }: IProps) => {
   const handleClick = React.useCallback(
     (e: React.SyntheticEvent<HTMLAnchorElement>) => {
       if (!href) {
@@ -25,15 +20,11 @@ export const DropdownItem = ({
         onClick();
       }
     },
-    []
+    [href, onClick],
   );
 
   return (
-    <a
-      href={href || "#"}
-      className={classNames("dropdown-item", className)}
-      onClick={handleClick}
-    >
+    <a href={href || '#'} className={classNames('dropdown-item', className)} onClick={handleClick}>
       {children}
     </a>
   );

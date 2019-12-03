@@ -1,22 +1,15 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { injectIntl } from "react-intl";
+import { injectIntl } from 'react-intl';
 
-import { injectIntlState } from "src/state/IntlState";
+import { injectIntlState } from 'src/state/IntlState';
 
-import { injectAdminCategoriesState } from "src/state/AdminCategoriesState";
-import { AdminCategoriesListPresenter } from "./AdminCategoriesListPresenter";
-import { AdminCategoriesListView } from "./AdminCategoriesListView";
+import { injectAdminCategoriesState } from 'src/state/AdminCategoriesState';
+import { AdminCategoriesListPresenter } from './AdminCategoriesListPresenter';
+import { AdminCategoriesListView } from './AdminCategoriesListView';
 
-const ConnectedAdminCategoriesListPresenter = injectIntlState(
-  AdminCategoriesListPresenter
-);
+const ConnectedAdminCategoriesListPresenter = injectIntlState(AdminCategoriesListPresenter);
 
-export const AdminCategoriesListContainer = injectAdminCategoriesState(
-  props => (
-    <ConnectedAdminCategoriesListPresenter
-      View={injectIntl(AdminCategoriesListView)}
-      {...props}
-    />
-  )
-);
+export const AdminCategoriesListContainer = injectAdminCategoriesState(props => (
+  <ConnectedAdminCategoriesListPresenter View={injectIntl(AdminCategoriesListView)} {...props} />
+));

@@ -1,53 +1,49 @@
-import * as React from "react";
+import * as React from 'react';
 
-import classNames from "classnames";
+import classNames from 'classnames';
 
-export interface IProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type IProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const ModalCard = ({ children, className, ...props }: IProps) => (
-  <div className={classNames("modal-card", className)} {...props}>
+  <div className={classNames('modal-card', className)} {...props}>
     {children}
   </div>
 );
 
-interface IModalHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
+type IModalHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 ModalCard.Head = ({ children, className, ...props }: IModalHeaderProps) => (
-  <header className={classNames("modal-card-head", className)} {...props}>
+  <header className={classNames('modal-card-head', className)} {...props}>
     {children}
   </header>
 );
 
-interface ITitleProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+type ITitleProps = React.HTMLAttributes<HTMLParagraphElement>;
 
 ModalCard.Title = ({ children, className, ...props }: ITitleProps) => (
-  <p className={classNames("modal-card-title", className)} {...props}>
+  <p className={classNames('modal-card-title', className)} {...props}>
     {children}
   </p>
 );
 
-interface ICloseProps extends React.HTMLAttributes<HTMLButtonElement> {}
+type ICloseProps = React.HTMLAttributes<HTMLButtonElement>;
 
 ModalCard.Close = ({ className, ...props }: ICloseProps) => (
-  <button
-    className={classNames("delete", className)}
-    aria-label="close"
-    {...props}
-  />
+  <button className={classNames('delete', className)} aria-label="close" {...props} />
 );
 
-interface IBodyProps extends React.HTMLAttributes<HTMLDivElement> {}
+type IBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
 ModalCard.Body = ({ children, className, ...props }: IBodyProps) => (
-  <section className={classNames("modal-card-body", className)} {...props}>
+  <section className={classNames('modal-card-body', className)} {...props}>
     {children}
   </section>
 );
 
-interface IFootProps extends React.HTMLAttributes<HTMLDivElement> {}
+type IFootProps = React.HTMLAttributes<HTMLDivElement>;
 
 ModalCard.Foot = ({ children, className, ...props }: IFootProps) => (
-  <footer className={classNames("modal-card-foot", className)} {...props}>
+  <footer className={classNames('modal-card-foot', className)} {...props}>
     {children}
   </footer>
 );

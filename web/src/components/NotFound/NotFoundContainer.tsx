@@ -1,5 +1,5 @@
-import { injectIntl } from "react-intl";
+import { injectIntl } from 'react-intl';
 
-import { NotFoundView } from "./NotFoundView";
+import { NotFoundView } from './NotFoundView';
 
 export const NotFoundContainer = injectIntl(NotFoundView);

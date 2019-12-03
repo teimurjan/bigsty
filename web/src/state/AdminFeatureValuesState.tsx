@@ -1,13 +1,10 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { IFeatureValueListRawIntlResponseItem } from "src/api/FeatureValueAPI";
-import { injectDependencies } from "src/DI/DI";
-import { extendIntlTextWithLocaleNames } from "src/helpers/intl";
-import { IFeatureValueService } from "src/services/FeatureValueService";
-import {
-  IContextValue as IntlStateContextValue,
-  injectIntlState
-} from "src/state/IntlState";
+import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
+import { injectDependencies } from 'src/DI/DI';
+import { extendIntlTextWithLocaleNames } from 'src/helpers/intl';
+import { IFeatureValueService } from 'src/services/FeatureValueService';
+import { IContextValue as IntlStateContextValue, injectIntlState } from 'src/state/IntlState';
 
 export interface IContextValue {
   adminFeatureValuesState: {
@@ -17,12 +14,8 @@ export interface IContextValue {
     listError: undefined | string;
     getFeatureValues: () => Promise<void>;
     deleteFeatureValue: (id: number) => void;
-    addFeatureValue: (
-      featureValue: IFeatureValueListRawIntlResponseItem
-    ) => void;
-    setFeatureValue: (
-      featureValue: IFeatureValueListRawIntlResponseItem
-    ) => void;
+    addFeatureValue: (featureValue: IFeatureValueListRawIntlResponseItem) => void;
+    setFeatureValue: (featureValue: IFeatureValueListRawIntlResponseItem) => void;
   };
 }
 
@@ -41,36 +34,22 @@ interface IProviderState {
   hasListLoaded: boolean;
 }
 
-class Provider extends React.Component<
-  IProviderProps & IntlStateContextValue,
-  IProviderState
-> {
+class Provider extends React.Component<IProviderProps & IntlStateContextValue, IProviderState> {
   public state = {
     featureValues: {},
     featureValuesOrder: [],
     hasListLoaded: false,
     isListLoading: false,
-    listError: undefined
+    listError: undefined,
   };
 
   public render() {
-    const {
-      featureValues,
-      featureValuesOrder,
-      isListLoading,
-      listError,
-      hasListLoaded
-    } = this.state;
+    const { featureValues, featureValuesOrder, isListLoading, listError, hasListLoaded } = this.state;
     const {
       children,
-      intlState: { availableLocales }
+      intlState: { availableLocales },
     } = this.props;
-    const {
-      addFeatureValue,
-      getFeatureValues,
-      deleteFeatureValue,
-      setFeatureValue
-    } = this;
+    const { addFeatureValue, getFeatureValues, deleteFeatureValue, setFeatureValue } = this;
 
     return (
       <Context.Provider
@@ -79,30 +58,23 @@ class Provider extends React.Component<
             addFeatureValue,
             deleteFeatureValue,
             featureValues: featureValuesOrder.map(featureValueId => {
-              const featureValue: IFeatureValueListRawIntlResponseItem =
-                featureValues[featureValueId];
+              const featureValue: IFeatureValueListRawIntlResponseItem = featureValues[featureValueId];
 
               return {
                 ...featureValue,
                 feature_type: {
                   ...featureValue.feature_type,
-                  name: extendIntlTextWithLocaleNames(
-                    featureValue.feature_type.name,
-                    availableLocales
-                  )
+                  name: extendIntlTextWithLocaleNames(featureValue.feature_type.name, availableLocales),
                 },
-                name: extendIntlTextWithLocaleNames(
-                  featureValue.name,
-                  availableLocales
-                )
+                name: extendIntlTextWithLocaleNames(featureValue.name, availableLocales),
               };
             }),
             getFeatureValues,
             hasListLoaded,
             isListLoading,
             listError,
-            setFeatureValue
-          }
+            setFeatureValue,
+          },
         }}
       >
         {children}
@@ -119,41 +91,37 @@ class Provider extends React.Component<
         featureValues: entities.featureValues,
         featureValuesOrder: result,
         hasListLoaded: true,
-        isListLoading: false
+        isListLoading: false,
       });
     } catch (e) {
       this.setState({
         hasListLoaded: true,
         isListLoading: false,
-        listError: "errors.common"
+        listError: 'errors.common',
       });
     }
   };
 
-  private addFeatureValue = (
-    featureValue: IFeatureValueListRawIntlResponseItem
-  ) => {
+  private addFeatureValue = (featureValue: IFeatureValueListRawIntlResponseItem) => {
     const { featureValues, featureValuesOrder } = this.state;
 
     const newFeatureValues = {
       ...featureValues,
-      [featureValue.id]: featureValue
+      [featureValue.id]: featureValue,
     };
 
     this.setState({
       featureValues: newFeatureValues,
-      featureValuesOrder: [...featureValuesOrder, featureValue.id]
+      featureValuesOrder: [...featureValuesOrder, featureValue.id],
     });
   };
 
-  private setFeatureValue = (
-    featureValue: IFeatureValueListRawIntlResponseItem
-  ) => {
+  private setFeatureValue = (featureValue: IFeatureValueListRawIntlResponseItem) => {
     const { featureValues } = this.state;
 
     const newFeatureValues = {
       ...featureValues,
-      [featureValue.id]: featureValue
+      [featureValue.id]: featureValue,
     };
 
     this.setState({ featureValues: newFeatureValues });
@@ -167,9 +135,7 @@ class Provider extends React.Component<
 
     this.setState({
       featureValues: newFeatureValues,
-      featureValuesOrder: featureValuesOrder.filter(
-        idFromOrder => idFromOrder !== id
-      )
+      featureValuesOrder: featureValuesOrder.filter(idFromOrder => idFromOrder !== id),
     });
   };
 }
@@ -177,13 +143,11 @@ class Provider extends React.Component<
 export const AdminFeatureValuesStateProvider = injectIntlState(
   injectDependencies(({ dependencies, ...props }) => (
     <Provider {...props} service={dependencies.services.featureValue} />
-  ))
+  )),
 );
 
 export const injectAdminFeatureValuesState = (
-  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>
+  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>,
 ): React.SFC<any> => props => (
-  <Context.Consumer>
-    {(context: IContextValue) => <Component {...{ ...props, ...context }} />}
-  </Context.Consumer>
+  <Context.Consumer>{(context: IContextValue) => <Component {...{ ...props, ...context }} />}</Context.Consumer>
 );

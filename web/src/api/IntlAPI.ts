@@ -1,6 +1,6 @@
-import { Client } from "ttypes/http";
+import { Client } from 'ttypes/http';
 
-import { IHeadersManager } from "src/manager/HeadersManager";
+import { IHeadersManager } from 'src/manager/HeadersManager';
 
 export interface IIntlListResponseItem {
   id: number;
@@ -26,12 +26,9 @@ export class IntlAPI implements IIntlAPI {
 
   public async getAll() {
     try {
-      const response = await this.client.get<IIntlListResponseData>(
-        "/api/languages",
-        {
-          headers: this.headersManager.getHeaders()
-        }
-      );
+      const response = await this.client.get<IIntlListResponseData>('/api/languages', {
+        headers: this.headersManager.getHeaders(),
+      });
       return response.data;
     } catch (e) {
       throw e;

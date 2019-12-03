@@ -1,14 +1,14 @@
 /** @jsx jsx */
-import * as React from "react";
+import * as React from 'react';
 
-import { css, jsx } from "@emotion/core";
-import classNames from "classnames";
+import { css, jsx } from '@emotion/core';
+import classNames from 'classnames';
 
-import { Hero } from "src/components/common/Hero/Hero";
-import { HeroBody } from "src/components/common/HeroBody/HeroBody";
-import { Title } from "src/components/common/Title/Title";
-import { textCenterMixin } from "src/styles/mixins";
-import { Subtitle } from "../Subtitle/Subtitle";
+import { Hero } from 'src/components/common/Hero/Hero';
+import { HeroBody } from 'src/components/common/HeroBody/HeroBody';
+import { Title } from 'src/components/common/Title/Title';
+import { textCenterMixin } from 'src/styles/mixins';
+import { Subtitle } from '../Subtitle/Subtitle';
 
 interface IProps {
   title?: string | undefined;
@@ -17,7 +17,7 @@ interface IProps {
 }
 
 export const NoDataAvailable = ({ title, description, CTA }: IProps) => (
-  <Hero className={classNames("is-large")}>
+  <Hero className={classNames('is-large')}>
     <HeroBody
       css={css`
         ${textCenterMixin};

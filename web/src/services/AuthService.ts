@@ -1,16 +1,9 @@
-import * as authAPI from "../api/AuthAPI";
-import * as authStorage from "../storage/AuthStorage";
+import * as authAPI from '../api/AuthAPI';
+import * as authStorage from '../storage/AuthStorage';
 
 export interface IAuthService {
-  logIn(
-    email: string,
-    password: string
-  ): Promise<{ error: string | undefined }>;
-  signUp(
-    name: string,
-    email: string,
-    password: string
-  ): Promise<{ error: string | undefined }>;
+  logIn(email: string, password: string): Promise<{ error: string | undefined }>;
+  signUp(name: string, email: string, password: string): Promise<{ error: string | undefined }>;
   refreshTokens(refreshToken: string): void;
   getAccessToken(): string | null;
   logOut(): void;
@@ -28,7 +21,7 @@ export const errors = {
       super();
       Object.setPrototypeOf(this, new.target.prototype);
     }
-  }
+  },
 };
 
 export class AuthService implements IAuthService {
@@ -42,10 +35,7 @@ export class AuthService implements IAuthService {
 
   public async logIn(email: string, password: string) {
     try {
-      const { accessToken, refreshToken } = await this.API.logIn(
-        email,
-        password
-      );
+      const { accessToken, refreshToken } = await this.API.logIn(email, password);
 
       this.storage.setAccessToken(accessToken);
       this.storage.setRefreshToken(refreshToken);
@@ -61,11 +51,7 @@ export class AuthService implements IAuthService {
 
   public async signUp(name: string, email: string, password: string) {
     try {
-      const { accessToken, refreshToken } = await this.API.signUp(
-        name,
-        email,
-        password
-      );
+      const { accessToken, refreshToken } = await this.API.signUp(name, email, password);
 
       this.storage.setAccessToken(accessToken);
       this.storage.setRefreshToken(refreshToken);
@@ -80,9 +66,7 @@ export class AuthService implements IAuthService {
   }
 
   public async refreshTokens(oldRefreshToken: string) {
-    const { accessToken, refreshToken } = await this.API.refreshTokens(
-      oldRefreshToken
-    );
+    const { accessToken, refreshToken } = await this.API.refreshTokens(oldRefreshToken);
 
     this.storage.setAccessToken(accessToken);
     this.storage.setRefreshToken(refreshToken);

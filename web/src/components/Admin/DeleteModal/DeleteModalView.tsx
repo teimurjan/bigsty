@@ -1,15 +1,15 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { InjectedIntlProps } from "react-intl";
+import { InjectedIntlProps } from 'react-intl';
 
-import { Button } from "src/components/common/Button/Button";
-import { Message } from "src/components/common/Message/Message";
-import { Modal } from "src/components/common/Modal/Modal";
-import { ModalBackground } from "src/components/common/ModalBackground/ModalBackground";
-import { ModalCard } from "src/components/common/ModalCard/ModalCard";
-import { ModalContent } from "src/components/common/ModalContent/ModalContent";
+import { Button } from 'src/components/common/Button/Button';
+import { Message } from 'src/components/common/Message/Message';
+import { Modal } from 'src/components/common/Modal/Modal';
+import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
+import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
+import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 
-import { IViewProps as IProps } from "./DeleteModalPresenter";
+import { IViewProps as IProps } from './DeleteModalPresenter';
 
 export const DeleteModalView = ({
   isOpen,
@@ -20,10 +20,7 @@ export const DeleteModalView = ({
   error,
   ...props
 }: IProps & InjectedIntlProps) => {
-  const onConfirmClick = React.useCallback(
-    (e: React.SyntheticEvent) => onConfirm(),
-    []
-  );
+  const onConfirmClick = React.useCallback((e: React.SyntheticEvent) => onConfirm(), [onConfirm]);
 
   return (
     <Modal isOpen={isOpen} {...props}>
@@ -32,7 +29,7 @@ export const DeleteModalView = ({
         {error ? (
           <Message color="is-danger">
             <Message.Header>
-              {intl.formatMessage({ id: "common.error" })}
+              {intl.formatMessage({ id: 'common.error' })}
               <ModalCard.Close onClick={onClose} />
             </Message.Header>
             <Message.Body>{intl.formatMessage({ id: error })}</Message.Body>
@@ -40,22 +37,15 @@ export const DeleteModalView = ({
         ) : (
           <ModalCard>
             <ModalCard.Head>
-              <ModalCard.Title>
-                {intl.formatMessage({ id: "common.deleteApproval" })}
-              </ModalCard.Title>
+              <ModalCard.Title>{intl.formatMessage({ id: 'common.deleteApproval' })}</ModalCard.Title>
               <ModalCard.Close onClick={onClose} />
             </ModalCard.Head>
             <ModalCard.Foot>
-              <Button
-                color="is-primary"
-                onClick={onConfirmClick}
-                isLoading={isLoading}
-                disabled={!!error}
-              >
-                {intl.formatMessage({ id: "common.yes" })}
+              <Button color="is-primary" onClick={onConfirmClick} isLoading={isLoading} disabled={!!error}>
+                {intl.formatMessage({ id: 'common.yes' })}
               </Button>
               <Button color="is-danger" onClick={onClose}>
-                {intl.formatMessage({ id: "common.no" })}
+                {intl.formatMessage({ id: 'common.no' })}
               </Button>
             </ModalCard.Foot>
           </ModalCard>

@@ -1,23 +1,21 @@
 /** @jsx jsx */
-import * as React from "react";
+import * as React from 'react';
 
-import { jsx } from "@emotion/core";
-import { InjectedIntlProps } from "react-intl";
+import { jsx } from '@emotion/core';
+import { InjectedIntlProps } from 'react-intl';
 
-import { Box } from "src/components/common/Box/Box";
-import { Modal } from "src/components/common/Modal/Modal";
-import { ModalBackground } from "src/components/common/ModalBackground/ModalBackground";
-import { ModalClose } from "src/components/common/ModalClose/ModalClose";
-import { ModalContent } from "src/components/common/ModalContent/ModalContent";
-import { Title } from "src/components/common/Title/Title";
-import { textCenterMixin } from "src/styles/mixins";
+import { Box } from 'src/components/common/Box/Box';
+import { Modal } from 'src/components/common/Modal/Modal';
+import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
+import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
+import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
+import { Title } from 'src/components/common/Title/Title';
+import { textCenterMixin } from 'src/styles/mixins';
 
-import { SignUpFormContainer } from "../SignUpForm/SignUpFormContainer";
-import { IViewProps } from "./SignUpPagePresenter";
+import { SignUpFormContainer } from '../SignUpForm/SignUpFormContainer';
+import { IViewProps } from './SignUpPagePresenter';
 
-export class SignUpPageView extends React.Component<
-  IViewProps & InjectedIntlProps
-> {
+export class SignUpPageView extends React.Component<IViewProps & InjectedIntlProps> {
   public render() {
     const { intl, isOpen, onClose } = this.props;
     return (
@@ -26,7 +24,7 @@ export class SignUpPageView extends React.Component<
         <ModalContent>
           <Box>
             <Title css={textCenterMixin} size={3}>
-              {intl.formatMessage({ id: "SignUpPage.title" })}
+              {intl.formatMessage({ id: 'SignUpPage.title' })}
             </Title>
             <SignUpFormContainer />
           </Box>

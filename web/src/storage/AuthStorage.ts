@@ -1,4 +1,4 @@
-import { Storage } from "ttypes/storage";
+import { Storage } from 'ttypes/storage';
 
 export interface IAuthStorage {
   getAccessToken(): string | null;
@@ -16,26 +16,26 @@ export class AuthStorage implements IAuthStorage {
   }
 
   public getAccessToken() {
-    return this.storage.getItem("access_token");
+    return this.storage.getItem('access_token');
   }
 
   public getRefreshToken() {
-    return this.storage.getItem("refresh_token");
+    return this.storage.getItem('refresh_token');
   }
 
   public setAccessToken(token: string) {
-    this.storage.setItem("access_token", token);
+    this.storage.setItem('access_token', token);
   }
 
   public setRefreshToken(token: string) {
-    this.storage.setItem("refresh_token", token);
+    this.storage.setItem('refresh_token', token);
   }
 
   public clearAccessToken() {
-    this.storage.removeItem("access_token");
+    this.storage.removeItem('access_token');
   }
 
   public clearRefreshToken() {
-    this.storage.removeItem("refresh_token");
+    this.storage.removeItem('refresh_token');
   }
 }

@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-export const useBoolean = (defaultValue: boolean = false) => {
+export const useBoolean = (defaultValue = false) => {
   const [value, setValue] = React.useState(defaultValue);
 
   const toggle = React.useCallback(() => {

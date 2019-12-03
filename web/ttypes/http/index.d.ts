@@ -1,4 +1,4 @@
-declare module "ttypes/http" {
+declare module 'ttypes/http' {
   export interface Client {
     get: <T>(...args: any[]) => Promise<{ data: T }>;
     post: <T>(...args: any[]) => Promise<{ data: T }>;

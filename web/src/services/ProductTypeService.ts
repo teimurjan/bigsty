@@ -1,10 +1,10 @@
-import { normalize, schema } from "normalizr";
-import * as productTypeAPI from "src/api/ProductTypeAPI";
+import { normalize, schema } from 'normalizr';
+import * as productTypeAPI from 'src/api/ProductTypeAPI';
 
 export interface IProductTypeService {
   getForCategory(
     categoryId: number,
-    page: number
+    page: number,
   ): Promise<{
     entities: {
       productTypes: {
@@ -25,8 +25,8 @@ export class ProductTypeService implements IProductTypeService {
   public async getForCategory(categoryId: number, page: number) {
     const productTypes = await this.API.getForCategory(categoryId, page);
     return {
-      ...normalize(productTypes.data, [new schema.Entity("productTypes")]),
-      meta: productTypes.meta
+      ...normalize(productTypes.data, [new schema.Entity('productTypes')]),
+      meta: productTypes.meta,
     };
   }
 }

@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps } from 'react-router';
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 
 interface IPreloadDataArgs {
@@ -31,9 +31,9 @@ export const DeleteModalPresenter = ({
   history,
   preloadData,
   backPath,
-  deleteEntity
+  deleteEntity,
 }: IProps & RouteComponentProps<{ id: string }>) => {
-  const close = React.useCallback(() => history.push(backPath), []);
+  const close = React.useCallback(() => history.push(backPath), [backPath, history]);
 
   const id = parseInt(match.params.id, 10);
 
@@ -42,9 +42,9 @@ export const DeleteModalPresenter = ({
 
   React.useEffect(() => {
     preloadData({ id, close, setError, setIsLoading });
-  }, []);
+  }, [close, id, preloadData]);
 
-  const isPreloadingTimeoutExpired = useTimeoutExpired(1000);  
+  const isPreloadingTimeoutExpired = useTimeoutExpired(1000);
 
   const remove = React.useCallback(async () => {
     try {
@@ -54,9 +54,9 @@ export const DeleteModalPresenter = ({
       close();
     } catch (e) {
       setIsLoading(false);
-      setError("errors.common");
+      setError('errors.common');
     }
-  }, [id]);
+  }, [close, deleteEntity, id]);
 
   return (
     <View

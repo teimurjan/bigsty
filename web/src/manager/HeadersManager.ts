@@ -1,5 +1,5 @@
-import { IAuthStorage } from "src/storage/AuthStorage";
-import { IIntlStorage } from "src/storage/IntlStorage";
+import { IAuthStorage } from 'src/storage/AuthStorage';
+import { IIntlStorage } from 'src/storage/IntlStorage';
 
 export interface IHeadersManager {
   getHeaders(): { [key: string]: string | null };
@@ -18,8 +18,8 @@ export class HeadersManager implements IHeadersManager {
     const locale = this.intlStorage.getLocale();
     const accessToken = this.authStorage.getAccessToken();
     return {
-      "Accept-Language": locale || 'en-US',
-      Authorization: accessToken ? `Bearer ${accessToken}` : null
+      'Accept-Language': locale || 'en-US',
+      Authorization: accessToken ? `Bearer ${accessToken}` : null,
     };
   }
 }

@@ -1,16 +1,16 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { IContextValue as AdminCategoriesContextValue } from "src/state/AdminCategoriesState";
-import { IContextValue as IntlStateContextValue } from "src/state/IntlState";
+import { IContextValue as AdminCategoriesContextValue } from 'src/state/AdminCategoriesState';
+import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { useTimeoutExpired } from "src/hooks/useTimeoutExpired";
+import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps>;
 }
 
 export interface IViewProps {
-  categories: AdminCategoriesContextValue["adminCategoriesState"]["categories"];
+  categories: AdminCategoriesContextValue['adminCategoriesState']['categories'];
   isDataLoaded: boolean;
   isLoading: boolean;
   locales: string[];
@@ -18,19 +18,14 @@ export interface IViewProps {
 
 export const AdminCategoriesListPresenter = ({
   View,
-  adminCategoriesState: {
-    isListLoading,
-    categories,
-    getCategories,
-    hasListLoaded
-  },
-  intlState: { availableLocales }
+  adminCategoriesState: { isListLoading, categories, getCategories, hasListLoaded },
+  intlState: { availableLocales },
 }: IProps & AdminCategoriesContextValue & IntlStateContextValue) => {
   const isLoadingTimeoutExpired = useTimeoutExpired(1000);
 
   React.useEffect(() => {
     getCategories();
-  }, []);
+  }, [getCategories]);
 
   return (
     <View

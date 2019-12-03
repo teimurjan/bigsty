@@ -1,30 +1,26 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import classNames from "classnames";
-import { InjectedIntlProps } from "react-intl";
+import { css, jsx } from '@emotion/core';
+import classNames from 'classnames';
+import { InjectedIntlProps } from 'react-intl';
 
-import { Hero } from "src/components/common/Hero/Hero";
-import { HeroBody } from "src/components/common/HeroBody/HeroBody";
-import { LinkButton } from "src/components/common/LinkButton/LinkButton";
-import { Title } from "src/components/common/Title/Title";
-import { textCenterMixin } from "src/styles/mixins";
+import { Hero } from 'src/components/common/Hero/Hero';
+import { HeroBody } from 'src/components/common/HeroBody/HeroBody';
+import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
+import { Title } from 'src/components/common/Title/Title';
+import { textCenterMixin } from 'src/styles/mixins';
 
 export const NotFoundView = ({ intl }: InjectedIntlProps) => (
-  <Hero className={classNames("is-large")}>
+  <Hero className={classNames('is-large')}>
     <HeroBody
       css={css`
         ${textCenterMixin};
       `}
     >
       <Title className="is-uppercase" size={1}>
-        {intl.formatMessage({ id: "NotFound.title" })}
+        {intl.formatMessage({ id: 'NotFound.title' })}
       </Title>
-      <LinkButton
-        className={classNames("is-medium", "is-uppercase")}
-        color="is-dark"
-        to="/"
-      >
-        {intl.formatMessage({ id: "NotFound.goHome.text" })}
+      <LinkButton className={classNames('is-medium', 'is-uppercase')} color="is-dark" to="/">
+        {intl.formatMessage({ id: 'NotFound.goHome.text' })}
       </LinkButton>
     </HeroBody>
   </Hero>

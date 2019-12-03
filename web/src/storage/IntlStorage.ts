@@ -1,4 +1,4 @@
-import { Storage } from "ttypes/storage";
+import { Storage } from 'ttypes/storage';
 
 export interface IIntlStorage {
   getLocale(): string | null;
@@ -13,14 +13,14 @@ export class IntlStorage implements IIntlStorage {
   }
 
   public getLocale() {
-    return this.storage.getItem("locale");
+    return this.storage.getItem('locale');
   }
 
   public setLocale(locale: string) {
-    this.storage.setItem("locale", locale);
+    this.storage.setItem('locale', locale);
   }
 
   public clearLocale() {
-    this.storage.removeItem("locale");
+    this.storage.removeItem('locale');
   }
 }

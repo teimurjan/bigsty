@@ -1,19 +1,17 @@
-import { IIntlListResponseItem } from "src/api/IntlAPI";
+import { IIntlListResponseItem } from 'src/api/IntlAPI';
 
 // Takes a raw intl field with locale IDs as keys and transform to the object where the keys are locale names
 // { 1: 'English Name' } => { 'en-US': 'English Name' }
 export const extendIntlTextWithLocaleNames = (
   intlText: { [key: string]: string },
-  availableLocales: IIntlListResponseItem[]
+  availableLocales: IIntlListResponseItem[],
 ) =>
   Object.keys(intlText).reduce((acc, languageId) => {
-    const locale = availableLocales.find(
-      ({ id }) => id === parseInt(languageId, 10)
-    );
+    const locale = availableLocales.find(({ id }) => id === parseInt(languageId, 10));
     if (locale) {
       return {
         ...acc,
-        [locale.name]: intlText[languageId]
+        [locale.name]: intlText[languageId],
       };
     }
 

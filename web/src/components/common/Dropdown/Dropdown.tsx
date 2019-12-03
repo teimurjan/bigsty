@@ -1,37 +1,29 @@
-import * as React from "react";
+import * as React from 'react';
 
-import classNames from "classnames";
+import classNames from 'classnames';
 
-import { useBoolean } from "src/hooks/useBoolean";
-import useClickOutside from "src/hooks/useClickOutside";
+import { useBoolean } from 'src/hooks/useBoolean';
+import useClickOutside from 'src/hooks/useClickOutside';
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
-  Trigger:
-    | React.ComponentClass<ITriggerProps>
-    | React.StatelessComponent<ITriggerProps>;
+  Trigger: React.ComponentClass<ITriggerProps> | React.StatelessComponent<ITriggerProps>;
 }
 
-export interface ITriggerProps extends React.HTMLAttributes<HTMLElement> {}
+export type ITriggerProps = React.HTMLAttributes<HTMLElement>;
 
-export const Dropdown = ({
-  children,
-  className,
-  Trigger,
-  ...props
-}: IProps) => {
+export const Dropdown = ({ children, className, Trigger, ...props }: IProps) => {
   const { value: isOpen, toggle, setNegative: close } = useBoolean();
   const contentRef = React.useRef(null);
 
   useClickOutside(contentRef, () => {
-    if (isOpen) { close(); }
+    if (isOpen) {
+      close();
+    }
   });
 
   return (
-    <div
-      className={classNames("dropdown", className, { "is-active": isOpen })}
-      {...props}
-    >
+    <div className={classNames('dropdown', className, { 'is-active': isOpen })} {...props}>
       <div className="dropdown-trigger">
         <Trigger onClick={toggle} />
       </div>

@@ -1,11 +1,11 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { InjectedIntlProps } from "react-intl";
+import { InjectedIntlProps } from 'react-intl';
 
-import { ModalForm } from "../../ModalForm";
-import { Fields, IFieldsProps } from "../Create/Fields";
+import { ModalForm } from '../../ModalForm';
+import { Fields, IFieldsProps } from '../Create/Fields';
 
-import { IViewProps as IProps } from "./AdminFeatureValuesEditPresenter";
+import { IViewProps as IProps } from './AdminFeatureValuesEditPresenter';
 
 const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
 
@@ -21,7 +21,7 @@ export const AdminFeatureValuesEditView = ({
   availableLocales,
   validate,
   preloadingError,
-  featureTypes
+  featureTypes,
 }: IProps & InjectedIntlProps) => (
   <ModalForm
     formID="adminFeatureValuesEditForm"
@@ -31,7 +31,7 @@ export const AdminFeatureValuesEditView = ({
     isLoading={isUpdating}
     isPreloading={isLoading}
     globalError={error}
-    title={intl.formatMessage({ id: "AdminFeatureValues.edit.title" })}
+    title={intl.formatMessage({ id: 'AdminFeatureValues.edit.title' })}
     renderFields={getFieldsRenderer({ availableLocales, featureTypes })}
     validate={validate}
     initialValues={initialValues}

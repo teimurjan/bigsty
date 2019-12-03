@@ -1,4 +1,4 @@
-import { Client } from "ttypes/http";
+import { Client } from 'ttypes/http';
 
 export interface IAuthResponseData {
   access_token: string;
@@ -8,7 +8,7 @@ export interface IAuthResponseData {
 export interface IAuthAPI {
   logIn(
     email: string,
-    password: string
+    password: string,
   ): Promise<{
     accessToken: string;
     refreshToken: string;
@@ -16,13 +16,13 @@ export interface IAuthAPI {
   signUp(
     name: string,
     email: string,
-    password: string
+    password: string,
   ): Promise<{
     accessToken: string;
     refreshToken: string;
   }>;
   refreshTokens(
-    refreshToken: string
+    refreshToken: string,
   ): Promise<{
     accessToken: string;
     refreshToken: string;
@@ -32,16 +32,16 @@ export interface IAuthAPI {
 export const errors = {
   DuplicateEmailError: class extends Error {
     constructor() {
-      super("Given email already exists.");
+      super('Given email already exists.');
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
   EmailOrPasswordInvalidError: class extends Error {
     constructor() {
-      super("Email or password are incorrect.");
+      super('Email or password are incorrect.');
       Object.setPrototypeOf(this, new.target.prototype);
     }
-  }
+  },
 };
 
 export class AuthAPI implements IAuthAPI {
@@ -53,20 +53,14 @@ export class AuthAPI implements IAuthAPI {
 
   public async logIn(email: string, password: string) {
     try {
-      const response = await this.client.post<IAuthResponseData>(
-        "/api/auth/login",
-        {
-          email,
-          password
-        }
-      );
-      const {
-        access_token: accessToken,
-        refresh_token: refreshToken
-      } = response.data;
+      const response = await this.client.post<IAuthResponseData>('/api/auth/login', {
+        email,
+        password,
+      });
+      const { access_token: accessToken, refresh_token: refreshToken } = response.data;
       return {
         accessToken,
-        refreshToken
+        refreshToken,
       };
     } catch (e) {
       if (e.response.data.credentials) {
@@ -78,21 +72,15 @@ export class AuthAPI implements IAuthAPI {
 
   public async signUp(name: string, email: string, password: string) {
     try {
-      const response = await this.client.post<IAuthResponseData>(
-        "/api/auth/register",
-        {
-          email,
-          name,
-          password
-        }
-      );
-      const {
-        access_token: accessToken,
-        refresh_token: refreshToken
-      } = response.data;
+      const response = await this.client.post<IAuthResponseData>('/api/auth/register', {
+        email,
+        name,
+        password,
+      });
+      const { access_token: accessToken, refresh_token: refreshToken } = response.data;
       return {
         accessToken,
-        refreshToken
+        refreshToken,
       };
     } catch (e) {
       if (e.response.data.email) {
@@ -103,19 +91,13 @@ export class AuthAPI implements IAuthAPI {
   }
 
   public async refreshTokens(refreshToken: string) {
-    const response = await this.client.post<IAuthResponseData>(
-      "/api/auth/refresh",
-      {
-        refresh_token: refreshToken
-      }
-    );
-    const {
-      access_token: accessToken,
-      refresh_token: newRefreshToken
-    } = response.data;
+    const response = await this.client.post<IAuthResponseData>('/api/auth/refresh', {
+      refresh_token: refreshToken,
+    });
+    const { access_token: accessToken, refresh_token: newRefreshToken } = response.data;
     return {
       accessToken,
-      refreshToken: newRefreshToken
+      refreshToken: newRefreshToken,
     };
   }
 }

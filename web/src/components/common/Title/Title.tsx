@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-import classNames from "classnames";
+import classNames from 'classnames';
 
 export interface IProps extends React.HTMLAttributes<HTMLHeadingElement> {
   children?: React.ReactNode;
@@ -8,8 +8,4 @@ export interface IProps extends React.HTMLAttributes<HTMLHeadingElement> {
 }
 
 export const Title = ({ children, size, className, ...props }: IProps) =>
-  React.createElement(
-    `h${size}`,
-    { className: classNames("title", className, `is-${size}`), ...props },
-    children
-  );
+  React.createElement(`h${size}`, { className: classNames('title', className, `is-${size}`), ...props }, children);

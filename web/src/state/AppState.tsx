@@ -1,5 +1,5 @@
-import * as React from "react";
-import { useBoolean } from "src/hooks/useBoolean";
+import * as React from 'react';
+import { useBoolean } from 'src/hooks/useBoolean';
 
 export interface IContextValue {
   appState: {
@@ -16,11 +16,7 @@ interface IProviderProps {
 }
 
 export const AppStateProvider: React.FC<IProviderProps> = ({ children }) => {
-  const {
-    value: isLoading,
-    setPositive: setLoading,
-    setNegative: setIdle
-  } = useBoolean();
+  const { value: isLoading, setPositive: setLoading, setNegative: setIdle } = useBoolean();
 
   return (
     <Provider
@@ -28,8 +24,8 @@ export const AppStateProvider: React.FC<IProviderProps> = ({ children }) => {
         appState: {
           isLoading,
           setIdle,
-          setLoading
-        }
+          setLoading,
+        },
       }}
     >
       {children}
@@ -38,11 +34,7 @@ export const AppStateProvider: React.FC<IProviderProps> = ({ children }) => {
 };
 
 export const injectAppState = (
-  Component:
-    | React.ComponentClass<IContextValue>
-    | React.StatelessComponent<IContextValue>
+  Component: React.ComponentClass<IContextValue> | React.StatelessComponent<IContextValue>,
 ): React.SFC<any> => props => (
-  <Consumer>
-    {(context: IContextValue) => <Component {...{ ...props, ...context }} />}
-  </Consumer>
+  <Consumer>{(context: IContextValue) => <Component {...{ ...props, ...context }} />}</Consumer>
 );

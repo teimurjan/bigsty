@@ -1,7 +1,7 @@
-import * as React from "react";
+import * as React from 'react';
 
 export const useTimeoutExpired = (
-  delay: number = 100 // milliseconds
+  delay = 100, // milliseconds
 ) => {
   const [isTimeoutExpired, setTimeoutExpired] = React.useState(false);
 
@@ -9,7 +9,7 @@ export const useTimeoutExpired = (
     const t = setTimeout(() => setTimeoutExpired(true), delay);
 
     return () => clearTimeout(t);
-  }, []);
+  }, [delay]);
 
   return isTimeoutExpired;
 };
@@ -19,10 +19,8 @@ export interface IInjectedProp {
 }
 
 export const withTimeoutExpired = <T>(
-  Component:
-    | React.ComponentClass<T & IInjectedProp>
-    | React.SFC<T & IInjectedProp>,
-  delay: number = 100
+  Component: React.ComponentClass<T & IInjectedProp> | React.SFC<T & IInjectedProp>,
+  delay = 100,
 ): React.SFC<T> => props => {
   const isTimeoutExpired = useTimeoutExpired(delay);
 

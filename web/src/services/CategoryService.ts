@@ -1,6 +1,6 @@
-import { normalize, schema } from "normalizr";
+import { normalize, schema } from 'normalizr';
 
-import * as categoryAPI from "src/api/CategoryAPI";
+import * as categoryAPI from 'src/api/CategoryAPI';
 
 export interface ICategoryService {
   getAll(): Promise<{
@@ -18,17 +18,10 @@ export interface ICategoryService {
     result: number[];
   }>;
   delete(id: number): Promise<{}>;
-  create(
-    payload: categoryAPI.ICategoryCreatePayload
-  ): Promise<categoryAPI.ICategoryListRawIntlResponseItem>;
+  create(payload: categoryAPI.ICategoryCreatePayload): Promise<categoryAPI.ICategoryListRawIntlResponseItem>;
   exists(id: number): Promise<boolean>;
-  getOneRawIntl(
-    id: number
-  ): Promise<categoryAPI.ICategoryListRawIntlResponseItem | undefined>;
-  edit(
-    id: number,
-    payload: categoryAPI.ICategoryCreatePayload
-  ): Promise<categoryAPI.ICategoryListRawIntlResponseItem>;
+  getOneRawIntl(id: number): Promise<categoryAPI.ICategoryListRawIntlResponseItem | undefined>;
+  edit(id: number, payload: categoryAPI.ICategoryCreatePayload): Promise<categoryAPI.ICategoryListRawIntlResponseItem>;
 }
 
 export const errors = {
@@ -37,7 +30,7 @@ export const errors = {
       super();
       Object.setPrototypeOf(this, new.target.prototype);
     }
-  }
+  },
 };
 
 export class CategoryService implements ICategoryService {
@@ -48,12 +41,12 @@ export class CategoryService implements ICategoryService {
 
   public async getAll() {
     const categories = await this.API.getAll();
-    return normalize(categories.data, [new schema.Entity("categories")]);
+    return normalize(categories.data, [new schema.Entity('categories')]);
   }
 
   public async getAllRawIntl() {
     const categories = await this.API.getAllRawIntl();
-    return normalize(categories.data, [new schema.Entity("categories")]);
+    return normalize(categories.data, [new schema.Entity('categories')]);
   }
 
   public async delete(id: number) {

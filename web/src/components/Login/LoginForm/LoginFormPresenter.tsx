@@ -1,15 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { RouteComponentProps } from "react-router";
-import * as yup from "yup";
+import { RouteComponentProps } from 'react-router';
+import * as yup from 'yup';
 
-import * as schemaValidator from "src/components/SchemaValidator";
-import * as authService from "src/services/AuthService";
-import { IContextValue as UserStateContextValue } from "src/state/UserState";
+import * as schemaValidator from 'src/components/SchemaValidator';
+import * as authService from 'src/services/AuthService';
+import { IContextValue as UserStateContextValue } from 'src/state/UserState';
 
-export interface IProps
-  extends RouteComponentProps<any>,
-    UserStateContextValue {
+export interface IProps extends RouteComponentProps<any>, UserStateContextValue {
   service: authService.IAuthService;
   View: React.ComponentClass<IViewProps>;
 }
@@ -28,7 +26,7 @@ interface IState {
 export class LoginFormPresenter extends React.Component<IProps, IState> {
   public state = {
     error: undefined,
-    isLoading: false
+    isLoading: false,
   };
 
   private validator: schemaValidator.ISchemaValidator;
@@ -39,23 +37,17 @@ export class LoginFormPresenter extends React.Component<IProps, IState> {
       yup.object().shape({
         email: yup
           .string()
-          .email("LoginForm.errors.email.format")
-          .required("LoginForm.errors.email.empty"),
-        password: yup.string().required("LoginForm.errors.password.empty")
-      })
+          .email('LoginForm.errors.email.format')
+          .required('LoginForm.errors.email.empty'),
+        password: yup.string().required('LoginForm.errors.password.empty'),
+      }),
     );
   }
 
   public render() {
     const { error } = this.state;
     const { View } = this.props;
-    return (
-      <View
-        onSubmit={this.onSubmit}
-        globalError={error}
-        validate={this.validator.validate}
-      />
-    );
+    return <View onSubmit={this.onSubmit} globalError={error} validate={this.validator.validate} />;
   }
 
   private onSubmit = async (values: { email: string; password: string }) => {
@@ -69,22 +61,20 @@ export class LoginFormPresenter extends React.Component<IProps, IState> {
 
       this.stopLoading();
 
-      history.push("/");
+      history.push('/');
     } catch (e) {
       if (e instanceof authService.errors.InvalidCredentialsError) {
-        this.setGlobalError("LoginForm.errors.invalidCredentials");
+        this.setGlobalError('LoginForm.errors.invalidCredentials');
       } else {
-        this.setGlobalError("errors.common");
+        this.setGlobalError('errors.common');
       }
       this.stopLoading();
     }
   };
 
-  private startLoading = () =>
-    this.setState({ error: undefined, isLoading: true });
+  private startLoading = () => this.setState({ error: undefined, isLoading: true });
 
   private stopLoading = () => this.setState({ isLoading: false });
 
-  private setGlobalError = (error: string | undefined) =>
-    this.setState({ error });
+  private setGlobalError = (error: string | undefined) => this.setState({ error });
 }

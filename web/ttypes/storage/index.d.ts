@@ -1,4 +1,4 @@
-declare module "ttypes/storage" {
+declare module 'ttypes/storage' {
   export interface Storage {
     length: number;
     clear(): void;

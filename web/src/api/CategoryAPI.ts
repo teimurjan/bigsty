@@ -1,7 +1,7 @@
-import { Client } from "ttypes/http";
+import { Client } from 'ttypes/http';
 
-import { IHeadersManager } from "src/manager/HeadersManager";
-import { buildQueryString } from "src/utils/queryString";
+import { IHeadersManager } from 'src/manager/HeadersManager';
+import { buildQueryString } from 'src/utils/queryString';
 
 export interface ICategoryListResponseItem {
   id: number;
@@ -43,13 +43,8 @@ export interface ICategoryAPI {
   getAll(): Promise<ICategoryListResponseData>;
   getAllRawIntl(): Promise<ICategoryListRawIntlResponseData>;
   delete(id: number): Promise<{}>;
-  create(
-    payload: ICategoryCreatePayload
-  ): Promise<ICategoryRawIntlResponseData>;
-  edit(
-    id: number,
-    payload: ICategoryCreatePayload
-  ): Promise<ICategoryRawIntlResponseData>;
+  create(payload: ICategoryCreatePayload): Promise<ICategoryRawIntlResponseData>;
+  edit(id: number, payload: ICategoryCreatePayload): Promise<ICategoryRawIntlResponseData>;
   status(id: number): Promise<{}>;
   getOneRawIntl(id: number): Promise<ICategoryRawIntlResponseData>;
 }
@@ -57,10 +52,10 @@ export interface ICategoryAPI {
 export const errors = {
   CategoryNotFound: class extends Error {
     constructor() {
-      super("Feature type not found");
+      super('Feature type not found');
       Object.setPrototypeOf(this, new.target.prototype);
     }
-  }
+  },
 };
 
 export class CategoryAPI implements ICategoryAPI {
@@ -74,12 +69,9 @@ export class CategoryAPI implements ICategoryAPI {
 
   public async getAll() {
     try {
-      const response = await this.client.get<ICategoryListResponseData>(
-        "/api/categories",
-        {
-          headers: this.headersManager.getHeaders()
-        }
-      );
+      const response = await this.client.get<ICategoryListResponseData>('/api/categories', {
+        headers: this.headersManager.getHeaders(),
+      });
       return response.data;
     } catch (e) {
       throw e;
@@ -91,8 +83,8 @@ export class CategoryAPI implements ICategoryAPI {
       const response = await this.client.get<ICategoryListRawIntlResponseData>(
         `/api/categories${buildQueryString({ raw_intl: 1 })}`,
         {
-          headers: this.headersManager.getHeaders()
-        }
+          headers: this.headersManager.getHeaders(),
+        },
       );
       return response.data;
     } catch (e) {
@@ -103,7 +95,7 @@ export class CategoryAPI implements ICategoryAPI {
   public async delete(id: number) {
     try {
       const response = await this.client.delete<{}>(`/api/categories/${id}`, {
-        headers: this.headersManager.getHeaders()
+        headers: this.headersManager.getHeaders(),
       });
       return response.data;
     } catch (e) {
@@ -118,7 +110,7 @@ export class CategoryAPI implements ICategoryAPI {
   public async status(id: number) {
     try {
       const response = await this.client.head<{}>(`/api/categories/${id}`, {
-        headers: this.headersManager.getHeaders()
+        headers: this.headersManager.getHeaders(),
       });
       return response.data;
     } catch (e) {
@@ -131,13 +123,9 @@ export class CategoryAPI implements ICategoryAPI {
 
   public async create(payload: ICategoryCreatePayload) {
     try {
-      const response = await this.client.post<ICategoryRawIntlResponseData>(
-        `/api/categories`,
-        payload,
-        {
-          headers: this.headersManager.getHeaders()
-        }
-      );
+      const response = await this.client.post<ICategoryRawIntlResponseData>(`/api/categories`, payload, {
+        headers: this.headersManager.getHeaders(),
+      });
       return response.data;
     } catch (e) {
       throw e;
@@ -150,8 +138,8 @@ export class CategoryAPI implements ICategoryAPI {
         `/api/categories/${id}${buildQueryString({ raw_intl: 1 })}`,
         payload,
         {
-          headers: this.headersManager.getHeaders()
-        }
+          headers: this.headersManager.getHeaders(),
+        },
       );
       return response.data;
     } catch (e) {
@@ -167,8 +155,8 @@ export class CategoryAPI implements ICategoryAPI {
       const response = await this.client.get<ICategoryRawIntlResponseData>(
         `/api/categories/${id}${buildQueryString({ raw_intl: 1 })}`,
         {
-          headers: this.headersManager.getHeaders()
-        }
+          headers: this.headersManager.getHeaders(),
+        },
       );
       return response.data;
     } catch (e) {

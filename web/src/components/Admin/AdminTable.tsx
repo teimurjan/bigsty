@@ -1,20 +1,20 @@
 /** @jsx jsx */
-import * as React from "react";
+import * as React from 'react';
 
-import { css, jsx } from "@emotion/core";
+import { css, jsx } from '@emotion/core';
 
-import { faPencilAlt, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import classNames from "classnames";
-import { InjectedIntlProps } from "react-intl";
+import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import classNames from 'classnames';
+import { InjectedIntlProps } from 'react-intl';
 
-import { Container } from "src/components/common/Container/Container";
-import { LinkButton } from "src/components/common/LinkButton/LinkButton";
-import { LoaderLayout } from "src/components/common/LoaderLayout/LoaderLayout";
-import { Section } from "src/components/common/Section/Section";
-import { Table } from "src/components/common/Table/Table";
+import { Container } from 'src/components/common/Container/Container';
+import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
+import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { Section } from 'src/components/common/Section/Section';
+import { Table } from 'src/components/common/Table/Table';
 
-import { textCenterMixin } from "src/styles/mixins";
+import { textCenterMixin } from 'src/styles/mixins';
 
 interface IAdminTableRendererRequiredArgs {
   componentKey: string;
@@ -30,35 +30,23 @@ interface IAdminTableColProps<T> {
 const AdminTableCol = <T extends any>(_: IAdminTableColProps<T>) => null;
 
 export interface IRenderer<T> {
-  renderHeader: (
-    title: string,
-    { componentKey }: IAdminTableRendererRequiredArgs
-  ) => React.ReactNode;
+  renderHeader: (title: string, { componentKey }: IAdminTableRendererRequiredArgs) => React.ReactNode;
 
-  renderSubheader: ({
-    componentKey
-  }: IAdminTableRendererRequiredArgs) => React.ReactNode;
+  renderSubheader: ({ componentKey }: IAdminTableRendererRequiredArgs) => React.ReactNode;
 
-  renderEntity: (
-    entity: T,
-    { colKey, componentKey }: IAdminTableRendererRequiredArgs
-  ) => React.ReactNode;
+  renderEntity: (entity: T, { colKey, componentKey }: IAdminTableRendererRequiredArgs) => React.ReactNode;
 }
 
 class DefaultRenderer<T> implements IRenderer<T> {
-  public renderHeader = (
-    title: string,
-    { componentKey }: IAdminTableRendererRequiredArgs
-  ) => <Table.HeadCell key={componentKey}>{title}</Table.HeadCell>;
+  public renderHeader = (title: string, { componentKey }: IAdminTableRendererRequiredArgs) => (
+    <Table.HeadCell key={componentKey}>{title}</Table.HeadCell>
+  );
 
-  public renderSubheader = ({
-    componentKey
-  }: IAdminTableRendererRequiredArgs) => <Table.HeadCell key={componentKey} />;
+  public renderSubheader = ({ componentKey }: IAdminTableRendererRequiredArgs) => <Table.HeadCell key={componentKey} />;
 
-  public renderEntity = (
-    entity: T,
-    { colKey, componentKey }: IAdminTableRendererRequiredArgs
-  ) => <Table.Cell key={componentKey}>{entity[colKey]}</Table.Cell>;
+  public renderEntity = (entity: T, { colKey, componentKey }: IAdminTableRendererRequiredArgs) => (
+    <Table.Cell key={componentKey}>{entity[colKey]}</Table.Cell>
+  );
 }
 
 export class IntlRenderer<T> implements IRenderer<T> {
@@ -68,28 +56,16 @@ export class IntlRenderer<T> implements IRenderer<T> {
     this.locales = locales;
   }
 
-  public renderHeader = (
-    title: string,
-    { componentKey }: IAdminTableRendererRequiredArgs
-  ) => (
+  public renderHeader = (title: string, { componentKey }: IAdminTableRendererRequiredArgs) => (
     <Table.HeadCell key={componentKey} colSpan={this.locales.length}>
       {title}
     </Table.HeadCell>
   );
 
-  public renderSubheader = ({
-    componentKey
-  }: IAdminTableRendererRequiredArgs) =>
-    this.locales.map(locale => (
-      <Table.HeadCell key={`${componentKey}-${locale}`}>
-        {locale}
-      </Table.HeadCell>
-    ));
+  public renderSubheader = ({ componentKey }: IAdminTableRendererRequiredArgs) =>
+    this.locales.map(locale => <Table.HeadCell key={`${componentKey}-${locale}`}>{locale}</Table.HeadCell>);
 
-  public renderEntity = (
-    entity: T,
-    { colKey, componentKey }: IAdminTableRendererRequiredArgs
-  ) => (
+  public renderEntity = (entity: T, { colKey, componentKey }: IAdminTableRendererRequiredArgs) => (
     <React.Fragment key={componentKey}>
       {this.locales.map(locale => (
         <Table.Cell key={locale}>{entity[colKey][locale]}</Table.Cell>
@@ -116,42 +92,30 @@ export const AdminTable = <T extends { id: number }>({
   entities,
   children,
   intl,
-  pathPrefix
+  pathPrefix,
 }: IProps<T> & InjectedIntlProps) => (
   <Section>
     <Container>
       {isLoading && <LoaderLayout />}
       {entities.length === 0 && isDataLoaded && renderNoData()}
       {entities.length > 0 && (
-        <Table
-          className={classNames(
-            "is-bordered",
-            "is-striped",
-            "is-narrow",
-            "is-hoverable",
-            "is-fullwidth"
-          )}
-        >
+        <Table className={classNames('is-bordered', 'is-striped', 'is-narrow', 'is-hoverable', 'is-fullwidth')}>
           <Table.Head>
             <Table.Row>
-              {React.Children.map(
-                children,
-                ({ props: { title, key_, renderer } }) =>
-                  (renderer || defaultRenderer).renderHeader(title, {
-                    colKey: key_ as string,
-                    componentKey: `head-cell-${key_}`
-                  })
+              {React.Children.map(children, ({ props: { title, key_, renderer } }) =>
+                (renderer || defaultRenderer).renderHeader(title, {
+                  colKey: key_ as string,
+                  componentKey: `head-cell-${key_}`,
+                }),
               )}
-              <Table.HeadCell key="head-cell-actions">
-                {intl.formatMessage({ id: "common.actions" })}
-              </Table.HeadCell>
+              <Table.HeadCell key="head-cell-actions">{intl.formatMessage({ id: 'common.actions' })}</Table.HeadCell>
             </Table.Row>
             <Table.Row>
               {React.Children.map(children, ({ props: { key_, renderer } }) =>
                 (renderer || defaultRenderer).renderSubheader({
                   colKey: key_ as string,
-                  componentKey: `sub-head-cell-${key_}`
-                })
+                  componentKey: `sub-head-cell-${key_}`,
+                }),
               )}
               <Table.HeadCell key="sub-head-cell-actions" />
             </Table.Row>
@@ -162,8 +126,8 @@ export const AdminTable = <T extends { id: number }>({
                 {React.Children.map(children, ({ props: { key_, renderer } }) =>
                   (renderer || defaultRenderer).renderEntity(entity, {
                     colKey: key_ as string,
-                    componentKey: `table-cell-${key_}-${entity.id}`
-                  })
+                    componentKey: `table-cell-${key_}-${entity.id}`,
+                  }),
                 )}
 
                 <Table.Cell
@@ -179,15 +143,10 @@ export const AdminTable = <T extends { id: number }>({
                       margin-right: 0.5rem;
                     `}
                     color="is-info"
-                    /* tslint:disable-next-line jsx-no-lambda */
                   >
                     <FontAwesomeIcon icon={faPencilAlt} />
                   </LinkButton>
-                  <LinkButton
-                    to={`${pathPrefix}/delete/${entity.id}`}
-                    color="is-danger"
-                    /* tslint:disable-next-line jsx-no-lambda */
-                  >
+                  <LinkButton to={`${pathPrefix}/delete/${entity.id}`} color="is-danger">
                     <FontAwesomeIcon icon={faTrashAlt} />
                   </LinkButton>
                 </Table.Cell>

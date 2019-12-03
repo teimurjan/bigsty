@@ -1,25 +1,22 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { RouteComponentProps } from "react-router";
-import * as yup from "yup";
+import { RouteComponentProps } from 'react-router';
+import * as yup from 'yup';
 
-import * as schemaValidator from "src/components/SchemaValidator";
+import * as schemaValidator from 'src/components/SchemaValidator';
 
-import { IContextValue as AdminCategoriesStateContextValue } from "src/state/AdminCategoriesState";
-import { IContextValue as AdminFeatureTypesStateContextValue } from "src/state/AdminFeatureTypesState";
-import { IContextValue as IntlStateContextValue } from "src/state/IntlState";
+import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
+import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
+import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { ICategoryListRawIntlResponseItem } from "src/api/CategoryAPI";
+import { ICategoryListRawIntlResponseItem } from 'src/api/CategoryAPI';
 
-import { ICategoryService } from "src/services/CategoryService";
+import { ICategoryService } from 'src/services/CategoryService';
 
-import { getNumberParam } from "src/utils/url";
+import { getNumberParam } from 'src/utils/url';
 
-import {
-  IInjectedProp as TimeoutExpiredInjectedProp,
-  withTimeoutExpired
-} from "src/hooks/useTimeoutExpired";
-import { getFieldName, parseFieldName } from "../../IntlField";
+import { IInjectedProp as TimeoutExpiredInjectedProp, withTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { getFieldName, parseFieldName } from '../../IntlField';
 
 interface IState {
   isUpdating: boolean;
@@ -41,24 +38,20 @@ export interface IProps
 
 export interface IViewProps {
   isOpen: boolean;
-  edit: (values: {
-    names: { [key: string]: string };
-    feature_types: string[];
-    parent_category_id?: string;
-  }) => any;
+  edit: (values: { names: { [key: string]: string }; feature_types: string[]; parent_category_id?: string }) => any;
   error?: string;
   close: () => any;
-  availableLocales: IntlStateContextValue["intlState"]["availableLocales"];
+  availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
-  featureTypes: AdminFeatureTypesStateContextValue["adminFeatureTypesState"]["featureTypes"];
-  categories: AdminCategoriesStateContextValue["adminCategoriesState"]["categories"];
+  featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
+  categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
   isLoading: boolean;
   isUpdating: boolean;
   preloadingError?: string;
   initialValues: object;
 }
 
-export const CATEGORY_NAME_FIELD_KEY = "name";
+export const CATEGORY_NAME_FIELD_KEY = 'name';
 
 export const AdminCategoriesEditPresenter = withTimeoutExpired(
   class extends React.Component<IProps & TimeoutExpiredInjectedProp, IState> {
@@ -68,7 +61,7 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
       isLoading: false,
       isUpdating: false,
       preloadingError: undefined,
-      validator: undefined
+      validator: undefined,
     };
 
     public async componentDidMount() {
@@ -81,12 +74,12 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
         adminFeatureTypesState: { getFeatureTypes },
         adminCategoriesState: { getCategories },
         service,
-        match
+        match,
       } = this.props;
 
       try {
         this.setState({ isLoading: true });
-        const id = getNumberParam(match, "id");
+        const id = getNumberParam(match, 'id');
         await getFeatureTypes();
         await getCategories();
         const category = await service.getOneRawIntl(id!);
@@ -94,11 +87,11 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
           this.setState({ category });
         } else {
           this.setState({
-            preloadingError: "AdminCategories.notFound"
+            preloadingError: 'AdminCategories.notFound',
           });
         }
       } catch (e) {
-        this.setState({ preloadingError: "errors.common" });
+        this.setState({ preloadingError: 'errors.common' });
       } finally {
         this.setState({ isLoading: false });
       }
@@ -108,10 +101,7 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
       const { intlState: newIntlState } = this.props;
       const { intlState: oldIntlState } = prevProps;
 
-      if (
-        newIntlState.availableLocales.length > 0 &&
-        oldIntlState.availableLocales.length === 0
-      ) {
+      if (newIntlState.availableLocales.length > 0 && oldIntlState.availableLocales.length === 0) {
         this.initValidator();
       }
     }
@@ -123,18 +113,12 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
         adminFeatureTypesState: { featureTypes },
         intlState: { availableLocales },
         isTimeoutExpired,
-        match
+        match,
       } = this.props;
 
-      const {
-        error,
-        isUpdating,
-        validator,
-        isLoading,
-        preloadingError
-      } = this.state;
+      const { error, isUpdating, validator, isLoading, preloadingError } = this.state;
 
-      const id = getNumberParam(match, "id");
+      const id = getNumberParam(match, 'id');
 
       return (
         <View
@@ -162,28 +146,25 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
             intlState.availableLocales.reduce(
               (acc, locale) => ({
                 ...acc,
-                [getFieldName(
-                  CATEGORY_NAME_FIELD_KEY,
-                  locale
-                )]: yup.string().required("common.errors.field.empty")
+                [getFieldName(CATEGORY_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
               }),
               {
                 feature_types: yup
                   .array()
                   .of(yup.number())
-                  .required("AdminCategories.errors.noFeatureTypes")
-                  .min(1, "AdminCategories.errors.noFeatureTypes"),
-                parent_category_id: yup.number().nullable(true)
-              }
-            )
-          )
-        )
+                  .required('AdminCategories.errors.noFeatureTypes')
+                  .min(1, 'AdminCategories.errors.noFeatureTypes'),
+                parent_category_id: yup.number().nullable(true),
+              },
+            ),
+          ),
+        ),
       });
     };
 
-    private close = () => this.props.history.push("/admin/categories");
+    private close = () => this.props.history.push('/admin/categories');
 
-    private edit: IViewProps["edit"] = async values => {
+    private edit: IViewProps['edit'] = async values => {
       const { service, adminCategoriesState, match } = this.props;
 
       const formattedValues = Object.keys(values).reduce(
@@ -198,19 +179,17 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
         {
           feature_types: values.feature_types.map(idStr => parseInt(idStr, 10)),
           names: {},
-          parent_category_id: values.parent_category_id
-            ? parseInt(values.parent_category_id, 10)
-            : undefined
-        }
+          parent_category_id: values.parent_category_id ? parseInt(values.parent_category_id, 10) : undefined,
+        },
       );
 
       try {
-        const id = getNumberParam(match, "id");
+        const id = getNumberParam(match, 'id');
         const category = await service.edit(id!, formattedValues);
         adminCategoriesState.setCategory(category);
         this.close();
       } catch (e) {
-        this.setState({ error: "errors.common" });
+        this.setState({ error: 'errors.common' });
       } finally {
         this.setState({ isUpdating: false });
       }
@@ -218,7 +197,7 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
 
     private getInitialValues = () => {
       const {
-        intlState: { availableLocales }
+        intlState: { availableLocales },
       } = this.props;
       const { category } = this.state;
 
@@ -230,19 +209,16 @@ export const AdminCategoriesEditPresenter = withTimeoutExpired(
         ...availableLocales.reduce(
           (acc, locale) => ({
             ...acc,
-            [getFieldName(
-              CATEGORY_NAME_FIELD_KEY,
-              locale
-            )]: (category! as ICategoryListRawIntlResponseItem).name[locale.id]
+            [getFieldName(CATEGORY_NAME_FIELD_KEY, locale)]: (category! as ICategoryListRawIntlResponseItem).name[
+              locale.id
+            ],
           }),
-          {}
+          {},
         ),
-        feature_types: (category! as ICategoryListRawIntlResponseItem)
-          .feature_types,
-        parent_category_id: (category! as ICategoryListRawIntlResponseItem)
-          .parent_category_id
+        feature_types: (category! as ICategoryListRawIntlResponseItem).feature_types,
+        parent_category_id: (category! as ICategoryListRawIntlResponseItem).parent_category_id,
       };
     };
   },
-  1000
+  1000,
 );

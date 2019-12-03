@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps } from 'react-router';
 
 export interface IProps extends RouteComponentProps<any> {
   View: React.ComponentClass<IViewProps>;
@@ -19,6 +19,6 @@ export class SignUpPagePresenter extends React.Component<IProps> {
 
   private close = () => {
     const { history } = this.props;
-    history.replace("/");
+    history.replace('/');
   };
 }

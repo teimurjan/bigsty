@@ -1,6 +1,6 @@
-import classNames from "classnames";
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import classNames from 'classnames';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -8,17 +8,14 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Modal = ({ children, className, isOpen, ...props }: IProps) => {
-  const modalRoot = document.getElementById("modalRoot");
+  const modalRoot = document.getElementById('modalRoot');
 
   return modalRoot
     ? ReactDOM.createPortal(
-        <div
-          className={classNames("modal", { "is-active": isOpen }, className)}
-          {...props}
-        >
+        <div className={classNames('modal', { 'is-active': isOpen }, className)} {...props}>
           {children}
         </div>,
-        modalRoot
+        modalRoot,
       )
     : null;
 };

@@ -1,7 +1,7 @@
-import * as intlAPI from "src/api/IntlAPI";
-import * as intlStorage from "src/storage/IntlStorage";
+import * as intlAPI from 'src/api/IntlAPI';
+import * as intlStorage from 'src/storage/IntlStorage';
 
-export const DEFAULT_LOCALE = "en-US";
+export const DEFAULT_LOCALE = 'en-US';
 
 export interface IIntlService {
   getLocale(): string;

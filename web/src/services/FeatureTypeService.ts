@@ -1,6 +1,6 @@
-import { normalize, schema } from "normalizr";
+import { normalize, schema } from 'normalizr';
 
-import * as featureTypeAPI from "src/api/FeatureTypeAPI";
+import * as featureTypeAPI from 'src/api/FeatureTypeAPI';
 
 export interface IFeatureTypeService {
   getAll(): Promise<{
@@ -21,16 +21,14 @@ export interface IFeatureTypeService {
   }>;
   delete(id: number): Promise<{}>;
   create(
-    payload: featureTypeAPI.IFeatureTypeCreatePayload
+    payload: featureTypeAPI.IFeatureTypeCreatePayload,
   ): Promise<featureTypeAPI.IFeatureTypeListRawIntlResponseItem>;
   edit(
     id: number,
-    payload: featureTypeAPI.IFeatureTypeEditPayload
+    payload: featureTypeAPI.IFeatureTypeEditPayload,
   ): Promise<featureTypeAPI.IFeatureTypeListRawIntlResponseItem>;
   exists(id: number): Promise<boolean>;
-  getOneRawIntl(
-    id: number
-  ): Promise<featureTypeAPI.IFeatureTypeListRawIntlResponseItem | undefined>;
+  getOneRawIntl(id: number): Promise<featureTypeAPI.IFeatureTypeListRawIntlResponseItem | undefined>;
 }
 
 export const errors = {
@@ -39,7 +37,7 @@ export const errors = {
       super();
       Object.setPrototypeOf(this, new.target.prototype);
     }
-  }
+  },
 };
 
 export class FeatureTypeService implements IFeatureTypeService {
@@ -50,12 +48,12 @@ export class FeatureTypeService implements IFeatureTypeService {
 
   public async getAll() {
     const featureTypes = await this.API.getAll();
-    return normalize(featureTypes.data, [new schema.Entity("featureTypes")]);
+    return normalize(featureTypes.data, [new schema.Entity('featureTypes')]);
   }
 
   public async getAllRawIntl() {
     const featureTypes = await this.API.getAllRawIntl();
-    return normalize(featureTypes.data, [new schema.Entity("featureTypes")]);
+    return normalize(featureTypes.data, [new schema.Entity('featureTypes')]);
   }
 
   public delete(id: number) {
@@ -74,10 +72,7 @@ export class FeatureTypeService implements IFeatureTypeService {
     return (await this.API.create(payload)).data;
   }
 
-  public async edit(
-    id: number,
-    payload: featureTypeAPI.IFeatureTypeEditPayload
-  ) {
+  public async edit(id: number, payload: featureTypeAPI.IFeatureTypeEditPayload) {
     try {
       return (await this.API.edit(id, payload)).data;
     } catch (e) {

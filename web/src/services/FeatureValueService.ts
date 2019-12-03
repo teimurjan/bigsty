@@ -1,6 +1,6 @@
-import { normalize, schema } from "normalizr";
+import { normalize, schema } from 'normalizr';
 
-import * as featureValueAPI from "src/api/FeatureValueAPI";
+import * as featureValueAPI from 'src/api/FeatureValueAPI';
 
 export interface IFeatureValueService {
   getAll(): Promise<{
@@ -21,16 +21,14 @@ export interface IFeatureValueService {
   }>;
   delete(id: number): Promise<{}>;
   create(
-    payload: featureValueAPI.IFeatureValueCreatePayload
+    payload: featureValueAPI.IFeatureValueCreatePayload,
   ): Promise<featureValueAPI.IFeatureValueListRawIntlResponseItem>;
   edit(
     id: number,
-    payload: featureValueAPI.IFeatureValueEditPayload
+    payload: featureValueAPI.IFeatureValueEditPayload,
   ): Promise<featureValueAPI.IFeatureValueListRawIntlResponseItem>;
   exists(id: number): Promise<boolean>;
-  getOneRawIntl(
-    id: number
-  ): Promise<featureValueAPI.IFeatureValueListRawIntlResponseItem | undefined>;
+  getOneRawIntl(id: number): Promise<featureValueAPI.IFeatureValueListRawIntlResponseItem | undefined>;
 }
 
 export const errors = {
@@ -39,7 +37,7 @@ export const errors = {
       super();
       Object.setPrototypeOf(this, new.target.prototype);
     }
-  }
+  },
 };
 
 export class FeatureValueService implements IFeatureValueService {
@@ -50,12 +48,12 @@ export class FeatureValueService implements IFeatureValueService {
 
   public async getAll() {
     const featureValues = await this.API.getAll();
-    return normalize(featureValues.data, [new schema.Entity("featureValues")]);
+    return normalize(featureValues.data, [new schema.Entity('featureValues')]);
   }
 
   public async getAllRawIntl() {
     const featureValues = await this.API.getAllRawIntl();
-    return normalize(featureValues.data, [new schema.Entity("featureValues")]);
+    return normalize(featureValues.data, [new schema.Entity('featureValues')]);
   }
 
   public delete(id: number) {
@@ -74,10 +72,7 @@ export class FeatureValueService implements IFeatureValueService {
     return (await this.API.create(payload)).data;
   }
 
-  public async edit(
-    id: number,
-    payload: featureValueAPI.IFeatureValueEditPayload
-  ) {
+  public async edit(id: number, payload: featureValueAPI.IFeatureValueEditPayload) {
     try {
       return (await this.API.edit(id, payload)).data;
     } catch (e) {

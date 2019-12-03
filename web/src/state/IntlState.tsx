@@ -1,16 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { addLocaleData, IntlProvider as ReactIntlProvider } from "react-intl";
+import { addLocaleData, IntlProvider as ReactIntlProvider } from 'react-intl';
 
-import { IIntlListResponseItem } from "src/api/IntlAPI.js";
-import defaultMessages from "src/assets/translations/en-US.json";
-import { injectDependencies } from "src/DI/DI";
-import { IIntlService } from "src/services/IntlService";
+import { IIntlListResponseItem } from 'src/api/IntlAPI.js';
+import defaultMessages from 'src/assets/translations/en-US.json';
+import { injectDependencies } from 'src/DI/DI';
+import { IIntlService } from 'src/services/IntlService';
 
-import {
-  IContextValue as AppStateContextValue,
-  injectAppState
-} from "./AppState";
+import { IContextValue as AppStateContextValue, injectAppState } from './AppState';
 
 export interface IContextValue {
   intlState: {
@@ -35,63 +32,60 @@ interface IProviderState {
 }
 
 const pluralRuleFunctionOf = {
-  "en-US": (n: number, isOrdinal: boolean) => {
+  'en-US': (n: number, isOrdinal: boolean) => {
     if (isOrdinal) {
       if (n === 1) {
-        return "first";
+        return 'first';
       }
       if (n === 2) {
-        return "second";
+        return 'second';
       }
       if (n === 3) {
-        return "third";
+        return 'third';
       }
       return `${n}th`;
     }
 
     if (n === 0) {
-      return "zero";
+      return 'zero';
     }
     if (n === 1) {
-      return "one";
+      return 'one';
     }
     if (n === 2) {
-      return "two";
+      return 'two';
     }
     if (n < 10) {
-      return "few";
+      return 'few';
     }
-    return "many";
+    return 'many';
   },
-  "ru-RU": (n: number, isOrdinal: boolean) => {
+  'ru-RU': (n: number, isOrdinal: boolean) => {
     if (isOrdinal) {
       return `${n}-й`;
     }
 
     if (n === 0) {
-      return "ноль";
+      return 'ноль';
     }
     if (n === 1) {
-      return "один";
+      return 'один';
     }
     if (n === 2) {
-      return "два";
+      return 'два';
     }
     if (n < 10) {
-      return "несколько";
+      return 'несколько';
     }
-    return "много";
-  }
+    return 'много';
+  },
 };
 
-class Provider extends React.Component<
-  IProviderProps & AppStateContextValue,
-  IProviderState
-> {
+class Provider extends React.Component<IProviderProps & AppStateContextValue, IProviderState> {
   public state = {
     availableLocales: [],
-    locale: "en-US",
-    messages: defaultMessages
+    locale: 'en-US',
+    messages: defaultMessages,
   };
 
   public componentDidMount() {
@@ -110,9 +104,7 @@ class Provider extends React.Component<
     const { locale, messages, availableLocales } = this.state;
 
     return (
-      <Context.Provider
-        value={{ intlState: { locale, changeLocale, availableLocales } }}
-      >
+      <Context.Provider value={{ intlState: { locale, changeLocale, availableLocales } }}>
         <ReactIntlProvider locale={locale} messages={messages}>
           {children}
         </ReactIntlProvider>
@@ -126,7 +118,7 @@ class Provider extends React.Component<
     const messages = await import(`../assets/translations/${locale}.json`);
     addLocaleData({
       locale,
-      pluralRuleFunction: pluralRuleFunctionOf[locale]
+      pluralRuleFunction: pluralRuleFunctionOf[locale],
     });
     service.setLocale(locale);
     appState.setIdle();
@@ -148,16 +140,12 @@ class Provider extends React.Component<
 
 const ProviderWithAppState = injectAppState(Provider);
 
-export const IntlStateProvider = injectDependencies(
-  ({ dependencies, ...props }) => (
-    <ProviderWithAppState {...props} service={dependencies.services.intl} />
-  )
-);
+export const IntlStateProvider = injectDependencies(({ dependencies, ...props }) => (
+  <ProviderWithAppState {...props} service={dependencies.services.intl} />
+));
 
 export const injectIntlState = (
-  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>
+  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>,
 ): React.SFC<any> => (props: any) => (
-  <Context.Consumer>
-    {(value: IContextValue) => <Component {...{ ...props, ...value }} />}
-  </Context.Consumer>
+  <Context.Consumer>{(value: IContextValue) => <Component {...{ ...props, ...value }} />}</Context.Consumer>
 );

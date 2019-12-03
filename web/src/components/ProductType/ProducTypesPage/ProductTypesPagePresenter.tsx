@@ -1,12 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps } from 'react-router';
 
-import {
-  IProductTypeListResponseItem,
-  IProductTypeListResponseMeta
-} from "src/api/ProductTypeAPI";
-import { IProductTypeService } from "src/services/ProductTypeService";
+import { IProductTypeListResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
+import { IProductTypeService } from 'src/services/ProductTypeService';
 
 export interface IProps extends RouteComponentProps<{ categoryId: string }> {
   ListView: React.ComponentClass<IListViewProps>;
@@ -34,7 +31,7 @@ export class ProductTypesPagePresenter extends React.Component<IProps, IState> {
     isLoading: false,
     productTypes: {},
     productTypesMeta: { count: 0, pages_count: 0, limit: 0, page: 0 },
-    productTypesOrder: []
+    productTypesOrder: [],
   };
 
   public componentDidMount() {
@@ -42,8 +39,7 @@ export class ProductTypesPagePresenter extends React.Component<IProps, IState> {
   }
 
   public componentDidUpdate(prevProps: IProps) {
-    const isNewCategory =
-      prevProps.match.params.categoryId !== this.props.match.params.categoryId;
+    const isNewCategory = prevProps.match.params.categoryId !== this.props.match.params.categoryId;
     if (isNewCategory) {
       this.getProductTypes();
     }
@@ -51,13 +47,7 @@ export class ProductTypesPagePresenter extends React.Component<IProps, IState> {
 
   public render() {
     const { ListView } = this.props;
-    const {
-      productTypes,
-      productTypesMeta,
-      productTypesOrder,
-      isLoading,
-      error
-    } = this.state;
+    const { productTypes, productTypesMeta, productTypesOrder, isLoading, error } = this.state;
 
     return (
       <ListView
@@ -73,21 +63,17 @@ export class ProductTypesPagePresenter extends React.Component<IProps, IState> {
     this.startLoading();
     try {
       const { productTypeService, match } = this.props;
-      const {
-        entities,
-        result,
-        meta
-      } = await productTypeService.getForCategory(
+      const { entities, result, meta } = await productTypeService.getForCategory(
         parseInt(match.params.categoryId, 10),
-        1
+        1,
       );
       this.setState({
         productTypes: entities.productTypes,
         productTypesMeta: meta,
-        productTypesOrder: result
+        productTypesOrder: result,
       });
     } catch (e) {
-      this.setError("errors.common");
+      this.setError('errors.common');
     }
     this.stopLoading();
   };

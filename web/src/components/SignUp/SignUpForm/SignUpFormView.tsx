@@ -1,35 +1,22 @@
 /** @jsx jsx */
-import * as React from "react";
+import * as React from 'react';
 
-import { jsx } from "@emotion/core";
-import {
-  Field,
-  FieldRenderProps,
-  Form,
-  FormRenderProps
-} from "react-final-form";
-import { InjectedIntlProps } from "react-intl";
-import { Link } from "react-router-dom";
+import { jsx } from '@emotion/core';
+import { Field, FieldRenderProps, Form, FormRenderProps } from 'react-final-form';
+import { InjectedIntlProps } from 'react-intl';
+import { Link } from 'react-router-dom';
 
-import { Button } from "src/components/common/Button/Button";
-import { FormTextField } from "src/components/common/FormTextField/FormTextField";
-import { HelpText } from "src/components/common/HelpText/HelpText";
-import { textCenterMixin } from "src/styles/mixins";
+import { Button } from 'src/components/common/Button/Button';
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { textCenterMixin } from 'src/styles/mixins';
 
-import { IViewProps as IProps } from "./SignUpFormPresenter";
+import { IViewProps as IProps } from './SignUpFormPresenter';
 
-export class SignUpFormView extends React.Component<
-  IProps & InjectedIntlProps
-> {
+export class SignUpFormView extends React.Component<IProps & InjectedIntlProps> {
   public render() {
     const { onSubmit, validate } = this.props;
-    return (
-      <Form
-        validate={validate}
-        onSubmit={onSubmit}
-        render={this.renderInnerForm}
-      />
-    );
+    return <Form validate={validate} onSubmit={onSubmit} render={this.renderInnerForm} />;
   }
 
   private renderInnerForm = ({ handleSubmit, submitting }: FormRenderProps) => {
@@ -40,24 +27,15 @@ export class SignUpFormView extends React.Component<
         <Field name="email" render={this.renderEmailField} />
         <Field name="password" render={this.renderPasswordField} />
         <div className="level is-mobile">
-          <Button
-            className="level-left is-uppercase"
-            color="is-success"
-            isLoading={submitting}
-            type="submit"
-          >
-            {intl.formatMessage({ id: "SignUpForm.submitButton.text" })}
+          <Button className="level-left is-uppercase" color="is-success" isLoading={submitting} type="submit">
+            {intl.formatMessage({ id: 'SignUpForm.submitButton.text' })}
           </Button>
           <Link to="/login" className="level-right">
-            {intl.formatMessage({ id: "SignUpForm.logInLink" })}
+            {intl.formatMessage({ id: 'SignUpForm.logInLink' })}
           </Link>
         </div>
         <div css={textCenterMixin}>
-          {globalError && (
-            <HelpText type="is-danger">
-              {intl.formatMessage({ id: globalError })}
-            </HelpText>
-          )}
+          {globalError && <HelpText type="is-danger">{intl.formatMessage({ id: globalError })}</HelpText>}
         </div>
       </form>
     );
@@ -69,21 +47,19 @@ export class SignUpFormView extends React.Component<
     return (
       <FormTextField
         labelProps={{
-          children: intl.formatMessage({ id: "SignUpForm.nameInput.label" })
+          children: intl.formatMessage({ id: 'SignUpForm.nameInput.label' }),
         }}
         inputProps={{
           ...input,
           isDanger: showError,
           placeholder: intl.formatMessage({
-            id: "SignUpForm.nameInput.placeholder"
+            id: 'SignUpForm.nameInput.placeholder',
           }),
-          type: "text"
+          type: 'text',
         }}
         helpTextProps={{
-          children: showError
-            ? intl.formatMessage({ id: meta.error })
-            : undefined,
-          type: "is-danger"
+          children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
+          type: 'is-danger',
         }}
       />
     );
@@ -95,21 +71,19 @@ export class SignUpFormView extends React.Component<
     return (
       <FormTextField
         labelProps={{
-          children: intl.formatMessage({ id: "SignUpForm.emailInput.label" })
+          children: intl.formatMessage({ id: 'SignUpForm.emailInput.label' }),
         }}
         inputProps={{
           ...input,
           isDanger: showError,
           placeholder: intl.formatMessage({
-            id: "SignUpForm.emailInput.placeholder"
+            id: 'SignUpForm.emailInput.placeholder',
           }),
-          type: "text"
+          type: 'text',
         }}
         helpTextProps={{
-          children: showError
-            ? intl.formatMessage({ id: meta.error })
-            : undefined,
-          type: "is-danger"
+          children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
+          type: 'is-danger',
         }}
       />
     );
@@ -122,22 +96,20 @@ export class SignUpFormView extends React.Component<
       <FormTextField
         labelProps={{
           children: intl.formatMessage({
-            id: "SignUpForm.passwordInput.label"
-          })
+            id: 'SignUpForm.passwordInput.label',
+          }),
         }}
         inputProps={{
           ...input,
           isDanger: showError,
           placeholder: intl.formatMessage({
-            id: "SignUpForm.passwordInput.placeholder"
+            id: 'SignUpForm.passwordInput.placeholder',
           }),
-          type: "password"
+          type: 'password',
         }}
         helpTextProps={{
-          children: showError
-            ? intl.formatMessage({ id: meta.error })
-            : undefined,
-          type: "is-danger"
+          children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
+          type: 'is-danger',
         }}
       />
     );

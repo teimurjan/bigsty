@@ -1,10 +1,10 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Table } from "src/components/common/Table/Table";
+import { Table } from 'src/components/common/Table/Table';
 
-import { IFeatureValueListRawIntlResponseItem } from "src/api/FeatureValueAPI";
+import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
 
-import { IRenderer } from "../../AdminTable";
+import { IRenderer } from '../../AdminTable';
 
 type BaseRenderer = IRenderer<IFeatureValueListRawIntlResponseItem>;
 
@@ -15,21 +15,13 @@ export class FeatureValueTypeRenderer implements BaseRenderer {
     this.locale = locale;
   }
 
-  public renderHeader: BaseRenderer["renderHeader"] = (
-    title: string,
-    { componentKey }
-  ) => <Table.HeadCell key={componentKey}>{title}</Table.HeadCell>;
+  public renderHeader: BaseRenderer['renderHeader'] = (title: string, { componentKey }) => (
+    <Table.HeadCell key={componentKey}>{title}</Table.HeadCell>
+  );
 
-  public renderSubheader: BaseRenderer["renderSubheader"] = ({
-    componentKey
-  }) => <Table.HeadCell key={componentKey} />;
+  public renderSubheader: BaseRenderer['renderSubheader'] = ({ componentKey }) => <Table.HeadCell key={componentKey} />;
 
-  public renderEntity: BaseRenderer["renderEntity"] = (
-    featureValue,
-    { colKey: _, componentKey }
-  ) => (
-    <Table.Cell key={componentKey}>
-      {featureValue.feature_type.name[this.locale]}
-    </Table.Cell>
+  public renderEntity: BaseRenderer['renderEntity'] = (featureValue, { colKey: _, componentKey }) => (
+    <Table.Cell key={componentKey}>{featureValue.feature_type.name[this.locale]}</Table.Cell>
   );
 }

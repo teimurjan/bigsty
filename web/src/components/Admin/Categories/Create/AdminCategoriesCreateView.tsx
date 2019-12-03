@@ -1,14 +1,11 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { InjectedIntlProps, injectIntl } from "react-intl";
+import { InjectedIntlProps, injectIntl } from 'react-intl';
 
-import { ModalForm } from "../../ModalForm";
+import { ModalForm } from '../../ModalForm';
 
-import {
-  CATEGORY_NAME_FIELD_KEY,
-  IViewProps as IProps
-} from "./AdminCategoriesCreatePresenter";
-import { Fields, IFieldsProps } from "./Fields";
+import { CATEGORY_NAME_FIELD_KEY, IViewProps as IProps } from './AdminCategoriesCreatePresenter';
+import { Fields, IFieldsProps } from './Fields';
 
 const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
 
@@ -25,7 +22,7 @@ export const AdminCategoriesCreateView = injectIntl(
     featureTypes,
     categories,
     preloadingError,
-    isCreating
+    isCreating,
   }: IProps & InjectedIntlProps) => (
     <ModalForm
       formID="adminCategoriesCreateForm"
@@ -36,14 +33,14 @@ export const AdminCategoriesCreateView = injectIntl(
       isPreloading={isLoading}
       preloadingError={preloadingError}
       globalError={error}
-      title={intl.formatMessage({ id: "AdminCategories.create.title" })}
+      title={intl.formatMessage({ id: 'AdminCategories.create.title' })}
       renderFields={getFieldsRenderer({
         availableLocales,
         categories,
         featureTypes,
-        nameFieldKey: CATEGORY_NAME_FIELD_KEY
+        nameFieldKey: CATEGORY_NAME_FIELD_KEY,
       })}
       validate={validate}
     />
-  )
+  ),
 );

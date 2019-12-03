@@ -1,34 +1,23 @@
 /** @jsx jsx */
-import * as React from "react";
+import * as React from 'react';
 
-import { jsx } from "@emotion/core";
-import {
-  Field,
-  FieldRenderProps,
-  Form,
-  FormRenderProps
-} from "react-final-form";
-import { InjectedIntlProps } from "react-intl";
-import { Link } from "react-router-dom";
+import { jsx } from '@emotion/core';
+import { Field, FieldRenderProps, Form, FormRenderProps } from 'react-final-form';
+import { InjectedIntlProps } from 'react-intl';
+import { Link } from 'react-router-dom';
 
-import { textCenterMixin } from "src/styles/mixins";
+import { textCenterMixin } from 'src/styles/mixins';
 
-import { Button } from "src/components/common/Button/Button";
-import { FormTextField } from "src/components/common/FormTextField/FormTextField";
-import { HelpText } from "src/components/common/HelpText/HelpText";
+import { Button } from 'src/components/common/Button/Button';
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+import { HelpText } from 'src/components/common/HelpText/HelpText';
 
-import { IViewProps as IProps } from "./LoginFormPresenter";
+import { IViewProps as IProps } from './LoginFormPresenter';
 
 export class LoginFormView extends React.Component<IProps & InjectedIntlProps> {
   public render() {
     const { onSubmit, validate } = this.props;
-    return (
-      <Form
-        validate={validate}
-        onSubmit={onSubmit}
-        render={this.renderInnerForm}
-      />
-    );
+    return <Form validate={validate} onSubmit={onSubmit} render={this.renderInnerForm} />;
   }
 
   private renderInnerForm = ({ handleSubmit, submitting }: FormRenderProps) => {
@@ -38,24 +27,15 @@ export class LoginFormView extends React.Component<IProps & InjectedIntlProps> {
         <Field name="email" render={this.renderEmailField} />
         <Field name="password" render={this.renderPasswordField} />
         <div className="level is-mobile">
-          <Button
-            className="level-left is-uppercase"
-            color="is-success"
-            isLoading={submitting}
-            type="submit"
-          >
-            {intl.formatMessage({ id: "LoginForm.submitButton.text" })}
+          <Button className="level-left is-uppercase" color="is-success" isLoading={submitting} type="submit">
+            {intl.formatMessage({ id: 'LoginForm.submitButton.text' })}
           </Button>
           <Link to="/signup" className="level-right">
-            {intl.formatMessage({ id: "LoginForm.signUpLink" })}
+            {intl.formatMessage({ id: 'LoginForm.signUpLink' })}
           </Link>
         </div>
         <div css={textCenterMixin}>
-          {globalError && (
-            <HelpText type="is-danger">
-              {intl.formatMessage({ id: globalError })}
-            </HelpText>
-          )}
+          {globalError && <HelpText type="is-danger">{intl.formatMessage({ id: globalError })}</HelpText>}
         </div>
       </form>
     );
@@ -67,21 +47,19 @@ export class LoginFormView extends React.Component<IProps & InjectedIntlProps> {
     return (
       <FormTextField
         labelProps={{
-          children: intl.formatMessage({ id: "LoginForm.emailInput.label" })
+          children: intl.formatMessage({ id: 'LoginForm.emailInput.label' }),
         }}
         inputProps={{
           ...input,
           isDanger: showError,
           placeholder: intl.formatMessage({
-            id: "LoginForm.emailInput.placeholder"
+            id: 'LoginForm.emailInput.placeholder',
           }),
-          type: "text"
+          type: 'text',
         }}
         helpTextProps={{
-          children: showError
-            ? intl.formatMessage({ id: meta.error })
-            : undefined,
-          type: "is-danger"
+          children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
+          type: 'is-danger',
         }}
       />
     );
@@ -94,22 +72,20 @@ export class LoginFormView extends React.Component<IProps & InjectedIntlProps> {
       <FormTextField
         labelProps={{
           children: intl.formatMessage({
-            id: "LoginForm.passwordInput.label"
-          })
+            id: 'LoginForm.passwordInput.label',
+          }),
         }}
         inputProps={{
           ...input,
           isDanger: showError,
           placeholder: intl.formatMessage({
-            id: "LoginForm.passwordInput.placeholder"
+            id: 'LoginForm.passwordInput.placeholder',
           }),
-          type: "password"
+          type: 'password',
         }}
         helpTextProps={{
-          children: showError
-            ? intl.formatMessage({ id: meta.error })
-            : undefined,
-          type: "is-danger"
+          children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
+          type: 'is-danger',
         }}
       />
     );

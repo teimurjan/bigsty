@@ -1,26 +1,26 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { InjectedIntlProps, injectIntl } from "react-intl";
+import { InjectedIntlProps, injectIntl } from 'react-intl';
 
-import { AdminTable, IntlRenderer } from "src/components/Admin/AdminTable";
-import { Container } from "src/components/common/Container/Container";
-import { LinkButton } from "src/components/common/LinkButton/LinkButton";
-import { NoDataAvailable } from "src/components/common/NoDataAvailable/NoDataAvaiable";
-import { Section } from "src/components/common/Section/Section";
+import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
+import { Container } from 'src/components/common/Container/Container';
+import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
+import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
+import { Section } from 'src/components/common/Section/Section';
 
-import { IViewProps as IProps } from "./AdminFeatureTypesListPresenter";
+import { IViewProps as IProps } from './AdminFeatureTypesListPresenter';
 
 const NewFeatureTypeButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/featureTypes/new" color="is-primary">
-    {intl.formatMessage({ id: "AdminFeatureTypes.notFound.cta" })}
+    {intl.formatMessage({ id: 'AdminFeatureTypes.notFound.cta' })}
   </LinkButton>
 ));
 
 const NoFeatureTypesAvialable = injectIntl(({ intl }) => (
   <NoDataAvailable
-    title={intl.formatMessage({ id: "AdminFeatureTypes.notFound.title" })}
+    title={intl.formatMessage({ id: 'AdminFeatureTypes.notFound.title' })}
     description={intl.formatMessage({
-      id: "AdminFeatureTypes.notFound.description"
+      id: 'AdminFeatureTypes.notFound.description',
     })}
     CTA={<NewFeatureTypeButton />}
   />
@@ -28,14 +28,14 @@ const NoFeatureTypesAvialable = injectIntl(({ intl }) => (
 
 const renderNoData = () => <NoFeatureTypesAvialable />;
 
-type FeatureType = IProps["featureTypes"][0];
+type FeatureType = IProps['featureTypes'][0];
 
 export const AdminFeatureTypesListView = ({
   featureTypes,
   locales,
   intl,
   isLoading,
-  isDataLoaded
+  isDataLoaded,
 }: IProps & InjectedIntlProps) => (
   <Section>
     <Container>
@@ -47,13 +47,10 @@ export const AdminFeatureTypesListView = ({
         renderNoData={renderNoData}
         intl={intl}
       >
-        <AdminTable.Col<FeatureType>
-          key_="id"
-          title={intl.formatMessage({ id: "common.ID" })}
-        />
+        <AdminTable.Col<FeatureType> key_="id" title={intl.formatMessage({ id: 'common.ID' })} />
         <AdminTable.Col<FeatureType>
           key_="name"
-          title={intl.formatMessage({ id: "AdminFeatureTypes.names" })}
+          title={intl.formatMessage({ id: 'AdminFeatureTypes.names' })}
           renderer={new IntlRenderer(locales)}
         />
       </AdminTable>

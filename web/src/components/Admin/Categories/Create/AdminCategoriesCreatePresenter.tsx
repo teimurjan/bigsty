@@ -1,31 +1,21 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { RouteComponentProps } from "react-router";
-import * as yup from "yup";
+import { RouteComponentProps } from 'react-router';
+import * as yup from 'yup';
 
-import * as schemaValidator from "src/components/SchemaValidator";
+import * as schemaValidator from 'src/components/SchemaValidator';
 
-import { ICategoryService } from "src/services/CategoryService";
-import { IContextValue as AdminCategoriesStateContextValue } from "src/state/AdminCategoriesState";
-import { IContextValue as AdminFeatureTypesStateContextValue } from "src/state/AdminFeatureTypesState";
-import { IContextValue as IntlStateContextValue } from "src/state/IntlState";
+import { ICategoryService } from 'src/services/CategoryService';
+import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
+import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
+import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import {
-  IInjectedProp as TimeoutExpiredInjectedProp,
-  withTimeoutExpired
-} from "src/hooks/useTimeoutExpired";
-import { getFieldName, parseFieldName } from "../../IntlField";
-
-interface IState {
-  isCreating: boolean;
-  isLoading: boolean;
-  error?: string;
-  preloadingError?: string;
-  validator?: schemaValidator.ISchemaValidator;
-}
+import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { getFieldName, parseFieldName } from '../../IntlField';
+import { useLazy } from 'src/hooks/useLazy';
 
 export interface IProps
-  extends RouteComponentProps<any>,
+  extends RouteComponentProps<{}>,
     AdminCategoriesStateContextValue,
     AdminFeatureTypesStateContextValue,
     IntlStateContextValue {
@@ -35,133 +25,80 @@ export interface IProps
 
 export interface IViewProps {
   isOpen: boolean;
-  create: (values: {
-    names: { [key: string]: string };
-    feature_types: string[];
-    parent_category_id?: string;
-  }) => any;
+  create: (values: { names: { [key: string]: string }; feature_types: string[]; parent_category_id?: string }) => any;
   isLoading: boolean;
   isCreating: boolean;
   error?: string;
   preloadingError?: string;
   close: () => any;
-  availableLocales: IntlStateContextValue["intlState"]["availableLocales"];
+  availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
-  featureTypes: AdminFeatureTypesStateContextValue["adminFeatureTypesState"]["featureTypes"];
-  categories: AdminCategoriesStateContextValue["adminCategoriesState"]["categories"];
+  featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
+  categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
 }
 
-export const CATEGORY_NAME_FIELD_KEY = "name";
+export const CATEGORY_NAME_FIELD_KEY = 'name';
 
-export const AdminCategoriesCreatePresenter = withTimeoutExpired(
-  class extends React.Component<IProps & TimeoutExpiredInjectedProp, IState> {
-    public state = {
-      error: undefined,
-      isCreating: false,
-      isLoading: false,
-      preloadingError: undefined,
-      validator: undefined
-    };
+export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
+  intlState,
+  history,
+  adminFeatureTypesState: { getFeatureTypes, featureTypes },
+  adminCategoriesState: { getCategories, categories, addCategory },
+  service,
+  View,
+}) => {
+  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [isCreating, setCreating] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
+  const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
-    public async componentDidMount() {
-      const { intlState } = this.props;
-      if (intlState.availableLocales.length > 0) {
-        this.initValidator();
-      }
+  const isTimeoutExpired = useTimeoutExpired(1000);
 
-      const {
-        adminFeatureTypesState: { getFeatureTypes },
-        adminCategoriesState: { getCategories }
-      } = this.props;
+  const makeValidator = React.useCallback(
+    () =>
+      new schemaValidator.SchemaValidator(
+        yup.object().shape(
+          intlState.availableLocales.reduce(
+            (acc, locale) => ({
+              ...acc,
+              [getFieldName(CATEGORY_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
+            }),
+            {
+              feature_types: yup
+                .array()
+                .of(yup.number())
+                .required('AdminCategories.errors.noFeatureTypes')
+                .min(1, 'AdminCategories.errors.noFeatureTypes'),
+              parent_category_id: yup.number(),
+            },
+          ),
+        ),
+      ),
+    [intlState],
+  );
 
-      try {
-        this.setState({ isLoading: true });
-        await getFeatureTypes();
-        await getCategories();
-      } catch (e) {
-        this.setState({ preloadingError: "errors.common" });
-      } finally {
-        this.setState({ isLoading: false });
-      }
+  const validator = useLazy({
+    make: makeValidator,
+    trigger: intlState.availableLocales.length,
+  });
+
+  React.useEffect(() => {
+    try {
+      setLoading(true);
+      getFeatureTypes();
+      getCategories();
+    } catch (e) {
+      setPreloadingError('errors.common');
+    } finally {
+      setLoading(false);
     }
+  }, [getCategories, getFeatureTypes]);
 
-    public componentDidUpdate(prevProps: IProps) {
-      const { intlState: newIntlState } = this.props;
-      const { intlState: oldIntlState } = prevProps;
+  const close = React.useCallback(() => history.push('/admin/categories'), [history]);
 
-      if (
-        newIntlState.availableLocales.length > 0 &&
-        oldIntlState.availableLocales.length === 0
-      ) {
-        this.initValidator();
-      }
-    }
-
-    public render() {
-      const {
-        View,
-        adminCategoriesState: { categories },
-        adminFeatureTypesState: { featureTypes },
-        intlState: { availableLocales },
-        isTimeoutExpired
-      } = this.props;
-
-      const {
-        error,
-        isCreating,
-        validator,
-        isLoading,
-        preloadingError
-      } = this.state;
-
-      return (
-        <View
-          categories={categories}
-          isOpen={true}
-          create={this.create}
-          error={error}
-          isLoading={isTimeoutExpired && isLoading}
-          isCreating={isCreating}
-          close={this.close}
-          availableLocales={availableLocales}
-          validate={(validator || { validate: undefined }).validate}
-          featureTypes={featureTypes}
-          preloadingError={preloadingError}
-        />
-      );
-    }
-
-    private initValidator = () => {
-      const { intlState } = this.props;
-      this.setState({
-        validator: new schemaValidator.SchemaValidator(
-          yup.object().shape(
-            intlState.availableLocales.reduce(
-              (acc, locale) => ({
-                ...acc,
-                [getFieldName(
-                  CATEGORY_NAME_FIELD_KEY,
-                  locale
-                )]: yup.string().required("common.errors.field.empty")
-              }),
-              {
-                feature_types: yup
-                  .array()
-                  .of(yup.number())
-                  .required("AdminCategories.errors.noFeatureTypes")
-                  .min(1, "AdminCategories.errors.noFeatureTypes"),
-                parent_category_id: yup.number()
-              }
-            )
-          )
-        )
-      });
-    };
-
-    private close = () => this.props.history.push("/admin/categories");
-
-    private create: IViewProps["create"] = async values => {
-      const { service, adminCategoriesState } = this.props;
+  const create: IViewProps['create'] = React.useCallback(
+    async values => {
+      setCreating(true);
 
       const formattedValues = Object.keys(values).reduce(
         (acc, fieldName) => {
@@ -175,22 +112,36 @@ export const AdminCategoriesCreatePresenter = withTimeoutExpired(
         {
           feature_types: values.feature_types.map(idStr => parseInt(idStr, 10)),
           names: {},
-          parent_category_id: values.parent_category_id
-            ? parseInt(values.parent_category_id, 10)
-            : undefined
-        }
+          parent_category_id: values.parent_category_id ? parseInt(values.parent_category_id, 10) : undefined,
+        },
       );
 
       try {
         const category = await service.create(formattedValues);
-        adminCategoriesState.addCategory(category);
-        this.close();
+        addCategory(category);
+        setCreating(false);
+        close();
       } catch (e) {
-        this.setState({ error: "errors.common" });
-      } finally {
-        this.setState({ isCreating: false });
+        setError('errors.common');
+        setCreating(false);
       }
-    };
-  },
-  1000
-);
+    },
+    [addCategory, close, service],
+  );
+
+  return (
+    <View
+      categories={categories}
+      isOpen={true}
+      create={create}
+      error={error}
+      isLoading={isTimeoutExpired && isLoading}
+      isCreating={isCreating}
+      close={close}
+      availableLocales={intlState.availableLocales}
+      validate={(validator || { validate: undefined }).validate}
+      featureTypes={featureTypes}
+      preloadingError={preloadingError}
+    />
+  );
+};

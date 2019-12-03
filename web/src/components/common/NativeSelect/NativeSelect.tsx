@@ -1,12 +1,12 @@
 /** @jsx jsx */
-import * as React from "react";
+import * as React from 'react';
 
-import { css, jsx } from "@emotion/core";
-import classNames from "classnames";
-import { InjectedIntlProps, injectIntl } from "react-intl";
+import { css, jsx } from '@emotion/core';
+import classNames from 'classnames';
+import { InjectedIntlProps, injectIntl } from 'react-intl';
 
-import { HelpText } from "src/components/common/HelpText/HelpText";
-import { alignItemsCenterMixin, flexMixin } from "src/styles/mixins";
+import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { alignItemsCenterMixin, flexMixin } from 'src/styles/mixins';
 
 export interface IProps<T = boolean> {
   children: Array<React.ReactElement<typeof Option>>;
@@ -27,7 +27,7 @@ export const NativeSelect = injectIntl(
     isMultiple = false,
     size,
     className,
-    value
+    value,
   }: IProps & InjectedIntlProps) => (
     <div
       css={css`
@@ -39,8 +39,8 @@ export const NativeSelect = injectIntl(
         css={css`
           flex: 1;
         `}
-        className={classNames("select", wrapperClassName, {
-          "is-multiple": isMultiple
+        className={classNames('select', wrapperClassName, {
+          'is-multiple': isMultiple,
         })}
       >
         <select
@@ -64,30 +64,24 @@ export const NativeSelect = injectIntl(
             padding-left: 10px;
           `}
         >
-          {intl.formatMessage({ id: "NativeSelect.multipleHint" })}
+          {intl.formatMessage({ id: 'NativeSelect.multipleHint' })}
         </HelpText>
       )}
     </div>
-  )
+  ),
 );
 
 interface IOptionProps extends React.HTMLProps<HTMLOptionElement> {
   children?: React.ReactNode;
 }
 
-export const NativeSelectOption = ({
-  children,
-  className,
-  ...props
-}: IOptionProps) => (
+export const NativeSelectOption = ({ children, className, ...props }: IOptionProps) => (
   <option className={className} {...props}>
     {children}
   </option>
 );
 
-export const getMultipleValuesFromChangeEvent = (
-  e: React.SyntheticEvent<HTMLSelectElement>
-) => {
+export const getMultipleValuesFromChangeEvent = (e: React.SyntheticEvent<HTMLSelectElement>) => {
   const { options } = e.currentTarget;
 
   const values = [];

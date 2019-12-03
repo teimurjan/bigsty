@@ -1,12 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { ICategoryListResponseItem } from "src/api/CategoryAPI";
-import { ICategoryService } from "src/services/CategoryService";
-import { IContextValue as AppStateContextValue } from "src/state/AppState";
-import {
-  IContextValue as UserStateContextValue,
-  User
-} from "src/state/UserState";
+import { ICategoryListResponseItem } from 'src/api/CategoryAPI';
+import { ICategoryService } from 'src/services/CategoryService';
+import { IContextValue as AppStateContextValue } from 'src/state/AppState';
+import { IContextValue as UserStateContextValue, User } from 'src/state/UserState';
 
 export interface IProps extends UserStateContextValue, AppStateContextValue {
   categoryService: ICategoryService;
@@ -29,7 +26,7 @@ export class HeaderPresenter extends React.Component<IProps, IState> {
   public state = {
     categories: {},
     categoriesOrder: [],
-    error: undefined
+    error: undefined,
   };
 
   public componentDidMount() {
@@ -55,10 +52,10 @@ export class HeaderPresenter extends React.Component<IProps, IState> {
       const { entities, result } = await categoryService.getAll();
       this.setState({
         categories: entities.categories,
-        categoriesOrder: result
+        categoriesOrder: result,
       });
     } catch (e) {
-      this.setState({ error: "errors.common" });
+      this.setState({ error: 'errors.common' });
     }
     appState.setIdle();
   };

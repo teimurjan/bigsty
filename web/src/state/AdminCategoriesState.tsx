@@ -1,13 +1,10 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { ICategoryListRawIntlResponseItem } from "src/api/CategoryAPI";
-import { injectDependencies } from "src/DI/DI";
-import { extendIntlTextWithLocaleNames } from "src/helpers/intl";
-import { ICategoryService } from "src/services/CategoryService";
-import {
-  IContextValue as IntlStateContextValue,
-  injectIntlState
-} from "src/state/IntlState";
+import { ICategoryListRawIntlResponseItem } from 'src/api/CategoryAPI';
+import { injectDependencies } from 'src/DI/DI';
+import { extendIntlTextWithLocaleNames } from 'src/helpers/intl';
+import { ICategoryService } from 'src/services/CategoryService';
+import { IContextValue as IntlStateContextValue, injectIntlState } from 'src/state/IntlState';
 
 export interface IContextValue {
   adminCategoriesState: {
@@ -37,29 +34,20 @@ interface IProviderState {
   hasListLoaded: boolean;
 }
 
-class Provider extends React.Component<
-  IProviderProps & IntlStateContextValue,
-  IProviderState
-> {
+class Provider extends React.Component<IProviderProps & IntlStateContextValue, IProviderState> {
   public state = {
     categories: {},
     categoriesOrder: [],
     hasListLoaded: false,
     isListLoading: false,
-    listError: undefined
+    listError: undefined,
   };
 
   public render() {
-    const {
-      categories,
-      categoriesOrder,
-      isListLoading,
-      listError,
-      hasListLoaded
-    } = this.state;
+    const { categories, categoriesOrder, isListLoading, listError, hasListLoaded } = this.state;
     const {
       children,
-      intlState: { availableLocales }
+      intlState: { availableLocales },
     } = this.props;
     const { getCategories, deleteCategory, addCategory, setCategory } = this;
 
@@ -69,15 +57,11 @@ class Provider extends React.Component<
           adminCategoriesState: {
             addCategory,
             categories: categoriesOrder.map(categoryId => {
-              const category: ICategoryListRawIntlResponseItem =
-                categories[categoryId];
+              const category: ICategoryListRawIntlResponseItem = categories[categoryId];
 
               return {
                 ...category,
-                name: extendIntlTextWithLocaleNames(
-                  category.name,
-                  availableLocales
-                )
+                name: extendIntlTextWithLocaleNames(category.name, availableLocales),
               };
             }),
             deleteCategory,
@@ -85,8 +69,8 @@ class Provider extends React.Component<
             hasListLoaded,
             isListLoading,
             listError,
-            setCategory
-          }
+            setCategory,
+          },
         }}
       >
         {children}
@@ -103,13 +87,13 @@ class Provider extends React.Component<
         categories: entities.categories,
         categoriesOrder: result,
         hasListLoaded: true,
-        isListLoading: false
+        isListLoading: false,
       });
     } catch (e) {
       this.setState({
         hasListLoaded: true,
         isListLoading: false,
-        listError: "errors.common"
+        listError: 'errors.common',
       });
     }
   };
@@ -122,7 +106,7 @@ class Provider extends React.Component<
 
     this.setState({
       categories: newCategories,
-      categoriesOrder: categoriesOrder.filter(idFromOrder => id !== idFromOrder)
+      categoriesOrder: categoriesOrder.filter(idFromOrder => id !== idFromOrder),
     });
   };
 
@@ -131,12 +115,12 @@ class Provider extends React.Component<
 
     const newCategories = {
       ...categories,
-      [category.id]: category
+      [category.id]: category,
     };
 
     this.setState({
       categories: newCategories,
-      categoriesOrder: [...categoriesOrder, category.id]
+      categoriesOrder: [...categoriesOrder, category.id],
     });
   };
 
@@ -145,7 +129,7 @@ class Provider extends React.Component<
 
     const newCategories = {
       ...categories,
-      [category.id]: category
+      [category.id]: category,
     };
 
     this.setState({ categories: newCategories });
@@ -153,15 +137,11 @@ class Provider extends React.Component<
 }
 
 export const AdminCategoriesStateProvider = injectIntlState(
-  injectDependencies(({ dependencies, ...props }) => (
-    <Provider {...props} service={dependencies.services.category} />
-  ))
+  injectDependencies(({ dependencies, ...props }) => <Provider {...props} service={dependencies.services.category} />),
 );
 
 export const injectAdminCategoriesState = (
-  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>
+  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>,
 ): React.SFC<any> => props => (
-  <Context.Consumer>
-    {(context: IContextValue) => <Component {...{ ...props, ...context }} />}
-  </Context.Consumer>
+  <Context.Consumer>{(context: IContextValue) => <Component {...{ ...props, ...context }} />}</Context.Consumer>
 );

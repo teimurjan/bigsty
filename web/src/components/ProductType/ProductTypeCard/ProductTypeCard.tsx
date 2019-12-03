@@ -1,13 +1,13 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
+import { css, jsx } from '@emotion/core';
 
-import { IProductTypeListResponseItem } from "src/api/ProductTypeAPI";
-import { Card } from "src/components/common/Card/Card";
-import { CardContent } from "src/components/common/CardContent/CardContent";
-import { CardImage } from "src/components/common/CardImage/CardImage";
-import { Image } from "src/components/common/Image/Image";
-import { Title } from "src/components/common/Title/Title";
-import { marginAutoMixin } from "src/styles/mixins";
+import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
+import { Card } from 'src/components/common/Card/Card';
+import { CardContent } from 'src/components/common/CardContent/CardContent';
+import { CardImage } from 'src/components/common/CardImage/CardImage';
+import { Image } from 'src/components/common/Image/Image';
+import { Title } from 'src/components/common/Title/Title';
+import { marginAutoMixin } from 'src/styles/mixins';
 
 export interface IProps {
   productType: IProductTypeListResponseItem;

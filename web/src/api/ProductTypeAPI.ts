@@ -1,6 +1,6 @@
-import { Client } from "ttypes/http";
+import { Client } from 'ttypes/http';
 
-import { IHeadersManager } from "src/manager/HeadersManager";
+import { IHeadersManager } from 'src/manager/HeadersManager';
 
 export interface IProductTypeListResponseItem {
   id: number;
@@ -29,10 +29,7 @@ export interface IProductTypeListResponseData {
 }
 
 export interface IProductTypeAPI {
-  getForCategory(
-    categoryId: number,
-    page: number
-  ): Promise<IProductTypeListResponseData>;
+  getForCategory(categoryId: number, page: number): Promise<IProductTypeListResponseData>;
 }
 
 export class ProductTypeAPI implements IProductTypeAPI {
@@ -49,8 +46,8 @@ export class ProductTypeAPI implements IProductTypeAPI {
       const response = await this.client.get<IProductTypeListResponseData>(
         `/api/categories/${categoryId}/product_types?page=${page}`,
         {
-          headers: this.headersManager.getHeaders()
-        }
+          headers: this.headersManager.getHeaders(),
+        },
       );
       return response.data;
     } catch (e) {

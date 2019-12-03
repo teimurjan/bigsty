@@ -1,13 +1,10 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { IFeatureTypeListRawIntlResponseItem } from "src/api/FeatureTypeAPI";
-import { injectDependencies } from "src/DI/DI";
-import { extendIntlTextWithLocaleNames } from "src/helpers/intl";
-import { IFeatureTypeService } from "src/services/FeatureTypeService";
-import {
-  IContextValue as IntlStateContextValue,
-  injectIntlState
-} from "src/state/IntlState";
+import { IFeatureTypeListRawIntlResponseItem } from 'src/api/FeatureTypeAPI';
+import { injectDependencies } from 'src/DI/DI';
+import { extendIntlTextWithLocaleNames } from 'src/helpers/intl';
+import { IFeatureTypeService } from 'src/services/FeatureTypeService';
+import { IContextValue as IntlStateContextValue, injectIntlState } from 'src/state/IntlState';
 
 export interface IContextValue {
   adminFeatureTypesState: {
@@ -37,36 +34,22 @@ interface IProviderState {
   hasListLoaded: boolean;
 }
 
-class Provider extends React.Component<
-  IProviderProps & IntlStateContextValue,
-  IProviderState
-> {
+class Provider extends React.Component<IProviderProps & IntlStateContextValue, IProviderState> {
   public state = {
     featureTypes: {},
     featureTypesOrder: [],
     hasListLoaded: false,
     isListLoading: false,
-    listError: undefined
+    listError: undefined,
   };
 
   public render() {
-    const {
-      featureTypes,
-      featureTypesOrder,
-      isListLoading,
-      listError,
-      hasListLoaded
-    } = this.state;
+    const { featureTypes, featureTypesOrder, isListLoading, listError, hasListLoaded } = this.state;
     const {
       children,
-      intlState: { availableLocales }
+      intlState: { availableLocales },
     } = this.props;
-    const {
-      addFeatureType,
-      getFeatureTypes,
-      deleteFeatureType,
-      setFeatureType
-    } = this;
+    const { addFeatureType, getFeatureTypes, deleteFeatureType, setFeatureType } = this;
 
     return (
       <Context.Provider
@@ -75,23 +58,19 @@ class Provider extends React.Component<
             addFeatureType,
             deleteFeatureType,
             featureTypes: featureTypesOrder.map(featureTypeId => {
-              const featureType: IFeatureTypeListRawIntlResponseItem =
-                featureTypes[featureTypeId];
+              const featureType: IFeatureTypeListRawIntlResponseItem = featureTypes[featureTypeId];
 
               return {
                 ...featureType,
-                name: extendIntlTextWithLocaleNames(
-                  featureType.name,
-                  availableLocales
-                )
+                name: extendIntlTextWithLocaleNames(featureType.name, availableLocales),
               };
             }),
             getFeatureTypes,
             hasListLoaded,
             isListLoading,
             listError,
-            setFeatureType
-          }
+            setFeatureType,
+          },
         }}
       >
         {children}
@@ -108,41 +87,37 @@ class Provider extends React.Component<
         featureTypes: entities.featureTypes,
         featureTypesOrder: result,
         hasListLoaded: true,
-        isListLoading: false
+        isListLoading: false,
       });
     } catch (e) {
       this.setState({
         hasListLoaded: true,
         isListLoading: false,
-        listError: "errors.common"
+        listError: 'errors.common',
       });
     }
   };
 
-  private addFeatureType = (
-    featureType: IFeatureTypeListRawIntlResponseItem
-  ) => {
+  private addFeatureType = (featureType: IFeatureTypeListRawIntlResponseItem) => {
     const { featureTypes, featureTypesOrder } = this.state;
 
     const newFeatureTypes = {
       ...featureTypes,
-      [featureType.id]: featureType
+      [featureType.id]: featureType,
     };
 
     this.setState({
       featureTypes: newFeatureTypes,
-      featureTypesOrder: [...featureTypesOrder, featureType.id]
+      featureTypesOrder: [...featureTypesOrder, featureType.id],
     });
   };
 
-  private setFeatureType = (
-    featureType: IFeatureTypeListRawIntlResponseItem
-  ) => {
+  private setFeatureType = (featureType: IFeatureTypeListRawIntlResponseItem) => {
     const { featureTypes } = this.state;
 
     const newFeatureTypes = {
       ...featureTypes,
-      [featureType.id]: featureType
+      [featureType.id]: featureType,
     };
 
     this.setState({ featureTypes: newFeatureTypes });
@@ -156,9 +131,7 @@ class Provider extends React.Component<
 
     this.setState({
       featureTypes: newFeatureTypes,
-      featureTypesOrder: featureTypesOrder.filter(
-        idFromOrder => idFromOrder !== id
-      )
+      featureTypesOrder: featureTypesOrder.filter(idFromOrder => idFromOrder !== id),
     });
   };
 }
@@ -166,13 +139,11 @@ class Provider extends React.Component<
 export const AdminFeatureTypesStateProvider = injectIntlState(
   injectDependencies(({ dependencies, ...props }) => (
     <Provider {...props} service={dependencies.services.featureType} />
-  ))
+  )),
 );
 
 export const injectAdminFeatureTypesState = (
-  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>
+  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>,
 ): React.SFC<any> => props => (
-  <Context.Consumer>
-    {(context: IContextValue) => <Component {...{ ...props, ...context }} />}
-  </Context.Consumer>
+  <Context.Consumer>{(context: IContextValue) => <Component {...{ ...props, ...context }} />}</Context.Consumer>
 );

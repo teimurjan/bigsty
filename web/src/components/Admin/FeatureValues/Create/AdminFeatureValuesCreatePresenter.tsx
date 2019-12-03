@@ -1,22 +1,19 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { RouteComponentProps } from "react-router";
-import * as yup from "yup";
+import { RouteComponentProps } from 'react-router';
+import * as yup from 'yup';
 
-import { IFeatureValueService } from "src/services/FeatureValueService";
+import { IFeatureValueService } from 'src/services/FeatureValueService';
 
-import * as schemaValidator from "src/components/SchemaValidator";
+import * as schemaValidator from 'src/components/SchemaValidator';
 
-import { IContextValue as AdminFeatureTypesStateContextValue } from "src/state/AdminFeatureTypesState";
-import { IContextValue as AdminFeatureValuesStateContextValue } from "src/state/AdminFeatureValuesState";
-import { IContextValue as IntlStateContextValue } from "src/state/IntlState";
+import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
+import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
+import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import {
-  IInjectedProp as TimeoutExpiredInjectedProp,
-  withTimeoutExpired
-} from "src/hooks/useTimeoutExpired";
+import { IInjectedProp as TimeoutExpiredInjectedProp, withTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 
-import { getFieldName, parseFieldName } from "../../IntlField";
+import { getFieldName, parseFieldName } from '../../IntlField';
 
 interface IState {
   isCreating: boolean;
@@ -35,27 +32,24 @@ export interface IProps
 
 export interface IViewProps {
   isOpen: boolean;
-  create: (values: {
-    names: { [key: string]: string };
-    feature_type_id: string;
-  }) => any;
+  create: (values: { names: { [key: string]: string }; feature_type_id: string }) => any;
   isCreating: boolean;
   isLoading: boolean;
   error: string | undefined;
   close: () => any;
-  availableLocales: IntlStateContextValue["intlState"]["availableLocales"];
-  featureTypes: AdminFeatureTypesStateContextValue["adminFeatureTypesState"]["featureTypes"];
+  availableLocales: IntlStateContextValue['intlState']['availableLocales'];
+  featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
   validate?: (values: object) => object | Promise<object>;
 }
 
-export const FEATURE_VALUE_NAME_FIELD_KEY = "name";
+export const FEATURE_VALUE_NAME_FIELD_KEY = 'name';
 
 export const AdminFeatureValuesCreatePresenter = withTimeoutExpired(
   class extends React.Component<IProps & TimeoutExpiredInjectedProp, IState> {
     public state = {
       error: undefined,
       isCreating: false,
-      validator: undefined
+      validator: undefined,
     };
 
     public componentDidMount() {
@@ -72,10 +66,7 @@ export const AdminFeatureValuesCreatePresenter = withTimeoutExpired(
       const { intlState: newIntlState } = this.props;
       const { intlState: oldIntlState } = prevProps;
 
-      if (
-        newIntlState.availableLocales.length > 0 &&
-        oldIntlState.availableLocales.length === 0
-      ) {
+      if (newIntlState.availableLocales.length > 0 && oldIntlState.availableLocales.length === 0) {
         this.initValidator();
       }
     }
@@ -86,10 +77,7 @@ export const AdminFeatureValuesCreatePresenter = withTimeoutExpired(
         View,
         intlState: { availableLocales },
         isTimeoutExpired,
-        adminFeatureTypesState: {
-          featureTypes,
-          isListLoading: featureTypesLoading
-        }
+        adminFeatureTypesState: { featureTypes, isListLoading: featureTypesLoading },
       } = this.props;
 
       return (
@@ -111,36 +99,33 @@ export const AdminFeatureValuesCreatePresenter = withTimeoutExpired(
       const { validator } = this.state;
       const { intlState } = this.props;
 
-      if (typeof validator === "undefined") {
+      if (typeof validator === 'undefined') {
         this.setState({
           validator: new schemaValidator.SchemaValidator(
             yup.object().shape(
               intlState.availableLocales.reduce(
                 (acc, locale) => ({
                   ...acc,
-                  [getFieldName(
-                    FEATURE_VALUE_NAME_FIELD_KEY,
-                    locale
-                  )]: yup.string().required("common.errors.field.empty")
+                  [getFieldName(FEATURE_VALUE_NAME_FIELD_KEY, locale)]: yup
+                    .string()
+                    .required('common.errors.field.empty'),
                 }),
                 {
-                  feature_type_id: yup
-                    .number()
-                    .required("common.errors.field.empty")
-                }
-              )
-            )
-          )
+                  feature_type_id: yup.number().required('common.errors.field.empty'),
+                },
+              ),
+            ),
+          ),
         });
       }
     };
 
-    private close = () => this.props.history.push("/admin/featureValues");
+    private close = () => this.props.history.push('/admin/featureValues');
 
-    private create: IViewProps["create"] = async values => {
+    private create: IViewProps['create'] = async values => {
       const {
         service,
-        adminFeatureValuesState: { addFeatureValue }
+        adminFeatureValuesState: { addFeatureValue },
       } = this.props;
 
       const formattedValues = Object.keys(values).reduce(
@@ -154,8 +139,8 @@ export const AdminFeatureValuesCreatePresenter = withTimeoutExpired(
         },
         {
           feature_type_id: parseInt(values.feature_type_id, 10),
-          names: {}
-        }
+          names: {},
+        },
       );
 
       try {
@@ -163,10 +148,10 @@ export const AdminFeatureValuesCreatePresenter = withTimeoutExpired(
         addFeatureValue(featureValue);
         this.close();
       } catch (e) {
-        this.setState({ error: "errors.common" });
+        this.setState({ error: 'errors.common' });
       } finally {
         this.setState({ isCreating: false });
       }
     };
-  }
+  },
 );

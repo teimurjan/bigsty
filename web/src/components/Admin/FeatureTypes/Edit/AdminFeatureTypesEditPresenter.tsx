@@ -1,21 +1,18 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { RouteComponentProps } from "react-router";
-import * as yup from "yup";
+import { RouteComponentProps } from 'react-router';
+import * as yup from 'yup';
 
-import { IFeatureTypeService } from "src/services/FeatureTypeService";
+import { IFeatureTypeService } from 'src/services/FeatureTypeService';
 
-import * as schemaValidator from "src/components/SchemaValidator";
-import { IContextValue as AdminFeatureTypesStateContextValue } from "src/state/AdminFeatureTypesState";
-import { IContextValue as IntlStateContextValue } from "src/state/IntlState";
+import * as schemaValidator from 'src/components/SchemaValidator';
+import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
+import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { IFeatureTypeListRawIntlResponseItem } from "src/api/FeatureTypeAPI";
-import {
-  IInjectedProp as TimeoutExpiredInjectedProp,
-  withTimeoutExpired
-} from "src/hooks/useTimeoutExpired";
-import { getNumberParam } from "src/utils/url";
-import { getFieldName, parseFieldName } from "../../IntlField";
+import { IFeatureTypeListRawIntlResponseItem } from 'src/api/FeatureTypeAPI';
+import { IInjectedProp as TimeoutExpiredInjectedProp, withTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { getNumberParam } from 'src/utils/url';
+import { getFieldName, parseFieldName } from '../../IntlField';
 
 interface IState {
   isUpdating: boolean;
@@ -41,13 +38,13 @@ export interface IViewProps {
   isUpdating: boolean;
   error: string | undefined;
   close: () => any;
-  availableLocales: IntlStateContextValue["intlState"]["availableLocales"];
+  availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
   initialValues: object;
   preloadingError?: string;
 }
 
-export const FEATURE_TYPE_NAME_FIELD_KEY = "name";
+export const FEATURE_TYPE_NAME_FIELD_KEY = 'name';
 
 export const AdminFeatureTypesEditPresenter = withTimeoutExpired(
   class extends React.Component<IProps & TimeoutExpiredInjectedProp, IState> {
@@ -57,7 +54,7 @@ export const AdminFeatureTypesEditPresenter = withTimeoutExpired(
       isLoading: false,
       isUpdating: false,
       preloadingError: undefined,
-      validator: undefined
+      validator: undefined,
     };
 
     public async componentDidMount() {
@@ -69,15 +66,15 @@ export const AdminFeatureTypesEditPresenter = withTimeoutExpired(
 
       try {
         this.setState({ isLoading: true });
-        const id = getNumberParam(match, "id");
+        const id = getNumberParam(match, 'id');
         const featureType = await service.getOneRawIntl(id!);
         if (featureType) {
           this.setState({ featureType });
         } else {
-          this.setState({ preloadingError: "AdminFeatureTypes.notFound" });
+          this.setState({ preloadingError: 'AdminFeatureTypes.notFound' });
         }
       } catch (e) {
-        this.setState({ preloadingError: "errors.common" });
+        this.setState({ preloadingError: 'errors.common' });
       } finally {
         this.setState({ isLoading: false });
       }
@@ -87,26 +84,17 @@ export const AdminFeatureTypesEditPresenter = withTimeoutExpired(
       const { intlState: newIntlState } = this.props;
       const { intlState: oldIntlState } = prevProps;
 
-      if (
-        newIntlState.availableLocales.length > 0 &&
-        oldIntlState.availableLocales.length === 0
-      ) {
+      if (newIntlState.availableLocales.length > 0 && oldIntlState.availableLocales.length === 0) {
         this.initValidator();
       }
     }
 
     public render() {
-      const {
-        isUpdating,
-        error,
-        validator,
-        isLoading,
-        preloadingError
-      } = this.state;
+      const { isUpdating, error, validator, isLoading, preloadingError } = this.state;
       const {
         View,
         intlState: { availableLocales },
-        isTimeoutExpired
+        isTimeoutExpired,
       } = this.props;
 
       return (
@@ -129,33 +117,32 @@ export const AdminFeatureTypesEditPresenter = withTimeoutExpired(
       const { validator } = this.state;
       const { intlState } = this.props;
 
-      if (typeof validator === "undefined") {
+      if (typeof validator === 'undefined') {
         this.setState({
           validator: new schemaValidator.SchemaValidator(
             yup.object().shape(
               intlState.availableLocales.reduce(
                 (acc, locale) => ({
                   ...acc,
-                  [getFieldName(
-                    FEATURE_TYPE_NAME_FIELD_KEY,
-                    locale
-                  )]: yup.string().required("common.errors.field.empty")
+                  [getFieldName(FEATURE_TYPE_NAME_FIELD_KEY, locale)]: yup
+                    .string()
+                    .required('common.errors.field.empty'),
                 }),
-                {}
-              )
-            )
-          )
+                {},
+              ),
+            ),
+          ),
         });
       }
     };
 
     private close = () => this.props.history.push('/admin/featureTypes');
 
-    private edit: IViewProps["edit"] = async values => {
+    private edit: IViewProps['edit'] = async values => {
       const {
         service,
         adminFeatureTypesState: { setFeatureType },
-        match
+        match,
       } = this.props;
 
       const formattedValues = Object.keys(values).reduce(
@@ -168,17 +155,17 @@ export const AdminFeatureTypesEditPresenter = withTimeoutExpired(
           return acc;
         },
         {
-          names: {}
-        }
+          names: {},
+        },
       );
 
       try {
-        const id = getNumberParam(match, "id");
+        const id = getNumberParam(match, 'id');
         const featureType = await service.edit(id!, formattedValues);
         setFeatureType(featureType);
         this.close();
       } catch (e) {
-        this.setState({ error: "errors.common" });
+        this.setState({ error: 'errors.common' });
       } finally {
         this.setState({ isUpdating: false });
       }
@@ -186,20 +173,18 @@ export const AdminFeatureTypesEditPresenter = withTimeoutExpired(
 
     private getInitialValues = () => {
       const {
-        intlState: { availableLocales }
+        intlState: { availableLocales },
       } = this.props;
       const { featureType } = this.state;
 
       return availableLocales.reduce(
         (acc, locale) => ({
           ...acc,
-          [getFieldName(FEATURE_TYPE_NAME_FIELD_KEY, locale)]: (
-            featureType || { name: "" }
-          ).name[locale.id]
+          [getFieldName(FEATURE_TYPE_NAME_FIELD_KEY, locale)]: (featureType || { name: '' }).name[locale.id],
         }),
-        {}
+        {},
       );
     };
   },
-  1000
+  1000,
 );

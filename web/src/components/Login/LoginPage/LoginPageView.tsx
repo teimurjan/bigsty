@@ -1,29 +1,25 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
-import { InjectedIntlProps } from "react-intl";
+import { jsx } from '@emotion/core';
+import { InjectedIntlProps } from 'react-intl';
 
-import { Box } from "src/components/common/Box/Box";
-import { Modal } from "src/components/common/Modal/Modal";
-import { ModalBackground } from "src/components/common/ModalBackground/ModalBackground";
-import { ModalClose } from "src/components/common/ModalClose/ModalClose";
-import { ModalContent } from "src/components/common/ModalContent/ModalContent";
-import { Title } from "src/components/common/Title/Title";
-import { textCenterMixin } from "src/styles/mixins";
+import { Box } from 'src/components/common/Box/Box';
+import { Modal } from 'src/components/common/Modal/Modal';
+import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
+import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
+import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
+import { Title } from 'src/components/common/Title/Title';
+import { textCenterMixin } from 'src/styles/mixins';
 
-import { LoginFormContainer } from "../LoginForm/LoginFormContainer";
-import { IViewProps as IProps } from "./LoginPagePresenter";
+import { LoginFormContainer } from '../LoginForm/LoginFormContainer';
+import { IViewProps as IProps } from './LoginPagePresenter';
 
-export const LoginPageView = ({
-  intl,
-  isOpen,
-  onClose
-}: IProps & InjectedIntlProps) => (
+export const LoginPageView = ({ intl, isOpen, onClose }: IProps & InjectedIntlProps) => (
   <Modal isOpen={isOpen}>
     <ModalBackground />
     <ModalContent>
       <Box>
         <Title css={textCenterMixin} size={3}>
-          {intl.formatMessage({ id: "LoginPage.title" })}
+          {intl.formatMessage({ id: 'LoginPage.title' })}
         </Title>
         <LoginFormContainer />
       </Box>
