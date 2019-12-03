@@ -10,12 +10,7 @@ import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/A
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
-
-interface IState {
-  isCreating: boolean;
-  error: string | undefined;
-  validator?: schemaValidator.ISchemaValidator;
-}
+import { useLazy } from 'src/hooks/useLazy';
 
 export interface IProps extends RouteComponentProps<any>, AdminFeatureTypesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -34,101 +29,79 @@ export interface IViewProps {
 
 export const FEATURE_TYPE_NAME_FIELD_KEY = 'name';
 
-export class AdminFeatureTypesCreatePresenter extends React.Component<IProps, IState> {
-  public state = {
-    error: undefined,
-    isCreating: false,
-    validator: undefined,
-  };
+export const AdminFeatureTypesCreatePresenter: React.FC<IProps> = ({
+  intlState: { availableLocales },
+  View,
+  history,
+  service,
+  adminFeatureTypesState: { addFeatureType },
+}) => {
+  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [isCreating, setCreating] = React.useState(false);
 
-  public componentDidMount() {
-    const { intlState } = this.props;
-
-    if (intlState.availableLocales.length > 0) {
-      this.initValidator();
-    }
-  }
-
-  public componentDidUpdate(prevProps: IProps) {
-    const { intlState: newIntlState } = this.props;
-    const { intlState: oldIntlState } = prevProps;
-
-    if (newIntlState.availableLocales.length > 0 && oldIntlState.availableLocales.length === 0) {
-      this.initValidator();
-    }
-  }
-
-  public render() {
-    const { isCreating, error, validator } = this.state;
-    const {
-      View,
-      intlState: { availableLocales },
-    } = this.props;
-
-    return (
-      <View
-        isOpen={true}
-        create={this.create}
-        error={error}
-        isLoading={isCreating}
-        close={this.close}
-        availableLocales={availableLocales}
-        validate={(validator || { validate: undefined }).validate}
-      />
-    );
-  }
-
-  private initValidator = () => {
-    const { validator } = this.state;
-    const { intlState } = this.props;
-
-    if (typeof validator === 'undefined') {
-      this.setState({
-        validator: new schemaValidator.SchemaValidator(
-          yup.object().shape(
-            intlState.availableLocales.reduce(
-              (acc, locale) => ({
-                ...acc,
-                [getFieldName(FEATURE_TYPE_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
-              }),
-              {},
-            ),
+  const makeValidator = React.useCallback(
+    () =>
+      new schemaValidator.SchemaValidator(
+        yup.object().shape(
+          availableLocales.reduce(
+            (acc, locale) => ({
+              ...acc,
+              [getFieldName(FEATURE_TYPE_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
+            }),
+            {},
           ),
         ),
-      });
-    }
-  };
+      ),
+    [availableLocales],
+  );
 
-  private close = () => this.props.history.push('/admin/featureTypes');
+  const validator = useLazy({
+    make: makeValidator,
+    trigger: availableLocales.length,
+  });
 
-  private create: IViewProps['create'] = async values => {
-    const {
-      service,
-      adminFeatureTypesState: { addFeatureType },
-    } = this.props;
+  const close = React.useCallback(() => history.push('/admin/featureTypes'), [history]);
 
-    const formattedValues = Object.keys(values).reduce(
-      (acc, fieldName) => {
-        const { key, id } = parseFieldName(fieldName);
-        if (key === FEATURE_TYPE_NAME_FIELD_KEY) {
-          return { ...acc, names: { ...acc.names, [id]: values[fieldName] } };
-        }
+  const create: IViewProps['create'] = React.useCallback(
+    async values => {
+      setCreating(true);
 
-        return acc;
-      },
-      {
-        names: {},
-      },
-    );
+      const formattedValues = Object.keys(values).reduce(
+        (acc, fieldName) => {
+          const { key, id } = parseFieldName(fieldName);
+          if (key === FEATURE_TYPE_NAME_FIELD_KEY) {
+            return { ...acc, names: { ...acc.names, [id]: values[fieldName] } };
+          }
 
-    try {
-      const featureType = await service.create(formattedValues);
-      addFeatureType(featureType);
-      this.close();
-    } catch (e) {
-      this.setState({ error: 'errors.common' });
-    } finally {
-      this.setState({ isCreating: false });
-    }
-  };
-}
+          return acc;
+        },
+        {
+          names: {},
+        },
+      );
+
+      try {
+        const featureType = await service.create(formattedValues);
+        addFeatureType(featureType);
+        setCreating(false);
+        close();
+      } catch (e) {
+        setError('errors.common');
+        setCreating(false);
+      }
+    },
+    [addFeatureType, close, service],
+  );
+
+  return (
+    <View
+      isOpen={true}
+      create={create}
+      error={error}
+      isLoading={isCreating}
+      close={close}
+      availableLocales={availableLocales}
+      validate={(validator || { validate: undefined }).validate}
+    />
+  );
+};

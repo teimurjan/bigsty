@@ -10,18 +10,10 @@ import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/A
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { IFeatureTypeListRawIntlResponseItem } from 'src/api/FeatureTypeAPI';
-import { IInjectedProp as TimeoutExpiredInjectedProp, withTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { getNumberParam } from 'src/utils/url';
 import { getFieldName, parseFieldName } from '../../IntlField';
-
-interface IState {
-  isUpdating: boolean;
-  isLoading: boolean;
-  error?: string;
-  preloadingError?: string;
-  validator?: schemaValidator.ISchemaValidator;
-  featureType?: IFeatureTypeListRawIntlResponseItem;
-}
+import { useLazy } from 'src/hooks/useLazy';
 
 export interface IProps
   extends RouteComponentProps<{ id: string }>,
@@ -46,145 +38,112 @@ export interface IViewProps {
 
 export const FEATURE_TYPE_NAME_FIELD_KEY = 'name';
 
-export const AdminFeatureTypesEditPresenter = withTimeoutExpired(
-  class extends React.Component<IProps & TimeoutExpiredInjectedProp, IState> {
-    public state = {
-      error: undefined,
-      featureType: undefined,
-      isLoading: false,
-      isUpdating: false,
-      preloadingError: undefined,
-      validator: undefined,
-    };
+export const AdminFeatureTypesEditPresenter: React.FC<IProps> = ({
+  intlState: { availableLocales },
+  View,
+  history,
+  service,
+  adminFeatureTypesState: { setFeatureType: setFeatureTypeToState },
+  match,
+}) => {
+  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
+  const [featureType, setFeatureType] = React.useState<IFeatureTypeListRawIntlResponseItem | undefined>(undefined);
+  const [isUpdating, setUpdating] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
 
-    public async componentDidMount() {
-      const { intlState, service, match } = this.props;
+  const isTimeoutExpired = useTimeoutExpired(1000);
 
-      if (intlState.availableLocales.length > 0) {
-        this.initValidator();
-      }
-
+  React.useEffect(() => {
+    (async () => {
       try {
-        this.setState({ isLoading: true });
+        setLoading(true);
         const id = getNumberParam(match, 'id');
-        const featureType = await service.getOneRawIntl(id!);
+        const featureType = id ? await service.getOneRawIntl(id) : undefined;
         if (featureType) {
-          this.setState({ featureType });
+          setFeatureType(featureType);
         } else {
-          this.setState({ preloadingError: 'AdminFeatureTypes.notFound' });
+          setPreloadingError('AdminFeatureTypes.notFound');
         }
       } catch (e) {
-        this.setState({ preloadingError: 'errors.common' });
+        setPreloadingError('errors.common');
       } finally {
-        this.setState({ isLoading: false });
+        setLoading(false);
       }
-    }
+    })();
+  }, [match, service]);
 
-    public componentDidUpdate(prevProps: IProps) {
-      const { intlState: newIntlState } = this.props;
-      const { intlState: oldIntlState } = prevProps;
-
-      if (newIntlState.availableLocales.length > 0 && oldIntlState.availableLocales.length === 0) {
-        this.initValidator();
-      }
-    }
-
-    public render() {
-      const { isUpdating, error, validator, isLoading, preloadingError } = this.state;
-      const {
-        View,
-        intlState: { availableLocales },
-        isTimeoutExpired,
-      } = this.props;
-
-      return (
-        <View
-          isOpen={true}
-          edit={this.edit}
-          error={error}
-          isUpdating={isUpdating}
-          isLoading={isTimeoutExpired && isLoading}
-          close={this.close}
-          availableLocales={availableLocales}
-          validate={(validator || { validate: undefined }).validate}
-          initialValues={this.getInitialValues()}
-          preloadingError={preloadingError}
-        />
-      );
-    }
-
-    private initValidator = () => {
-      const { validator } = this.state;
-      const { intlState } = this.props;
-
-      if (typeof validator === 'undefined') {
-        this.setState({
-          validator: new schemaValidator.SchemaValidator(
-            yup.object().shape(
-              intlState.availableLocales.reduce(
-                (acc, locale) => ({
-                  ...acc,
-                  [getFieldName(FEATURE_TYPE_NAME_FIELD_KEY, locale)]: yup
-                    .string()
-                    .required('common.errors.field.empty'),
-                }),
-                {},
-              ),
-            ),
+  const makeValidator = React.useCallback(
+    () =>
+      new schemaValidator.SchemaValidator(
+        yup.object().shape(
+          availableLocales.reduce(
+            (acc, locale) => ({
+              ...acc,
+              [getFieldName(FEATURE_TYPE_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
+            }),
+            {},
           ),
-        });
-      }
-    };
+        ),
+      ),
+    [availableLocales],
+  );
 
-    private close = () => this.props.history.push('/admin/featureTypes');
+  const validator = useLazy({
+    make: makeValidator,
+    trigger: availableLocales.length,
+  });
 
-    private edit: IViewProps['edit'] = async values => {
-      const {
-        service,
-        adminFeatureTypesState: { setFeatureType },
-        match,
-      } = this.props;
+  const close = React.useCallback(() => history.push('/admin/featureTypes'), [history]);
+  const edit: IViewProps['edit'] = async values => {
+    const formattedValues = Object.keys(values).reduce(
+      (acc, fieldName) => {
+        const { key, id } = parseFieldName(fieldName);
+        if (key === FEATURE_TYPE_NAME_FIELD_KEY) {
+          return { ...acc, names: { ...acc.names, [id]: values[fieldName] } };
+        }
 
-      const formattedValues = Object.keys(values).reduce(
-        (acc, fieldName) => {
-          const { key, id } = parseFieldName(fieldName);
-          if (key === FEATURE_TYPE_NAME_FIELD_KEY) {
-            return { ...acc, names: { ...acc.names, [id]: values[fieldName] } };
-          }
+        return acc;
+      },
+      {
+        names: {},
+      },
+    );
 
-          return acc;
-        },
-        {
-          names: {},
-        },
-      );
+    try {
+      const id = getNumberParam(match, 'id');
+      const featureType = await service.edit(id as number, formattedValues);
+      setFeatureTypeToState(featureType);
+      setUpdating(false);
+      close();
+    } catch (e) {
+      setError('errors.common');
+      setUpdating(false);
+    }
+  };
 
-      try {
-        const id = getNumberParam(match, 'id');
-        const featureType = await service.edit(id!, formattedValues);
-        setFeatureType(featureType);
-        this.close();
-      } catch (e) {
-        this.setState({ error: 'errors.common' });
-      } finally {
-        this.setState({ isUpdating: false });
-      }
-    };
+  const initialValues = React.useMemo(() => {
+    return availableLocales.reduce(
+      (acc, locale) => ({
+        ...acc,
+        [getFieldName(FEATURE_TYPE_NAME_FIELD_KEY, locale)]: (featureType || { name: '' }).name[locale.id],
+      }),
+      {},
+    );
+  }, [availableLocales, featureType]);
 
-    private getInitialValues = () => {
-      const {
-        intlState: { availableLocales },
-      } = this.props;
-      const { featureType } = this.state;
-
-      return availableLocales.reduce(
-        (acc, locale) => ({
-          ...acc,
-          [getFieldName(FEATURE_TYPE_NAME_FIELD_KEY, locale)]: (featureType || { name: '' }).name[locale.id],
-        }),
-        {},
-      );
-    };
-  },
-  1000,
-);
+  return (
+    <View
+      isOpen={true}
+      edit={edit}
+      error={error}
+      preloadingError={preloadingError}
+      isUpdating={isUpdating}
+      isLoading={isLoading && isTimeoutExpired}
+      initialValues={initialValues}
+      close={close}
+      availableLocales={availableLocales}
+      validate={(validator || { validate: undefined }).validate}
+    />
+  );
+};

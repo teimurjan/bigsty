@@ -48,8 +48,13 @@ export const CATEGORY_NAME_FIELD_KEY = 'name';
 export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
   intlState,
   history,
-  adminFeatureTypesState: { getFeatureTypes, featureTypes },
-  adminCategoriesState: { getCategories, categories, setCategory: setCategoryToState },
+  adminFeatureTypesState: { getFeatureTypes, featureTypes, isListLoading: featureTypesLoading },
+  adminCategoriesState: {
+    getCategories,
+    categories,
+    setCategory: setCategoryToState,
+    isListLoading: categoriesLoading,
+  },
   intlState: { availableLocales },
   service,
   View,
@@ -97,7 +102,9 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
     (async () => {
       try {
         setLoading(true);
-        await Promise.all([getFeatureTypes(), getCategories()]);
+
+        getFeatureTypes();
+        getCategories();
 
         const category = id ? await service.getOneRawIntl(id) : undefined;
         if (category) {
@@ -174,7 +181,7 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
       edit={edit}
       error={error}
       isUpdating={isUpdating}
-      isLoading={isTimeoutExpired && isLoading}
+      isLoading={isTimeoutExpired && (isLoading || featureTypesLoading || categoriesLoading)}
       close={close}
       availableLocales={availableLocales}
       validate={(validator || { validate: undefined }).validate}

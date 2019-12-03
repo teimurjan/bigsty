@@ -42,14 +42,13 @@ export const CATEGORY_NAME_FIELD_KEY = 'name';
 export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
   intlState,
   history,
-  adminFeatureTypesState: { getFeatureTypes, featureTypes },
-  adminCategoriesState: { getCategories, categories, addCategory },
+  adminFeatureTypesState: { getFeatureTypes, featureTypes, isListLoading: featureTypesLoading },
+  adminCategoriesState: { getCategories, categories, addCategory, isListLoading: categoriesLoading },
   service,
   View,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isCreating, setCreating] = React.useState(false);
-  const [isLoading, setLoading] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
   const isTimeoutExpired = useTimeoutExpired(1000);
@@ -85,12 +84,9 @@ export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
   React.useEffect(() => {
     (async () => {
       try {
-        setLoading(true);
         await Promise.all([getFeatureTypes(), getCategories()]);
       } catch (e) {
         setPreloadingError('errors.common');
-      } finally {
-        setLoading(false);
       }
     })();
   }, [getCategories, getFeatureTypes]);
@@ -136,7 +132,7 @@ export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
       isOpen={true}
       create={create}
       error={error}
-      isLoading={isTimeoutExpired && isLoading}
+      isLoading={isTimeoutExpired && (featureTypesLoading || categoriesLoading)}
       isCreating={isCreating}
       close={close}
       availableLocales={intlState.availableLocales}

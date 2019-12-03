@@ -11,15 +11,10 @@ import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/A
 import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { IInjectedProp as TimeoutExpiredInjectedProp, withTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
-
-interface IState {
-  isCreating: boolean;
-  error: string | undefined;
-  validator?: schemaValidator.ISchemaValidator;
-}
+import { useLazy } from 'src/hooks/useLazy';
 
 export interface IProps
   extends RouteComponentProps<any>,
@@ -44,90 +39,50 @@ export interface IViewProps {
 
 export const FEATURE_VALUE_NAME_FIELD_KEY = 'name';
 
-export const AdminFeatureValuesCreatePresenter = withTimeoutExpired(
-  class extends React.Component<IProps & TimeoutExpiredInjectedProp, IState> {
-    public state = {
-      error: undefined,
-      isCreating: false,
-      validator: undefined,
-    };
+export const AdminFeatureValuesCreatePresenter: React.FC<IProps> = ({
+  intlState: { availableLocales },
+  adminFeatureTypesState: { getFeatureTypes, isListLoading: featureTypesLoading, featureTypes },
+  adminFeatureValuesState: { addFeatureValue },
+  View,
+  history,
+  service,
+}) => {
+  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [isCreating, setCreating] = React.useState(false);
 
-    public componentDidMount() {
-      const { intlState, adminFeatureTypesState } = this.props;
+  const isTimeoutExpired = useTimeoutExpired(1000);
 
-      if (intlState.availableLocales.length > 0) {
-        this.initValidator();
-      }
+  React.useEffect(() => {
+    getFeatureTypes();
+  }, [getFeatureTypes]);
 
-      adminFeatureTypesState.getFeatureTypes();
-    }
-
-    public componentDidUpdate(prevProps: IProps) {
-      const { intlState: newIntlState } = this.props;
-      const { intlState: oldIntlState } = prevProps;
-
-      if (newIntlState.availableLocales.length > 0 && oldIntlState.availableLocales.length === 0) {
-        this.initValidator();
-      }
-    }
-
-    public render() {
-      const { isCreating, error, validator } = this.state;
-      const {
-        View,
-        intlState: { availableLocales },
-        isTimeoutExpired,
-        adminFeatureTypesState: { featureTypes, isListLoading: featureTypesLoading },
-      } = this.props;
-
-      return (
-        <View
-          isOpen={true}
-          create={this.create}
-          error={error}
-          isCreating={isCreating}
-          isLoading={isTimeoutExpired && featureTypesLoading}
-          close={this.close}
-          availableLocales={availableLocales}
-          featureTypes={featureTypes}
-          validate={(validator || { validate: undefined }).validate}
-        />
-      );
-    }
-
-    private initValidator = () => {
-      const { validator } = this.state;
-      const { intlState } = this.props;
-
-      if (typeof validator === 'undefined') {
-        this.setState({
-          validator: new schemaValidator.SchemaValidator(
-            yup.object().shape(
-              intlState.availableLocales.reduce(
-                (acc, locale) => ({
-                  ...acc,
-                  [getFieldName(FEATURE_VALUE_NAME_FIELD_KEY, locale)]: yup
-                    .string()
-                    .required('common.errors.field.empty'),
-                }),
-                {
-                  feature_type_id: yup.number().required('common.errors.field.empty'),
-                },
-              ),
-            ),
+  const makeValidator = React.useCallback(
+    () =>
+      new schemaValidator.SchemaValidator(
+        yup.object().shape(
+          availableLocales.reduce(
+            (acc, locale) => ({
+              ...acc,
+              [getFieldName(FEATURE_VALUE_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
+            }),
+            {
+              feature_type_id: yup.number().required('common.errors.field.empty'),
+            },
           ),
-        });
-      }
-    };
+        ),
+      ),
+    [availableLocales],
+  );
 
-    private close = () => this.props.history.push('/admin/featureValues');
+  const validator = useLazy({
+    make: makeValidator,
+    trigger: availableLocales.length,
+  });
 
-    private create: IViewProps['create'] = async values => {
-      const {
-        service,
-        adminFeatureValuesState: { addFeatureValue },
-      } = this.props;
+  const close = React.useCallback(() => history.push('/admin/featureValues'), [history]);
 
+  const create: IViewProps['create'] = React.useCallback(
+    async values => {
       const formattedValues = Object.keys(values).reduce(
         (acc, fieldName) => {
           const { key, id } = parseFieldName(fieldName);
@@ -146,12 +101,27 @@ export const AdminFeatureValuesCreatePresenter = withTimeoutExpired(
       try {
         const featureValue = await service.create(formattedValues);
         addFeatureValue(featureValue);
-        this.close();
+        setCreating(false);
+        close();
       } catch (e) {
-        this.setState({ error: 'errors.common' });
-      } finally {
-        this.setState({ isCreating: false });
+        setError('errors.common');
+        setCreating(false);
       }
-    };
-  },
-);
+    },
+    [addFeatureValue, close, service],
+  );
+
+  return (
+    <View
+      isOpen={true}
+      create={create}
+      error={error}
+      isCreating={isCreating}
+      isLoading={isTimeoutExpired && featureTypesLoading}
+      close={close}
+      availableLocales={availableLocales}
+      featureTypes={featureTypes}
+      validate={(validator || { validate: undefined }).validate}
+    />
+  );
+};
