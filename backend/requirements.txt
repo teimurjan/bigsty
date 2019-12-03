@@ -5,7 +5,7 @@ bcrypt==3.1.7
 Cerberus==1.1
 cffi==1.11.2
 Click==7.0
-coverage==4.4.1
+coverage==4.5.4
 Flask==1.1.1
 Flask-Script==2.0.6
 gunicorn==19.9.0
