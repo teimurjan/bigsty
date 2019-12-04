@@ -1,78 +1,79 @@
 /** @jsx jsx */
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 import { css, jsx } from '@emotion/core';
-import classNames from 'classnames';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { useIntl, IntlShape } from 'react-intl';
 
-import logo from 'src/assets/images/logo.png';
-import { Button } from 'src/components/common/Button/Button';
-import { Container } from 'src/components/common/Container/Container';
-import { Dropdown, ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
-import { DropdownItemLink } from 'src/components/common/DropdownItemLink/DropdownItemLink';
-import { Navbar } from 'src/components/common/Navbar/Navbar';
-import { NavbarBrand } from 'src/components/common/NavbarBrand/NavbarBrand';
-import { NavbarBurger } from 'src/components/common/NavbarBurger/NavbarBurger';
-import { NavbarEnd } from 'src/components/common/NavbarEnd/NavbarEnd';
-import { NavbarItem } from 'src/components/common/NavbarItem/NavbarItem';
-import { NavbarMenu } from 'src/components/common/NavbarMenu/NavbarMenu';
-import { NavbarStart } from 'src/components/common/NavbarStart/NavbarStart';
+import { Menu } from 'src/components/common/Menu/Menu';
+import { ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
+
+import { fullWidthMixin } from 'src/styles/mixins';
 
 import { LanguageDropdownContainer as LanguageDropdown } from '../../LanguageDropdown/LanguageDropdownContainer';
+
 import { IViewProps as IProps } from './AdminHeaderPresenter';
 
-const DropdownTrigger = injectIntl(({ intl, className, ...props }: ITriggerProps & InjectedIntlProps) => (
-  <NavbarItem className={classNames('navbar-link is-uppercase', className)} {...props}>
-    {intl.formatMessage({ id: 'AdminMenu.modelsLabel' })}
-  </NavbarItem>
-));
+const LanguageDrodownTrigger = ({ onClick, ...props }: ITriggerProps) => {
+  const intl = useIntl();
 
-export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & InjectedIntlProps) => {
-  const [isOpen, setOpen] = React.useState(false);
+  const modifiedOnClick = React.useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
 
-  const toggleOpen = () => setOpen(!isOpen);
+      if (onClick) {
+        onClick(e);
+      }
+    },
+    [onClick],
+  );
 
   return (
-    <Navbar>
-      <Container>
-        <NavbarBrand>
-          <Link className="navbar-item" to="/">
-            <img
-              css={css`
-                max-height: 3rem !important;
-              `}
-              src={logo}
-            />
+    <Link css={fullWidthMixin} to="#" onClick={modifiedOnClick} {...props}>
+      {intl.formatMessage({ id: 'AdminMenu.changeLangaugeLinkText' })}
+    </Link>
+  );
+};
+
+export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlShape }) => {
+  return (
+    <Menu
+      css={css`
+        width: 100%;
+        height: 100vh;
+        padding: 3rem 1.5rem;
+      `}
+    >
+      <Menu.Label>{intl.formatMessage({ id: 'AdminMenu.modelsLabel' })}</Menu.Label>
+      <Menu.List>
+        <Menu.Item>
+          <NavLink to="/admin/categories" activeClassName="is-active">
+            {intl.formatMessage({ id: 'AdminMenu.categoriesLinkText' })}
+          </NavLink>
+        </Menu.Item>
+        <Menu.Item>
+          <NavLink to="/admin/featureTypes" activeClassName="is-active">
+            {intl.formatMessage({ id: 'AdminMenu.featureTypesLinkText' })}
+          </NavLink>
+        </Menu.Item>
+        <Menu.Item>
+          <NavLink to="/admin/featureValues" activeClassName="is-active">
+            {intl.formatMessage({ id: 'AdminMenu.featureValuesLinkText' })}
+          </NavLink>
+        </Menu.Item>
+      </Menu.List>
+
+      <Menu.Label>{intl.formatMessage({ id: 'AdminMenu.actionsLabel' })}</Menu.Label>
+      <Menu.List>
+        <Menu.Item>
+          <LanguageDropdown css={fullWidthMixin} Trigger={LanguageDrodownTrigger} />
+        </Menu.Item>
+        <Menu.Item>
+          <Link to="#" onClick={onLogOutClick}>
+            {intl.formatMessage({ id: 'AdminMenu.logoutLinkText' })}
           </Link>
-          <NavbarBurger isActive={isOpen} onClick={toggleOpen} />
-        </NavbarBrand>
-        <NavbarMenu isActive={isOpen}>
-          <NavbarStart>
-            <NavbarItem className="is-uppercase">
-              <Dropdown Trigger={DropdownTrigger}>
-                <DropdownItemLink to="/admin/categories">
-                  {intl.formatMessage({ id: 'AdminMenu.categoriesLinkText' })}
-                </DropdownItemLink>
-                <DropdownItemLink to="/admin/featureTypes">
-                  {intl.formatMessage({ id: 'AdminMenu.featureTypesLinkText' })}
-                </DropdownItemLink>
-                <DropdownItemLink to="/admin/featureValues">
-                  {intl.formatMessage({ id: 'AdminMenu.featureValuesLinkText' })}
-                </DropdownItemLink>
-              </Dropdown>
-            </NavbarItem>
-          </NavbarStart>
-          <NavbarEnd>
-            <LanguageDropdown />
-            <NavbarItem>
-              <Button onClick={onLogOutClick} color="is-info">
-                {intl.formatMessage({ id: 'Header.logOut' })}
-              </Button>
-            </NavbarItem>
-          </NavbarEnd>
-        </NavbarMenu>
-      </Container>
-    </Navbar>
+        </Menu.Item>
+      </Menu.List>
+    </Menu>
   );
 };

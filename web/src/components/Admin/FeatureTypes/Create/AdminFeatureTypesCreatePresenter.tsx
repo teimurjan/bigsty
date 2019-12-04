@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
+import { History } from 'history';
 import * as yup from 'yup';
 
 import { IFeatureTypeService } from 'src/services/FeatureTypeService';
@@ -9,12 +9,14 @@ import * as schemaValidator from 'src/components/SchemaValidator';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
 
-export interface IProps extends RouteComponentProps<any>, AdminFeatureTypesStateContextValue, IntlStateContextValue {
+import { getFieldName, parseFieldName } from '../../IntlField';
+
+export interface IProps extends AdminFeatureTypesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: IFeatureTypeService;
+  history: History;
 }
 
 export interface IViewProps {

@@ -18,7 +18,6 @@
     "importHelpers": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
     "typeRoots": ["node_modules/@types", "ttypes"]
   },
   "exclude": [

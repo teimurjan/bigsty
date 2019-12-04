@@ -1,26 +1,27 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
+import { History } from 'history';
 import * as yup from 'yup';
 
 import { IFeatureTypeService } from 'src/services/FeatureTypeService';
 
 import * as schemaValidator from 'src/components/SchemaValidator';
+
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { IFeatureTypeListRawIntlResponseItem } from 'src/api/FeatureTypeAPI';
+
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
-import { getNumberParam } from 'src/utils/url';
-import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
 
-export interface IProps
-  extends RouteComponentProps<{ id: string }>,
-    AdminFeatureTypesStateContextValue,
-    IntlStateContextValue {
+import { getFieldName, parseFieldName } from '../../IntlField';
+
+export interface IProps extends AdminFeatureTypesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: IFeatureTypeService;
+  featureTypeId: number;
+  history: History;
 }
 
 export interface IViewProps {
@@ -44,7 +45,7 @@ export const AdminFeatureTypesEditPresenter: React.FC<IProps> = ({
   history,
   service,
   adminFeatureTypesState: { setFeatureType: setFeatureTypeToState },
-  match,
+  featureTypeId,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
@@ -58,8 +59,7 @@ export const AdminFeatureTypesEditPresenter: React.FC<IProps> = ({
     (async () => {
       try {
         setLoading(true);
-        const id = getNumberParam(match, 'id');
-        const featureType = id ? await service.getOneRawIntl(id) : undefined;
+        const featureType = await service.getOneRawIntl(featureTypeId);
         if (featureType) {
           setFeatureType(featureType);
         } else {
@@ -71,7 +71,7 @@ export const AdminFeatureTypesEditPresenter: React.FC<IProps> = ({
         setLoading(false);
       }
     })();
-  }, [match, service]);
+  }, [featureTypeId, service]);
 
   const makeValidator = React.useCallback(
     () =>
@@ -111,8 +111,7 @@ export const AdminFeatureTypesEditPresenter: React.FC<IProps> = ({
     );
 
     try {
-      const id = getNumberParam(match, 'id');
-      const featureType = await service.edit(id as number, formattedValues);
+      const featureType = await service.edit(featureTypeId, formattedValues);
       setFeatureTypeToState(featureType);
       setUpdating(false);
       close();

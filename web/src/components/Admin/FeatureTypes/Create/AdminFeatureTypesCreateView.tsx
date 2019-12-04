@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { IntlField } from '../../IntlField';
 import { ModalForm } from '../../ModalForm';
@@ -11,7 +11,7 @@ interface IFieldsProps {
   availableLocales: IProps['availableLocales'];
 }
 
-const Fields = injectIntl(({ availableLocales, intl }: IFieldsProps & InjectedIntlProps) => (
+const Fields = injectIntl(({ availableLocales, intl }: IFieldsProps & { intl: IntlShape }) => (
   <IntlField
     key_={FEATURE_TYPE_NAME_FIELD_KEY}
     locales={availableLocales}
@@ -35,7 +35,7 @@ export const AdminFeatureTypesCreateView = ({
   intl,
   availableLocales,
   validate,
-}: IProps & InjectedIntlProps) => (
+}: IProps & { intl: IntlShape }) => (
   <ModalForm
     formID="adminFeatureTypesCreateForm"
     isOpen={isOpen}

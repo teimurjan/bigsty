@@ -1,22 +1,30 @@
 import * as React from 'react';
 
-import { withRouter } from 'react-router';
-
-import { injectAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
-import { injectIntlState } from 'src/state/IntlState';
-
+import { useHistory } from 'react-router';
 import { injectIntl } from 'react-intl';
-import { injectDependencies } from 'src/DI/DI';
-import { AdminFeatureTypesCreatePresenter, IProps } from './AdminFeatureTypesCreatePresenter';
+
+import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
+import { useIntlState } from 'src/state/IntlState';
+
+import { useDependencies } from 'src/DI/DI';
+
+import { AdminFeatureTypesCreatePresenter } from './AdminFeatureTypesCreatePresenter';
 import { AdminFeatureTypesCreateView } from './AdminFeatureTypesCreateView';
 
-const ConnectedAdminFeatureTypesCreatePresenter = injectIntlState(
-  injectAdminFeatureTypesState(withRouter<IProps>(AdminFeatureTypesCreatePresenter)),
-);
+export const AdminFeatureTypesCreateContainer = () => {
+  const history = useHistory();
 
-export const AdminFeatureTypesCreateContainer = injectDependencies(({ dependencies }) => (
-  <ConnectedAdminFeatureTypesCreatePresenter
-    View={injectIntl(AdminFeatureTypesCreateView)}
-    service={dependencies.services.featureType}
-  />
-));
+  const { dependencies } = useDependencies();
+  const { adminFeatureTypesState } = useAdminFeatureTypesState();
+  const { intlState } = useIntlState();
+
+  return (
+    <AdminFeatureTypesCreatePresenter
+      history={history}
+      View={injectIntl(AdminFeatureTypesCreateView)}
+      service={dependencies.services.featureType}
+      intlState={intlState}
+      adminFeatureTypesState={adminFeatureTypesState}
+    />
+  );
+};

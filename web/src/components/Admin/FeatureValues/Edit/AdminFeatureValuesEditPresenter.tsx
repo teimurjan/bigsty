@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
 import * as yup from 'yup';
+import { History } from 'history';
 
 import { IFeatureValueService } from 'src/services/FeatureValueService';
 
@@ -12,16 +12,18 @@ import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
+
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
-import { getNumberParam } from 'src/utils/url';
-import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
 
+import { getFieldName, parseFieldName } from '../../IntlField';
+
 export interface IProps
-  extends RouteComponentProps<{ id: string }>,
-    AdminFeatureTypesStateContextValue,
+  extends AdminFeatureTypesStateContextValue,
     AdminFeatureValuesStateContextValue,
     IntlStateContextValue {
+  featureValueId: number;
+  history: History;
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: IFeatureValueService;
 }
@@ -43,12 +45,12 @@ export interface IViewProps {
 export const FEATURE_VALUE_NAME_FIELD_KEY = 'name';
 
 export const AdminFeatureValuesEditPresenter: React.FC<IProps> = ({
+  featureValueId,
   intlState: { availableLocales },
   service,
   adminFeatureTypesState: { getFeatureTypes, isListLoading: featureTypesLoading, featureTypes },
   history,
   adminFeatureValuesState: { setFeatureValue: setFeatureValueToState },
-  match,
   View,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
@@ -63,8 +65,7 @@ export const AdminFeatureValuesEditPresenter: React.FC<IProps> = ({
     (async () => {
       try {
         setLoading(true);
-        const id = getNumberParam(match, 'id');
-        const featureValue = await service.getOneRawIntl(id!);
+        const featureValue = await service.getOneRawIntl(featureValueId);
         if (featureValue) {
           getFeatureTypes();
           setFeatureValue(featureValue);
@@ -77,7 +78,7 @@ export const AdminFeatureValuesEditPresenter: React.FC<IProps> = ({
         setLoading(false);
       }
     })();
-  }, [getFeatureTypes, match, service]);
+  }, [featureValueId, getFeatureTypes, service]);
 
   const makeValidator = React.useCallback(
     () =>
@@ -121,8 +122,7 @@ export const AdminFeatureValuesEditPresenter: React.FC<IProps> = ({
     );
 
     try {
-      const id = getNumberParam(match, 'id');
-      const featureValue = await service.edit(id as number, formattedValues);
+      const featureValue = await service.edit(featureValueId, formattedValues);
       setFeatureValueToState(featureValue);
       setUpdating(false);
       close();

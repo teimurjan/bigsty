@@ -1,23 +1,35 @@
 import * as React from 'react';
 
-import { withRouter } from 'react-router';
-
-import { injectAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
-import { injectAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
-import { injectIntlState } from 'src/state/IntlState';
-
+import { useHistory, useParams } from 'react-router';
 import { injectIntl } from 'react-intl';
-import { injectDependencies } from 'src/DI/DI';
-import { AdminFeatureValuesEditPresenter, IProps } from './AdminFeatureValuesEditPresenter';
+
+import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
+import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
+import { useIntlState } from 'src/state/IntlState';
+
+import { useDependencies } from 'src/DI/DI';
+
+import { AdminFeatureValuesEditPresenter } from './AdminFeatureValuesEditPresenter';
 import { AdminFeatureValuesEditView } from './AdminFeatureValuesEditView';
 
-const ConnectedAdminFeatureValuesEditPresenter = injectIntlState(
-  injectAdminFeatureTypesState(injectAdminFeatureValuesState(withRouter<IProps>(AdminFeatureValuesEditPresenter))),
-);
+export const AdminFeatureValuesEditContainer = () => {
+  const history = useHistory();
+  const params = useParams<{ id: string }>();
 
-export const AdminFeatureValuesEditContainer = injectDependencies(({ dependencies }) => (
-  <ConnectedAdminFeatureValuesEditPresenter
-    View={injectIntl(AdminFeatureValuesEditView)}
-    service={dependencies.services.featureValue}
-  />
-));
+  const { dependencies } = useDependencies();
+  const { adminFeatureTypesState } = useAdminFeatureTypesState();
+  const { adminFeatureValuesState } = useAdminFeatureValuesState();
+  const { intlState } = useIntlState();
+
+  return (
+    <AdminFeatureValuesEditPresenter
+      featureValueId={parseInt(params.id, 10)}
+      history={history}
+      View={injectIntl(AdminFeatureValuesEditView)}
+      service={dependencies.services.featureValue}
+      intlState={intlState}
+      adminFeatureTypesState={adminFeatureTypesState}
+      adminFeatureValuesState={adminFeatureValuesState}
+    />
+  );
+};

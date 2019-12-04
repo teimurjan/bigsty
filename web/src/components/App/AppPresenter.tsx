@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IContextValue as AppStateContextValue } from 'src/state/AppState';
 
 interface IProps extends AppStateContextValue {
-  View: React.ComponentClass<IViewProps>;
+  View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
 }
 
 export interface IViewProps {

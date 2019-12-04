@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Field, FieldRenderProps } from 'react-final-form';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { getMultipleValuesFromChangeEvent } from 'src/components/common/NativeSelect/NativeSelect';
@@ -17,7 +17,7 @@ interface IFeatureTypesSelectProps extends FieldRenderProps {
 }
 
 const FeatureTypesSelect = injectIntl(
-  ({ featureTypes, intl, input, meta }: IFeatureTypesSelectProps & InjectedIntlProps) => {
+  ({ featureTypes, intl, input, meta }: IFeatureTypesSelectProps & { intl: IntlShape }) => {
     const showError = meta.touched && meta.error;
 
     const { onChange: _, value, ...inputPropsToPass } = input;
@@ -65,7 +65,7 @@ interface IParentCategorySelectProps extends FieldRenderProps {
 }
 
 const ParentCategorySelect = injectIntl(
-  ({ categories, intl, input, meta }: IParentCategorySelectProps & InjectedIntlProps) => {
+  ({ categories, intl, input, meta }: IParentCategorySelectProps & { intl: IntlShape }) => {
     const showError = meta.touched && meta.error;
 
     return (
@@ -116,7 +116,7 @@ export interface IFieldsProps {
 }
 
 export const Fields = injectIntl(
-  ({ availableLocales, featureTypes, categories, intl, nameFieldKey }: IFieldsProps & InjectedIntlProps) => (
+  ({ availableLocales, featureTypes, categories, intl, nameFieldKey }: IFieldsProps & { intl: IntlShape }) => (
     <>
       <IntlField
         key_={nameFieldKey}

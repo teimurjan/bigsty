@@ -1,4 +1,7 @@
+/** @jsx jsx */
 import * as React from 'react';
+
+import { css, jsx } from '@emotion/core';
 
 import classNames from 'classnames';
 
@@ -24,7 +27,12 @@ export const Dropdown = ({ children, className, Trigger, ...props }: IProps) => 
 
   return (
     <div className={classNames('dropdown', className, { 'is-active': isOpen })} {...props}>
-      <div className="dropdown-trigger">
+      <div
+        css={css`
+          width: inherit;
+        `}
+        className="dropdown-trigger"
+      >
         <Trigger onClick={toggle} />
       </div>
       <div className="dropdown-menu" role="menu">

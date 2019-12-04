@@ -30,3 +30,12 @@ export interface IMenuListProps extends React.HTMLAttributes<HTMLUListElement> {
 Menu.List = ({ children, className }: IMenuListProps) => (
   <ul className={classNames('menu-list', className)}>{children}</ul>
 );
+
+export interface IMenuItemProps extends React.HTMLAttributes<HTMLLIElement> {
+  className?: string;
+  children?: React.ReactNode | HTMLCollection;
+}
+
+Menu.Item = ({ children, className }: IMenuListProps) => (
+  <li className={classNames('menu-item', className)}>{children}</li>
+);

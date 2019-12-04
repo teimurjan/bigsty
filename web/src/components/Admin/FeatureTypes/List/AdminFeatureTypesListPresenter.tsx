@@ -5,8 +5,8 @@ import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 
-export interface IProps {
-  View: React.ComponentClass<IViewProps>;
+export interface IProps extends AdminFeatureTypesContextValue, IntlStateContextValue {
+  View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
 }
 
 export interface IViewProps {
@@ -20,7 +20,7 @@ export const AdminFeatureTypesListPresenter = ({
   View,
   adminFeatureTypesState: { isListLoading, featureTypes, getFeatureTypes, hasListLoaded },
   intlState: { availableLocales },
-}: IProps & AdminFeatureTypesContextValue & IntlStateContextValue) => {
+}: IProps) => {
   const isLoadingTimeoutExpired = useTimeoutExpired(1000);
 
   React.useEffect(() => {

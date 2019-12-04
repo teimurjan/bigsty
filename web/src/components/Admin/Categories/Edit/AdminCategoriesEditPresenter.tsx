@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
+import { History } from 'history';
 import * as yup from 'yup';
 
 import * as schemaValidator from 'src/components/SchemaValidator';
@@ -13,19 +13,19 @@ import { ICategoryListRawIntlResponseItem } from 'src/api/CategoryAPI';
 
 import { ICategoryService } from 'src/services/CategoryService';
 
-import { getNumberParam } from 'src/utils/url';
-
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+
 import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
 
 export interface IProps
-  extends RouteComponentProps<any>,
-    AdminCategoriesStateContextValue,
+  extends AdminCategoriesStateContextValue,
     AdminFeatureTypesStateContextValue,
     IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: ICategoryService;
+  history: History;
+  categoryId: number;
 }
 
 export interface IViewProps {
@@ -58,7 +58,7 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
   intlState: { availableLocales },
   service,
   View,
-  match,
+  categoryId,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [category, setCategory] = React.useState<ICategoryListRawIntlResponseItem | undefined>(undefined);
@@ -96,8 +96,6 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
     trigger: availableLocales.length,
   });
 
-  const id = React.useMemo(() => getNumberParam(match, 'id'), [match]);
-
   React.useEffect(() => {
     (async () => {
       try {
@@ -106,7 +104,7 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
         getFeatureTypes();
         getCategories();
 
-        const category = id ? await service.getOneRawIntl(id) : undefined;
+        const category = await service.getOneRawIntl(categoryId);
         if (category) {
           setCategory(category);
         } else {
@@ -144,7 +142,7 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
       );
 
       try {
-        const category = await service.edit(id as number, formattedValues);
+        const category = await service.edit(categoryId, formattedValues);
         setCategoryToState(category);
         setUpdating(false);
         close();
@@ -153,7 +151,7 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
         setUpdating(false);
       }
     },
-    [close, id, service, setCategoryToState],
+    [categoryId, close, service, setCategoryToState],
   );
 
   const initialValues = React.useMemo(() => {
@@ -176,7 +174,7 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
 
   return (
     <View
-      categories={categories.filter(category => category.id !== id)}
+      categories={categories.filter(category => category.id !== categoryId)}
       isOpen={true}
       edit={edit}
       error={error}

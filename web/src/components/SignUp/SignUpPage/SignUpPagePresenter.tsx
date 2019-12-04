@@ -1,9 +1,12 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
+import { match } from 'react-router';
+import { History } from 'history';
 
-export interface IProps extends RouteComponentProps<any> {
-  View: React.ComponentClass<IViewProps>;
+export interface IProps {
+  View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
+  match: match | null;
+  history: History;
 }
 
 export interface IViewProps {
@@ -14,7 +17,7 @@ export interface IViewProps {
 export class SignUpPagePresenter extends React.Component<IProps> {
   public render() {
     const { View, match } = this.props;
-    return <View isOpen={match.isExact} onClose={this.close} />;
+    return <View isOpen={match ? match.isExact : false} onClose={this.close} />;
   }
 
   private close = () => {

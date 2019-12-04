@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
 import { Container } from 'src/components/common/Container/Container';
@@ -37,7 +37,7 @@ export const AdminFeatureValuesListView = ({
   intl,
   isLoading,
   isDataLoaded,
-}: IProps & InjectedIntlProps) => (
+}: IProps & { intl: IntlShape }) => (
   <Section>
     <Container>
       <AdminTable<FeatureValue>

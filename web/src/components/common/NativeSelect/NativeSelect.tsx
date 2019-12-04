@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
 import classNames from 'classnames';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { alignItemsCenterMixin, flexMixin } from 'src/styles/mixins';
@@ -28,7 +28,7 @@ export const NativeSelect = injectIntl(
     size,
     className,
     value,
-  }: IProps & InjectedIntlProps) => (
+  }: IProps & { intl: IntlShape }) => (
     <div
       css={css`
         ${flexMixin};

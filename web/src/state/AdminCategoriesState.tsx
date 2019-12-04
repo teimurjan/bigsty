@@ -1,10 +1,12 @@
 import * as React from 'react';
 
 import { ICategoryListRawIntlResponseItem } from 'src/api/CategoryAPI';
-import { injectDependencies } from 'src/DI/DI';
+
+import { useDependencies } from 'src/DI/DI';
+
 import { extendIntlTextWithLocaleNames } from 'src/helpers/intl';
-import { ICategoryService } from 'src/services/CategoryService';
-import { IContextValue as IntlStateContextValue, injectIntlState } from 'src/state/IntlState';
+
+import { useIntlState } from 'src/state/IntlState';
 
 export interface IContextValue {
   adminCategoriesState: {
@@ -23,125 +25,102 @@ const Context = React.createContext<IContextValue | null>(null);
 
 interface IProviderProps {
   children?: React.ReactNode;
-  service: ICategoryService;
 }
 
-interface IProviderState {
-  categories: { [key: string]: ICategoryListRawIntlResponseItem };
-  categoriesOrder: number[];
-  isListLoading: boolean;
-  listError: undefined | string;
-  hasListLoaded: boolean;
-}
+export const AdminCategoriesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
+  const {
+    intlState: { availableLocales },
+  } = useIntlState();
+  const {
+    dependencies: {
+      services: { category: service },
+    },
+  } = useDependencies();
 
-class Provider extends React.Component<IProviderProps & IntlStateContextValue, IProviderState> {
-  public state = {
-    categories: {},
-    categoriesOrder: [],
-    hasListLoaded: false,
-    isListLoading: false,
-    listError: undefined,
-  };
+  const [categories, setCategories] = React.useState<{ [key: string]: ICategoryListRawIntlResponseItem }>({});
+  const [categoriesOrder, setCategoriesOrder] = React.useState<number[]>([]);
+  const [isListLoading, setListLoading] = React.useState(false);
+  const [listError, setListError] = React.useState<undefined | string>(undefined);
+  const [hasListLoaded, setListLoaded] = React.useState(false);
 
-  public render() {
-    const { categories, categoriesOrder, isListLoading, listError, hasListLoaded } = this.state;
-    const {
-      children,
-      intlState: { availableLocales },
-    } = this.props;
-    const { getCategories, deleteCategory, addCategory, setCategory } = this;
-
-    return (
-      <Context.Provider
-        value={{
-          adminCategoriesState: {
-            addCategory,
-            categories: categoriesOrder.map(categoryId => {
-              const category: ICategoryListRawIntlResponseItem = categories[categoryId];
-
-              return {
-                ...category,
-                name: extendIntlTextWithLocaleNames(category.name, availableLocales),
-              };
-            }),
-            deleteCategory,
-            getCategories,
-            hasListLoaded,
-            isListLoading,
-            listError,
-            setCategory,
-          },
-        }}
-      >
-        {children}
-      </Context.Provider>
-    );
-  }
-
-  private getCategories = async () => {
-    const { service } = this.props;
-    this.setState({ isListLoading: true });
+  const getCategories = React.useCallback(async () => {
+    setListLoading(true);
     try {
       const { entities, result } = await service.getAllRawIntl();
-      this.setState({
-        categories: entities.categories,
-        categoriesOrder: result,
-        hasListLoaded: true,
-        isListLoading: false,
-      });
+      setCategories(entities.categories);
+      setCategoriesOrder(result);
     } catch (e) {
-      this.setState({
-        hasListLoaded: true,
-        isListLoading: false,
-        listError: 'errors.common',
-      });
+      setListError('errors.common');
+    } finally {
+      setListLoading(false);
+      setListLoaded(true);
     }
-  };
+  }, [service]);
 
-  private deleteCategory = (id: number) => {
-    const { categories, categoriesOrder } = this.state;
+  const addCategory = React.useCallback(
+    (category: ICategoryListRawIntlResponseItem) => {
+      const newCategories = {
+        ...categories,
+        [category.id]: category,
+      };
 
-    const newCategories = { ...categories };
-    delete newCategories[id];
+      const newCategoriesOrder = [...categoriesOrder, category.id];
 
-    this.setState({
-      categories: newCategories,
-      categoriesOrder: categoriesOrder.filter(idFromOrder => id !== idFromOrder),
-    });
-  };
+      setCategories(newCategories);
+      setCategoriesOrder(newCategoriesOrder);
+    },
+    [categories, categoriesOrder],
+  );
 
-  private addCategory = (category: ICategoryListRawIntlResponseItem) => {
-    const { categories, categoriesOrder } = this.state;
+  const setCategory = React.useCallback(
+    (category: ICategoryListRawIntlResponseItem) => {
+      const newCategories = {
+        ...categories,
+        [category.id]: category,
+      };
 
-    const newCategories = {
-      ...categories,
-      [category.id]: category,
-    };
+      setCategories(newCategories);
+    },
+    [categories],
+  );
 
-    this.setState({
-      categories: newCategories,
-      categoriesOrder: [...categoriesOrder, category.id],
-    });
-  };
+  const deleteCategory = React.useCallback(
+    (id: number) => {
+      const newCategories = { ...categories };
+      delete newCategories[id];
 
-  private setCategory = (category: ICategoryListRawIntlResponseItem) => {
-    const { categories } = this.state;
+      const newCategoriesOrder = categoriesOrder.filter(idFromOrder => idFromOrder !== id);
+      setCategories(newCategories);
+      setCategoriesOrder(newCategoriesOrder);
+    },
+    [categories, categoriesOrder],
+  );
 
-    const newCategories = {
-      ...categories,
-      [category.id]: category,
-    };
+  return (
+    <Context.Provider
+      value={{
+        adminCategoriesState: {
+          addCategory,
+          deleteCategory,
+          categories: categoriesOrder.map(categoryId => {
+            const category: ICategoryListRawIntlResponseItem = categories[categoryId];
 
-    this.setState({ categories: newCategories });
-  };
-}
+            return {
+              ...category,
+              name: extendIntlTextWithLocaleNames(category.name, availableLocales),
+            };
+          }),
+          getCategories,
+          hasListLoaded,
+          isListLoading,
+          listError,
+          setCategory,
+        },
+      }}
+    >
+      {children}
+    </Context.Provider>
+  );
+};
 
-export const AdminCategoriesStateProvider = injectIntlState(
-  injectDependencies(({ dependencies, ...props }) => <Provider {...props} service={dependencies.services.category} />),
-);
-
-export const injectAdminCategoriesState = (
-  Component: React.ComponentClass<IContextValue> | React.SFC<IContextValue>,
-): React.SFC<any> => props => (
-  <Context.Consumer>{(context: IContextValue) => <Component {...{ ...props, ...context }} />}</Context.Consumer>
-);
+export const useAdminCategoriesState = () => React.useContext(Context) as IContextValue;

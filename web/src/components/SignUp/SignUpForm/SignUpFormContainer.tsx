@@ -1,16 +1,26 @@
 import * as React from 'react';
 
 import { injectIntl } from 'react-intl';
-import { withRouter } from 'react-router';
 
-import { injectDependencies } from 'src/DI/DI';
-import { injectUserState } from 'src/state/UserState';
+import { useDependencies } from 'src/DI/DI';
+import { useUserState } from 'src/state/UserState';
 
-import { IProps, SignUpFormPresenter } from './SignUpFormPresenter';
+import { SignUpFormPresenter } from './SignUpFormPresenter';
 import { SignUpFormView } from './SignUpFormView';
+import { useHistory } from 'react-router';
 
-const ConnectedSignUpFormPresenter = injectUserState(withRouter<IProps>(SignUpFormPresenter));
+export const SignUpFormContainer = () => {
+  const history = useHistory();
 
-export const SignUpFormContainer = injectDependencies(({ dependencies }) => (
-  <ConnectedSignUpFormPresenter service={dependencies.services.auth} View={injectIntl(SignUpFormView)} />
-));
+  const { dependencies } = useDependencies();
+  const { userState } = useUserState();
+
+  return (
+    <SignUpFormPresenter
+      history={history}
+      userState={userState}
+      service={dependencies.services.auth}
+      View={injectIntl(SignUpFormView)}
+    />
+  );
+};

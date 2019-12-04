@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { Form, FormRenderProps } from 'react-final-form';
 
@@ -33,7 +33,7 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const ModalForm = injectIntl(
-  class extends React.Component<IProps & InjectedIntlProps> {
+  class extends React.Component<IProps & { intl: IntlShape }> {
     public render() {
       const { isOpen, onClose, onSubmit, validate, initialValues, preloadingError, intl } = this.props;
       return (

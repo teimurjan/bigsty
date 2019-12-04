@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 import { jsx } from '@emotion/core';
-import { InjectedIntlProps } from 'react-intl';
+import { IntlShape } from 'react-intl';
 
 import { Box } from 'src/components/common/Box/Box';
 import { Modal } from 'src/components/common/Modal/Modal';
@@ -15,7 +15,7 @@ import { textCenterMixin } from 'src/styles/mixins';
 import { SignUpFormContainer } from '../SignUpForm/SignUpFormContainer';
 import { IViewProps } from './SignUpPagePresenter';
 
-export class SignUpPageView extends React.Component<IViewProps & InjectedIntlProps> {
+export class SignUpPageView extends React.Component<IViewProps & { intl: IntlShape }> {
   public render() {
     const { intl, isOpen, onClose } = this.props;
     return (

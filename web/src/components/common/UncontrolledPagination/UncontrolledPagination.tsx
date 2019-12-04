@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { times } from 'lodash';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { Pagination } from 'src/components/common/Pagination/Pagination';
 import { PaginationLink } from 'src/components/common/PaginationLink/PaginationLink';
@@ -9,10 +9,11 @@ import { PaginationList } from 'src/components/common/PaginationList/PaginationL
 import { PaginationNext } from 'src/components/common/PaginationNext/PaginationNext';
 import { PaginationPrev } from 'src/components/common/PaginationPrev/PaginationPrev';
 
-export interface IProps extends React.HTMLAttributes<HTMLDivElement>, InjectedIntlProps {
+export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   length: number;
   initialIndex?: number;
   onPageChange?: (index: number) => any;
+  intl: IntlShape;
 }
 
 interface IState {

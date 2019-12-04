@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
+import { History } from 'history';
 import * as yup from 'yup';
 
 import { IFeatureValueService } from 'src/services/FeatureValueService';
@@ -12,17 +12,17 @@ import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
-
-import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
 
+import { getFieldName, parseFieldName } from '../../IntlField';
+
 export interface IProps
-  extends RouteComponentProps<any>,
-    AdminFeatureValuesStateContextValue,
+  extends AdminFeatureValuesStateContextValue,
     AdminFeatureTypesStateContextValue,
     IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: IFeatureValueService;
+  history: History;
 }
 
 export interface IViewProps {

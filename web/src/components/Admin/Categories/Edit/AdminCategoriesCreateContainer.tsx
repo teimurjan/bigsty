@@ -1,19 +1,35 @@
 import * as React from 'react';
 
-import { withRouter } from 'react-router';
+import { useHistory, useParams } from 'react-router';
+import { injectIntl } from 'react-intl';
 
-import { injectAdminCategoriesState } from 'src/state/AdminCategoriesState';
-import { injectIntlState } from 'src/state/IntlState';
+import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
+import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
+import { useIntlState } from 'src/state/IntlState';
 
-import { injectDependencies } from 'src/DI/DI';
-import { injectAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
-import { AdminCategoriesEditPresenter, IProps } from './AdminCategoriesEditPresenter';
+import { useDependencies } from 'src/DI/DI';
+
+import { AdminCategoriesEditPresenter } from './AdminCategoriesEditPresenter';
 import { AdminCategoriesEditView } from './AdminCategoriesEditView';
 
-const ConnectedAdminCategoriesEditPresenter = injectIntlState(
-  injectAdminFeatureTypesState(injectAdminCategoriesState(withRouter<IProps>(AdminCategoriesEditPresenter))),
-);
+export const AdminCategoriesEditContainer = () => {
+  const history = useHistory();
+  const params = useParams<{ id: string }>();
 
-export const AdminCategoriesEditContainer = injectDependencies(({ dependencies }) => (
-  <ConnectedAdminCategoriesEditPresenter View={AdminCategoriesEditView} service={dependencies.services.category} />
-));
+  const { dependencies } = useDependencies();
+  const { adminFeatureTypesState } = useAdminFeatureTypesState();
+  const { adminCategoriesState } = useAdminCategoriesState();
+  const { intlState } = useIntlState();
+
+  return (
+    <AdminCategoriesEditPresenter
+      categoryId={parseInt(params.id, 10)}
+      history={history}
+      View={injectIntl(AdminCategoriesEditView)}
+      service={dependencies.services.category}
+      intlState={intlState}
+      adminFeatureTypesState={adminFeatureTypesState}
+      adminCategoriesState={adminCategoriesState}
+    />
+  );
+};

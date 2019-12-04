@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { Redirect, Route } from 'react-router';
+import { Redirect, Route, RouteProps } from 'react-router';
 
 import { isUserAdmin, isUserNotSetYet } from 'src/helpers/user';
 
-import { IContextValue as UserStateContextValue, injectUserState, User } from 'src/state/UserState';
+import { useUserState, User } from 'src/state/UserState';
 
 interface IGetRendererArgs<P> {
   Component: React.ComponentClass<P> | React.SFC<P>;
@@ -18,8 +18,10 @@ interface IProps {
   component: React.ComponentClass<any> | React.SFC<any>;
 }
 
-export const PrivateRoute = injectUserState(
-  ({ component: Component, userState, ...rest }: IProps & UserStateContextValue) => (
+export const PrivateRoute: React.SFC<IProps & RouteProps> = ({ component: Component, ...rest }) => {
+  const { userState } = useUserState();
+
+  return (
     <Route
       {...rest}
       render={getComponentRenderer({
@@ -27,5 +29,5 @@ export const PrivateRoute = injectUserState(
         user: userState.user,
       })}
     />
-  ),
-);
+  );
+};

@@ -27,6 +27,6 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     'react/jsx-uses-react': 'error',
-    'react/jsx-uses-vars': 'error',
+    'react/jsx-uses-vars': 'error'
   },
 };

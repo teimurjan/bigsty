@@ -1,16 +1,21 @@
 import * as React from 'react';
-import { withRouter } from 'react-router';
 
-import { injectDependencies } from 'src/DI/DI';
+import { useParams } from 'react-router';
+
+import { useDependencies } from 'src/DI/DI';
 
 import { ProductTypesListView } from '../ProductTypesList/ProductTypesListView';
 import { ProductTypesPagePresenter } from './ProductTypesPagePresenter';
 
-const ConnectedProductTypesPagePresenter = withRouter(ProductTypesPagePresenter);
+export const ProductTypesPageContainer = () => {
+  const { dependencies } = useDependencies();
+  const { categoryId } = useParams<{ categoryId: string }>();
 
-export const ProductTypesPageContainer = injectDependencies(({ dependencies }) => (
-  <ConnectedProductTypesPagePresenter
-    productTypeService={dependencies.services.productType}
-    ListView={ProductTypesListView}
-  />
-));
+  return (
+    <ProductTypesPagePresenter
+      categoryId={parseInt(categoryId, 10)}
+      productTypeService={dependencies.services.productType}
+      ListView={ProductTypesListView}
+    />
+  );
+};

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Field, FieldRenderProps } from 'react-final-form';
-import { InjectedIntl, InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { IIntlListResponseItem } from 'src/api/IntlAPI';
 import { FormTextField } from '../common/FormTextField/FormTextField';
@@ -28,7 +28,7 @@ interface IIntlFieldRendererProps {
   label: string;
   placeholder: string;
   locale: IIntlListResponseItem;
-  intl: InjectedIntl;
+  intl: IntlShape;
   defaultValue?: string;
 }
 
@@ -61,7 +61,7 @@ const getIntlFieldRenderer = ({ label, placeholder, locale, intl }: IIntlFieldRe
   );
 };
 
-export const IntlField = injectIntl(({ key_, label, placeholder, locales, intl }: IProps & InjectedIntlProps) => (
+export const IntlField = injectIntl(({ key_, label, placeholder, locales, intl }: IProps & { intl: IntlShape }) => (
   <>
     {locales.map(locale => (
       <Field

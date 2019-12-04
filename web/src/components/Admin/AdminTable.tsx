@@ -6,12 +6,10 @@ import { css, jsx } from '@emotion/core';
 import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import { InjectedIntlProps } from 'react-intl';
+import { IntlShape } from 'react-intl';
 
-import { Container } from 'src/components/common/Container/Container';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { Section } from 'src/components/common/Section/Section';
 import { Table } from 'src/components/common/Table/Table';
 
 import { textCenterMixin } from 'src/styles/mixins';
@@ -93,70 +91,68 @@ export const AdminTable = <T extends { id: number }>({
   children,
   intl,
   pathPrefix,
-}: IProps<T> & InjectedIntlProps) => (
-  <Section>
-    <Container>
-      {isLoading && <LoaderLayout />}
-      {entities.length === 0 && isDataLoaded && renderNoData()}
-      {entities.length > 0 && (
-        <Table className={classNames('is-bordered', 'is-striped', 'is-narrow', 'is-hoverable', 'is-fullwidth')}>
-          <Table.Head>
-            <Table.Row>
-              {React.Children.map(children, ({ props: { title, key_, renderer } }) =>
-                (renderer || defaultRenderer).renderHeader(title, {
-                  colKey: key_ as string,
-                  componentKey: `head-cell-${key_}`,
-                }),
-              )}
-              <Table.HeadCell key="head-cell-actions">{intl.formatMessage({ id: 'common.actions' })}</Table.HeadCell>
-            </Table.Row>
-            <Table.Row>
+}: IProps<T> & { intl: IntlShape }) => (
+  <React.Fragment>
+    {isLoading && <LoaderLayout />}
+    {entities.length === 0 && isDataLoaded && renderNoData()}
+    {entities.length > 0 && (
+      <Table className={classNames('is-bordered', 'is-striped', 'is-narrow', 'is-hoverable', 'is-fullwidth')}>
+        <Table.Head>
+          <Table.Row>
+            {React.Children.map(children, ({ props: { title, key_, renderer } }) =>
+              (renderer || defaultRenderer).renderHeader(title, {
+                colKey: key_ as string,
+                componentKey: `head-cell-${key_}`,
+              }),
+            )}
+            <Table.HeadCell key="head-cell-actions">{intl.formatMessage({ id: 'common.actions' })}</Table.HeadCell>
+          </Table.Row>
+          <Table.Row>
+            {React.Children.map(children, ({ props: { key_, renderer } }) =>
+              (renderer || defaultRenderer).renderSubheader({
+                colKey: key_ as string,
+                componentKey: `sub-head-cell-${key_}`,
+              }),
+            )}
+            <Table.HeadCell key="sub-head-cell-actions" />
+          </Table.Row>
+        </Table.Head>
+        <Table.Body>
+          {entities.map(entity => (
+            <Table.Row key={entity.id}>
               {React.Children.map(children, ({ props: { key_, renderer } }) =>
-                (renderer || defaultRenderer).renderSubheader({
+                (renderer || defaultRenderer).renderEntity(entity, {
                   colKey: key_ as string,
-                  componentKey: `sub-head-cell-${key_}`,
+                  componentKey: `table-cell-${key_}-${entity.id}`,
                 }),
               )}
-              <Table.HeadCell key="sub-head-cell-actions" />
-            </Table.Row>
-          </Table.Head>
-          <Table.Body>
-            {entities.map(entity => (
-              <Table.Row key={entity.id}>
-                {React.Children.map(children, ({ props: { key_, renderer } }) =>
-                  (renderer || defaultRenderer).renderEntity(entity, {
-                    colKey: key_ as string,
-                    componentKey: `table-cell-${key_}-${entity.id}`,
-                  }),
-                )}
 
-                <Table.Cell
-                  key={`table-cell-${entity.id}`}
+              <Table.Cell
+                key={`table-cell-${entity.id}`}
+                css={css`
+                  ${textCenterMixin};
+                  width: 15%;
+                `}
+              >
+                <LinkButton
+                  to={`${pathPrefix}/edit/${entity.id}`}
                   css={css`
-                    ${textCenterMixin};
-                    width: 15%;
+                    margin-right: 0.5rem;
                   `}
+                  color="is-info"
                 >
-                  <LinkButton
-                    to={`${pathPrefix}/edit/${entity.id}`}
-                    css={css`
-                      margin-right: 0.5rem;
-                    `}
-                    color="is-info"
-                  >
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                  </LinkButton>
-                  <LinkButton to={`${pathPrefix}/delete/${entity.id}`} color="is-danger">
-                    <FontAwesomeIcon icon={faTrashAlt} />
-                  </LinkButton>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-      )}
-    </Container>
-  </Section>
+                  <FontAwesomeIcon icon={faPencilAlt} />
+                </LinkButton>
+                <LinkButton to={`${pathPrefix}/delete/${entity.id}`} color="is-danger">
+                  <FontAwesomeIcon icon={faTrashAlt} />
+                </LinkButton>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    )}
+  </React.Fragment>
 );
 
 AdminTable.Col = AdminTableCol;

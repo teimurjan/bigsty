@@ -2,9 +2,10 @@ import * as React from 'react';
 
 import { IIntlService } from 'src/services/IntlService';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
+import { IProps as IDropdownProps } from 'src/components/common/Dropdown/Dropdown';
 
-export interface IProps extends IntlStateContextValue {
-  View: React.ComponentClass<IViewProps>;
+interface IProps extends IntlStateContextValue {
+  View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   intlService: IIntlService;
 }
 
@@ -12,9 +13,16 @@ export interface IViewProps {
   locales: string[];
   changeLocale: IIntlService['setLocale'];
   currentLocale: string;
+  Trigger?: IDropdownProps['Trigger'];
+  className?: string;
 }
 
-export const LanguageDropdownPresenter = ({ View, intlState: { availableLocales, locale }, intlService }: IProps) => {
+export const LanguageDropdownPresenter = ({
+  View,
+  intlState: { availableLocales, locale },
+  intlService,
+  ...viewProps
+}: IProps) => {
   const changeLocale = React.useCallback(
     (newLocale: string) => {
       intlService.setLocale(newLocale);
@@ -23,5 +31,12 @@ export const LanguageDropdownPresenter = ({ View, intlState: { availableLocales,
     [intlService],
   );
 
-  return <View locales={availableLocales.map(({ name }) => name)} changeLocale={changeLocale} currentLocale={locale} />;
+  return (
+    <View
+      locales={availableLocales.map(({ name }) => name)}
+      changeLocale={changeLocale}
+      currentLocale={locale}
+      {...viewProps}
+    />
+  );
 };

@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { InjectedIntlProps } from 'react-intl';
+import { IntlShape } from 'react-intl';
 
 import { Box } from 'src/components/common/Box/Box';
 import { Modal } from 'src/components/common/Modal/Modal';
@@ -13,7 +13,7 @@ import { textCenterMixin } from 'src/styles/mixins';
 import { LoginFormContainer } from '../LoginForm/LoginFormContainer';
 import { IViewProps as IProps } from './LoginPagePresenter';
 
-export const LoginPageView = ({ intl, isOpen, onClose }: IProps & InjectedIntlProps) => (
+export const LoginPageView = ({ intl, isOpen, onClose }: IProps & { intl: IntlShape }) => (
   <Modal isOpen={isOpen}>
     <ModalBackground />
     <ModalContent>

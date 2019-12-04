@@ -6,7 +6,7 @@ import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 
 export interface IProps {
-  View: React.ComponentClass<IViewProps>;
+  View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
 }
 
 export interface IViewProps {

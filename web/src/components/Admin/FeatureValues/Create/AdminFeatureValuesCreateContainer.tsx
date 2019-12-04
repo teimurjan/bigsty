@@ -1,23 +1,33 @@
 import * as React from 'react';
 
-import { withRouter } from 'react-router';
-
-import { injectAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
-import { injectAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
-import { injectIntlState } from 'src/state/IntlState';
-
+import { useHistory } from 'react-router';
 import { injectIntl } from 'react-intl';
-import { injectDependencies } from 'src/DI/DI';
-import { AdminFeatureValuesCreatePresenter, IProps } from './AdminFeatureValuesCreatePresenter';
+
+import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
+import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
+import { useIntlState } from 'src/state/IntlState';
+
+import { useDependencies } from 'src/DI/DI';
+
+import { AdminFeatureValuesCreatePresenter } from './AdminFeatureValuesCreatePresenter';
 import { AdminFeatureValuesCreateView } from './AdminFeatureValuesCreateView';
 
-const ConnectedAdminFeatureValuesCreatePresenter = injectIntlState(
-  injectAdminFeatureTypesState(injectAdminFeatureValuesState(withRouter<IProps>(AdminFeatureValuesCreatePresenter))),
-);
+export const AdminFeatureValuesCreateContainer = () => {
+  const history = useHistory();
 
-export const AdminFeatureValuesCreateContainer = injectDependencies(({ dependencies }) => (
-  <ConnectedAdminFeatureValuesCreatePresenter
-    View={injectIntl(AdminFeatureValuesCreateView)}
-    service={dependencies.services.featureValue}
-  />
-));
+  const { dependencies } = useDependencies();
+  const { adminFeatureTypesState } = useAdminFeatureTypesState();
+  const { adminFeatureValuesState } = useAdminFeatureValuesState();
+  const { intlState } = useIntlState();
+
+  return (
+    <AdminFeatureValuesCreatePresenter
+      history={history}
+      View={injectIntl(AdminFeatureValuesCreateView)}
+      service={dependencies.services.featureValue}
+      intlState={intlState}
+      adminFeatureTypesState={adminFeatureTypesState}
+      adminFeatureValuesState={adminFeatureValuesState}
+    />
+  );
+};

@@ -1,26 +1,28 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
+import { History } from 'history';
 import * as yup from 'yup';
 
 import * as schemaValidator from 'src/components/SchemaValidator';
 
 import { ICategoryService } from 'src/services/CategoryService';
+
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
-import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
 
+import { getFieldName, parseFieldName } from '../../IntlField';
+
 export interface IProps
-  extends RouteComponentProps<{}>,
-    AdminCategoriesStateContextValue,
+  extends AdminCategoriesStateContextValue,
     AdminFeatureTypesStateContextValue,
     IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: ICategoryService;
+  history: History;
 }
 
 export interface IViewProps {

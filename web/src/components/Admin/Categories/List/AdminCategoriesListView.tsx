@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { Container } from 'src/components/common/Container/Container';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
@@ -40,7 +40,7 @@ export const AdminCategoriesListView = ({
   intl,
   isLoading,
   isDataLoaded,
-}: IProps & InjectedIntlProps) => (
+}: IProps & { intl: IntlShape }) => (
   <Section>
     <Container>
       <AdminTable<Category>

@@ -28,6 +28,10 @@ export const alignItemsCenterMixin = css`
   align-items: center;
 `;
 
+export const alignItemsFlexStartMixin = css`
+  align-items: flex-start;
+`;
+
 export const justifyContentCenterMixin = css`
   justify-content: center;
 `;

@@ -1,11 +1,12 @@
 import * as React from 'react';
-
 import { injectIntl } from 'react-intl';
-import { withRouter } from 'react-router';
-
-import { IProps, SignUpPagePresenter } from './SignUpPagePresenter';
+import { useHistory, useRouteMatch } from 'react-router';
+import { SignUpPagePresenter } from './SignUpPagePresenter';
 import { SignUpPageView } from './SignUpPageView';
 
-const ConnectedSignUpPagePresenter = withRouter<IProps>(SignUpPagePresenter);
+export const SignUpPageContainer = () => {
+  const history = useHistory();
+  const match = useRouteMatch();
 
-export const SignUpPageContainer = () => <ConnectedSignUpPagePresenter View={injectIntl(SignUpPageView)} />;
+  return <SignUpPagePresenter history={history} match={match} View={injectIntl(SignUpPageView)} />;
+};

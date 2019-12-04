@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import classNames from 'classnames';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { Column } from 'src/components/common/Column/Column';
 import { Columns } from 'src/components/common/Columns/Columns';
@@ -14,7 +14,7 @@ import { ProductTypeCard } from 'src/components/ProductType/ProductTypeCard/Prod
 import { IListViewProps as IProps } from 'src/components/ProductType/ProducTypesPage/ProductTypesPagePresenter';
 
 export const ProductTypesListView = injectIntl(
-  class extends React.Component<IProps & InjectedIntlProps> {
+  class extends React.Component<IProps & { intl: IntlShape }> {
     public render() {
       return (
         <Section>

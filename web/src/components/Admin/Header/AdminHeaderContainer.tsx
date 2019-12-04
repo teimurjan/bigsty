@@ -2,12 +2,15 @@ import * as React from 'react';
 
 import { injectIntl } from 'react-intl';
 
-import { injectAppState } from 'src/state/AppState';
-import { injectUserState } from 'src/state/UserState';
+import { useAppState } from 'src/state/AppState';
+import { useUserState } from 'src/state/UserState';
 
 import { AdminHeaderPresenter } from './AdminHeaderPresenter';
 import { AdminHeaderView } from './AdminHeaderView';
 
-const ConnectedAdminHeaderPresenter = injectUserState(injectAppState(AdminHeaderPresenter));
+export const AdminHeaderContainer = () => {
+  const { appState } = useAppState();
+  const { userState } = useUserState();
 
-export const AdminHeaderContainer = () => <ConnectedAdminHeaderPresenter View={injectIntl(AdminHeaderView)} />;
+  return <AdminHeaderPresenter View={injectIntl(AdminHeaderView)} appState={appState} userState={userState} />;
+};

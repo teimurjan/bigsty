@@ -1,15 +1,18 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
 import * as yup from 'yup';
+import { History } from 'history';
 
 import * as schemaValidator from 'src/components/SchemaValidator';
+
 import * as authService from 'src/services/AuthService';
+
 import { IContextValue as UserStateContextValue } from 'src/state/UserState';
 
-export interface IProps extends RouteComponentProps<any>, UserStateContextValue {
+export interface IProps extends UserStateContextValue {
   service: authService.IAuthService;
-  View: React.ComponentClass<IViewProps>;
+  View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
+  history: History;
 }
 
 export interface IViewProps {

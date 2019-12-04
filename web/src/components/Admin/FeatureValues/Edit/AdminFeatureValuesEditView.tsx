@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { InjectedIntlProps } from 'react-intl';
+import { IntlShape } from 'react-intl';
 
 import { ModalForm } from '../../ModalForm';
 import { Fields, IFieldsProps } from '../Create/Fields';
@@ -22,7 +22,7 @@ export const AdminFeatureValuesEditView = ({
   validate,
   preloadingError,
   featureTypes,
-}: IProps & InjectedIntlProps) => (
+}: IProps & { intl: IntlShape }) => (
   <ModalForm
     formID="adminFeatureValuesEditForm"
     isOpen={isOpen}

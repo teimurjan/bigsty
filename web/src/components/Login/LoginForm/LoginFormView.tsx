@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { jsx } from '@emotion/core';
 import { Field, FieldRenderProps, Form, FormRenderProps } from 'react-final-form';
-import { InjectedIntlProps } from 'react-intl';
+import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import { textCenterMixin } from 'src/styles/mixins';
@@ -14,7 +14,7 @@ import { HelpText } from 'src/components/common/HelpText/HelpText';
 
 import { IViewProps as IProps } from './LoginFormPresenter';
 
-export class LoginFormView extends React.Component<IProps & InjectedIntlProps> {
+export class LoginFormView extends React.Component<IProps & { intl: IntlShape }> {
   public render() {
     const { onSubmit, validate } = this.props;
     return <Form validate={validate} onSubmit={onSubmit} render={this.renderInnerForm} />;

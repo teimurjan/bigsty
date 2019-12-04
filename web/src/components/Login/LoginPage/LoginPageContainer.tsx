@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
-import { withRouter } from 'react-router';
-import { IProps, LoginPagePresenter } from './LoginPagePresenter';
+import { useHistory, useRouteMatch } from 'react-router';
+import { LoginPagePresenter } from './LoginPagePresenter';
 import { LoginPageView } from './LoginPageView';
 
-const ConnectedLoginPagePresenter = withRouter<IProps>(LoginPagePresenter);
+export const LoginPageContainer = () => {
+  const history = useHistory();
+  const match = useRouteMatch();
 
-export const LoginPageContainer = () => <ConnectedLoginPagePresenter View={injectIntl(LoginPageView)} />;
+  return <LoginPagePresenter history={history} match={match} View={injectIntl(LoginPageView)} />;
+};

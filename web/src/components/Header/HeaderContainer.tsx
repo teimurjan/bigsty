@@ -2,15 +2,24 @@ import * as React from 'react';
 
 import { injectIntl } from 'react-intl';
 
-import { injectDependencies } from 'src/DI/DI';
-import { injectAppState } from 'src/state/AppState';
-import { injectUserState } from 'src/state/UserState';
+import { useDependencies } from 'src/DI/DI';
+import { useAppState } from 'src/state/AppState';
+import { useUserState } from 'src/state/UserState';
 
 import { HeaderPresenter } from './HeaderPresenter';
 import { HeaderView } from './HeaderView';
 
-const ConnectedHeaderPresenter = injectUserState(injectAppState(HeaderPresenter));
+export const HeaderContainer = () => {
+  const { dependencies } = useDependencies();
+  const { appState } = useAppState();
+  const { userState } = useUserState();
 
-export const HeaderContainer = injectDependencies(({ dependencies }) => (
-  <ConnectedHeaderPresenter categoryService={dependencies.services.category} View={injectIntl(HeaderView)} />
-));
+  return (
+    <HeaderPresenter
+      appState={appState}
+      userState={userState}
+      categoryService={dependencies.services.category}
+      View={injectIntl(HeaderView)}
+    />
+  );
+};

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { css, jsx } from '@emotion/core';
 import classNames from 'classnames';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import logo from 'src/assets/images/logo.png';
 import { Button } from 'src/components/common/Button/Button';
@@ -25,7 +25,7 @@ import { isUserAdmin } from 'src/helpers/user';
 import { LanguageDropdownContainer as LanguageDropdown } from '../LanguageDropdown/LanguageDropdownContainer';
 import { IViewProps as IProps } from './HeaderPresenter';
 
-const DropdownTrigger = injectIntl(({ intl, className, ...props }: ITriggerProps & InjectedIntlProps) => (
+const DropdownTrigger = injectIntl(({ intl, className, ...props }: ITriggerProps & { intl: IntlShape }) => (
   <NavbarItem className={classNames('navbar-link is-uppercase', className)} {...props}>
     {intl.formatMessage({ id: 'Header.categories.title' })}
   </NavbarItem>
@@ -40,7 +40,7 @@ const renderCategories = (categories: IProps['categories']): React.ReactNode =>
       </DropdownItemLink>
     ));
 
-export const HeaderView = ({ categories, user, intl, onLogOutClick }: IProps & InjectedIntlProps) => {
+export const HeaderView = ({ categories, user, intl, onLogOutClick }: IProps & { intl: IntlShape }) => {
   const [isOpen, setOpen] = React.useState(false);
 
   const toggleOpen = () => setOpen(!isOpen);
@@ -66,7 +66,9 @@ export const HeaderView = ({ categories, user, intl, onLogOutClick }: IProps & I
             </NavbarItem>
           </NavbarStart>
           <NavbarEnd>
-            <LanguageDropdown />
+            <NavbarItem className={classNames('navbar-link is-uppercase is-arrowless')}>
+              <LanguageDropdown />
+            </NavbarItem>
             <NavbarItem>
               {user ? (
                 <div className="buttons">

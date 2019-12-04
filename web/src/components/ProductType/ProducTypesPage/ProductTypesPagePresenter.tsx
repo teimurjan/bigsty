@@ -1,13 +1,12 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
-
 import { IProductTypeListResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
 import { IProductTypeService } from 'src/services/ProductTypeService';
 
-export interface IProps extends RouteComponentProps<{ categoryId: string }> {
-  ListView: React.ComponentClass<IListViewProps>;
+export interface IProps {
+  ListView: React.ComponentClass<IListViewProps> | React.SFC<IListViewProps>;
   productTypeService: IProductTypeService;
+  categoryId: number;
 }
 
 interface IState {
@@ -39,7 +38,7 @@ export class ProductTypesPagePresenter extends React.Component<IProps, IState> {
   }
 
   public componentDidUpdate(prevProps: IProps) {
-    const isNewCategory = prevProps.match.params.categoryId !== this.props.match.params.categoryId;
+    const isNewCategory = prevProps.categoryId !== this.props.categoryId;
     if (isNewCategory) {
       this.getProductTypes();
     }
@@ -62,11 +61,8 @@ export class ProductTypesPagePresenter extends React.Component<IProps, IState> {
   private getProductTypes = async () => {
     this.startLoading();
     try {
-      const { productTypeService, match } = this.props;
-      const { entities, result, meta } = await productTypeService.getForCategory(
-        parseInt(match.params.categoryId, 10),
-        1,
-      );
+      const { productTypeService, categoryId } = this.props;
+      const { entities, result, meta } = await productTypeService.getForCategory(categoryId, 1);
       this.setState({
         productTypes: entities.productTypes,
         productTypesMeta: meta,

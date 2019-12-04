@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { InjectedIntlProps } from 'react-intl';
+import { IntlShape } from 'react-intl';
 
 import { Button } from 'src/components/common/Button/Button';
 import { Message } from 'src/components/common/Message/Message';
@@ -19,7 +19,7 @@ export const DeleteModalView = ({
   isLoading = false,
   error,
   ...props
-}: IProps & InjectedIntlProps) => {
+}: IProps & { intl: IntlShape }) => {
   const onConfirmClick = React.useCallback((e: React.SyntheticEvent) => onConfirm(), [onConfirm]);
 
   return (

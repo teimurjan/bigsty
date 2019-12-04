@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { InjectedIntlProps } from 'react-intl';
+import { IntlShape } from 'react-intl';
 
 import { ModalForm } from '../../ModalForm';
 
@@ -20,7 +20,7 @@ export const AdminFeatureValuesCreateView = ({
   availableLocales,
   featureTypes,
   validate,
-}: IProps & InjectedIntlProps) => (
+}: IProps & { intl: IntlShape }) => (
   <ModalForm
     formID="adminFeatureValuesCreateForm"
     isOpen={isOpen}

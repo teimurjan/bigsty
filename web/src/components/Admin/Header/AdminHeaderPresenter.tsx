@@ -4,7 +4,7 @@ import { IContextValue as AppStateContextValue } from 'src/state/AppState';
 import { IContextValue as UserStateContextValue } from 'src/state/UserState';
 
 export interface IProps extends UserStateContextValue, AppStateContextValue {
-  View: React.ComponentClass<IViewProps>;
+  View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
 }
 
 export interface IViewProps {

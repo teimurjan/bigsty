@@ -2,14 +2,21 @@ import * as React from 'react';
 
 import { injectIntl } from 'react-intl';
 
-import { injectIntlState } from 'src/state/IntlState';
+import { useIntlState } from 'src/state/IntlState';
+import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 
-import { injectAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 import { AdminFeatureTypesListPresenter } from './AdminFeatureTypesListPresenter';
 import { AdminFeatureTypesListView } from './AdminFeatureTypesListView';
 
-const ConnectedAdminFeatureTypesListPresenter = injectIntlState(AdminFeatureTypesListPresenter);
+export const AdminFeatureTypesListContainer = () => {
+  const { adminFeatureTypesState } = useAdminFeatureTypesState();
+  const { intlState } = useIntlState();
 
-export const AdminFeatureTypesListContainer = injectAdminFeatureTypesState(props => (
-  <ConnectedAdminFeatureTypesListPresenter View={injectIntl(AdminFeatureTypesListView)} {...props} />
-));
+  return (
+    <AdminFeatureTypesListPresenter
+      View={injectIntl(AdminFeatureTypesListView)}
+      adminFeatureTypesState={adminFeatureTypesState}
+      intlState={intlState}
+    />
+  );
+};

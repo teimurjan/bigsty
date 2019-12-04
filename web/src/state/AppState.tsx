@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { useBoolean } from 'src/hooks/useBoolean';
 
 export interface IContextValue {
@@ -9,7 +10,7 @@ export interface IContextValue {
   };
 }
 
-const { Provider, Consumer } = React.createContext<IContextValue | null>(null);
+const Context = React.createContext<IContextValue | null>(null);
 
 interface IProviderProps {
   children: React.ReactNode;
@@ -19,7 +20,7 @@ export const AppStateProvider: React.FC<IProviderProps> = ({ children }) => {
   const { value: isLoading, setPositive: setLoading, setNegative: setIdle } = useBoolean();
 
   return (
-    <Provider
+    <Context.Provider
       value={{
         appState: {
           isLoading,
@@ -29,12 +30,8 @@ export const AppStateProvider: React.FC<IProviderProps> = ({ children }) => {
       }}
     >
       {children}
-    </Provider>
+    </Context.Provider>
   );
 };
 
-export const injectAppState = (
-  Component: React.ComponentClass<IContextValue> | React.StatelessComponent<IContextValue>,
-): React.SFC<any> => props => (
-  <Consumer>{(context: IContextValue) => <Component {...{ ...props, ...context }} />}</Consumer>
-);
+export const useAppState = () => React.useContext(Context) as IContextValue;

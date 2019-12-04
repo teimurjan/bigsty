@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Field, FieldRenderProps } from 'react-final-form';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl } from 'react-intl';
 
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
@@ -20,7 +20,7 @@ interface IFeatureTypeSelectProps extends FieldRenderProps {
 }
 
 const FeatureTypeSelect = injectIntl(
-  ({ featureTypes, intl, input, meta }: IFeatureTypeSelectProps & InjectedIntlProps) => {
+  ({ featureTypes, intl, input, meta }: IFeatureTypeSelectProps & { intl: IntlShape }) => {
     const showError = meta.touched && meta.error;
 
     return (
@@ -59,7 +59,7 @@ const getFeatureTypeSelectRenderer = (
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'],
 ) => (fieldRenderProps: FieldRenderProps) => <FeatureTypeSelect featureTypes={featureTypes} {...fieldRenderProps} />;
 
-export const Fields = injectIntl(({ availableLocales, intl, featureTypes }: IFieldsProps & InjectedIntlProps) => (
+export const Fields = injectIntl(({ availableLocales, intl, featureTypes }: IFieldsProps & { intl: IntlShape }) => (
   <>
     <IntlField
       key_={FEATURE_VALUE_NAME_FIELD_KEY}
