@@ -7,10 +7,4 @@ CREATE_CATEGORY_VALIDATION_RULES = {
         'nullable': False,
     },
     'parent_category_id': {'type': 'integer', 'nullable': True, 'required': False},
-    "feature_types": {
-        'type': 'list',
-        'schema': {'type': 'integer', 'nullable': False},
-        'required': True,
-        'nullable': False,
-    },
 }

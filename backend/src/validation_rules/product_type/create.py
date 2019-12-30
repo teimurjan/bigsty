@@ -20,7 +20,7 @@ CREATE_PRODUCT_TYPE_VALIDATION_RULES = {
         'required': True,
         'nullable': False,
     },
-    'feature_values':  {
+    'feature_types':  {
         'type': 'list',
         'schema': {'type': 'integer', 'nullable': False},
         'required': True,

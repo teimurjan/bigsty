@@ -1,6 +1,5 @@
-from sqlalchemy import Column, String, orm, Integer, ForeignKey
+from sqlalchemy import Column, String, orm, Integer, ForeignKey, Table
 from src.models.base import BaseModel
-
 
 class ProductType(BaseModel):
     __tablename__ = 'product_type'

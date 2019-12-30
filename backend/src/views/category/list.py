@@ -22,16 +22,13 @@ class CategoryListView(ValidatableView):
         return {'data': serialized_categories}, OK_CODE
 
     def post(self, request):
-        try:
-            data = request.get_json()
-            self._validate(data)
-            category = self._service.create(data, user=request.user)
-            serialized_category = (
-                self
-                ._serializer_cls(category)
-                .with_serialized_feature_types()
-                .serialize()
-            )
-            return {'data': serialized_category}, OK_CODE
-        except self._service.FeatureTypeInvalid:
-            raise InvalidEntityFormat({'feature_types': 'errors.invalidID'})
+        data = request.get_json()
+        self._validate(data)
+        category = self._service.create(data, user=request.user)
+        serialized_category = (
+            self
+            ._serializer_cls(category)
+            .serialize()
+        )
+        return {'data': serialized_category}, OK_CODE
+

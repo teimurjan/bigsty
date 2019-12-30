@@ -18,7 +18,7 @@ class ProductTypeDetailView(ValidatableView):
                 self
                 ._serializer_cls(product_type)
                 .in_language(request.language)
-                .with_serialized_feature_values()
+                .with_serialized_feature_types()
                 .serialize()
             )
             return {'data': serialized_product_type}, OK_CODE
@@ -41,7 +41,7 @@ class ProductTypeDetailView(ValidatableView):
                 self
                 ._serializer_cls(product_type)
                 .in_language(request.language)
-                .with_serialized_feature_values()
+                .with_serialized_feature_types()
                 .serialize()
             )
             return {'data': serialized_product_type}, OK_CODE
@@ -49,10 +49,8 @@ class ProductTypeDetailView(ValidatableView):
             return {}, NOT_FOUND_CODE
         except self._service.CategoryInvalid:
             raise InvalidEntityFormat({'category_id': 'errors.invalidID'})
-        except self._service.FeatureValuesInvalid:
-            raise InvalidEntityFormat({'feature_values': 'errors.invalidID'})
-        except self._service.FeatureValuesOfInvalidType:
-            raise InvalidEntityFormat({'feature_values': 'errors.invalidType'})
+        except self._service.FeatureTypesInvalid:
+            raise InvalidEntityFormat({'feature_types': 'errors.invalidID'})
 
     def delete(self, request, product_type_id):
         try:

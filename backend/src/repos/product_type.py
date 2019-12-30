@@ -16,7 +16,7 @@ class ProductTypeRepo(IntlRepo):
         short_descriptions,
         image,
         category,
-        feature_values,
+        feature_type,
         session
     ):
         product_type = ProductType()
@@ -27,8 +27,8 @@ class ProductTypeRepo(IntlRepo):
         self._add_intl_texts(short_descriptions, product_type,
                              'short_descriptions', ProductTypeShortDescription)
 
-        for feature_value in feature_values:
-            product_type.feature_values.append(feature_value)
+        for feature_value in feature_type:
+            product_type.feature_type.append(feature_value)
 
         product_type.category_id = category.id
 
@@ -51,7 +51,7 @@ class ProductTypeRepo(IntlRepo):
         short_descriptions,
         image,
         category,
-        feature_values,
+        feature_type,
         session
     ):
         product_type = self.get_by_id(id_, session=session)
@@ -62,7 +62,7 @@ class ProductTypeRepo(IntlRepo):
         self._update_intl_texts(short_descriptions, product_type,
                                 'short_descriptions', ProductTypeShortDescription)
 
-        product_type.feature_values = feature_values
+        product_type.feature_type = feature_type
 
         product_type.category = category
 

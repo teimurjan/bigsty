@@ -16,7 +16,6 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Import and set configs from applicaiton's config file
-import load_env
 from config import Config
 config.set_main_option('sqlalchemy.url', Config.DB_URL)
 

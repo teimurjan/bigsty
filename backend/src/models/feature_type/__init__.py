@@ -1,6 +1,14 @@
-from sqlalchemy import orm
+from sqlalchemy import orm, Table, Integer, Column, ForeignKey
 from src.models.base import BaseModel
-from src.models.category import CategoryXFeatureType
+
+product_types_m2m_table = Table(
+    'product_type_x_feature_type',
+    BaseModel.metadata,
+    Column('product_type_id', Integer, ForeignKey(
+        'product_type.id'), primary_key=True),
+    Column('feature_type_id', Integer, ForeignKey(
+        'feature_type.id'), primary_key=True)
+)
 
 
 class FeatureType(BaseModel):
@@ -17,10 +25,11 @@ class FeatureType(BaseModel):
         lazy='subquery',
         cascade="all, delete, delete-orphan"
     )
-    categories = orm.relationship(
-        'Category',
-        secondary=CategoryXFeatureType,
+    product_types = orm.relationship(
+        'ProductType',
+        secondary=product_types_m2m_table,
         lazy='subquery',
+        backref=orm.backref('feature_types', lazy='joined')
     )
 
     def __getitem__(self, key):

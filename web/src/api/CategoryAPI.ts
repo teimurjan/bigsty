@@ -6,7 +6,6 @@ import { buildQueryString } from 'src/utils/queryString';
 export interface ICategoryListResponseItem {
   id: number;
   name: string;
-  feature_types: number[];
   parent_category_id: number | null;
 }
 
@@ -15,7 +14,6 @@ export interface ICategoryListRawIntlResponseItem {
   name: {
     [key: string]: string;
   };
-  feature_types: number[];
   parent_category_id: number | null;
 }
 
@@ -35,7 +33,6 @@ export interface ICategoryCreatePayload {
   names: {
     [key: string]: string;
   };
-  feature_types: number[];
   parent_category_id?: number;
 }
 

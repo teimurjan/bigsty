@@ -20,7 +20,6 @@ export const AdminCategoriesEditView = ({
   intl,
   availableLocales,
   validate,
-  featureTypes,
   categories,
   preloadingError,
   initialValues,
@@ -38,7 +37,6 @@ export const AdminCategoriesEditView = ({
     renderFields={getFieldsRenderer({
       availableLocales,
       categories,
-      featureTypes,
       nameFieldKey: CATEGORY_NAME_FIELD_KEY,
     })}
     validate={validate}

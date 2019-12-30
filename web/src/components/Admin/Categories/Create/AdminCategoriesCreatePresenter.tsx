@@ -8,7 +8,6 @@ import * as schemaValidator from 'src/components/SchemaValidator';
 import { ICategoryService } from 'src/services/CategoryService';
 
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
-import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
@@ -16,10 +15,7 @@ import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
 
-export interface IProps
-  extends AdminCategoriesStateContextValue,
-    AdminFeatureTypesStateContextValue,
-    IntlStateContextValue {
+export interface IProps extends AdminCategoriesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: ICategoryService;
   history: History;
@@ -27,7 +23,7 @@ export interface IProps
 
 export interface IViewProps {
   isOpen: boolean;
-  create: (values: { names: { [key: string]: string }; feature_types: string[]; parent_category_id?: string }) => any;
+  create: (values: { names: { [key: string]: string }; parent_category_id?: string }) => any;
   isLoading: boolean;
   isCreating: boolean;
   error?: string;
@@ -35,7 +31,6 @@ export interface IViewProps {
   close: () => any;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
-  featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
 }
 
@@ -44,7 +39,6 @@ export const CATEGORY_NAME_FIELD_KEY = 'name';
 export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
   intlState,
   history,
-  adminFeatureTypesState: { getFeatureTypes, featureTypes, isListLoading: featureTypesLoading },
   adminCategoriesState: { getCategories, categories, addCategory, isListLoading: categoriesLoading },
   service,
   View,
@@ -65,11 +59,6 @@ export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
               [getFieldName(CATEGORY_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
             }),
             {
-              feature_types: yup
-                .array()
-                .of(yup.number())
-                .required('AdminCategories.errors.noFeatureTypes')
-                .min(1, 'AdminCategories.errors.noFeatureTypes'),
               parent_category_id: yup.number(),
             },
           ),
@@ -86,12 +75,12 @@ export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
   React.useEffect(() => {
     (async () => {
       try {
-        await Promise.all([getFeatureTypes(), getCategories()]);
+        await getCategories();
       } catch (e) {
         setPreloadingError('errors.common');
       }
     })();
-  }, [getCategories, getFeatureTypes]);
+  }, [getCategories]);
 
   const close = React.useCallback(() => history.push('/admin/categories'), [history]);
 
@@ -109,7 +98,6 @@ export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
           return acc;
         },
         {
-          feature_types: values.feature_types.map(idStr => parseInt(idStr, 10)),
           names: {},
           parent_category_id: values.parent_category_id ? parseInt(values.parent_category_id, 10) : undefined,
         },
@@ -134,12 +122,11 @@ export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
       isOpen={true}
       create={create}
       error={error}
-      isLoading={isTimeoutExpired && (featureTypesLoading || categoriesLoading)}
+      isLoading={isTimeoutExpired && categoriesLoading}
       isCreating={isCreating}
       close={close}
       availableLocales={intlState.availableLocales}
       validate={(validator || { validate: undefined }).validate}
-      featureTypes={featureTypes}
       preloadingError={preloadingError}
     />
   );

@@ -1,8 +1,7 @@
 from src.services.decorators import allow_roles
 from src.repos.category import CategoryRepo
-from src.repos.feature_value import FeatureValueRepo
+from src.repos.feature_type import FeatureTypeRepo
 from src.repos.product_type import ProductTypeRepo
-from src.policies.feature_values import FeatureValuesPolicy
 
 
 class ProductTypeService:
@@ -10,13 +9,11 @@ class ProductTypeService:
         self,
         repo: ProductTypeRepo,
         category_repo: CategoryRepo,
-        feature_value_repo: FeatureValueRepo,
-        feature_values_policy: FeatureValuesPolicy,
+        feature_type_repo: FeatureTypeRepo,
     ):
         self._repo = repo
         self._category_repo = category_repo
-        self._feature_value_repo = feature_value_repo
-        self._feature_values_policy = feature_values_policy
+        self._feature_type_repo = feature_type_repo
 
     @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
@@ -27,19 +24,13 @@ class ProductTypeService:
                     session=s
                 )
 
-                feature_values = self._feature_value_repo.filter_by_ids(
-                    data['feature_values'],
+                feature_types = self._feature_type_repo.filter_by_ids(
+                    data['feature_types'],
                     session=s
                 )
 
-                if len(feature_values) != len(data['feature_values']):
-                    raise self.FeatureValuesInvalid()
-
-                if not self._feature_values_policy.are_allowed_if_category_is(
-                    feature_values,
-                    category
-                ):
-                    raise self.FeatureValuesOfInvalidType()
+                if len(feature_types) != len(data['feature_types']):
+                    raise self.FeatureTypesInvalid()
 
                 return self._repo.add_product_type(
                     data['names'],
@@ -47,13 +38,13 @@ class ProductTypeService:
                     data['short_descriptions'],
                     data['image'],
                     category,
-                    feature_values,
+                    feature_types,
                     session=s
                 )
         except self._category_repo.DoesNotExist:
             raise self.CategoryInvalid()
-        except self._feature_value_repo.DoesNotExist:
-            raise self.FeatureValuesInvalid()
+        except self._feature_type_repo.DoesNotExist:
+            raise self.FeatureTypesInvalid()
 
     @allow_roles(['admin', 'manager'])
     def update(self, id_, data, *args, **kwargs):
@@ -64,21 +55,13 @@ class ProductTypeService:
                     session=s
                 )
 
-                feature_values = self._feature_value_repo.filter_by_ids(
-                    data['feature_values'],
+                feature_types = self._feature_type_repo.filter_by_ids(
+                    data['feature_types'],
                     session=s
                 )
 
-                print(f"\n\n\nopopo\n\n\n")
-
-                if len(feature_values) != len(data['feature_values']):
-                    raise self.FeatureValuesInvalid()
-
-                if not self._feature_values_policy.are_allowed_if_category_is(
-                    feature_values,
-                    category
-                ):
-                    raise self.FeatureValuesOfInvalidType()
+                if len(feature_types) != len(data['feature_types']):
+                    raise self.FeatureTypesInvalid()
 
                 return self._repo.update_product_type(
                     id_,
@@ -87,17 +70,15 @@ class ProductTypeService:
                     data['short_descriptions'],
                     data['image'],
                     category,
-                    feature_values,
+                    feature_types,
                     session=s
                 )
-
-            return product_type
         except self._repo.DoesNotExist:
             raise self.ProductTypeNotFound()
         except self._category_repo.DoesNotExist:
             raise self.CategoryInvalid()
-        except self._feature_value_repo.DoesNotExist:
-            raise self.FeatureValuesInvalid()
+        except self._feature_type_repo.DoesNotExist:
+            raise self.FeatureTypesInvalid()
 
     def get_all(self):
         return self._repo.get_all()
@@ -124,8 +105,6 @@ class ProductTypeService:
     class CategoryInvalid(Exception):
         pass
 
-    class FeatureValuesInvalid(Exception):
+    class FeatureTypesInvalid(Exception):
         pass
 
-    class FeatureValuesOfInvalidType(Exception):
-        pass

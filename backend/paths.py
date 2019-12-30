@@ -1,3 +1,3 @@
 import os
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+APP_ROOT_PATH = os.path.abspath(os.path.dirname(__file__))

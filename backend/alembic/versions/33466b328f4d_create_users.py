@@ -10,8 +10,6 @@ import sqlalchemy as sa
 
 import os
 
-# TODO: comment when creating/manipulating migrations
-import load_env
 from src.repos.user import encrypt_password
 
 

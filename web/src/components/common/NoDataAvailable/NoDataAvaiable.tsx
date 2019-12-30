@@ -23,8 +23,21 @@ export const NoDataAvailable = ({ title, description, CTA }: IProps) => (
         ${textCenterMixin};
       `}
     >
-      {title && <Title size={3}>{title}</Title>}
-      {description && <Subtitle size={6}>{description}</Subtitle>}
+      {title && (
+        <Title className="is-spaced" size={3}>
+          {title}
+        </Title>
+      )}
+      {description && (
+        <Subtitle
+          css={css`
+            margin: 10px 0 !important;
+          `}
+          size={5}
+        >
+          {description}
+        </Subtitle>
+      )}
       {CTA}
     </HeroBody>
   </Hero>

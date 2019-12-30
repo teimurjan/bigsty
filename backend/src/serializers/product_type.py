@@ -1,7 +1,7 @@
 from src.models.category import Category
-from src.models.feature_value import FeatureValue
+from src.models.feature_type import FeatureType
 from src.serializers.intl import IntlSerializer
-from src.serializers.feature_value import FeatureValueSerializer
+from src.serializers.feature_type import FeatureTypeSerializer
 from src.serializers.category import CategorySerializer
 
 
@@ -14,7 +14,7 @@ class ProductTypeSerializer(IntlSerializer):
         self._short_descriptions = product_type.short_descriptions
         self._image = product_type.image
         self._category = product_type.category
-        self._feature_values = product_type.feature_values
+        self._feature_types = product_type.feature_types
 
     def serialize(self):
         return self._filter_with_only_fields({
@@ -24,7 +24,7 @@ class ProductTypeSerializer(IntlSerializer):
             'short_description': self._serialize_short_description(),
             'image': self._image,
             'category': self._serialize_category(),
-            'feature_values': self._serialize_feature_values(),
+            'feature_types': self._serialize_feature_types(),
         })
 
     def _serialize_name(self):
@@ -48,17 +48,17 @@ class ProductTypeSerializer(IntlSerializer):
     def _serialize_category(self):
         return self._category.id if isinstance(self._category, Category) else self._category
 
-    def with_serialized_feature_values(self):
-        self._feature_values = [
-            FeatureValueSerializer(feature_value)
+    def with_serialized_feature_types(self):
+        self._feature_types = [
+            FeatureTypeSerializer(feature_type)
             .in_language(self._language)
             .serialize()
-            for feature_value in self._feature_values
+            for feature_type in self._feature_types
         ]
         return self
 
-    def _serialize_feature_values(self):
-        if len(self._feature_values) > 0 and isinstance(self._feature_values[0], FeatureValue):
-            return [feature_value.id for feature_value in self._feature_values]
+    def _serialize_feature_types(self):
+        if len(self._feature_types) > 0 and isinstance(self._feature_types[0], FeatureType):
+            return [feature_type.id for feature_type in self._feature_types]
         else:
-            return self._feature_values
+            return self._feature_types

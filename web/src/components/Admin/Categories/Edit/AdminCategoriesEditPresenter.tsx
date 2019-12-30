@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import * as schemaValidator from 'src/components/SchemaValidator';
 
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
-import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { ICategoryListRawIntlResponseItem } from 'src/api/CategoryAPI';
@@ -18,10 +17,7 @@ import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
 
-export interface IProps
-  extends AdminCategoriesStateContextValue,
-    AdminFeatureTypesStateContextValue,
-    IntlStateContextValue {
+export interface IProps extends AdminCategoriesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: ICategoryService;
   history: History;
@@ -30,12 +26,11 @@ export interface IProps
 
 export interface IViewProps {
   isOpen: boolean;
-  edit: (values: { names: { [key: string]: string }; feature_types: string[]; parent_category_id?: string }) => any;
+  edit: (values: { names: { [key: string]: string }; parent_category_id?: string }) => any;
   error?: string;
   close: () => any;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
-  featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
   isLoading: boolean;
   isUpdating: boolean;
@@ -48,7 +43,6 @@ export const CATEGORY_NAME_FIELD_KEY = 'name';
 export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
   intlState,
   history,
-  adminFeatureTypesState: { getFeatureTypes, featureTypes, isListLoading: featureTypesLoading },
   adminCategoriesState: {
     getCategories,
     categories,
@@ -78,11 +72,6 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
               [getFieldName(CATEGORY_NAME_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
             }),
             {
-              feature_types: yup
-                .array()
-                .of(yup.number())
-                .required('AdminCategories.errors.noFeatureTypes')
-                .min(1, 'AdminCategories.errors.noFeatureTypes'),
               parent_category_id: yup.number().nullable(true),
             },
           ),
@@ -101,7 +90,6 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
       try {
         setLoading(true);
 
-        getFeatureTypes();
         getCategories();
 
         const category = await service.getOneRawIntl(categoryId);
@@ -135,7 +123,6 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
           return acc;
         },
         {
-          feature_types: values.feature_types.map(idStr => parseInt(idStr, 10)),
           names: {},
           parent_category_id: values.parent_category_id ? parseInt(values.parent_category_id, 10) : undefined,
         },
@@ -164,7 +151,6 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
           }),
           {},
         ),
-        feature_types: category.feature_types,
         parent_category_id: category.parent_category_id,
       };
     }
@@ -179,11 +165,10 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
       edit={edit}
       error={error}
       isUpdating={isUpdating}
-      isLoading={isTimeoutExpired && (isLoading || featureTypesLoading || categoriesLoading)}
+      isLoading={isTimeoutExpired && (isLoading || categoriesLoading)}
       close={close}
       availableLocales={availableLocales}
       validate={(validator || { validate: undefined }).validate}
-      featureTypes={featureTypes}
       initialValues={initialValues}
       preloadingError={preloadingError}
     />

@@ -1,4 +1,6 @@
-import load_env
+import os
+from shutil import copyfile
+
 from flask_script import Manager
 
 from src.factories.app import AppFactory

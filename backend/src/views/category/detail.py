@@ -39,8 +39,6 @@ class CategoryDetailView(ValidatableView):
             return {'data': serialized_category}, OK_CODE
         except self._service.CategoryNotFound:
             return {}, NOT_FOUND_CODE
-        except self._service.FeatureTypeInvalid:
-            raise InvalidEntityFormat({'feature_types': 'errors.invalidID'})
         except self._service.CircularCategoryConnection:
             raise InvalidEntityFormat(
                 {'parent_category_id': 'errors.circularConnection'}
@@ -55,7 +53,7 @@ class CategoryDetailView(ValidatableView):
 
     def head(self, request, category_id):
         try:
-            category = self._service.get_one(category_id)
+            self._service.get_one(category_id)
             return {}, OK_CODE
         except self._service.CategoryNotFound:
             return {}, NOT_FOUND_CODE
