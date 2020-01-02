@@ -41,7 +41,7 @@ export class SignUpFormView extends React.Component<IProps & { intl: IntlShape }
     );
   };
 
-  private renderNameField = ({ input, meta }: FieldRenderProps) => {
+  private renderNameField = ({ input, meta }: FieldRenderProps<string>) => {
     const { intl } = this.props;
     const showError = meta.touched && meta.error;
     return (
@@ -65,7 +65,7 @@ export class SignUpFormView extends React.Component<IProps & { intl: IntlShape }
     );
   };
 
-  private renderEmailField = ({ input, meta }: FieldRenderProps) => {
+  private renderEmailField = ({ input, meta }: FieldRenderProps<string>) => {
     const { intl } = this.props;
     const showError = meta.touched && meta.error;
     return (
@@ -89,7 +89,7 @@ export class SignUpFormView extends React.Component<IProps & { intl: IntlShape }
     );
   };
 
-  private renderPasswordField = ({ input, meta }: FieldRenderProps) => {
+  private renderPasswordField = ({ input, meta }: FieldRenderProps<string>) => {
     const { intl } = this.props;
     const showError = meta.touched && meta.error;
     return (

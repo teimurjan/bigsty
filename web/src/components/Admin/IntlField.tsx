@@ -35,7 +35,7 @@ interface IIntlFieldRendererProps {
 const getIntlFieldRenderer = ({ label, placeholder, locale, intl }: IIntlFieldRendererProps) => ({
   input,
   meta,
-}: FieldRenderProps) => {
+}: FieldRenderProps<string>) => {
   const showError = meta.touched && meta.error;
 
   return (

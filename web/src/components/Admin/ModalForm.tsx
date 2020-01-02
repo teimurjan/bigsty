@@ -1,4 +1,7 @@
+/** @jsx jsx */
 import * as React from 'react';
+
+import { css, jsx } from '@emotion/core';
 
 import { IntlShape, injectIntl } from 'react-intl';
 
@@ -11,7 +14,11 @@ import { ModalBackground } from 'src/components/common/ModalBackground/ModalBack
 import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 
+import { useMedia } from 'src/hooks/useMedia';
+
 import { textCenterMixin } from 'src/styles/mixins';
+import { mediaQueries } from 'src/styles/media';
+
 import { LoaderLayout } from '../common/LoaderLayout/LoaderLayout';
 import { Message } from '../common/Message/Message';
 
@@ -30,47 +37,47 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   cancelText?: string;
   initialValues?: object;
   preloadingError?: string;
+  wide?: boolean;
 }
 
 export const ModalForm = injectIntl(
-  class extends React.Component<IProps & { intl: IntlShape }> {
-    public render() {
-      const { isOpen, onClose, onSubmit, validate, initialValues, preloadingError, intl } = this.props;
-      return (
-        <Modal isOpen={isOpen}>
-          <ModalBackground onClick={onClose} />
-          <ModalContent>
-            {preloadingError ? (
-              <Message color="is-danger">
-                <Message.Header>
-                  {intl.formatMessage({ id: 'common.error' })}
-                  <ModalCard.Close onClick={onClose} />
-                </Message.Header>
-                <Message.Body>{intl.formatMessage({ id: preloadingError })}</Message.Body>
-              </Message>
-            ) : (
-              <Form
-                validate={validate}
-                onSubmit={onSubmit}
-                render={this.renderInnerForm}
-                initialValues={initialValues}
-              />
-            )}
-          </ModalContent>
-        </Modal>
-      );
-    }
+  ({
+    cancelText,
+    submitText,
+    onClose,
+    intl,
+    isLoading = false,
+    title,
+    globalError,
+    renderFields,
+    formID,
+    isPreloading,
+    isOpen,
+    preloadingError,
+    validate,
+    onSubmit,
+    initialValues,
+    wide,
+  }: IProps & { intl: IntlShape }) => {
+    const modalCSS = wide
+      ? useMedia(
+          [mediaQueries.minWidth1024],
+          [
+            css`
+              width: 1024px;
+              margin: 0;
+            `,
+          ],
+          css`
+            width: 100%;
+            margin: 0;
+          `,
+        )
+      : undefined;
 
-    private renderInnerForm = ({ handleSubmit }: FormRenderProps) => {
-      const { onClose, intl, isLoading = false, title, globalError, renderFields, formID, isPreloading } = this.props;
-
-      const {
-        submitText = intl.formatMessage({ id: 'common.submit' }),
-        cancelText = intl.formatMessage({ id: 'common.cancel' }),
-      } = this.props;
-
-      return (
-        <ModalCard>
+    const renderInnerForm = React.useCallback(
+      ({ handleSubmit }: FormRenderProps) => (
+        <ModalCard css={modalCSS}>
           <ModalCard.Head>
             <ModalCard.Title>{title}</ModalCard.Title>
             <ModalCard.Close onClick={onClose} />
@@ -89,14 +96,46 @@ export const ModalForm = injectIntl(
           </ModalCard.Body>
           <ModalCard.Foot>
             <Button form={formID} type="submit" color="is-primary" isLoading={isLoading || isPreloading}>
-              {submitText}
+              {submitText || intl.formatMessage({ id: 'common.submit' })}
             </Button>
             <Button color="is-danger" onClick={onClose}>
-              {cancelText}
+              {cancelText || intl.formatMessage({ id: 'common.cancel' })}
             </Button>
           </ModalCard.Foot>
         </ModalCard>
-      );
-    };
+      ),
+      [
+        cancelText,
+        formID,
+        globalError,
+        intl,
+        isLoading,
+        isPreloading,
+        modalCSS,
+        onClose,
+        renderFields,
+        submitText,
+        title,
+      ],
+    );
+
+    return (
+      <Modal isOpen={isOpen}>
+        <ModalBackground onClick={onClose} />
+        <ModalContent css={modalCSS}>
+          {preloadingError ? (
+            <Message color="is-danger">
+              <Message.Header>
+                {intl.formatMessage({ id: 'common.error' })}
+                <ModalCard.Close onClick={onClose} />
+              </Message.Header>
+              <Message.Body>{intl.formatMessage({ id: preloadingError })}</Message.Body>
+            </Message>
+          ) : (
+            <Form validate={validate} onSubmit={onSubmit} render={renderInnerForm} initialValues={initialValues} />
+          )}
+        </ModalContent>
+      </Modal>
+    );
   },
 );

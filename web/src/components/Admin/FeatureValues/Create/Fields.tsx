@@ -15,7 +15,7 @@ export interface IFieldsProps {
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
 }
 
-interface IFeatureTypeSelectProps extends FieldRenderProps {
+interface IFeatureTypeSelectProps extends FieldRenderProps<string> {
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
 }
 
@@ -57,7 +57,9 @@ const FeatureTypeSelect = injectIntl(
 
 const getFeatureTypeSelectRenderer = (
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'],
-) => (fieldRenderProps: FieldRenderProps) => <FeatureTypeSelect featureTypes={featureTypes} {...fieldRenderProps} />;
+) => (fieldRenderProps: FieldRenderProps<string>) => (
+  <FeatureTypeSelect featureTypes={featureTypes} {...fieldRenderProps} />
+);
 
 export const Fields = injectIntl(({ availableLocales, intl, featureTypes }: IFieldsProps & { intl: IntlShape }) => (
   <>

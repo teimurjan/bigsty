@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, orm, Integer, ForeignKey, Table
 from src.models.base import BaseModel
 
+
 class ProductType(BaseModel):
     __tablename__ = 'product_type'
 
@@ -24,7 +25,7 @@ class ProductType(BaseModel):
     )
     products = orm.relationship(
         'Product',
-        lazy=True
+        lazy='subquery',
     )
     image = Column(String(255), nullable=True)
     category_id = Column(
@@ -34,11 +35,11 @@ class ProductType(BaseModel):
         ),
         nullable=False
     )
-    category = orm.relationship("Category", lazy='joined')
+    category = orm.relationship("Category", lazy='subquery')
 
     def __getitem__(self, key):
         if key == 'names':
-            return self.descriptions
+            return self.names
         if key == 'descriptions':
             return self.descriptions
         if key == 'short_descriptions':

@@ -72,6 +72,21 @@ export class IntlRenderer<T> implements IRenderer<T> {
   );
 }
 
+export class ImageRenderer<T> extends DefaultRenderer<T> {
+  public renderEntity = (entity: T, { colKey }: IAdminTableRendererRequiredArgs) => (
+    <Table.Cell>
+      <img
+        css={css`
+          max-width: 100px;
+          margin: 0 auto;
+          display: block !important;
+        `}
+        src={entity[colKey]}
+      />
+    </Table.Cell>
+  );
+}
+
 interface IProps<T> {
   isLoading: boolean;
   isDataLoaded: boolean;

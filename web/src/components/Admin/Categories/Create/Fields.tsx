@@ -10,56 +10,7 @@ import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { IntlField } from '../../IntlField';
 
-// TODO: remove when a product type creation is ready
-// interface IFeatureTypesSelectProps extends FieldRenderProps {
-//   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
-// }
-
-// const FeatureTypesSelect = injectIntl(
-//   ({ featureTypes, intl, input, meta }: IFeatureTypesSelectProps & { intl: IntlShape }) => {
-//     const showError = meta.touched && meta.error;
-
-//     const { onChange: _, value, ...inputPropsToPass } = input;
-
-//     const onChange = React.useCallback(
-//       (e: React.SyntheticEvent<HTMLSelectElement>) => {
-//         input.onChange(getMultipleValuesFromChangeEvent(e));
-//       },
-//       [input],
-//     );
-
-//     return (
-//       <FormNativeSelectField
-//         labelProps={{
-//           children: (
-//             <>
-//               {intl.formatMessage({
-//                 id: 'AdminCategories.featureTypesSelect.label',
-//               })}
-//             </>
-//           ),
-//         }}
-//         selectProps={{
-//           ...inputPropsToPass,
-//           isMultiple: true,
-//           onChange,
-//           options: featureTypes.map(({ id, name }) => ({
-//             checked: value instanceof Array ? value.indexOf(id.toString()) !== -1 : false,
-//             title: name[intl.locale],
-//             value: id.toString(),
-//           })),
-//           value,
-//         }}
-//         helpTextProps={{
-//           children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
-//           type: 'is-danger',
-//         }}
-//       />
-//     );
-//   },
-// );
-
-interface IParentCategorySelectProps extends FieldRenderProps {
+interface IParentCategorySelectProps extends FieldRenderProps<string> {
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
 }
 
@@ -101,7 +52,9 @@ const ParentCategorySelect = injectIntl(
 
 const getParentCategoryIDRenderer = (
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'],
-) => (fieldRenderProps: FieldRenderProps) => <ParentCategorySelect categories={categories} {...fieldRenderProps} />;
+) => (fieldRenderProps: FieldRenderProps<string>) => (
+  <ParentCategorySelect categories={categories} {...fieldRenderProps} />
+);
 
 export interface IFieldsProps {
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
