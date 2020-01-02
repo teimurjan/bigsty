@@ -67,7 +67,9 @@ class ProductTypeRepo(IntlRepo):
         product_type.category = category
 
         if image is not None:
-            product_type.image = self.__file_storage.save_file(image)
+            product_type.image = (image
+                                  if isinstance(image, str)
+                                  else self.__file_storage.save_file(image))
 
         return product_type
 

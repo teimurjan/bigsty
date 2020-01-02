@@ -96,5 +96,8 @@
   "AdminProductTypes.categorySelect.label": "Категория",
   "AdminProductTypes.categorySelect.defaultOption.title": "Нет категории",
   "AdminProductType.create.title": "Создать тип продукта",
-  "AdminProductTypes.errors.noFeatureTypes": "Вы должны выбрать как минимум 1 тип характеристики"
+  "AdminProductTypes.errors.noFeatureTypes": "Вы должны выбрать как минимум 1 тип характеристики",
+  "AdminProductTypes.edit.title": "Редактировать тип продукта",
+  "AdminProductTypes.notFound": "Тип продукта не найден"
+
 }

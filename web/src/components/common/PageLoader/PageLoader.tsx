@@ -16,10 +16,16 @@ import {
   positionAbsoluteMixin,
 } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
+import { useModalScrollLock } from 'src/hooks/useModalScrollLock';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   isActive: boolean;
   timeout?: number;
+}
+
+interface ILoaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  timeout: number;
+  status: string;
 }
 
 const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
@@ -40,17 +46,23 @@ const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
   }
 `;
 
-export const PageLoader = ({ isActive, className, timeout = 500, ...props }: IProps) =>
-  ReactDOM.createPortal(
+const Loader = ({ status, timeout, className, ...props }: ILoaderProps) => {
+  useModalScrollLock();
+
+  const shouldShow = status === 'entering' || status === 'entered';
+
+  return (
+    <div css={getCSS(timeout, shouldShow)} className={classNames(className, 'has-background-primary')} {...props}>
+      <ClipLoader color="white" sizeUnit="vw" size={15} loading={true} />
+    </div>
+  );
+};
+
+export const PageLoader = ({ isActive, timeout = 500, ...props }: IProps) => {
+  return ReactDOM.createPortal(
     <Transition in={isActive} timeout={timeout} unmountOnExit={true}>
-      {status => {
-        const shouldShow = status === 'entering' || status === 'entered';
-        return (
-          <div css={getCSS(timeout, shouldShow)} className={classNames(className, 'has-background-primary')} {...props}>
-            <ClipLoader color="white" sizeUnit="vw" size={15} loading={true} />
-          </div>
-        );
-      }}
+      {status => <Loader timeout={timeout} status={status} {...props} />}
     </Transition>,
     document.body,
   );
+};

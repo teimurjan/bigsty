@@ -25,7 +25,7 @@ class ProductType(BaseModel):
     )
     products = orm.relationship(
         'Product',
-        lazy='subquery',
+        lazy='select',
     )
     image = Column(String(255), nullable=True)
     category_id = Column(
@@ -35,7 +35,7 @@ class ProductType(BaseModel):
         ),
         nullable=False
     )
-    category = orm.relationship("Category", lazy='subquery')
+    category = orm.relationship("Category", lazy='joined')
 
     def __getitem__(self, key):
         if key == 'names':

@@ -13,6 +13,7 @@ import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Table } from 'src/components/common/Table/Table';
 
 import { textCenterMixin } from 'src/styles/mixins';
+import { mediaQueries } from 'src/styles/media';
 
 interface IAdminTableRendererRequiredArgs {
   componentKey: string;
@@ -153,6 +154,11 @@ export const AdminTable = <T extends { id: number }>({
                   to={`${pathPrefix}/edit/${entity.id}`}
                   css={css`
                     margin-right: 0.5rem;
+
+                    @media ${mediaQueries.maxWidth768} {
+                      margin-right: 0;
+                      margin-bottom: 0.25rem;
+                    }
                   `}
                   color="is-info"
                 >

@@ -29,7 +29,7 @@ class FeatureValue(BaseModel):
     products = orm.relationship(
         'Product',
         secondary=products_m2m_table,
-        lazy='subquery',
+        lazy='select',
         backref=orm.backref('feature_values', lazy='joined')
     )
 

@@ -14,6 +14,14 @@ import { defaultTheme } from 'src/themes';
 
 import 'bulma/css/bulma.css';
 
+if (process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const whyDidYouRender = require('@welldone-software/why-did-you-render');
+  whyDidYouRender(React, {
+    collapseGroups: true,
+  });
+}
+
 ReactDOM.render(
   <DIProvider value={{ dependencies: makeDependenciesContainer() }}>
     <ThemeProvider theme={defaultTheme}>

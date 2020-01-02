@@ -4,38 +4,40 @@ import { IntlShape } from 'react-intl';
 
 import { ModalForm } from '../../ModalForm';
 
+import { IViewProps as IProps } from './AdminProductTypesEditPresenter';
+
+import { Fields } from '../Create/Fields';
 import {
   PRODUCT_TYPE_NAME_FIELD_KEY,
   PRODUCT_TYPE_DESCRIPTION_FIELD_KEY,
   PRODUCT_TYPE_SHORT_DESCRIPTION_FIELD_KEY,
-  IViewProps as IProps,
-} from './AdminProductTypesCreatePresenter';
-import { Fields } from './Fields';
+} from '../Create/AdminProductTypesCreatePresenter';
 
-export const AdminProductTypesCreateView = ({
+export const AdminProductTypesEditView = ({
   isOpen,
-  create,
+  edit,
   close,
   isLoading,
+  isUpdating,
   error,
   intl,
   availableLocales,
   validate,
   categories,
   preloadingError,
-  isCreating,
+  initialValues,
   featureTypes,
 }: IProps & { intl: IntlShape }) => (
   <ModalForm
-    formID="adminProductTypesCreateForm"
+    formID="adminProductTypesEditForm"
     isOpen={isOpen}
-    onSubmit={create}
+    onSubmit={edit}
     onClose={close}
-    isLoading={isCreating}
     isPreloading={isLoading}
+    isLoading={isUpdating}
     preloadingError={preloadingError}
     globalError={error}
-    title={intl.formatMessage({ id: 'AdminProductType.create.title' })}
+    title={intl.formatMessage({ id: 'AdminProductTypes.edit.title' })}
     fields={
       <Fields
         availableLocales={availableLocales}
@@ -47,6 +49,7 @@ export const AdminProductTypesCreateView = ({
       />
     }
     validate={validate}
+    initialValues={initialValues}
     wide
   />
 );

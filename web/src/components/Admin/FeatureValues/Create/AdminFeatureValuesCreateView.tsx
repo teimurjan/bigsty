@@ -5,9 +5,7 @@ import { IntlShape } from 'react-intl';
 import { ModalForm } from '../../ModalForm';
 
 import { IViewProps as IProps } from './AdminFeatureValuesCreatePresenter';
-import { Fields, IFieldsProps } from './Fields';
-
-const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
+import { Fields } from './Fields';
 
 export const AdminFeatureValuesCreateView = ({
   isOpen,
@@ -30,7 +28,7 @@ export const AdminFeatureValuesCreateView = ({
     isPreloading={isLoading}
     globalError={error}
     title={intl.formatMessage({ id: 'AdminFeatureValues.create.title' })}
-    renderFields={getFieldsRenderer({ availableLocales, featureTypes })}
+    fields={<Fields availableLocales={availableLocales} featureTypes={featureTypes} />}
     validate={validate}
   />
 );

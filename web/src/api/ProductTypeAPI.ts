@@ -161,11 +161,14 @@ export class ProductTypeAPI implements IProductTypeAPI {
     }
   }
 
-  public async edit(id: number, payload: IProductTypeEditPayload) {
+  public async edit(id: number, { image, ...json }: IProductTypeEditPayload) {
     try {
+      const formData = new FormData();
+      formData.append('json', JSON.stringify(json));
+      formData.append('image', image);
       const response = await this.client.put<IProductTypeRawIntlResponseData>(
         `/api/product_types/${id}${buildQueryString({ raw_intl: 1 })}`,
-        payload,
+        formData,
         {
           headers: this.headersManager.getHeaders(),
         },

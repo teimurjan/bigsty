@@ -1,14 +1,15 @@
-import * as React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
-import { Container } from 'src/components/common/Container/Container';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
 
 import { IViewProps as IProps } from './AdminFeatureTypesListPresenter';
+import { fullWidthMixin } from 'src/styles/mixins';
 
 const NewFeatureTypeButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/featureTypes/new" color="is-primary">
@@ -37,25 +38,23 @@ export const AdminFeatureTypesListView = ({
   isLoading,
   isDataLoaded,
 }: IProps & { intl: IntlShape }) => (
-  <Section>
-    <Container>
-      <AdminTable<FeatureType>
-        pathPrefix="/admin/featureTypes"
-        isLoading={isLoading}
-        isDataLoaded={isDataLoaded}
-        entities={featureTypes}
-        renderNoData={renderNoData}
-        intl={intl}
-      >
-        <AdminTable.Col<FeatureType> key_="id" title={intl.formatMessage({ id: 'common.ID' })} />
-        <AdminTable.Col<FeatureType>
-          key_="name"
-          title={intl.formatMessage({ id: 'AdminFeatureTypes.names' })}
-          renderer={new IntlRenderer(locales)}
-        />
-      </AdminTable>
+  <Section css={fullWidthMixin}>
+    <AdminTable<FeatureType>
+      pathPrefix="/admin/featureTypes"
+      isLoading={isLoading}
+      isDataLoaded={isDataLoaded}
+      entities={featureTypes}
+      renderNoData={renderNoData}
+      intl={intl}
+    >
+      <AdminTable.Col<FeatureType> key_="id" title={intl.formatMessage({ id: 'common.ID' })} />
+      <AdminTable.Col<FeatureType>
+        key_="name"
+        title={intl.formatMessage({ id: 'AdminFeatureTypes.names' })}
+        renderer={new IntlRenderer(locales)}
+      />
+    </AdminTable>
 
-      {isDataLoaded && featureTypes.length > 0 && <NewFeatureTypeButton />}
-    </Container>
+    {isDataLoaded && featureTypes.length > 0 && <NewFeatureTypeButton />}
   </Section>
 );

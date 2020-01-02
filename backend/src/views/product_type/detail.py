@@ -14,11 +14,13 @@ class ProductTypeDetailView(ValidatableView):
     def get(self, request, product_type_id):
         try:
             product_type = self._service.get_one(product_type_id)
+
+            should_get_raw_intl_field = request.args.get('raw_intl') == '1'
+
             serialized_product_type = (
                 self
                 ._serializer_cls(product_type)
-                .in_language(request.language)
-                .with_serialized_feature_types()
+                .in_language(None if should_get_raw_intl_field else request.language)
                 .serialize()
             )
             return {'data': serialized_product_type}, OK_CODE
@@ -32,6 +34,9 @@ class ProductTypeDetailView(ValidatableView):
                 'image': request.files.get('image'),
             }
             self._validate(data)
+
+            should_get_raw_intl_field = request.args.get('raw_intl') == '1'
+
             product_type = self._service.update(
                 product_type_id,
                 data,
@@ -40,7 +45,7 @@ class ProductTypeDetailView(ValidatableView):
             serialized_product_type = (
                 self
                 ._serializer_cls(product_type)
-                .in_language(request.language)
+                .in_language(None if should_get_raw_intl_field else request.language)
                 .with_serialized_feature_types()
                 .serialize()
             )

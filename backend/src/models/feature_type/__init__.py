@@ -22,13 +22,13 @@ class FeatureType(BaseModel):
     )
     feature_values = orm.relationship(
         "FeatureValue",
-        lazy='subquery',
+        lazy='select',
         cascade="all, delete, delete-orphan"
     )
     product_types = orm.relationship(
         'ProductType',
         secondary=product_types_m2m_table,
-        lazy='subquery',
+        lazy='select',
         backref=orm.backref('feature_types', lazy='joined')
     )
 

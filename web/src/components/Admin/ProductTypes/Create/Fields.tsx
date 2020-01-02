@@ -15,6 +15,7 @@ import { FileInput } from 'src/components/common/FileInput/FileInput';
 import { Field } from 'src/components/common/Field/Field';
 import { Label } from 'src/components/common/Label/Label';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { arePropsEqual, lengthCompare } from 'src/utils/propEquality';
 
 interface IFeatureTypesSelectProps extends FieldRenderProps<string[]> {
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
@@ -140,50 +141,66 @@ export interface IFieldsProps {
   shortDescriptionFieldKey: string;
 }
 
-export const Fields = injectIntl(
-  ({
-    availableLocales,
-    categories,
-    featureTypes,
-    intl,
-    nameFieldKey,
-    descriptionFieldKey,
-    shortDescriptionFieldKey,
-  }: IFieldsProps & { intl: IntlShape }) => (
-    <>
-      <IntlField
-        key_={nameFieldKey}
-        locales={availableLocales}
-        label={intl.formatMessage({
-          id: 'AdminProductTypes.nameInput.label',
-        })}
-        placeholder={intl.formatMessage({
-          id: 'AdminProductTypes.nameInput.placeholder',
-        })}
-      />
-      <IntlField
-        key_={descriptionFieldKey}
-        locales={availableLocales}
-        label={intl.formatMessage({
-          id: 'AdminProductTypes.descriptionInput.label',
-        })}
-        placeholder={intl.formatMessage({
-          id: 'AdminProductTypes.descriptionInput.placeholder',
-        })}
-      />
-      <IntlField
-        key_={shortDescriptionFieldKey}
-        locales={availableLocales}
-        label={intl.formatMessage({
-          id: 'AdminProductTypes.shortDescriptionInput.label',
-        })}
-        placeholder={intl.formatMessage({
-          id: 'AdminProductTypes.shortDescriptionInput.placeholder',
-        })}
-      />
-      <FinalFormField key="category_id" name="category_id" render={getCategorySelectRenderer(categories)} />
-      <FinalFormField key="feature_types" name="feature_types" render={getFeatureTypesSelectRenderer(featureTypes)} />
-      <FinalFormField key="image" name="image" render={getImageFieldRenderer()} />
-    </>
+export const Fields: React.SFC<IFieldsProps> = injectIntl<
+  'intl',
+  IFieldsProps & {
+    intl: IntlShape;
+  }
+>(
+  React.memo(
+    ({
+      availableLocales,
+      categories,
+      featureTypes,
+      intl,
+      nameFieldKey,
+      descriptionFieldKey,
+      shortDescriptionFieldKey,
+    }) => (
+      <>
+        <IntlField
+          key_={nameFieldKey}
+          locales={availableLocales}
+          label={intl.formatMessage({
+            id: 'AdminProductTypes.nameInput.label',
+          })}
+          placeholder={intl.formatMessage({
+            id: 'AdminProductTypes.nameInput.placeholder',
+          })}
+        />
+        <IntlField
+          key_={descriptionFieldKey}
+          locales={availableLocales}
+          label={intl.formatMessage({
+            id: 'AdminProductTypes.descriptionInput.label',
+          })}
+          placeholder={intl.formatMessage({
+            id: 'AdminProductTypes.descriptionInput.placeholder',
+          })}
+        />
+        <IntlField
+          key_={shortDescriptionFieldKey}
+          locales={availableLocales}
+          label={intl.formatMessage({
+            id: 'AdminProductTypes.shortDescriptionInput.label',
+          })}
+          placeholder={intl.formatMessage({
+            id: 'AdminProductTypes.shortDescriptionInput.placeholder',
+          })}
+        />
+        <FinalFormField key="category_id" name="category_id" render={getCategorySelectRenderer(categories)} />
+        <FinalFormField key="feature_types" name="feature_types" render={getFeatureTypesSelectRenderer(featureTypes)} />
+        <FinalFormField key="image" name="image" render={getImageFieldRenderer()} />
+      </>
+    ),
+    (prevProps, nextProps) =>
+      arePropsEqual(prevProps, nextProps, [
+        'nameFieldKey',
+        'descriptionFieldKey',
+        'shortDescriptionFieldKey',
+        { key: 'availableLocales', compare: lengthCompare },
+        { key: 'categories', compare: lengthCompare },
+        { key: 'featureTypes', compare: lengthCompare },
+      ]),
   ),
 );

@@ -1,14 +1,15 @@
-import * as React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
 import { IntlShape, injectIntl } from 'react-intl';
 
-import { Container } from 'src/components/common/Container/Container';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
 
 import { AdminTable, IntlRenderer } from '../../AdminTable';
 import { IViewProps as IProps } from './AdminCategoriesListPresenter';
+import { fullWidthMixin } from 'src/styles/mixins';
 
 const NewCategoryButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/categories/new" color="is-primary">
@@ -41,31 +42,29 @@ export const AdminCategoriesListView = ({
   isLoading,
   isDataLoaded,
 }: IProps & { intl: IntlShape }) => (
-  <Section>
-    <Container>
-      <AdminTable<Category>
-        pathPrefix="/admin/categories"
-        isLoading={isLoading}
-        isDataLoaded={isDataLoaded}
-        entities={categories}
-        renderNoData={renderNoData}
-        intl={intl}
-      >
-        <AdminTable.Col<Category> key_="id" title={intl.formatMessage({ id: 'common.ID' })} />
-        <AdminTable.Col<Category>
-          key_="parent_category_id"
-          title={intl.formatMessage({
-            id: 'AdminCategories.parentCategoryID',
-          })}
-        />
-        <AdminTable.Col<Category>
-          key_="name"
-          title={intl.formatMessage({ id: 'AdminCategories.names' })}
-          renderer={new IntlRenderer(locales)}
-        />
-      </AdminTable>
+  <Section css={fullWidthMixin}>
+    <AdminTable<Category>
+      pathPrefix="/admin/categories"
+      isLoading={isLoading}
+      isDataLoaded={isDataLoaded}
+      entities={categories}
+      renderNoData={renderNoData}
+      intl={intl}
+    >
+      <AdminTable.Col<Category> key_="id" title={intl.formatMessage({ id: 'common.ID' })} />
+      <AdminTable.Col<Category>
+        key_="parent_category_id"
+        title={intl.formatMessage({
+          id: 'AdminCategories.parentCategoryID',
+        })}
+      />
+      <AdminTable.Col<Category>
+        key_="name"
+        title={intl.formatMessage({ id: 'AdminCategories.names' })}
+        renderer={new IntlRenderer(locales)}
+      />
+    </AdminTable>
 
-      {isDataLoaded && categories.length > 0 && <NewCategoryButton />}
-    </Container>
+    {isDataLoaded && categories.length > 0 && <NewCategoryButton />}
   </Section>
 );

@@ -13,6 +13,7 @@ import { fullWidthMixin } from 'src/styles/mixins';
 import { LanguageDropdownContainer as LanguageDropdown } from '../../LanguageDropdown/LanguageDropdownContainer';
 
 import { IViewProps as IProps } from './AdminHeaderPresenter';
+import { mediaQueries } from 'src/styles/media';
 
 const LanguageDrodownTrigger = ({ onClick, ...props }: ITriggerProps) => {
   const intl = useIntl();
@@ -42,6 +43,10 @@ export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlSh
         width: 100%;
         height: 100vh;
         padding: 3rem 1.5rem;
+
+        @media ${mediaQueries.maxWidth768} {
+          height: auto;
+        }
       `}
     >
       <Menu.Label>{intl.formatMessage({ id: 'AdminMenu.modelsLabel' })}</Menu.Label>

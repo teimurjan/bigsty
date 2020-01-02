@@ -3,11 +3,9 @@ import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { ModalForm } from '../../ModalForm';
-import { Fields, IFieldsProps } from '../Create/Fields';
+import { Fields } from '../Create/Fields';
 
 import { IViewProps as IProps } from './AdminFeatureValuesEditPresenter';
-
-const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
 
 export const AdminFeatureValuesEditView = ({
   isOpen,
@@ -32,7 +30,7 @@ export const AdminFeatureValuesEditView = ({
     isPreloading={isLoading}
     globalError={error}
     title={intl.formatMessage({ id: 'AdminFeatureValues.edit.title' })}
-    renderFields={getFieldsRenderer({ availableLocales, featureTypes })}
+    fields={<Fields availableLocales={availableLocales} featureTypes={featureTypes} />}
     validate={validate}
     initialValues={initialValues}
     preloadingError={preloadingError}

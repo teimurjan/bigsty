@@ -24,8 +24,6 @@ const Fields = injectIntl(({ availableLocales, intl }: IFieldsProps & { intl: In
   />
 ));
 
-const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
-
 export const AdminFeatureTypesCreateView = ({
   isOpen,
   create,
@@ -44,7 +42,7 @@ export const AdminFeatureTypesCreateView = ({
     isLoading={isLoading}
     globalError={error}
     title={intl.formatMessage({ id: 'AdminFeatureTypes.create.title' })}
-    renderFields={getFieldsRenderer({ availableLocales })}
+    fields={<Fields availableLocales={availableLocales} />}
     validate={validate}
   />
 );

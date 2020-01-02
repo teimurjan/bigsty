@@ -48,7 +48,7 @@ export const AdminFeatureTypesEditView = ({
     isPreloading={isLoading}
     globalError={error}
     title={intl.formatMessage({ id: 'AdminFeatureTypes.edit.title' })}
-    renderFields={getFieldsRenderer({ availableLocales })}
+    fields={<Fields availableLocales={availableLocales} />}
     validate={validate}
     initialValues={initialValues}
     preloadingError={preloadingError}

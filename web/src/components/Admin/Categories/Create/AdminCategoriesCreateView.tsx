@@ -5,9 +5,7 @@ import { IntlShape } from 'react-intl';
 import { ModalForm } from '../../ModalForm';
 
 import { CATEGORY_NAME_FIELD_KEY, IViewProps as IProps } from './AdminCategoriesCreatePresenter';
-import { Fields, IFieldsProps } from './Fields';
-
-const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
+import { Fields } from './Fields';
 
 export const AdminCategoriesCreateView = ({
   isOpen,
@@ -32,11 +30,9 @@ export const AdminCategoriesCreateView = ({
     preloadingError={preloadingError}
     globalError={error}
     title={intl.formatMessage({ id: 'AdminCategories.create.title' })}
-    renderFields={getFieldsRenderer({
-      availableLocales,
-      categories,
-      nameFieldKey: CATEGORY_NAME_FIELD_KEY,
-    })}
+    fields={
+      <Fields availableLocales={availableLocales} categories={categories} nameFieldKey={CATEGORY_NAME_FIELD_KEY} />
+    }
     validate={validate}
   />
 );

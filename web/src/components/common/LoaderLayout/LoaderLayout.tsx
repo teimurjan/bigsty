@@ -9,12 +9,10 @@ import { alignItemsCenterMixin, flexMixin, fullWidthMixin, justifyContentCenterM
 import { ITheme } from 'src/themes';
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
-  children?: React.ReactNode;
-  loaderColor?: string;
   theme: ITheme;
 }
 
-export const LoaderLayout = withTheme(({ children, loaderColor, theme, ...props }: IProps) => (
+export const LoaderLayout = withTheme(({ theme, ...props }: IProps) => (
   <div
     css={css`
       ${alignItemsCenterMixin};

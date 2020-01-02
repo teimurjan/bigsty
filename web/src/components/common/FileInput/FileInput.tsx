@@ -7,14 +7,31 @@ interface IProps extends Omit<React.HTMLProps<HTMLInputElement>, 'onChange' | 'v
   showPreview?: boolean;
   defaultValue?: string;
   onChange: (file: File | undefined) => any;
-  value?: File;
+  value?: File | string;
 }
+
+const Filename = ({ file }: { file: IProps['value'] }) => {
+  if (typeof file === 'string') {
+    return <span className="file-name">{file}</span>;
+  }
+
+  if (file && file.name) {
+    <span className="file-name">{file.name}</span>;
+  }
+
+  return null;
+};
 
 export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview = true, onChange }) => {
   const [previewURL, setPreviewURL] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
     if (!value) return;
+
+    if (typeof value === 'string') {
+      setPreviewURL(value);
+      return;
+    }
 
     const url = URL.createObjectURL(value);
     setPreviewURL(url);
@@ -43,7 +60,7 @@ export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview =
             </span>
             <span className="file-label">{placeholder}</span>
           </span>
-          {value && value.name && <span className="file-name">{value.name}</span>}
+          <Filename file={value} />
         </label>
       </div>
     </div>

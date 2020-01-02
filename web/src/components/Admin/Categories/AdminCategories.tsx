@@ -4,7 +4,7 @@ import { Route, RouteComponentProps } from 'react-router';
 
 import { AdminCategoriesCreateContainer } from './Create/AdminCategoriesCreateContainer';
 import { AdminCategoriesDeleteContainer } from './Delete/AdminCategoriesDeleteContainer';
-import { AdminCategoriesEditContainer } from './Edit/AdminCategoriesCreateContainer';
+import { AdminCategoriesEditContainer } from './Edit/AdminCategoriesEditContainer';
 import { AdminCategoriesListContainer } from './List/AdminCategoriesListContainer';
 
 export const AdminCategories = ({ match }: RouteComponentProps) => (

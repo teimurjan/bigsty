@@ -6,9 +6,7 @@ import { ModalForm } from '../../ModalForm';
 
 import { CATEGORY_NAME_FIELD_KEY, IViewProps as IProps } from './AdminCategoriesEditPresenter';
 
-import { Fields, IFieldsProps } from '../Create/Fields';
-
-const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
+import { Fields } from '../Create/Fields';
 
 export const AdminCategoriesEditView = ({
   isOpen,
@@ -34,11 +32,9 @@ export const AdminCategoriesEditView = ({
     preloadingError={preloadingError}
     globalError={error}
     title={intl.formatMessage({ id: 'AdminCategories.edit.title' })}
-    renderFields={getFieldsRenderer({
-      availableLocales,
-      categories,
-      nameFieldKey: CATEGORY_NAME_FIELD_KEY,
-    })}
+    fields={
+      <Fields availableLocales={availableLocales} categories={categories} nameFieldKey={CATEGORY_NAME_FIELD_KEY} />
+    }
     validate={validate}
     initialValues={initialValues}
   />
