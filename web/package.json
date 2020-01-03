@@ -11,7 +11,7 @@
     "@types/draft-js": "^0.10.38",
     "@types/lodash": "^4.14.120",
     "@types/react-router": "5.1.2",
-    "@types/react-transition-group": "^2.0.15",
+    "@types/react-transition-group": "^4.2.3",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.1",
     "babel-jest": "20.0.3",
