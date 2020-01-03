@@ -11,7 +11,7 @@ import { PaginationPrev } from 'src/components/common/PaginationPrev/PaginationP
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   length: number;
-  initialIndex?: number;
+  initialPage?: number;
   onPageChange?: (index: number) => any;
   intl: IntlShape;
 }
@@ -27,14 +27,14 @@ export const UncontrolledPagination = injectIntl(
     };
 
     public componentDidMount() {
-      const { initialIndex } = this.props;
-      if (typeof initialIndex === 'number') {
-        this.setState({ currentIndex: initialIndex });
+      const { initialPage } = this.props;
+      if (typeof initialPage === 'number') {
+        this.setState({ currentIndex: initialPage - 1 });
       }
     }
 
     public render() {
-      const { length, onPageChange, intl, ...props } = this.props;
+      const { length, intl, initialPage: _initialPage, onPageChange: _onPageChange, ...props } = this.props;
       const { currentIndex } = this.state;
       return (
         <Pagination {...props}>
@@ -56,24 +56,25 @@ export const UncontrolledPagination = injectIntl(
 
     private changeCurrent = (index: number) => {
       const { onPageChange } = this.props;
-      this.setState({ currentIndex: index });
-      if (typeof onPageChange === 'function') {
-        onPageChange(index);
+      const { currentIndex } = this.state;
+      if (typeof onPageChange === 'function' && currentIndex !== index) {
+        onPageChange(index + 1);
       }
+      this.setState({ currentIndex: index });
     };
 
     private onNextClick = () => {
       const { currentIndex } = this.state;
       const { length } = this.props;
       if (currentIndex < length - 1) {
-        this.setState({ currentIndex: currentIndex + 1 });
+        this.changeCurrent(currentIndex + 1);
       }
     };
 
     private onPrevClick = () => {
       const { currentIndex } = this.state;
       if (currentIndex > 0) {
-        this.setState({ currentIndex: currentIndex - 1 });
+        this.changeCurrent(currentIndex - 1);
       }
     };
   },

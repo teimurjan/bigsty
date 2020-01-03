@@ -43,6 +43,7 @@ export interface IProductTypeService {
       };
     };
     result: number[];
+    meta: productTypeAPI.IProductTypeListResponseMeta;
   }>;
   delete(id: number): Promise<{}>;
   create(

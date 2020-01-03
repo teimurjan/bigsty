@@ -15,9 +15,12 @@ class ValidatableView:
 
 class PaginatableView:
     def _paginate(self, items, page, limit):
-        return items, {
+        pages_count = math.ceil(len(items) / limit)
+        starting_item_index = limit * (page - 1)
+        ending_item_index = starting_item_index + limit
+        return items[starting_item_index: ending_item_index], {
             'count': len(items),
-            'pages_count': math.ceil(len(items) / limit),
+            'pages_count': pages_count,
             'page': page,
             'limit': limit,
         }

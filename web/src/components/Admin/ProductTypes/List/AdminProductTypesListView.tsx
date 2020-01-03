@@ -42,6 +42,8 @@ export const AdminProductTypesListView = ({
   intl,
   isLoading,
   isDataLoaded,
+  meta,
+  onPageChange,
 }: IProps & { intl: IntlShape }) => (
   <Section css={fullWidthMixin}>
     <AdminTable<ProductType>
@@ -51,6 +53,9 @@ export const AdminProductTypesListView = ({
       entities={productTypes}
       renderNoData={renderNoData}
       intl={intl}
+      currentPage={meta.page}
+      pagesCount={meta.pages_count}
+      onPageChange={onPageChange}
     >
       <AdminTable.Col<ProductType> key_="id" title={intl.formatMessage({ id: 'common.ID' })} />
       <AdminTable.Col<ProductType>

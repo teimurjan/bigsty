@@ -7,6 +7,7 @@ import { useDependencies } from 'src/DI/DI';
 import { extendIntlTextWithLocaleNames } from 'src/helpers/intl';
 
 import { useIntlState } from 'src/state/IntlState';
+import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
 export interface IContextValue {
   adminCategoriesState: {
@@ -102,14 +103,10 @@ export const AdminCategoriesStateProvider: React.SFC<IProviderProps> = ({ childr
         adminCategoriesState: {
           addCategory,
           deleteCategory,
-          categories: categoriesOrder.map(categoryId => {
-            const category: ICategoryListRawIntlResponseItem = categories[categoryId];
-
-            return {
-              ...category,
-              name: extendIntlTextWithLocaleNames(category.name, availableLocales),
-            };
-          }),
+          categories: agregateOrderedMapToArray(categories, categoriesOrder, category => ({
+            ...category,
+            name: extendIntlTextWithLocaleNames(category.name, availableLocales),
+          })),
           getCategories,
           hasListLoaded,
           isListLoading,

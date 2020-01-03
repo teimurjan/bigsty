@@ -1,12 +1,15 @@
 import * as React from 'react';
 
-import { IProductTypeListRawIntlResponseItem } from 'src/api/ProductTypeAPI';
+import { IProductTypeListRawIntlResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
 
 import { useDependencies } from 'src/DI/DI';
 
 import { extendIntlTextWithLocaleNames } from 'src/helpers/intl';
 
 import { useIntlState } from 'src/state/IntlState';
+import { agregateOrderedMapToArray } from 'src/utils/agregate';
+
+const defaultMeta = { count: undefined, pages_count: undefined, page: undefined, limit: undefined };
 
 export interface IContextValue {
   adminProductTypesState: {
@@ -18,7 +21,7 @@ export interface IContextValue {
     deleteProductType: (id: number) => void;
     addProductType: (productType: IProductTypeListRawIntlResponseItem) => void;
     setProductType: (productType: IProductTypeListRawIntlResponseItem) => void;
-    recentPage: number;
+    meta: IProductTypeListResponseMeta | typeof defaultMeta;
   };
 }
 
@@ -38,7 +41,7 @@ export const AdminProductTypesStateProvider: React.SFC<IProviderProps> = ({ chil
     },
   } = useDependencies();
 
-  const [recentPage, setRecentPage] = React.useState(0);
+  const [meta, setMeta] = React.useState<IProductTypeListResponseMeta | typeof defaultMeta>(defaultMeta);
   const [productTypes, setProductTypes] = React.useState<{ [key: string]: IProductTypeListRawIntlResponseItem }>({});
   const [productTypesOrder, setProductTypesOrder] = React.useState<number[]>([]);
   const [isListLoading, setListLoading] = React.useState(false);
@@ -49,10 +52,10 @@ export const AdminProductTypesStateProvider: React.SFC<IProviderProps> = ({ chil
     async (page = 1) => {
       setListLoading(true);
       try {
-        const { entities, result } = await service.getAllRawIntl(page);
+        const { entities, result, meta } = await service.getAllRawIntl(page);
         setProductTypes(entities.productTypes);
         setProductTypesOrder(result);
-        setRecentPage(page);
+        setMeta(meta);
       } catch (e) {
         setListError('errors.common');
       } finally {
@@ -106,19 +109,15 @@ export const AdminProductTypesStateProvider: React.SFC<IProviderProps> = ({ chil
     <Context.Provider
       value={{
         adminProductTypesState: {
-          recentPage,
+          meta,
           addProductType,
           deleteProductType,
-          productTypes: productTypesOrder.map(productTypeId => {
-            const productType: IProductTypeListRawIntlResponseItem = productTypes[productTypeId];
-
-            return {
-              ...productType,
-              name: extendIntlTextWithLocaleNames(productType.name, availableLocales),
-              description: extendIntlTextWithLocaleNames(productType.description, availableLocales),
-              short_description: extendIntlTextWithLocaleNames(productType.short_description, availableLocales),
-            };
-          }),
+          productTypes: agregateOrderedMapToArray(productTypes, productTypesOrder, productType => ({
+            ...productType,
+            name: extendIntlTextWithLocaleNames(productType.name, availableLocales),
+            description: extendIntlTextWithLocaleNames(productType.description, availableLocales),
+            short_description: extendIntlTextWithLocaleNames(productType.short_description, availableLocales),
+          })),
           getProductTypes,
           hasListLoaded,
           isListLoading,

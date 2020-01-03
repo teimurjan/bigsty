@@ -7,6 +7,7 @@ import { useDependencies } from 'src/DI/DI';
 import { extendIntlTextWithLocaleNames } from 'src/helpers/intl';
 
 import { useIntlState } from 'src/state/IntlState';
+import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
 export interface IContextValue {
   adminFeatureTypesState: {
@@ -102,14 +103,10 @@ export const AdminFeatureTypesStateProvider: React.SFC<IProviderProps> = ({ chil
         adminFeatureTypesState: {
           addFeatureType,
           deleteFeatureType,
-          featureTypes: featureTypesOrder.map(featureTypeId => {
-            const featureType: IFeatureTypeListRawIntlResponseItem = featureTypes[featureTypeId];
-
-            return {
-              ...featureType,
-              name: extendIntlTextWithLocaleNames(featureType.name, availableLocales),
-            };
-          }),
+          featureTypes: agregateOrderedMapToArray(featureTypes, featureTypesOrder, featureType => ({
+            ...featureType,
+            name: extendIntlTextWithLocaleNames(featureType.name, availableLocales),
+          })),
           getFeatureTypes,
           hasListLoaded,
           isListLoading,

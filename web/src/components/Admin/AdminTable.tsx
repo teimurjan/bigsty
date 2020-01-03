@@ -14,6 +14,8 @@ import { Table } from 'src/components/common/Table/Table';
 
 import { textCenterMixin } from 'src/styles/mixins';
 import { mediaQueries } from 'src/styles/media';
+import { Pagination } from '../common/Pagination/Pagination';
+import { UncontrolledPagination } from '../common/UncontrolledPagination/UncontrolledPagination';
 
 interface IAdminTableRendererRequiredArgs {
   componentKey: string;
@@ -92,9 +94,12 @@ interface IProps<T> {
   isLoading: boolean;
   isDataLoaded: boolean;
   pathPrefix: string;
-  renderNoData: () => React.ReactNode;
+  renderNoData: () => React.ReactElement;
   entities: T[];
   children: Array<React.ReactElement<IAdminTableColProps<T>>>;
+  pagesCount?: number;
+  currentPage?: number;
+  onPageChange?: (newPage: number) => void;
 }
 
 const defaultRenderer = new DefaultRenderer();
@@ -107,11 +112,20 @@ export const AdminTable = <T extends { id: number }>({
   children,
   intl,
   pathPrefix,
-}: IProps<T> & { intl: IntlShape }) => (
-  <React.Fragment>
-    {isLoading && <LoaderLayout />}
-    {entities.length === 0 && isDataLoaded && renderNoData()}
-    {entities.length > 0 && (
+  pagesCount,
+  currentPage,
+  onPageChange,
+}: IProps<T> & { intl: IntlShape }) => {
+  if (isLoading) {
+    return <LoaderLayout />;
+  }
+
+  if (entities.length === 0 && isDataLoaded) {
+    return renderNoData();
+  }
+
+  return (
+    <React.Fragment>
       <Table className={classNames('is-bordered', 'is-striped', 'is-narrow', 'is-hoverable', 'is-fullwidth')}>
         <Table.Head>
           <Table.Row>
@@ -172,8 +186,19 @@ export const AdminTable = <T extends { id: number }>({
           ))}
         </Table.Body>
       </Table>
-    )}
-  </React.Fragment>
-);
+
+      {[pagesCount, currentPage].every(i => typeof i !== 'undefined') && (
+        <UncontrolledPagination
+          css={css`
+            margin-bottom: 0.25rem;
+          `}
+          length={pagesCount as number}
+          initialPage={currentPage}
+          onPageChange={onPageChange}
+        />
+      )}
+    </React.Fragment>
+  );
+};
 
 AdminTable.Col = AdminTableCol;
