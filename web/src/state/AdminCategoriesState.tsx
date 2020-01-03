@@ -90,8 +90,8 @@ export const AdminCategoriesStateProvider: React.SFC<IProviderProps> = ({ childr
       delete newCategories[id];
 
       const newCategoriesOrder = categoriesOrder.filter(idFromOrder => idFromOrder !== id);
-      setCategories(newCategories);
       setCategoriesOrder(newCategoriesOrder);
+      setCategories(newCategories);
     },
     [categories, categoriesOrder],
   );

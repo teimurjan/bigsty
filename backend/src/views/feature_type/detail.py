@@ -52,7 +52,7 @@ class FeatureTypeDetailView(ValidatableView):
 
     def head(self, request, feature_type_id):
         try:
-            feature_type = self._service.get_one(feature_type_id)
+            self._service.get_one(feature_type_id)
             return {}, OK_CODE
         except self._service.FeatureTypeNotFound:
             return {}, NOT_FOUND_CODE

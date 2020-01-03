@@ -63,3 +63,10 @@ class ProductTypeDetailView(ValidatableView):
             return {}, OK_CODE
         except self._service.ProductTypeNotFound:
             return {}, NOT_FOUND_CODE
+
+    def head(self, request, product_type_id):
+        try:
+            self._service.get_one(product_type_id)
+            return {}, OK_CODE
+        except self._service.ProductTypeNotFound:
+            return {}, NOT_FOUND_CODE

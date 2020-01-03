@@ -14,8 +14,8 @@ export const AdminCategoriesDeleteContainer = () => {
 
   const deleteEntity = React.useCallback(
     async (id: number) => {
-      await deleteCategory(id);
-      dependencies.services.category.delete(id);
+      await dependencies.services.category.delete(id);
+      deleteCategory(id);
     },
     [deleteCategory, dependencies.services.category],
   );

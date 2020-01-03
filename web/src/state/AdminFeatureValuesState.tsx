@@ -90,8 +90,8 @@ export const AdminFeatureValuesStateProvider: React.SFC<IProviderProps> = ({ chi
       delete newFeatureValues[id];
 
       const newFeatureValuesOrder = featureValuesOrder.filter(idFromOrder => idFromOrder !== id);
-      setFeatureValues(newFeatureValues);
       setFeatureValuesOrder(newFeatureValuesOrder);
+      setFeatureValues(newFeatureValues);
     },
     [featureValues, featureValuesOrder],
   );

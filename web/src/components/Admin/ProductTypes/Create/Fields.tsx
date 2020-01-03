@@ -9,13 +9,16 @@ import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/Adm
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { IntlField } from '../../IntlField';
+import { IntlField, IProps as IIntlFieldProps } from '../../IntlField';
 import { getMultipleValuesFromChangeEvent } from 'src/components/common/NativeSelect/NativeSelect';
 import { FileInput } from 'src/components/common/FileInput/FileInput';
 import { Field } from 'src/components/common/Field/Field';
 import { Label } from 'src/components/common/Label/Label';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { arePropsEqual, lengthCompare } from 'src/utils/propEquality';
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+import { Tag } from 'src/components/common/Tag/Tag';
+import { WYSIWYG } from 'src/components/common/WYSIWYG/WYSIWYG';
 
 interface IFeatureTypesSelectProps extends FieldRenderProps<string[]> {
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
@@ -132,6 +135,36 @@ const getImageFieldRenderer = () =>
     );
   });
 
+const renderDescriptionField: IIntlFieldProps['render'] = ({ input, meta, label, placeholder, locale, intl }) => {
+  const showError = meta.touched && meta.error;
+
+  return (
+    <FormTextField
+      labelProps={{
+        children: (
+          <>
+            {label} <Tag color="is-info">{locale.name}</Tag>
+          </>
+        ),
+      }}
+      renderInput={() => (
+        <WYSIWYG
+          initialValue={input.value}
+          placeholder={placeholder}
+          onChange={input.onChange}
+          onBlur={input.onBlur}
+          onFocus={input.onFocus}
+          hasError={showError}
+        />
+      )}
+      helpTextProps={{
+        children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
+        type: 'is-danger',
+      }}
+    />
+  );
+};
+
 export interface IFieldsProps {
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
@@ -177,6 +210,7 @@ export const Fields: React.SFC<IFieldsProps> = injectIntl<
           placeholder={intl.formatMessage({
             id: 'AdminProductTypes.descriptionInput.placeholder',
           })}
+          render={renderDescriptionField}
         />
         <IntlField
           key_={shortDescriptionFieldKey}

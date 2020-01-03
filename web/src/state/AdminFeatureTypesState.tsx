@@ -90,8 +90,8 @@ export const AdminFeatureTypesStateProvider: React.SFC<IProviderProps> = ({ chil
       delete newFeatureTypes[id];
 
       const newFeatureTypesOrder = featureTypesOrder.filter(idFromOrder => idFromOrder !== id);
-      setFeatureTypes(newFeatureTypes);
       setFeatureTypesOrder(newFeatureTypesOrder);
+      setFeatureTypes(newFeatureTypes);
     },
     [featureTypes, featureTypesOrder],
   );

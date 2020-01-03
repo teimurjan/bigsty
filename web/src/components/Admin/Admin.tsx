@@ -1,5 +1,4 @@
 /** @jsx jsx */
-import * as React from 'react';
 import { css, jsx } from '@emotion/core';
 
 import { Route, Switch } from 'react-router';

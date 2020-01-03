@@ -96,8 +96,8 @@ export const AdminProductTypesStateProvider: React.SFC<IProviderProps> = ({ chil
       delete newProductTypes[id];
 
       const newProductTypesOrder = productTypesOrder.filter(idFromOrder => idFromOrder !== id);
-      setProductTypes(newProductTypes);
       setProductTypesOrder(newProductTypesOrder);
+      setProductTypes(newProductTypes);
     },
     [productTypes, productTypesOrder],
   );

@@ -7,13 +7,6 @@ import { IIntlListResponseItem } from 'src/api/IntlAPI';
 import { FormTextField } from '../common/FormTextField/FormTextField';
 import { Tag } from '../common/Tag/Tag';
 
-interface IProps {
-  key_: string;
-  label: string;
-  placeholder: string;
-  locales: IIntlListResponseItem[];
-}
-
 export const getFieldName = (key: string, locale: IIntlListResponseItem): string =>
   `${key}-${locale.name}-${locale.id}`;
 export const parseFieldName = (fieldName: string): { id: number; key: string } => {
@@ -32,10 +25,22 @@ interface IIntlFieldRendererProps {
   defaultValue?: string;
 }
 
-const getIntlFieldRenderer = ({ label, placeholder, locale, intl }: IIntlFieldRendererProps) => ({
+export interface IProps {
+  key_: string;
+  label: string;
+  placeholder: string;
+  locales: IIntlListResponseItem[];
+  render?: (props: FieldRenderProps<string> & IIntlFieldRendererProps) => React.ReactNode;
+}
+
+const renderIntlField = ({
   input,
   meta,
-}: FieldRenderProps<string>) => {
+  label,
+  placeholder,
+  locale,
+  intl,
+}: FieldRenderProps<string> & IIntlFieldRendererProps) => {
   const showError = meta.touched && meta.error;
 
   return (
@@ -61,19 +66,20 @@ const getIntlFieldRenderer = ({ label, placeholder, locale, intl }: IIntlFieldRe
   );
 };
 
-export const IntlField = injectIntl(({ key_, label, placeholder, locales, intl }: IProps & { intl: IntlShape }) => (
-  <>
-    {locales.map(locale => (
-      <Field
-        key={locale.id}
-        name={getFieldName(key_, locale)}
-        render={getIntlFieldRenderer({
-          intl,
-          label,
-          locale,
-          placeholder,
-        })}
-      />
-    ))}
-  </>
-));
+export const IntlField = injectIntl(
+  ({ render, intl, label, locales, placeholder, key_ }: IProps & { intl: IntlShape }) => (
+    <>
+      {locales.map(locale => (
+        <Field
+          key={locale.id}
+          name={getFieldName(key_, locale)}
+          render={render ? render : renderIntlField}
+          intl={intl}
+          label={label}
+          locale={locale}
+          placeholder={placeholder}
+        />
+      ))}
+    </>
+  ),
+);

@@ -12,6 +12,7 @@ interface IProps {
   helpTextProps?: HelpTextProps;
   inputProps?: InputProps;
   labelProps?: LabelProps;
+  renderInput?: () => React.ReactNode;
 }
 
 export const FormTextField = ({
@@ -20,12 +21,11 @@ export const FormTextField = ({
   inputProps = {},
   labelProps = {},
   helpTextProps = {},
+  renderInput,
 }: IProps) => (
   <Field {...fieldProps}>
     <Label {...labelProps} />
-    <Control {...controlProps}>
-      <Input {...inputProps} />
-    </Control>
+    <Control {...controlProps}>{renderInput ? renderInput() : <Input {...inputProps} />}</Control>
     <HelpText {...helpTextProps} />
   </Field>
 );

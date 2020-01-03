@@ -14,8 +14,8 @@ export const AdminFeatureTypesDeleteContainer = () => {
 
   const deleteEntity = React.useCallback(
     async (id: number) => {
-      await deleteFeatureType(id);
-      dependencies.services.featureType.delete(id);
+      await dependencies.services.featureType.delete(id);
+      deleteFeatureType(id);
     },
     [deleteFeatureType, dependencies.services.featureType],
   );

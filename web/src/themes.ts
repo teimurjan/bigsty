@@ -6,6 +6,7 @@ export interface ITheme {
   primary: string;
   success: string;
   warning: string;
+  greyLight: string;
 }
 
 export const defaultTheme: ITheme = {
@@ -16,4 +17,5 @@ export const defaultTheme: ITheme = {
   primary: 'hsl(171, 100%, 41%)',
   success: 'hsl(141, 71%,  48%)',
   warning: 'hsl(48,  100%, 67%)',
+  greyLight: 'hsl(0, 0%, 71%)',
 };

@@ -2,7 +2,7 @@ UPDATE_PRODUCT_TYPE_VALIDATION_RULES = {
     'names': {
         'type': 'dict',
         'keyschema': {'regex': r'^\d+$'},
-        'valueschema': {'type': 'string', 'required': True, 'empty': False, 'nullable': False},
+        'valueschema': {'type': 'string', 'required': True, 'empty': False, 'nullable': False,'maxlength': 50},
         'required': True,
         'nullable': False,
     },
@@ -16,7 +16,7 @@ UPDATE_PRODUCT_TYPE_VALIDATION_RULES = {
     'short_descriptions': {
         'type': 'dict',
         'keyschema': {'regex': r'^\d+$'},
-        'valueschema': {'type': 'string', 'required': True, 'empty': False, 'nullable': False},
+        'valueschema': {'type': 'string', 'required': True, 'empty': False, 'nullable': False,'maxlength': 1000},
         'required': True,
         'nullable': False,
     },

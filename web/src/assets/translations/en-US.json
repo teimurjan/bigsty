@@ -87,7 +87,7 @@
   "AdminFeatureValues.notFound.title": "No feature values found",
   "AdminFeatureValues.notFound.description": "It seems that you've not added a feature value. Click below to fix it.",
   "AdminProductTypes.notFound.title": "No product types found",
-  "AdminProductTypes.edit.titlees.notFound.description": "It seems that you've not added a product type. Click below Product type fix it.",
+  "AdminProductTypes.notFound.description": "It seems that you've not added a product type. Click below Product type fix it.",
   "AdminProductTypes.notFound.cta": "Create a product type",
   "AdminProductTypes.names": "Names",
   "AdminProductTypes.shortDescriptions": "Short Descriptions",
