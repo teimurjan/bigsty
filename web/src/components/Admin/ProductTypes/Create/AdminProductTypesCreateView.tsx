@@ -35,7 +35,7 @@ export const AdminProductTypesCreateView = ({
     isPreloading={isLoading}
     preloadingError={preloadingError}
     globalError={error}
-    title={intl.formatMessage({ id: 'AdminProductType.create.title' })}
+    title={intl.formatMessage({ id: 'AdminProductTypes.create.title' })}
     fields={
       <Fields
         availableLocales={availableLocales}

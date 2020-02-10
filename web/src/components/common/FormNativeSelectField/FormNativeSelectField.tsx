@@ -29,7 +29,7 @@ export const FormNativeSelectField = ({
   const selectOptions = [
     ...(defaultOption
       ? [
-          <NativeSelectOption key="default" value={undefined}>
+          <NativeSelectOption key="default" value="">
             {defaultOption.title}
           </NativeSelectOption>,
         ]

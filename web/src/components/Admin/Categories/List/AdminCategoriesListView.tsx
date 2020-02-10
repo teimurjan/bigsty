@@ -11,7 +11,7 @@ import { AdminTable, IntlRenderer } from '../../AdminTable';
 import { IViewProps as IProps } from './AdminCategoriesListPresenter';
 import { fullWidthMixin } from 'src/styles/mixins';
 
-const NewCategoryButton = injectIntl(({ intl }) => (
+export const NewCategoryButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/categories/new" color="is-primary">
     {intl.formatMessage({ id: 'AdminCategories.notFound.cta' })}
   </LinkButton>

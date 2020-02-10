@@ -13,7 +13,7 @@ class ProductRepo(Repo):
         self,
         price,
         discount,
-        quality,
+        quantity,
         images,
         product_type,
         feature_values,
@@ -23,7 +23,7 @@ class ProductRepo(Repo):
 
         product.price = price
         product.discount = discount
-        product.quality = quality
+        product.quantity = quantity
         product.feature_values = feature_values
         product.product_type = product_type
 

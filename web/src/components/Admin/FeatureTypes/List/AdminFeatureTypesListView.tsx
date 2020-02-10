@@ -11,7 +11,7 @@ import { Section } from 'src/components/common/Section/Section';
 import { IViewProps as IProps } from './AdminFeatureTypesListPresenter';
 import { fullWidthMixin } from 'src/styles/mixins';
 
-const NewFeatureTypeButton = injectIntl(({ intl }) => (
+export const NewFeatureTypeButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/featureTypes/new" color="is-primary">
     {intl.formatMessage({ id: 'AdminFeatureTypes.notFound.cta' })}
   </LinkButton>

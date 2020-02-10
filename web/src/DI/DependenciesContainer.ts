@@ -6,6 +6,7 @@ import * as featureTypeAPI from 'src/api/FeatureTypeAPI';
 import * as featureValueAPI from 'src/api/FeatureValueAPI';
 import * as intlAPI from 'src/api/IntlAPI';
 import * as productTypeAPI from 'src/api/ProductTypeAPI';
+import * as productAPI from 'src/api/ProductAPI';
 
 import * as authService from 'src/services/AuthService';
 import * as categoryService from 'src/services/CategoryService';
@@ -13,6 +14,7 @@ import * as featureTypeService from 'src/services/FeatureTypeService';
 import * as featureValueService from 'src/services/FeatureValueService';
 import * as intlService from 'src/services/IntlService';
 import * as productTypeService from 'src/services/ProductTypeService';
+import * as productService from 'src/services/ProductService';
 
 import * as authStorage from 'src/storage/AuthStorage';
 import * as intlStorage from 'src/storage/IntlStorage';
@@ -23,6 +25,7 @@ export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
   category: categoryAPI.ICategoryAPI;
   productType: productTypeAPI.IProductTypeAPI;
+  product: productAPI.IProductAPI;
   featureType: featureTypeAPI.IFeatureTypeAPI;
   featureValue: featureValueAPI.IFeatureValueAPI;
   intl: intlAPI.IIntlAPI;
@@ -32,6 +35,7 @@ export interface IServicesContainer {
   auth: authService.IAuthService;
   category: categoryService.ICategoryService;
   productType: productTypeService.IProductTypeService;
+  product: productService.IProductService;
   featureType: featureTypeService.IFeatureTypeService;
   featureValue: featureValueService.IFeatureValueService;
   intl: intlService.IIntlService;
@@ -74,6 +78,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     featureValue: new featureValueAPI.FeatureValueAPI(APIClient, headersManager),
     intl: new intlAPI.IntlAPI(APIClient, headersManager),
     productType: new productTypeAPI.ProductTypeAPI(APIClient, headersManager),
+    product: new productAPI.ProductAPI(APIClient, headersManager),
   };
 
   const servicesContainer = {
@@ -83,6 +88,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     featureValue: new featureValueService.FeatureValueService(APIsContainer.featureValue),
     intl: new intlService.IntlService(APIsContainer.intl, storagesContainer.intl),
     productType: new productTypeService.ProductTypeService(APIsContainer.productType),
+    product: new productService.ProductService(APIsContainer.product),
   };
 
   return new DependenciesContainer(APIsContainer, storagesContainer, servicesContainer);

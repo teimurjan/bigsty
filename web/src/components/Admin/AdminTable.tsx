@@ -14,7 +14,6 @@ import { Table } from 'src/components/common/Table/Table';
 
 import { textCenterMixin } from 'src/styles/mixins';
 import { mediaQueries } from 'src/styles/media';
-import { Pagination } from '../common/Pagination/Pagination';
 import { UncontrolledPagination } from '../common/UncontrolledPagination/UncontrolledPagination';
 
 interface IAdminTableRendererRequiredArgs {
@@ -26,6 +25,7 @@ interface IAdminTableColProps<T> {
   title: string;
   key_: keyof T;
   renderer?: IRenderer<T>;
+  render?: (entity: T) => React.ReactNode;
 }
 
 const AdminTableCol = <T extends any>(_: IAdminTableColProps<T>) => null;
@@ -100,6 +100,7 @@ interface IProps<T> {
   pagesCount?: number;
   currentPage?: number;
   onPageChange?: (newPage: number) => void;
+  hideSubheader?: boolean;
 }
 
 const defaultRenderer = new DefaultRenderer();
@@ -115,6 +116,7 @@ export const AdminTable = <T extends { id: number }>({
   pagesCount,
   currentPage,
   onPageChange,
+  hideSubheader = false,
 }: IProps<T> & { intl: IntlShape }) => {
   if (isLoading) {
     return <LoaderLayout />;
@@ -137,24 +139,30 @@ export const AdminTable = <T extends { id: number }>({
             )}
             <Table.HeadCell key="head-cell-actions">{intl.formatMessage({ id: 'common.actions' })}</Table.HeadCell>
           </Table.Row>
-          <Table.Row>
-            {React.Children.map(children, ({ props: { key_, renderer } }) =>
-              (renderer || defaultRenderer).renderSubheader({
-                colKey: key_ as string,
-                componentKey: `sub-head-cell-${key_}`,
-              }),
-            )}
-            <Table.HeadCell key="sub-head-cell-actions" />
-          </Table.Row>
+          {!hideSubheader && (
+            <Table.Row>
+              {React.Children.map(children, ({ props: { key_, renderer } }) =>
+                (renderer || defaultRenderer).renderSubheader({
+                  colKey: key_ as string,
+                  componentKey: `sub-head-cell-${key_}`,
+                }),
+              )}
+              <Table.HeadCell key="sub-head-cell-actions" />
+            </Table.Row>
+          )}
         </Table.Head>
         <Table.Body>
           {entities.map(entity => (
             <Table.Row key={entity.id}>
-              {React.Children.map(children, ({ props: { key_, renderer } }) =>
-                (renderer || defaultRenderer).renderEntity(entity, {
-                  colKey: key_ as string,
-                  componentKey: `table-cell-${key_}-${entity.id}`,
-                }),
+              {React.Children.map(children, ({ props: { key_, renderer, render } }) =>
+                render ? (
+                  <Table.Cell key={key_ as string}>{render(entity)}</Table.Cell>
+                ) : (
+                  (renderer || defaultRenderer).renderEntity(entity, {
+                    colKey: key_ as string,
+                    componentKey: `table-cell-${key_}-${entity.id}`,
+                  })
+                ),
               )}
 
               <Table.Cell

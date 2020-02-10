@@ -12,7 +12,7 @@ import { IViewProps as IProps } from './AdminFeatureValuesListPresenter';
 import { FeatureValueTypeRenderer } from './FeatureValueTypeRenderer';
 import { fullWidthMixin } from 'src/styles/mixins';
 
-const NewFeatureValueButton = injectIntl(({ intl }) => (
+export const NewFeatureValueButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/featureValues/new" color="is-primary">
     {intl.formatMessage({ id: 'AdminFeatureValues.notFound.cta' })}
   </LinkButton>

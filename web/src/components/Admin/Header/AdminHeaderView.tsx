@@ -49,6 +49,13 @@ export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlSh
         }
       `}
     >
+      <Menu.List>
+        <Menu.Item>
+          <NavLink to="/admin" exact activeClassName="is-active">
+            {intl.formatMessage({ id: 'AdminMenu.home' })}
+          </NavLink>
+        </Menu.Item>
+      </Menu.List>
       <Menu.Label>{intl.formatMessage({ id: 'AdminMenu.modelsLabel' })}</Menu.Label>
       <Menu.List>
         <Menu.Item>
@@ -69,6 +76,11 @@ export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlSh
         <Menu.Item>
           <NavLink to="/admin/productTypes" activeClassName="is-active">
             {intl.formatMessage({ id: 'AdminMenu.productTypesLinkText' })}
+          </NavLink>
+        </Menu.Item>
+        <Menu.Item>
+          <NavLink to="/admin/products" activeClassName="is-active">
+            {intl.formatMessage({ id: 'AdminMenu.productsLinkText' })}
           </NavLink>
         </Menu.Item>
       </Menu.List>

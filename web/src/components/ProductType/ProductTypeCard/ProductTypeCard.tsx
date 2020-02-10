@@ -7,14 +7,14 @@ import { CardContent } from 'src/components/common/CardContent/CardContent';
 import { CardImage } from 'src/components/common/CardImage/CardImage';
 import { Image } from 'src/components/common/Image/Image';
 import { Title } from 'src/components/common/Title/Title';
-import { marginAutoMixin } from 'src/styles/mixins';
+import { fullWidthMixin } from 'src/styles/mixins';
 
 export interface IProps {
   productType: IProductTypeListResponseItem;
 }
 
 export const ProductTypeCard = ({ productType }: IProps) => (
-  <Card className="equal-height">
+  <Card>
     <CardImage
       css={css`
         padding: 1.5rem;
@@ -22,10 +22,15 @@ export const ProductTypeCard = ({ productType }: IProps) => (
     >
       <Image
         css={css`
-          ${marginAutoMixin}
+          height: 300px;
+          ${fullWidthMixin};
+          position: relative;
+          overflow: hidden;
         `}
-        className="is-3by4"
-        imgProps={{ src: productType.image }}
+        imgProps={{
+          src: productType.image,
+          style: { position: 'absolute', top: '50%', left: '50%', transform: 'translate3d(-50%, -50%, 0)' },
+        }}
       />
     </CardImage>
     <CardContent>

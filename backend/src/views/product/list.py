@@ -24,6 +24,7 @@ class ProductListView(ValidatableView, PaginatableView):
             self
             ._serializer_cls(product)
             .in_language(request.language)
+            .with_serialized_product_type()
             .serialize()
             for product in products
         ]
@@ -41,6 +42,7 @@ class ProductListView(ValidatableView, PaginatableView):
                 self
                 ._serializer_cls(product)
                 .in_language(request.language)
+                .with_serialized_product_type()
                 .serialize()
             )
             return {'data': serialized_product}, OK_CODE

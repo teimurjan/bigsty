@@ -17,9 +17,17 @@ class ProductDetailView(ValidatableView):
                 self
                 ._serializer_cls(product)
                 .in_language(request.language)
+                .with_serialized_product_type()
                 .serialize()
             )
             return {'data': serialized_product}, OK_CODE
+        except self._service.ProductNotFound:
+            return {}, NOT_FOUND_CODE
+
+    def head(self, request, product_id):
+        try:
+            self._service.get_one(product_id)
+            return {}, OK_CODE
         except self._service.ProductNotFound:
             return {}, NOT_FOUND_CODE
 
@@ -35,6 +43,7 @@ class ProductDetailView(ValidatableView):
                 self
                 ._serializer_cls(product)
                 .in_language(request.language)
+                .with_serialized_product_type()
                 .serialize()
             )
             return {'data': serialized_product}, OK_CODE

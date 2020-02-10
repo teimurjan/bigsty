@@ -12,7 +12,7 @@ import { AdminTable, IntlRenderer, ImageRenderer } from '../../AdminTable';
 import { IViewProps as IProps } from './AdminProductTypesListPresenter';
 import { fullWidthMixin } from 'src/styles/mixins';
 
-const NewProductTypeButton = injectIntl(({ intl }) => (
+export const NewProductTypeButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/productTypes/new" color="is-primary">
     {intl.formatMessage({ id: 'AdminProductTypes.notFound.cta' })}
   </LinkButton>

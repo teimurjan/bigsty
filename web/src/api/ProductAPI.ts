@@ -1,0 +1,162 @@
+import { Client } from 'ttypes/http';
+
+import { IHeadersManager } from 'src/manager/HeadersManager';
+import { buildQueryString } from 'src/utils/queryString';
+
+export interface IProductListResponseMeta {
+  count: number;
+  pages_count: number;
+  page: number;
+  limit: number;
+}
+
+export interface IProductListResponseItem {
+  id: number;
+  discount: number;
+  price: number;
+  quantity: number;
+  product_type: { id: number; name: string };
+  feature_values: number[];
+  images: string[];
+}
+
+export interface IProductResponseItem {
+  id: number;
+  discount: number;
+  price: number;
+  quantity: number;
+  product_type: { id: number; name: string };
+  feature_values: number[];
+  images: string[];
+}
+
+export interface IProductListResponseData {
+  data: IProductListResponseItem[];
+  meta: IProductListResponseMeta;
+}
+
+export interface IProductResponseData {
+  data: IProductResponseItem;
+}
+
+export interface IProductCreatePayload {
+  discount: number;
+  price: number;
+  quantity: number;
+  product_type_id: number;
+  images: Array<File | string>;
+}
+
+export type IProductEditPayload = IProductCreatePayload;
+
+export interface IProductAPI {
+  getAll(page: number): Promise<IProductListResponseData>;
+  delete(id: number): Promise<{}>;
+  create(payload: IProductCreatePayload): Promise<IProductResponseData>;
+  edit(id: number, payload: IProductEditPayload): Promise<IProductResponseData>;
+  status(id: number): Promise<{}>;
+  getOne(id: number): Promise<IProductResponseData>;
+}
+
+export const errors = {
+  ProductNotFound: class extends Error {
+    constructor() {
+      super('Product type not found');
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
+};
+
+export class ProductAPI implements IProductAPI {
+  private client: Client;
+  private headersManager: IHeadersManager;
+
+  constructor(client: Client, headersManager: IHeadersManager) {
+    this.client = client;
+    this.headersManager = headersManager;
+  }
+
+  public async getAll(page: number) {
+    try {
+      const response = await this.client.get<IProductListResponseData>(`/api/products${buildQueryString({ page })}`, {
+        headers: this.headersManager.getHeaders(),
+      });
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async delete(id: number) {
+    try {
+      const response = await this.client.delete<{}>(`/api/products/${id}`, {
+        headers: this.headersManager.getHeaders(),
+      });
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.ProductNotFound();
+      }
+      throw e;
+    }
+  }
+
+  public async create({ images, ...json }: IProductCreatePayload) {
+    try {
+      const formData = new FormData();
+      formData.append('json', JSON.stringify(json));
+      images.forEach(image => formData.append('images', image));
+      const response = await this.client.post<IProductResponseData>(`/api/products`, formData, {
+        headers: this.headersManager.getHeaders(),
+      });
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async edit(id: number, { images, ...json }: IProductEditPayload) {
+    try {
+      const formData = new FormData();
+      formData.append('json', JSON.stringify(json));
+      images.forEach(image => formData.append('images', image));
+      const response = await this.client.put<IProductResponseData>(`/api/products/${id}`, formData, {
+        headers: this.headersManager.getHeaders(),
+      });
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.ProductNotFound();
+      }
+      throw e;
+    }
+  }
+
+  public async status(id: number) {
+    try {
+      const response = await this.client.head<{}>(`/api/products/${id}`, {
+        headers: this.headersManager.getHeaders(),
+      });
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.ProductNotFound();
+      }
+      throw e;
+    }
+  }
+
+  public async getOne(id: number) {
+    try {
+      const response = await this.client.get<IProductResponseData>(`/api/products/${id}`, {
+        headers: this.headersManager.getHeaders(),
+      });
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.ProductNotFound();
+      }
+      throw e;
+    }
+  }
+}

@@ -30,6 +30,15 @@ export interface IProductTypeListRawIntlResponseItem {
   feature_types: number[];
 }
 
+export interface IProductTypeBaseListResponseItem {
+  id: number;
+  name: string;
+}
+
+export interface IProductTypeBaseListResponseItemData {
+  data: IProductTypeBaseListResponseItem[];
+}
+
 export interface IProductTypeListResponseData {
   data: IProductTypeListResponseItem[];
   meta: IProductTypeListResponseMeta;
@@ -65,6 +74,7 @@ export type IProductTypeEditPayload = IProductTypeCreatePayload;
 export interface IProductTypeAPI {
   getForCategory(categoryId: number, page: number): Promise<IProductTypeListResponseData>;
   getAll(page: number): Promise<IProductTypeListResponseData>;
+  getAllWithBaseFields(): Promise<IProductTypeBaseListResponseItemData>;
   getAllRawIntl(page: number): Promise<IProductTypeListRawIntlResponseData>;
   delete(id: number): Promise<{}>;
   create(payload: IProductTypeCreatePayload): Promise<IProductTypeRawIntlResponseData>;
@@ -109,6 +119,20 @@ export class ProductTypeAPI implements IProductTypeAPI {
     try {
       const response = await this.client.get<IProductTypeListResponseData>(
         `/api/product_types${buildQueryString({ page })}`,
+        {
+          headers: this.headersManager.getHeaders(),
+        },
+      );
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async getAllWithBaseFields() {
+    try {
+      const response = await this.client.get<IProductTypeBaseListResponseItemData>(
+        `/api/product_types${buildQueryString({ fields: ['id', 'name'] })}`,
         {
           headers: this.headersManager.getHeaders(),
         },

@@ -50,7 +50,6 @@ export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview =
 
   return (
     <div className="file-container">
-      {showPreview && previewURL && <img src={previewURL} />}
       <div className="file has-name is-fullwidth">
         <label className="file-label">
           <input className="file-input" type="file" onChange={handleChange} />
@@ -63,6 +62,7 @@ export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview =
           <Filename file={value} />
         </label>
       </div>
+      {showPreview && previewURL && <img src={previewURL} />}
     </div>
   );
 };

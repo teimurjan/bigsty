@@ -30,7 +30,7 @@ class ProductSerializer(IntlSerializer):
         if isinstance(self._product_type, ProductType):
             self._product_type = ProductTypeSerializer(
                 self._product_type
-            ).in_language(self._language).serialize()
+            ).in_language(self._language).only(['id', 'name', 'category', 'feature_types']).serialize()
         return self
 
     def _serialize_product_type(self):

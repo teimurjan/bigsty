@@ -47,7 +47,7 @@ export const ProductTypesListView = injectIntl(
               </Column>
             ))}
           </Columns>
-          <UncontrolledPagination length={meta.count} />
+          <UncontrolledPagination length={meta.pages_count} />
         </React.Fragment>
       );
     };

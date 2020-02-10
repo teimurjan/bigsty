@@ -33,6 +33,7 @@ class ProductTypeListView(ValidatableView, PaginatableView):
             self
             ._serializer_cls(product_type)
             .in_language(None if should_get_raw_intl_field else request.language)
+            .only(request.args.getlist('fields'))
             .serialize()
             for product_type in product_types
         ]
