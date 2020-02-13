@@ -10,7 +10,7 @@ import { ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
 
 import { fullWidthMixin } from 'src/styles/mixins';
 
-import { LanguageDropdownContainer as LanguageDropdown } from '../../LanguageDropdown/LanguageDropdownContainer';
+import { LanguageDropdownContainer as LanguageDropdown } from '../../Client/LanguageDropdown/LanguageDropdownContainer';
 
 import { IViewProps as IProps } from './AdminHeaderPresenter';
 import { mediaQueries } from 'src/styles/media';

@@ -78,8 +78,9 @@ class ProductTypeRepo(IntlRepo):
         return (
             session
             .query(ProductType)
-            .filter(Category.id == category_id)
-            .order_by(ProductType.id).all()
+            .filter(ProductType.category_id.in_([category_id]))
+            .order_by(ProductType.id)
+            .all()
         )
 
     class DoesNotExist(Exception):

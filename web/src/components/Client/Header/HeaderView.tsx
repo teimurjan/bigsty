@@ -46,7 +46,11 @@ export const HeaderView = ({ categories, user, intl, onLogOutClick }: IProps & {
   const toggleOpen = () => setOpen(!isOpen);
 
   return (
-    <Navbar>
+    <Navbar
+      css={css`
+        height: 3.25rem;
+      `}
+    >
       <Container>
         <NavbarBrand>
           <Link className="navbar-item" to="/">

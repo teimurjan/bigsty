@@ -10,8 +10,8 @@ import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Section } from 'src/components/common/Section/Section';
 import { UncontrolledPagination } from 'src/components/common/UncontrolledPagination/UncontrolledPagination';
-import { ProductTypeCard } from 'src/components/ProductType/ProductTypeCard/ProductTypeCard';
-import { IListViewProps as IProps } from 'src/components/ProductType/ProducTypesPage/ProductTypesPagePresenter';
+import { ProductTypeCard } from 'src/components/Client/ProductType/ProductTypeCard/ProductTypeCard';
+import { IListViewProps as IProps } from 'src/components/Client/ProducTypesPage/ProductTypesPagePresenter';
 
 export const ProductTypesListView = injectIntl(
   class extends React.Component<IProps & { intl: IntlShape }> {

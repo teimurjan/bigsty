@@ -141,5 +141,7 @@
   "AdminHome.makeProduct": "Make a product of the created product type with the created feature.",
   "AdminHome.exampleProduct1": "IPhone 11 Black 64GB",
   "AdminHome.exampleProduct2": "IPhone 11 Pro White 256GB",
-  "AdminMenu.home": "Home"
+  "AdminMenu.home": "Home",
+  "Home.searchFor": "I am searching for...",
+  "common.noResults": "No results matching your request"
 }

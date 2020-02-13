@@ -141,5 +141,7 @@
   "AdminHome.makeProduct": "Создай продукт на основе созданного типа с помощью созданных характеристик.",
   "AdminHome.exampleProduct1": "Айфон 11 Черный 64ГБ",
   "AdminHome.exampleProduct2": "Айфон 11 Про Белый 256ГБ",
-  "AdminMenu.home": "Домой"
+  "AdminMenu.home": "Домой",
+  "Home.searchFor": "Я ищу...",
+  "common.noResults": "Нет результатов удовлетворяющих Вашему запросу"
 }
