@@ -1,5 +1,7 @@
-from src.repos.base import IntlRepo
+from sqlalchemy.orm.query import aliased
+
 from src.models import Category, CategoryName, FeatureType
+from src.repos.base import IntlRepo
 
 
 class CategoryRepo(IntlRepo):
@@ -29,6 +31,21 @@ class CategoryRepo(IntlRepo):
         session.flush()
 
         return category
+
+    @IntlRepo.with_session
+    def get_children(self, id_, session):
+        category_recursive_query = session.query(Category).filter(
+            Category.id == id_).cte(recursive=True)
+
+        category_alias = aliased(category_recursive_query, name="parent")
+        children_alias = aliased(Category, name='children')
+
+        final_query = category_recursive_query.union_all(
+            session.query(children_alias).filter(
+                children_alias.parent_category_id == category_alias.c.id)
+        )
+
+        return session.query(final_query).all()
 
     class DoesNotExist(Exception):
         pass

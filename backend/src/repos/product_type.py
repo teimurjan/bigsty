@@ -1,6 +1,9 @@
-from src.repos.base import IntlRepo
-from src.models import ProductType, ProductTypeName, ProductTypeDescription, ProductTypeShortDescription, Category
+from sqlalchemy.orm import joinedload
+
 from src.file_storage import FileStorage
+from src.models import (Category, Product, ProductType, ProductTypeDescription,
+                        ProductTypeName, ProductTypeShortDescription)
+from src.repos.base import IntlRepo
 
 
 class ProductTypeRepo(IntlRepo):
@@ -74,11 +77,12 @@ class ProductTypeRepo(IntlRepo):
         return product_type
 
     @IntlRepo.with_session
-    def filter_by_category_id(self, category_id, session):
+    def get_for_categories_with_products(self, category_ids, session):
         return (
             session
             .query(ProductType)
-            .filter(ProductType.category_id.in_([category_id]))
+            .options(joinedload(ProductType.products))
+            .filter(ProductType.category_id.in_(category_ids))
             .order_by(ProductType.id)
             .all()
         )

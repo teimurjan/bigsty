@@ -9,8 +9,8 @@ from src.constants.status_codes import (
 
 
 class AbstractView(View):
-    def __init__(self, concrete_view_factory, middlewares):
-        self._concrete_view_factory = concrete_view_factory
+    def __init__(self, concrete_view, middlewares):
+        self._concrete_view = concrete_view
         self._middlewares = middlewares
 
     def dispatch_request(self, *args, **kwargs):
@@ -36,8 +36,7 @@ class AbstractView(View):
             middleware.handle(request)
 
     def _get_handler(self, http_method):
-        if self._concrete_view_factory is not None:
-            view = self._concrete_view_factory.create(http_method)
-            return getattr(view, http_method)
+        if self._concrete_view is not None:
+            return getattr(self._concrete_view, http_method)
         else:
             raise Exception('You must specify a view factory')

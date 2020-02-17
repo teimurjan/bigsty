@@ -1,10 +1,16 @@
-from src.services.decorators import allow_roles
+import json
+
+from elasticsearch.client import Elasticsearch
+
+from src.models.intl import Language
 from src.repos.category import CategoryRepo
+from src.services.decorators import allow_roles
 
 
 class CategoryService:
-    def __init__(self, repo: CategoryRepo):
+    def __init__(self, repo: CategoryRepo, es: Elasticsearch):
         self._repo = repo
+        self._es = es
 
     def get_all(self):
         return self._repo.get_all()
@@ -47,6 +53,39 @@ class CategoryService:
             return self._repo.delete(id_)
         except self._repo.DoesNotExist:
             raise self.CategoryNotFound()
+
+    def search(self, query: str, language: Language):
+        formatted_query = query.lower()
+        body = json.loads('''
+            {
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {
+                                    "%s": "%s"
+                                }
+                            },
+                            {
+                                "match": {
+                                    "%s": {
+                                        "query": "%s",
+                                        "fuzziness": "AUTO",
+                                        "operator": "and"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ''' % (language.name, formatted_query, language.name, formatted_query)
+        )
+        result = self._es.search(index='category', body=body)
+
+        ids = [hit['_id'] for hit in result['hits']['hits']]
+        
+        return self._repo.filter_by_ids(ids)
 
     class CategoryNotFound(Exception):
         pass

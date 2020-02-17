@@ -8,33 +8,84 @@ import { CardImage } from 'src/components/common/CardImage/CardImage';
 import { Image } from 'src/components/common/Image/Image';
 import { Title } from 'src/components/common/Title/Title';
 import { fullWidthMixin } from 'src/styles/mixins';
+import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
+import { useIntl } from 'react-intl';
+import { calculateDiscountedPrice } from 'src/utils/number';
+import { mediaQueries } from 'src/styles/media';
+import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 
 export interface IProps {
   productType: IProductTypeListResponseItem;
 }
 
-export const ProductTypeCard = ({ productType }: IProps) => (
-  <Card>
-    <CardImage
+const PriceText = ({ priceRange }: { priceRange: number[] }) => {
+  const intl = useIntl();
+
+  if (priceRange.length === 0) {
+    return <Title size={5}>{intl.formatMessage({ id: 'common.notSpecified' })}</Title>;
+  }
+
+  return (
+    <Title size={5}>
+      {priceRange.length > 1 ? `${Math.min(...priceRange)}$ - ${Math.max(...priceRange)}$` : `${priceRange[0]}$`}
+    </Title>
+  );
+};
+
+export const ProductTypeCard = ({ productType }: IProps) => {
+  const intl = useIntl();
+
+  return (
+    <Card
       css={css`
-        padding: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
       `}
     >
-      <Image
+      <CardImage>
+        <Image
+          css={css`
+            height: 250px;
+            ${fullWidthMixin};
+            position: relative;
+            overflow: hidden;
+
+            @media ${mediaQueries.maxWidth768} {
+              height: 170px;
+            }
+          `}
+          imgProps={{
+            src: productType.image,
+            style: { position: 'absolute', top: '50%', left: '50%', transform: 'translate3d(-50%, -50%, 0)' },
+          }}
+        />
+      </CardImage>
+      <CardContent
         css={css`
-          height: 300px;
-          ${fullWidthMixin};
-          position: relative;
-          overflow: hidden;
+          @media ${mediaQueries.maxWidth768} {
+            padding: 0.5rem;
+          }
         `}
-        imgProps={{
-          src: productType.image,
-          style: { position: 'absolute', top: '50%', left: '50%', transform: 'translate3d(-50%, -50%, 0)' },
-        }}
-      />
-    </CardImage>
-    <CardContent>
-      <Title size={4}>{productType.name}</Title>
-    </CardContent>
-  </Card>
-);
+      >
+        <Subtitle size={5}>{productType.name}</Subtitle>
+        {productType.products && (
+          <PriceText
+            priceRange={productType.products.map(product => calculateDiscountedPrice(product.price, product.discount))}
+          />
+        )}
+      </CardContent>
+      <LinkButton
+        css={css`
+          width: 100%;
+          border-radius: unset;
+          margin-top: auto;
+        `}
+        to={`/productTypes/${productType.id}`}
+        color="is-primary"
+      >
+        {intl.formatMessage({ id: 'common.buy' })}
+      </LinkButton>
+    </Card>
+  );
+};

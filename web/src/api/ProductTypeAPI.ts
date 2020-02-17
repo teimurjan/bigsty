@@ -18,6 +18,13 @@ export interface IProductTypeListResponseItem {
   image: string;
   category: number;
   feature_types: number[];
+  products?: Array<{
+    discount: number;
+    feature_values: number[];
+    id: number;
+    price: number;
+    quantity: number;
+  }>;
 }
 
 export interface IProductTypeListRawIntlResponseItem {

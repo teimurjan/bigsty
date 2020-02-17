@@ -24,8 +24,7 @@ class UserSerializer(Serializer):
         })
 
     def with_serialized_group(self):
-        if isinstance(self._group, Group):
-            self._group = GroupSerializer(self._group).serialize()
+        self._with_serialized_relation('_group', Group, GroupSerializer)
         return self
 
     def _serialize_group(self):

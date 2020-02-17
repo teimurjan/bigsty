@@ -1,4 +1,6 @@
-from sqlalchemy import Column, String, orm, Integer, ForeignKey, Table
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, orm
+from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
+
 from src.models.base import BaseModel
 
 

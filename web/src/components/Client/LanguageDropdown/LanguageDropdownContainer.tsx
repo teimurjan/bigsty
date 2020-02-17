@@ -8,7 +8,7 @@ import { useIntlState } from 'src/state/IntlState';
 import { LanguageDropdownPresenter, IViewProps } from './LanguageDropdownPresenter';
 import { LanguageDropdownView } from './LanguageDropdownView';
 
-export const LanguageDropdownContainer = (viewProps: Pick<IViewProps, 'Trigger' | 'className'>) => {
+export const LanguageDropdownContainer = (viewProps: Pick<IViewProps, 'TriggerComponent' | 'className'>) => {
   const { dependencies } = useDependencies();
   const { intlState } = useIntlState();
 

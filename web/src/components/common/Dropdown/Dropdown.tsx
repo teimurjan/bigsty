@@ -8,36 +8,62 @@ import classNames from 'classnames';
 import { useBoolean } from 'src/hooks/useBoolean';
 import useClickOutside from 'src/hooks/useClickOutside';
 
+type RenderChildren = (props: {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  isOpen: boolean;
+}) => React.ReactNode;
+
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
-  children?: React.ReactNode;
-  Trigger: React.ComponentClass<ITriggerProps> | React.StatelessComponent<ITriggerProps>;
+  children?: React.ReactNode | RenderChildren;
+  TriggerComponent?: React.ComponentClass<ITriggerProps> | React.StatelessComponent<ITriggerProps>;
+  trigger?: React.ReactNode | RenderChildren;
+  menuClassName?: string;
 }
 
 export type ITriggerProps = React.HTMLAttributes<HTMLElement>;
 
-export const Dropdown = ({ children, className, Trigger, ...props }: IProps) => {
-  const { value: isOpen, toggle, setNegative: close } = useBoolean();
+export const Dropdown = ({
+  children,
+  className,
+  menuClassName,
+  TriggerComponent,
+  trigger: triggerProp,
+  ...props
+}: IProps) => {
+  const { value: isOpen, toggle, setNegative: close, setPositive: open } = useBoolean();
+  const triggerRef = React.useRef(null);
   const contentRef = React.useRef(null);
 
-  useClickOutside(contentRef, () => {
+  useClickOutside([contentRef, triggerRef], () => {
     if (isOpen) {
       close();
     }
   });
 
+  const trigger = React.useMemo(() => {
+    if (TriggerComponent) {
+      return <TriggerComponent onClick={toggle} />;
+    }
+
+    return typeof triggerProp === 'function' ? triggerProp({ open, close, isOpen, toggle }) : triggerProp;
+  }, [TriggerComponent, close, isOpen, open, toggle, triggerProp]);
+
   return (
     <div className={classNames('dropdown', className, { 'is-active': isOpen })} {...props}>
       <div
+        ref={triggerRef}
         css={css`
           width: inherit;
         `}
         className="dropdown-trigger"
       >
-        <Trigger onClick={toggle} />
+        {trigger}
       </div>
-      <div className="dropdown-menu" role="menu">
+      <div className={classNames('dropdown-menu', menuClassName)} role="menu">
         <div ref={contentRef} className="dropdown-content">
-          {children}
+          {typeof children === 'function' ? children({ open, close, isOpen, toggle }) : children}
         </div>
       </div>
     </div>

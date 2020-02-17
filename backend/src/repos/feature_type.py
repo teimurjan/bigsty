@@ -29,10 +29,6 @@ class FeatureTypeRepo(IntlRepo):
         return feature_type
 
     @IntlRepo.with_session
-    def filter_by_ids(self, ids, session):
-        return session.query(FeatureType).filter(FeatureType.id.in_(ids)).all()
-
-    @IntlRepo.with_session
     def filter_by_category(self, category, session):
         return (
             session

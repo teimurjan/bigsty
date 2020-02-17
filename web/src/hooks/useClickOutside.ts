@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export const useClickOutside = (
   refs: React.RefObject<HTMLElement> | Array<React.RefObject<HTMLElement>>,
-  callback: () => any,
+  callback: () => void,
 ) => {
   React.useEffect(() => {
     const handleClick: EventListener = e => {

@@ -6,10 +6,11 @@ export interface IProps {
   children?: React.ReactNode;
   className?: string;
   href?: string;
-  onClick?: () => any;
+  onClick?: () => void;
+  elementType?: 'a' | 'div';
 }
 
-export const DropdownItem = ({ children, className, onClick, href }: IProps) => {
+export const DropdownItem = ({ elementType = 'a', children, className, onClick, href }: IProps) => {
   const handleClick = React.useCallback(
     (e: React.SyntheticEvent<HTMLAnchorElement>) => {
       if (!href) {
@@ -23,9 +24,9 @@ export const DropdownItem = ({ children, className, onClick, href }: IProps) => 
     [href, onClick],
   );
 
-  return (
-    <a href={href || '#'} className={classNames('dropdown-item', className)} onClick={handleClick}>
-      {children}
-    </a>
+  return React.createElement(
+    elementType,
+    { href: href || '#', className: classNames('dropdown-item', className), onClick: handleClick },
+    children,
   );
 };

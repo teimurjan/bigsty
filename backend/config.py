@@ -11,7 +11,9 @@ class Config:
     CSRF_ENABLED = True
     SECRET_KEY = os.environ.get('SECRET_KEY')
     DB_URL = os.environ.get('DB_URL')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER')
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class ProductionConfig(Config):
@@ -23,7 +25,6 @@ class DevelopmentConfig(Config):
     ENV = "development"
     DEVELOPMENT = True
     DEBUG = True
-    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER')
 
 
 class TestingConfig(Config):

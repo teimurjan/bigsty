@@ -4,13 +4,11 @@ import { Link } from 'react-router-dom';
 
 import { css, jsx } from '@emotion/core';
 import classNames from 'classnames';
-import { IntlShape, injectIntl } from 'react-intl';
+import { IntlShape } from 'react-intl';
 
 import logo from 'src/assets/images/logo.png';
 import { Button } from 'src/components/common/Button/Button';
 import { Container } from 'src/components/common/Container/Container';
-import { Dropdown, ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
-import { DropdownItemLink } from 'src/components/common/DropdownItemLink/DropdownItemLink';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { Navbar } from 'src/components/common/Navbar/Navbar';
 import { NavbarBrand } from 'src/components/common/NavbarBrand/NavbarBrand';
@@ -24,23 +22,9 @@ import { isUserAdmin } from 'src/helpers/user';
 
 import { LanguageDropdownContainer as LanguageDropdown } from '../LanguageDropdown/LanguageDropdownContainer';
 import { IViewProps as IProps } from './HeaderPresenter';
+import { SearchContainer } from '../Search/SearchContainer';
 
-const DropdownTrigger = injectIntl(({ intl, className, ...props }: ITriggerProps & { intl: IntlShape }) => (
-  <NavbarItem className={classNames('navbar-link is-uppercase', className)} {...props}>
-    {intl.formatMessage({ id: 'Header.categories.title' })}
-  </NavbarItem>
-));
-
-const renderCategories = (categories: IProps['categories']): React.ReactNode =>
-  categories
-    .filter(({ parent_category_id }) => !parent_category_id)
-    .map(({ id, name }) => (
-      <DropdownItemLink key={id} to={`/categories/${id}/productTypes`}>
-        {name}
-      </DropdownItemLink>
-    ));
-
-export const HeaderView = ({ categories, user, intl, onLogOutClick }: IProps & { intl: IntlShape }) => {
+export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlShape }) => {
   const [isOpen, setOpen] = React.useState(false);
 
   const toggleOpen = () => setOpen(!isOpen);
@@ -65,8 +49,8 @@ export const HeaderView = ({ categories, user, intl, onLogOutClick }: IProps & {
         </NavbarBrand>
         <NavbarMenu isActive={isOpen}>
           <NavbarStart>
-            <NavbarItem className="is-uppercase">
-              <Dropdown Trigger={DropdownTrigger}>{renderCategories(categories)}</Dropdown>
+            <NavbarItem>
+              <SearchContainer />
             </NavbarItem>
           </NavbarStart>
           <NavbarEnd>

@@ -1,7 +1,12 @@
-from src.services.decorators import allow_roles
+import json
+
+from elasticsearch.client import Elasticsearch
+
+from src.models.intl import Language
 from src.repos.category import CategoryRepo
 from src.repos.feature_type import FeatureTypeRepo
 from src.repos.product_type import ProductTypeRepo
+from src.services.decorators import allow_roles
 
 
 class ProductTypeService:
@@ -10,10 +15,12 @@ class ProductTypeService:
         repo: ProductTypeRepo,
         category_repo: CategoryRepo,
         feature_type_repo: FeatureTypeRepo,
+        es: Elasticsearch
     ):
         self._repo = repo
         self._category_repo = category_repo
         self._feature_type_repo = feature_type_repo
+        self._es = es
 
     @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
@@ -83,8 +90,12 @@ class ProductTypeService:
     def get_all(self):
         return self._repo.get_all()
 
-    def get_by_category_id(self, category_id):
-        return self._repo.filter_by_category_id(category_id)
+    def get_all_categorized(self, category_id):
+        with self._repo.session() as s:
+            children_categories = self._category_repo.get_children(category_id, session=s)
+            categories_ids = [category.id for category in children_categories]
+            product_types = self._repo.get_for_categories_with_products([category_id, *categories_ids], session=s)
+            return product_types
 
     def get_one(self, id_):
         try:
@@ -99,6 +110,39 @@ class ProductTypeService:
         except self._repo.DoesNotExist:
             raise self.ProductTypeNotFound()
 
+    def search(self, query: str, language: Language):
+        formatted_query = query.lower()
+        body = json.loads('''
+            {
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {
+                                    "%s": "%s"
+                                }
+                            },
+                            {
+                                "match": {
+                                    "%s": {
+                                        "query": "%s",
+                                        "fuzziness": "AUTO",
+                                        "operator": "and"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ''' % (language.name, formatted_query, language.name, formatted_query)
+        )
+        result = self._es.search(index='product_type', body=body)
+
+        ids = [hit['_id'] for hit in result['hits']['hits']]
+
+        return self._repo.filter_by_ids(ids)
+
     class ProductTypeNotFound(Exception):
         pass
 
@@ -107,4 +151,3 @@ class ProductTypeService:
 
     class FeatureTypesInvalid(Exception):
         pass
-

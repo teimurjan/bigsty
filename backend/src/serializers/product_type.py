@@ -1,8 +1,10 @@
 from src.models.category import Category
 from src.models.feature_type import FeatureType
-from src.serializers.intl import IntlSerializer
-from src.serializers.feature_type import FeatureTypeSerializer
+from src.models.product import Product
 from src.serializers.category import CategorySerializer
+from src.serializers.feature_type import FeatureTypeSerializer
+from src.serializers.intl import IntlSerializer
+from src.serializers.product import ProductSerializer
 
 
 class ProductTypeSerializer(IntlSerializer):
@@ -15,6 +17,7 @@ class ProductTypeSerializer(IntlSerializer):
         self._image = product_type.image
         self._category = product_type.category
         self._feature_types = product_type.feature_types
+        self._products = None
 
     def serialize(self):
         return self._filter_with_only_fields({
@@ -25,6 +28,7 @@ class ProductTypeSerializer(IntlSerializer):
             'image': self._image,
             'category': self._serialize_category(),
             'feature_types': self._serialize_feature_types(),
+            'products': self._products,
         })
 
     def _serialize_name(self):
@@ -37,28 +41,28 @@ class ProductTypeSerializer(IntlSerializer):
         return self._get_intl_field_from(self._short_descriptions)
 
     def with_serialized_category(self):
-        if isinstance(self._category, Category):
-            self._category = (
-                CategorySerializer(self._category)
-                .in_language(self._language)
-                .serialize()
-            )
+        self._with_serialized_relation(
+            '_category', Category, CategorySerializer, self._language)
+
         return self
 
     def _serialize_category(self):
-        return self._category.id if isinstance(self._category, Category) else self._category
+        return self._serialize_relation('_category', Category)
 
     def with_serialized_feature_types(self):
-        self._feature_types = [
-            FeatureTypeSerializer(feature_type)
-            .in_language(self._language)
-            .serialize()
-            for feature_type in self._feature_types
-        ]
+        self._with_serialized_relations(
+            '_feature_types', FeatureType, FeatureTypeSerializer, self._language)
+
         return self
 
     def _serialize_feature_types(self):
-        if len(self._feature_types) > 0 and isinstance(self._feature_types[0], FeatureType):
-            return [feature_type.id for feature_type in self._feature_types]
-        else:
-            return self._feature_types
+        return self._serialize_relations('_feature_types', FeatureType)
+
+    def add_products(self, products):
+        self._products = [
+            ProductSerializer(product)
+            .in_language(self._language)
+            .serialize()
+            for product in products
+        ]
+        return self

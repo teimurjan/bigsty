@@ -7,6 +7,7 @@ import * as featureValueAPI from 'src/api/FeatureValueAPI';
 import * as intlAPI from 'src/api/IntlAPI';
 import * as productTypeAPI from 'src/api/ProductTypeAPI';
 import * as productAPI from 'src/api/ProductAPI';
+import * as searchAPI from 'src/api/SearchAPI';
 
 import * as authService from 'src/services/AuthService';
 import * as categoryService from 'src/services/CategoryService';
@@ -15,6 +16,7 @@ import * as featureValueService from 'src/services/FeatureValueService';
 import * as intlService from 'src/services/IntlService';
 import * as productTypeService from 'src/services/ProductTypeService';
 import * as productService from 'src/services/ProductService';
+import * as searchService from 'src/services/SearchService';
 
 import * as authStorage from 'src/storage/AuthStorage';
 import * as intlStorage from 'src/storage/IntlStorage';
@@ -29,6 +31,7 @@ export interface IAPIsContainer {
   featureType: featureTypeAPI.IFeatureTypeAPI;
   featureValue: featureValueAPI.IFeatureValueAPI;
   intl: intlAPI.IIntlAPI;
+  search: searchAPI.ISearchAPI;
 }
 
 export interface IServicesContainer {
@@ -39,6 +42,7 @@ export interface IServicesContainer {
   featureType: featureTypeService.IFeatureTypeService;
   featureValue: featureValueService.IFeatureValueService;
   intl: intlService.IIntlService;
+  search: searchService.ISearchService;
 }
 
 export interface IStoragesContainer {
@@ -79,6 +83,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     intl: new intlAPI.IntlAPI(APIClient, headersManager),
     productType: new productTypeAPI.ProductTypeAPI(APIClient, headersManager),
     product: new productAPI.ProductAPI(APIClient, headersManager),
+    search: new searchAPI.SearchAPI(APIClient, headersManager),
   };
 
   const servicesContainer = {
@@ -89,6 +94,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     intl: new intlService.IntlService(APIsContainer.intl, storagesContainer.intl),
     productType: new productTypeService.ProductTypeService(APIsContainer.productType),
     product: new productService.ProductService(APIsContainer.product),
+    search: new searchService.SearchService(APIsContainer.search),
   };
 
   return new DependenciesContainer(APIsContainer, storagesContainer, servicesContainer);

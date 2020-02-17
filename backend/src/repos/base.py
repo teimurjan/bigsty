@@ -6,20 +6,23 @@ from contextlib import contextmanager
 T = TypeVar('T')
 
 
+def with_session(f):
+    def wrapper(self, *args, **kwargs):
+        if kwargs.get('session') is None:
+            with self.session() as s:
+                kwargs['session'] = s
+                return f(self, *args, **kwargs)
+        return f(self, *args, **kwargs)
+
+    return wrapper
+
+
 class Repo(Generic[T]):
+    with_session = with_session
+
     def __init__(self, db_conn, Model: T):
         self.__db_conn = db_conn
         self.__Model = Model
-
-    def with_session(f):
-        def wrapper(self, *args, **kwargs):
-            if kwargs.get('session') is None:
-                with self.session() as s:
-                    kwargs['session'] = s
-                    return f(self, *args, **kwargs)
-            return f(self, *args, **kwargs)
-
-        return wrapper
 
     @contextmanager
     def session(self):
@@ -43,8 +46,12 @@ class Repo(Generic[T]):
         return obj
 
     @with_session
-    def get_all(self, session):
+    def get_all(self, session=None):
         return session.query(self.__Model).order_by(self.__Model.id).all()
+
+    @with_session
+    def filter_by_ids(self, ids, session):
+        return session.query(self.__Model).filter(self.__Model.id.in_(ids)).all()
 
     @with_session
     def delete(self, id_, session):

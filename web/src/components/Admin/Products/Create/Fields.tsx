@@ -168,7 +168,7 @@ const ProductTypeSelect = injectIntl(
           children: (
             <>
               {intl.formatMessage({
-                id: 'AdminProducts.productTypeSelect.label',
+                id: 'common.productTypeSelect.label',
               })}
             </>
           ),

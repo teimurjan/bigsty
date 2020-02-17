@@ -87,7 +87,7 @@ const CategorySelect = injectIntl(({ categories, intl, input, meta }: ICategoryS
         children: (
           <>
             {intl.formatMessage({
-              id: 'AdminProductTypes.categorySelect.label',
+              id: 'common.category',
             })}
           </>
         ),

@@ -1,9 +1,17 @@
 from abc import abstractmethod
 
+from sqlalchemy.orm.exc import DetachedInstanceError
+
 
 class Serializer:
     def __init__(self):
         self._only_fields = None
+
+    def _init_relation_safely(self, attr_name, obj, relation_name):
+        try:
+            setattr(self, attr_name, getattr(obj, relation_name))
+        except DetachedInstanceError:
+            setattr(self, attr_name, None)
 
     def only(self, only_fields):
         if only_fields:
@@ -18,6 +26,43 @@ class Serializer:
                     filtered_dict[field] = serialized_dict[field]
             return filtered_dict
         return serialized_dict
+
+    def _with_serialized_relation(self, attr_name, model_cls, serializer_cls, language=None, only=None):
+        if isinstance(getattr(self, attr_name), model_cls):
+            serializer = serializer_cls(getattr(self, attr_name))
+            if language is not None:
+                serializer.in_language(language)
+            if only is not None:
+                serializer.only(only)
+            setattr(
+                self,
+                attr_name,
+                serializer.serialize()
+            )
+        return self
+
+    def _serialize_relation(self, attr_name, model_cls):
+        if isinstance(getattr(self, attr_name), model_cls):
+            return getattr(self, attr_name).id
+        return getattr(self, attr_name)
+
+    def _with_serialized_relations(self, attr_name, model_cls, serializer_cls, language=None, only=None):
+        serialized = []
+        for i in getattr(self, attr_name):
+            serializer = serializer_cls(i)
+            if language is not None:
+                serializer.in_language(language)
+            if only is not None:
+                serializer.only(only)
+            serialized.append(serializer.serialize())
+
+        setattr(self, attr_name, serialized)
+        return self
+
+    def _serialize_relations(self, attr_name, model_cls):
+        if getattr(self, attr_name) and isinstance(getattr(self, attr_name)[0], model_cls):
+            return [i.id for i in getattr(self, attr_name)]
+        return getattr(self, attr_name)
 
     @abstractmethod
     def serialize(self):

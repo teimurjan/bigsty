@@ -12,7 +12,7 @@ class ProductTypeByCategoryView(PaginatableView):
         self._serializer_cls = serializer_cls
 
     def get(self, request, category_id):
-        product_types = self._service.get_by_category_id(category_id)
+        product_types = self._service.get_all_categorized(category_id)
 
         meta = None
         page = parse_int(request.args.get('page'))
@@ -23,6 +23,7 @@ class ProductTypeByCategoryView(PaginatableView):
         serialized_product_types = [
             self
             ._serializer_cls(product_type)
+            .add_products(product_type.products)
             .in_language(request.language)
             .serialize()
             for product_type in product_types

@@ -33,9 +33,5 @@ class FeatureValueRepo(IntlRepo):
 
         return feature_value
 
-    @IntlRepo.with_session
-    def filter_by_ids(self, ids, session):
-        return session.query(FeatureValue).filter(FeatureValue.id.in_(ids)).all()
-
     class DoesNotExist(Exception):
         pass

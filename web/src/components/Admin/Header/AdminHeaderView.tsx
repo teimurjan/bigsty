@@ -88,7 +88,7 @@ export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlSh
       <Menu.Label>{intl.formatMessage({ id: 'AdminMenu.actionsLabel' })}</Menu.Label>
       <Menu.List>
         <Menu.Item>
-          <LanguageDropdown css={fullWidthMixin} Trigger={LanguageDrodownTrigger} />
+          <LanguageDropdown css={fullWidthMixin} TriggerComponent={LanguageDrodownTrigger} />
         </Menu.Item>
         <Menu.Item>
           <Link to="#" onClick={onLogOutClick}>

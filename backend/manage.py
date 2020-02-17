@@ -3,11 +3,11 @@ from shutil import copyfile
 
 from flask_script import Manager
 
-from src.factories.app import AppFactory
+from src.app import App
 
-app = AppFactory.create()
+app = App()
 
-manager = Manager(app)
+manager = Manager(app.flask_app)
 
 if __name__ == '__main__':
     manager.run()

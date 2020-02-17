@@ -40,10 +40,10 @@ export const LanguageDropdownView = ({
   locales,
   changeLocale,
   currentLocale,
-  Trigger = DefaultDropdownTrigger,
+  TriggerComponent = DefaultDropdownTrigger,
   className,
 }: IProps & { intl: IntlShape }) => (
-  <Dropdown className={className} Trigger={Trigger}>
+  <Dropdown className={className} TriggerComponent={TriggerComponent}>
     {locales.map(locale => {
       const onClick = async () => {
         await changeLocale(locale);

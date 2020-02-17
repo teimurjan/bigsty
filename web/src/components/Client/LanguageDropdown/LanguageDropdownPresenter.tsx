@@ -13,7 +13,7 @@ export interface IViewProps {
   locales: string[];
   changeLocale: IIntlService['setLocale'];
   currentLocale: string;
-  Trigger?: IDropdownProps['Trigger'];
+  TriggerComponent?: IDropdownProps['TriggerComponent'];
   className?: string;
 }
 
