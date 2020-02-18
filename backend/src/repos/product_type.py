@@ -1,9 +1,9 @@
 from sqlalchemy.orm import joinedload
 
 from src.file_storage import FileStorage
-from src.models import (Category, Product, ProductType, ProductTypeDescription,
+from src.models import (ProductType, ProductTypeDescription,
                         ProductTypeName, ProductTypeShortDescription)
-from src.repos.base import IntlRepo
+from src.repos.base import IntlRepo, with_session
 
 
 class ProductTypeRepo(IntlRepo):
@@ -11,7 +11,7 @@ class ProductTypeRepo(IntlRepo):
         super().__init__(db_conn, ProductType)
         self.__file_storage = file_storage
 
-    @IntlRepo.with_session
+    @with_session
     def add_product_type(
         self,
         names,
@@ -45,7 +45,7 @@ class ProductTypeRepo(IntlRepo):
 
         return product_type
 
-    @IntlRepo.with_session
+    @with_session
     def update_product_type(
         self,
         id_,
@@ -76,7 +76,7 @@ class ProductTypeRepo(IntlRepo):
 
         return product_type
 
-    @IntlRepo.with_session
+    @with_session
     def get_for_categories_with_products(self, category_ids, session):
         return (
             session
@@ -86,6 +86,10 @@ class ProductTypeRepo(IntlRepo):
             .order_by(ProductType.id)
             .all()
         )
+
+    @with_session
+    def has_with_category(self, id_, session):
+        return session.query(ProductType).filter(ProductType.category_id == id_).count() > 0
 
     class DoesNotExist(Exception):
         pass

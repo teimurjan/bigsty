@@ -1,4 +1,4 @@
-from src.repos.base import IntlRepo
+from src.repos.base import IntlRepo, with_session
 from src.models import FeatureValue, FeatureValueName, FeatureType
 
 
@@ -6,7 +6,7 @@ class FeatureValueRepo(IntlRepo):
     def __init__(self, db_conn):
         super().__init__(db_conn, FeatureValue)
 
-    @IntlRepo.with_session
+    @with_session
     def add_feature_value(self, names, feature_type, session):
         feature_value = FeatureValue()
 
@@ -23,7 +23,7 @@ class FeatureValueRepo(IntlRepo):
 
         return feature_value
 
-    @IntlRepo.with_session
+    @with_session
     def update_feature_value(self, id_, names, feature_type, session):
         feature_value = self.get_by_id(id_, session=session)
         

@@ -1,14 +1,14 @@
 from sqlalchemy.orm.query import aliased
 
 from src.models import Category, CategoryName, FeatureType
-from src.repos.base import IntlRepo
+from src.repos.base import IntlRepo, with_session
 
 
 class CategoryRepo(IntlRepo):
     def __init__(self, db_conn):
         super().__init__(db_conn, Category)
 
-    @IntlRepo.with_session
+    @with_session
     def add_category(self, names, parent_category_id, session):
         category = Category()
         category.parent_category_id = parent_category_id
@@ -21,7 +21,7 @@ class CategoryRepo(IntlRepo):
 
         return category
 
-    @IntlRepo.with_session
+    @with_session
     def update_category(self, id_, names, parent_category_id, session):
         category = self.get_by_id(id_, session=session)
         category.parent_category_id = parent_category_id
@@ -32,7 +32,7 @@ class CategoryRepo(IntlRepo):
 
         return category
 
-    @IntlRepo.with_session
+    @with_session
     def get_children(self, id_, session):
         category_recursive_query = session.query(Category).filter(
             Category.id == id_).cte(recursive=True)
@@ -46,6 +46,10 @@ class CategoryRepo(IntlRepo):
         )
 
         return session.query(final_query).all()
+
+    @with_session
+    def has_children(self, id_, session):
+        return session.query(Category).filter(Category.parent_category_id == id_).count() > 0
 
     class DoesNotExist(Exception):
         pass

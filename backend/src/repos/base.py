@@ -18,8 +18,6 @@ def with_session(f):
 
 
 class Repo(Generic[T]):
-    with_session = with_session
-
     def __init__(self, db_conn, Model: T):
         self.__db_conn = db_conn
         self.__Model = Model

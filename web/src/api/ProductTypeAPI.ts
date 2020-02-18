@@ -97,6 +97,12 @@ export const errors = {
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
+  ProductTypeWithProductsIsUntouchable: class extends Error {
+    constructor() {
+      super('Product type with products cannot be deleted');
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
 };
 
 export class ProductTypeAPI implements IProductTypeAPI {
@@ -174,6 +180,10 @@ export class ProductTypeAPI implements IProductTypeAPI {
       if (e.response.status === 404) {
         throw new errors.ProductTypeNotFound();
       }
+      if (e.response.data.products) {
+        throw new errors.ProductTypeWithProductsIsUntouchable();
+      }
+
       throw e;
     }
   }

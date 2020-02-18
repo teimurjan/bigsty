@@ -2,9 +2,19 @@ import * as React from 'react';
 
 import { useDependencies } from 'src/DI/DI';
 
+import * as productTypeService from 'src/services/ProductTypeService';
+
 import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 
 import { DeleteModalContainer } from '../../DeleteModal/DeleteModalContainer';
+
+const getErrorMessageID = (e: Error) => {
+  if (e instanceof productTypeService.errors.ProductTypeHasProducts) {
+    return 'errors.productTypeDeletion.hasProducts';
+  }
+
+  return 'errors.common';
+};
 
 export const AdminProductTypesDeleteContainer = () => {
   const { dependencies } = useDependencies();
@@ -38,5 +48,12 @@ export const AdminProductTypesDeleteContainer = () => {
     [dependencies.services.productType],
   );
 
-  return <DeleteModalContainer deleteEntity={deleteEntity} preloadData={preloadData} backPath="/admin/productTypes" />;
+  return (
+    <DeleteModalContainer
+      getErrorMessageID={getErrorMessageID}
+      deleteEntity={deleteEntity}
+      preloadData={preloadData}
+      backPath="/admin/productTypes"
+    />
+  );
 };

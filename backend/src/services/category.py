@@ -4,12 +4,14 @@ from elasticsearch.client import Elasticsearch
 
 from src.models.intl import Language
 from src.repos.category import CategoryRepo
+from src.repos.product_type import ProductTypeRepo
 from src.services.decorators import allow_roles
 
 
 class CategoryService:
-    def __init__(self, repo: CategoryRepo, es: Elasticsearch):
+    def __init__(self, repo: CategoryRepo, product_type_repo: ProductTypeRepo, es: Elasticsearch):
         self._repo = repo
+        self._product_type_repo = product_type_repo
         self._es = es
 
     def get_all(self):
@@ -38,21 +40,42 @@ class CategoryService:
                 if (parent_category_id != None and parent_category_id == id_):
                     raise self.CircularCategoryConnection()
 
-                return self._repo.update_category(
+                category = self._repo.update_category(
                     id_,
                     data['names'],
                     parent_category_id,
                     session=s
                 )
+
+                self.set_to_search_index(category)
+
+                return category
         except self._repo.DoesNotExist:
             raise self.CategoryNotFound()
 
     @allow_roles(['admin', 'manager'])
     def delete(self, id_):
         try:
-            return self._repo.delete(id_)
+            with self._repo.session() as s:
+                if self._repo.has_children(id_, session=s):
+                    raise self.CategoryWithChildrenIsUntouchable()
+
+                if self._product_type_repo.has_with_category(id_, session=s):
+                    raise self.CategoryWithProductTypesIsUntouchable()
+
+                self._repo.delete(id_, session=s)
+                self.remove_from_search_index(id_)
         except self._repo.DoesNotExist:
             raise self.CategoryNotFound()
+
+    def set_to_search_index(self, category):
+        body = {}
+        for name in category.names:
+            body[name.language.name] = name.value
+        self._es.index(index='category', id=category.id, body=body)
+
+    def remove_from_search_index(self, id_):
+        self._es.delete(index='category', id=id_)
 
     def search(self, query: str, language: Language):
         formatted_query = query.lower()
@@ -84,11 +107,17 @@ class CategoryService:
         result = self._es.search(index='category', body=body)
 
         ids = [hit['_id'] for hit in result['hits']['hits']]
-        
+
         return self._repo.filter_by_ids(ids)
 
     class CategoryNotFound(Exception):
         pass
 
     class CircularCategoryConnection(Exception):
+        pass
+
+    class CategoryWithChildrenIsUntouchable(Exception):
+        pass
+
+    class CategoryWithProductTypesIsUntouchable(Exception):
         pass

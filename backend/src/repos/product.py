@@ -1,6 +1,6 @@
 from src.file_storage import FileStorage
 from src.models import ProductImage, Product
-from src.repos.base import Repo
+from src.repos.base import Repo, with_session
 
 
 class ProductRepo(Repo):
@@ -8,7 +8,7 @@ class ProductRepo(Repo):
         super().__init__(db_conn, Product)
         self.__file_storage = file_storage
 
-    @Repo.with_session
+    @with_session
     def add_product(
         self,
         price,
@@ -38,7 +38,7 @@ class ProductRepo(Repo):
 
         return product
 
-    @Repo.with_session
+    @with_session
     def update_product(
         self,
         id_,
@@ -77,6 +77,11 @@ class ProductRepo(Repo):
         session.flush()
 
         return product
+
+
+    @with_session
+    def has_with_product_type(self, id_, session):
+        return session.query(Product).filter(Product.product_type_id == id_).count() > 0
 
     class DoesNotExist(Exception):
         pass

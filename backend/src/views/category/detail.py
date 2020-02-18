@@ -50,6 +50,11 @@ class CategoryDetailView(ValidatableView):
             return {}, OK_CODE
         except self._service.CategoryNotFound:
             return {}, NOT_FOUND_CODE
+        except self._service.CategoryWithChildrenIsUntouchable:
+            raise InvalidEntityFormat({'children': 'errors.hasChildren'})
+        except self._service.CategoryWithProductTypesIsUntouchable:
+            raise InvalidEntityFormat({'product_types': 'errors.hasProductTypes'})
+
 
     def head(self, request, category_id):
         try:

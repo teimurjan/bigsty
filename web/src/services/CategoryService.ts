@@ -31,6 +31,18 @@ export const errors = {
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
+  CategoryHasChildren: class extends Error {
+    constructor() {
+      super();
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
+  CategoryHasProductTypes: class extends Error {
+    constructor() {
+      super();
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
 };
 
 export class CategoryService implements ICategoryService {
@@ -51,10 +63,16 @@ export class CategoryService implements ICategoryService {
 
   public async delete(id: number) {
     try {
-      return this.API.delete(id);
+      return await this.API.delete(id);
     } catch (e) {
       if (e instanceof categoryAPI.errors.CategoryNotFound) {
         throw new errors.CategoryNotExists();
+      }
+      if (e instanceof categoryAPI.errors.CategoryWithChildrenIsUntouchable) {
+        throw new errors.CategoryHasChildren();
+      }
+      if (e instanceof categoryAPI.errors.CategoryWithProductTypesIsUntouchable) {
+        throw new errors.CategoryHasProductTypes();
       }
 
       throw e;

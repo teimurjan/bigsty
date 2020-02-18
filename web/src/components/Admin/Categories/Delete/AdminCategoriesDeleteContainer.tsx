@@ -2,9 +2,22 @@ import * as React from 'react';
 
 import { useDependencies } from 'src/DI/DI';
 
+import * as categoryService from 'src/services/CategoryService';
+
 import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
 
 import { DeleteModalContainer } from '../../DeleteModal/DeleteModalContainer';
+
+const getErrorMessageID = (e: Error) => {
+  if (e instanceof categoryService.errors.CategoryHasChildren) {
+    return 'errors.categoryDeletion.hasChildren';
+  }
+  if (e instanceof categoryService.errors.CategoryHasProductTypes) {
+    return 'errors.categoryDeletion.hasProductTypes';
+  }
+
+  return 'errors.common';
+};
 
 export const AdminCategoriesDeleteContainer = () => {
   const { dependencies } = useDependencies();
@@ -37,5 +50,12 @@ export const AdminCategoriesDeleteContainer = () => {
     [dependencies.services.category],
   );
 
-  return <DeleteModalContainer deleteEntity={deleteEntity} preloadData={preloadData} backPath="/admin/categorys" />;
+  return (
+    <DeleteModalContainer
+      getErrorMessageID={getErrorMessageID}
+      deleteEntity={deleteEntity}
+      preloadData={preloadData}
+      backPath="/admin/categories"
+    />
+  );
 };

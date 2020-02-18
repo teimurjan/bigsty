@@ -53,6 +53,18 @@ export const errors = {
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
+  CategoryWithChildrenIsUntouchable: class extends Error {
+    constructor() {
+      super('Category with children cannot be deleted');
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
+  CategoryWithProductTypesIsUntouchable: class extends Error {
+    constructor() {
+      super('Category with product types cannot be deleted');
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
 };
 
 export class CategoryAPI implements ICategoryAPI {
@@ -98,6 +110,12 @@ export class CategoryAPI implements ICategoryAPI {
     } catch (e) {
       if (e.response.status === 404) {
         throw new errors.CategoryNotFound();
+      }
+      if (e.response.data.children) {
+        throw new errors.CategoryWithChildrenIsUntouchable();
+      }
+      if (e.response.data.product_types) {
+        throw new errors.CategoryWithProductTypesIsUntouchable();
       }
 
       throw e;

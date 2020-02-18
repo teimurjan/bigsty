@@ -1,4 +1,4 @@
-from src.repos.base import IntlRepo
+from src.repos.base import IntlRepo, with_session
 from src.models import FeatureType, FeatureTypeName, Category
 
 
@@ -6,7 +6,7 @@ class FeatureTypeRepo(IntlRepo):
     def __init__(self, db_conn):
         super().__init__(db_conn, FeatureType)
 
-    @IntlRepo.with_session
+    @with_session
     def add_feature_type(self, names, session):
         feature_type = FeatureType()
 
@@ -20,7 +20,7 @@ class FeatureTypeRepo(IntlRepo):
 
         return feature_type
 
-    @IntlRepo.with_session
+    @with_session
     def update_feature_type(self, id_, names, session):
         feature_type = self.get_by_id(id_, session=session)
 
@@ -28,7 +28,7 @@ class FeatureTypeRepo(IntlRepo):
 
         return feature_type
 
-    @IntlRepo.with_session
+    @with_session
     def filter_by_category(self, category, session):
         return (
             session

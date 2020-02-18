@@ -20,7 +20,7 @@ export const DeleteModalView = ({
   error,
   ...props
 }: IProps & { intl: IntlShape }) => {
-  const onConfirmClick = React.useCallback((e: React.SyntheticEvent) => onConfirm(), [onConfirm]);
+  const onConfirmClick = React.useCallback(() => onConfirm(), [onConfirm]);
 
   return (
     <Modal isOpen={isOpen} {...props}>

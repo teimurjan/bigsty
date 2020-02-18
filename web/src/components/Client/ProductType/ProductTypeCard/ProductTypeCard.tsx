@@ -7,7 +7,6 @@ import { CardContent } from 'src/components/common/CardContent/CardContent';
 import { CardImage } from 'src/components/common/CardImage/CardImage';
 import { Image } from 'src/components/common/Image/Image';
 import { Title } from 'src/components/common/Title/Title';
-import { fullWidthMixin } from 'src/styles/mixins';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { useIntl } from 'react-intl';
 import { calculateDiscountedPrice } from 'src/utils/number';
@@ -44,22 +43,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
       `}
     >
       <CardImage>
-        <Image
-          css={css`
-            height: 250px;
-            ${fullWidthMixin};
-            position: relative;
-            overflow: hidden;
-
-            @media ${mediaQueries.maxWidth768} {
-              height: 170px;
-            }
-          `}
-          imgProps={{
-            src: productType.image,
-            style: { position: 'absolute', top: '50%', left: '50%', transform: 'translate3d(-50%, -50%, 0)' },
-          }}
-        />
+        <Image className="image is-square" imgProps={{ src: productType.image }} />
       </CardImage>
       <CardContent
         css={css`

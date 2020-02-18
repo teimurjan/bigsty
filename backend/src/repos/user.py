@@ -1,6 +1,6 @@
 import bcrypt
 
-from src.repos.base import Repo
+from src.repos.base import Repo, with_session
 from src.models import User
 
 
@@ -15,15 +15,15 @@ class UserRepo(Repo):
     def __init__(self, db_conn):
         super().__init__(db_conn, User)
 
-    @Repo.with_session
+    @with_session
     def get_first_by_email(self, email, session):
         return session.query(User).filter(User.email == email).first()
 
-    @Repo.with_session
+    @with_session
     def is_email_used(self, email, session):
         return session.query(User).filter(User.email == email).count() > 0
     
-    @Repo.with_session
+    @with_session
     def create_user(self, name, email, password, session):
         user = User()
         user.name = name

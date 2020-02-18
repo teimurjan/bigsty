@@ -5,6 +5,7 @@ from elasticsearch.client import Elasticsearch
 from src.models.intl import Language
 from src.repos.category import CategoryRepo
 from src.repos.feature_type import FeatureTypeRepo
+from src.repos.product import ProductRepo
 from src.repos.product_type import ProductTypeRepo
 from src.services.decorators import allow_roles
 
@@ -15,11 +16,13 @@ class ProductTypeService:
         repo: ProductTypeRepo,
         category_repo: CategoryRepo,
         feature_type_repo: FeatureTypeRepo,
+        product_repo: ProductRepo,
         es: Elasticsearch
     ):
         self._repo = repo
         self._category_repo = category_repo
         self._feature_type_repo = feature_type_repo
+        self._product_repo = product_repo
         self._es = es
 
     @allow_roles(['admin', 'manager'])
@@ -70,7 +73,7 @@ class ProductTypeService:
                 if len(feature_types) != len(data['feature_types']):
                     raise self.FeatureTypesInvalid()
 
-                return self._repo.update_product_type(
+                product_type = self._repo.update_product_type(
                     id_,
                     data['names'],
                     data['descriptions'],
@@ -80,6 +83,10 @@ class ProductTypeService:
                     feature_types,
                     session=s
                 )
+
+                self.set_to_search_index(product_type)
+
+                return product_type
         except self._repo.DoesNotExist:
             raise self.ProductTypeNotFound()
         except self._category_repo.DoesNotExist:
@@ -92,9 +99,11 @@ class ProductTypeService:
 
     def get_all_categorized(self, category_id):
         with self._repo.session() as s:
-            children_categories = self._category_repo.get_children(category_id, session=s)
+            children_categories = self._category_repo.get_children(
+                category_id, session=s)
             categories_ids = [category.id for category in children_categories]
-            product_types = self._repo.get_for_categories_with_products([category_id, *categories_ids], session=s)
+            product_types = self._repo.get_for_categories_with_products(
+                [category_id, *categories_ids], session=s)
             return product_types
 
     def get_one(self, id_):
@@ -106,9 +115,22 @@ class ProductTypeService:
     @allow_roles(['admin', 'manager'])
     def delete(self, id_):
         try:
-            return self._repo.delete(id_)
+            if self._product_repo.has_with_product_type(id_):
+                raise self.ProductTypeWithProductsIsUntouchable()
+
+            self._repo.delete(id_)
+            self.remove_from_search_index(id_)
         except self._repo.DoesNotExist:
             raise self.ProductTypeNotFound()
+
+    def set_to_search_index(self, product_type):
+        body = {}
+        for name in product_type.names:
+            body[name.language.name] = name.value
+        self._es.index(index='product_type', id=product_type.id, body=body)
+
+    def remove_from_search_index(self, id_):
+        self._es.delete(index='product_type', id=id_)
 
     def search(self, query: str, language: Language):
         formatted_query = query.lower()
@@ -150,4 +172,7 @@ class ProductTypeService:
         pass
 
     class FeatureTypesInvalid(Exception):
+        pass
+
+    class ProductTypeWithProductsIsUntouchable(Exception):
         pass

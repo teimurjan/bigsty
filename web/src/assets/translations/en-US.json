@@ -144,5 +144,8 @@
   "Search.searchFor": "I am searching for...",
   "common.noResults": "No results matching your request",
   "common.notSpecified": "Not specified",
-  "common.buy": "Buy"
+  "common.buy": "Buy",
+  "errors.categoryDeletion.hasChildren": "Category which contains children cannot be deleted.",
+  "errors.categoryDeletion.hasProductTypes": "Category which contains product types cannot be deleted.",
+  "errors.productTypeDeletion.hasProducts": "Product type which contains products cannot be deleted."
 }

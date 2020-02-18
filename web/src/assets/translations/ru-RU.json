@@ -145,5 +145,8 @@
   "Search.searchFor": "Я ищу...",
   "common.noResults": "Нет результатов удовлетворяющих Вашему запросу",
   "common.notSpecified": "Уточняется",
-  "common.buy": "Купить"
+  "common.buy": "Купить",
+  "errors.categoryDeletion.hasChildren": "Категория у которой есть дочерние категории не может быть удалена.",
+  "errors.categoryDeletion.hasProductTypes": "Категория у которой есть типы продуктов не может быть удалена.",
+  "errors.productTypeDeletion.hasProducts": "Тип продукта у которого есть продукты не может быть удален."
 }

@@ -12,15 +12,16 @@ interface IPreloadDataArgs {
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
-  deleteEntity: (id: number) => Promise<any>;
-  preloadData: (args: IPreloadDataArgs) => Promise<any>;
+  deleteEntity: (id: number) => Promise<void>;
+  preloadData: (args: IPreloadDataArgs) => Promise<void>;
+  getErrorMessageID?: (e: Error) => string;
   backPath: string;
 }
 
 export interface IViewProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
-  onClose: () => any;
-  onConfirm: () => any;
+  onClose: () => void;
+  onConfirm: () => void;
   isLoading?: boolean;
   error: string | undefined;
 }
@@ -32,6 +33,7 @@ export const DeleteModalPresenter = ({
   preloadData,
   backPath,
   deleteEntity,
+  getErrorMessageID,
 }: IProps & RouteComponentProps<{ id: string }>) => {
   const close = React.useCallback(() => history.push(backPath), [backPath, history]);
 
@@ -54,9 +56,9 @@ export const DeleteModalPresenter = ({
       close();
     } catch (e) {
       setIsLoading(false);
-      setError('errors.common');
+      setError(getErrorMessageID ? getErrorMessageID(e) : 'errors.common');
     }
-  }, [close, deleteEntity, id]);
+  }, [close, deleteEntity, getErrorMessageID, id]);
 
   return (
     <View

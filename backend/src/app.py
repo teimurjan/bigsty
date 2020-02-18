@@ -99,7 +99,7 @@ class App:
 
     def __init_services(self):
         self.__category_service = CategoryService(
-            self.__category_repo, self.__es)
+            self.__category_repo, self.__product_type_repo, self.__es)
         self.__feature_type_service = FeatureTypeService(
             self.__feature_type_repo)
         self.__feature_value_service = FeatureValueService(
@@ -107,7 +107,7 @@ class App:
         )
         self.__language_service = LanguageService(self.__language_repo)
         self.__product_type_service = ProductTypeService(
-            self.__product_type_repo, self.__category_repo, self.__feature_type_repo, self.__es
+            self.__product_type_repo, self.__category_repo, self.__feature_type_repo, self.__product_repo, self.__es
         )
         feature_values_policy = FeatureValuesPolicy(self.__feature_type_repo)
         self.__product_service = ProductService(
@@ -117,17 +117,10 @@ class App:
 
     def __init_search(self):
         for category in self.__category_repo.get_all():
-            body = {}
-            for name in category.names:
-                body[name.language.name] = name.value
-            self.__es.index(index='category', id=category.id, body=body)
+            self.__category_service.set_to_search_index(category)
 
         for product_type in self.__product_type_repo.get_all():
-            body = {}
-            for name in product_type.names:
-                body[name.language.name] = name.value
-            self.__es.index(index='product_type',
-                            id=product_type.id, body=body)
+            self.__product_type_service.set_to_search_index(product_type)
 
     def __init_api_routes(self):
         middlewares = [

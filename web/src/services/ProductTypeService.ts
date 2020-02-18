@@ -9,6 +9,12 @@ export const errors = {
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
+  ProductTypeHasProducts: class extends Error {
+    constructor() {
+      super();
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
 };
 
 export interface IProductTypeService {
@@ -45,7 +51,7 @@ export interface IProductTypeService {
     result: number[];
     meta: productTypeAPI.IProductTypeListResponseMeta;
   }>;
-  delete(id: number): Promise<{}>;
+  delete(id: number): Promise<void>;
   create(
     payload: productTypeAPI.IProductTypeCreatePayload,
   ): Promise<productTypeAPI.IProductTypeListRawIntlResponseItem>;
@@ -87,12 +93,15 @@ export class ProductTypeService implements IProductTypeService {
     };
   }
 
-  public delete(id: number) {
+  public async delete(id: number) {
     try {
-      return this.API.delete(id);
+      await this.API.delete(id);
     } catch (e) {
       if (e instanceof productTypeAPI.errors.ProductTypeNotFound) {
         throw new errors.ProductTypeNotExists();
+      }
+      if (e instanceof productTypeAPI.errors.ProductTypeWithProductsIsUntouchable) {
+        throw new errors.ProductTypeHasProducts();
       }
 
       throw e;
