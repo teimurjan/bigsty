@@ -1,2 +1,2 @@
-release: alembic migrate
+release: alembic upgrade head
 web: gunicorn wsgi:app
