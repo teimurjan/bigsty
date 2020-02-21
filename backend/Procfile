@@ -1,0 +1,2 @@
+release: alembic migrate
+web: gunicorn wsgi:app
