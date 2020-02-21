@@ -1,2 +1,2 @@
 release: alembic upgrade head
-web: gunicorn wsgi:app
+web: env APP_SETTINGS=config.ProductionConfig gunicorn wsgi:app
