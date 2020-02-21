@@ -147,5 +147,9 @@
       "react-app",
       "emotion"
     ]
+  },
+  "engines": {
+    "node": "10.15.1",
+    "yarn": "1.17.3"
   }
 }
