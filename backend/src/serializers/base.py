@@ -27,13 +27,13 @@ class Serializer:
             return filtered_dict
         return serialized_dict
 
-    def _with_serialized_relation(self, attr_name, model_cls, serializer_cls, language=None, only=None):
+    def _with_serialized_relation(self, attr_name, model_cls, serializer_cls, before_serialize=None):
         if isinstance(getattr(self, attr_name), model_cls):
             serializer = serializer_cls(getattr(self, attr_name))
-            if language is not None:
-                serializer.in_language(language)
-            if only is not None:
-                serializer.only(only)
+
+            if before_serialize is not None and callable(before_serialize):
+                before_serialize(serializer)
+
             setattr(
                 self,
                 attr_name,
@@ -46,14 +46,14 @@ class Serializer:
             return getattr(self, attr_name).id
         return getattr(self, attr_name)
 
-    def _with_serialized_relations(self, attr_name, model_cls, serializer_cls, language=None, only=None):
+    def _with_serialized_relations(self, attr_name, model_cls, serializer_cls, before_serialize=None):
         serialized = []
         for i in getattr(self, attr_name):
             serializer = serializer_cls(i)
-            if language is not None:
-                serializer.in_language(language)
-            if only is not None:
-                serializer.only(only)
+
+            if before_serialize is not None and callable(before_serialize):
+                before_serialize(serializer)
+
             serialized.append(serializer.serialize())
 
         setattr(self, attr_name, serialized)

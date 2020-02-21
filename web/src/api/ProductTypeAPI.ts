@@ -27,6 +27,23 @@ export interface IProductTypeListResponseItem {
   }>;
 }
 
+export interface IProductTypeDetailResponseItem {
+  id: number;
+  name: string;
+  description: string;
+  short_description: string;
+  image: string;
+  category: number;
+  feature_types: number[];
+  products?: Array<{
+    discount: number;
+    feature_values: number[];
+    id: number;
+    price: number;
+    quantity: number;
+  }>;
+}
+
 export interface IProductTypeListRawIntlResponseItem {
   id: number;
   name: { [key: string]: string };
@@ -61,6 +78,10 @@ export interface IProductTypeRawIntlResponseData {
   meta: IProductTypeListResponseMeta;
 }
 
+export interface IProductTypeDetailResponseItemData {
+  data: IProductTypeDetailResponseItem;
+}
+
 export interface IProductTypeCreatePayload {
   names: {
     [key: string]: string;
@@ -81,6 +102,7 @@ export type IProductTypeEditPayload = IProductTypeCreatePayload;
 export interface IProductTypeAPI {
   getForCategory(categoryId: number, page: number): Promise<IProductTypeListResponseData>;
   getAll(page: number): Promise<IProductTypeListResponseData>;
+  getByID(id: number): Promise<IProductTypeDetailResponseItemData>;
   getAllWithBaseFields(): Promise<IProductTypeBaseListResponseItemData>;
   getAllRawIntl(page: number): Promise<IProductTypeListRawIntlResponseData>;
   delete(id: number): Promise<{}>;
@@ -138,6 +160,20 @@ export class ProductTypeAPI implements IProductTypeAPI {
       );
       return response.data;
     } catch (e) {
+      throw e;
+    }
+  }
+
+  public async getByID(id: number) {
+    try {
+      const response = await this.client.get<IProductTypeDetailResponseItemData>(`/api/product_types/${id}`, {
+        headers: this.headersManager.getHeaders(),
+      });
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.ProductTypeNotFound();
+      }
       throw e;
     }
   }

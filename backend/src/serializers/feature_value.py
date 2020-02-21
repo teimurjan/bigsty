@@ -21,7 +21,8 @@ class FeatureValueSerializer(IntlSerializer):
         return self._get_intl_field_from(self._names)
 
     def with_serialized_feature_type(self):
-        self._with_serialized_relation('_feature_type', FeatureType, FeatureTypeSerializer, self._language)
+        self._with_serialized_relation('_feature_type', FeatureType, FeatureTypeSerializer,
+                                       lambda serializer: serializer.in_language(self._language))
         return self
 
     def _serialize_feature_type(self):

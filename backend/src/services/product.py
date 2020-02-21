@@ -88,6 +88,9 @@ class ProductService:
     def get_all(self):
         return self._repo.get_all()
 
+    def get_for_product_type(self, product_type_id):
+        return self._repo.get_for_product_type(product_type_id)
+
     def get_one(self, id_):
         try:
             return self._repo.get_by_id(id_)

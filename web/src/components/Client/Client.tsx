@@ -13,6 +13,7 @@ import { Container } from '../common/Container/Container';
 import { NavContainer } from './Nav/NavContainer';
 import { flexMixin } from 'src/styles/mixins';
 import { Section } from '../common/Section/Section';
+import { ProductTypePageContainer } from './ProductTypePage/ProductTypePageContainer';
 
 export const Client = () => (
   <React.Fragment>
@@ -34,6 +35,7 @@ export const Client = () => (
           >
             <Switch>
               <Route exact={true} path="/categories/:categoryId/productTypes" component={ProductTypesPageContainer} />
+              <Route exact={true} path="/productTypes/:id" component={ProductTypePageContainer} />
 
               <Route component={NotFoundContainer} />
             </Switch>

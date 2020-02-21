@@ -42,7 +42,7 @@ class ProductTypeSerializer(IntlSerializer):
 
     def with_serialized_category(self):
         self._with_serialized_relation(
-            '_category', Category, CategorySerializer, self._language)
+            '_category', Category, CategorySerializer, lambda serializer: serializer.in_language(self._language))
 
         return self
 
@@ -51,7 +51,7 @@ class ProductTypeSerializer(IntlSerializer):
 
     def with_serialized_feature_types(self):
         self._with_serialized_relations(
-            '_feature_types', FeatureType, FeatureTypeSerializer, self._language)
+            '_feature_types', FeatureType, FeatureTypeSerializer, lambda serializer: serializer.in_language(self._language))
 
         return self
 

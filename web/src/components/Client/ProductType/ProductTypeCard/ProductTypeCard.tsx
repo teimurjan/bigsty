@@ -26,7 +26,7 @@ const PriceText = ({ priceRange }: { priceRange: number[] }) => {
 
   return (
     <Title size={5}>
-      {priceRange.length > 1 ? `${Math.min(...priceRange)}$ - ${Math.max(...priceRange)}$` : `${priceRange[0]}$`}
+      {priceRange.length > 1 ? `$${Math.min(...priceRange)} - $${Math.max(...priceRange)}` : `$${priceRange[0]}`}
     </Title>
   );
 };

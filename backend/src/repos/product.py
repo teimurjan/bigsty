@@ -78,10 +78,19 @@ class ProductRepo(Repo):
 
         return product
 
+    @with_session
+    def has_with_product_type(self, product_type_id, session):
+        return session.query(Product).filter(Product.product_type_id == product_type_id).count() > 0
 
     @with_session
-    def has_with_product_type(self, id_, session):
-        return session.query(Product).filter(Product.product_type_id == id_).count() > 0
+    def get_for_product_type(self, product_type_id, session):
+        return (
+            session
+            .query(Product)
+            .filter(Product.product_type_id == product_type_id)
+            .order_by(Product.id)
+            .all()
+        )
 
     class DoesNotExist(Exception):
         pass

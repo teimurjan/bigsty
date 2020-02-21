@@ -147,5 +147,7 @@
   "common.buy": "Buy",
   "errors.categoryDeletion.hasChildren": "Category which contains children cannot be deleted.",
   "errors.categoryDeletion.hasProductTypes": "Category which contains product types cannot be deleted.",
-  "errors.productTypeDeletion.hasProducts": "Product type which contains products cannot be deleted."
+  "errors.productTypeDeletion.hasProducts": "Product type which contains products cannot be deleted.",
+  "ProductPage.notFound": "Product does not exist.",
+  "ProductPage.notInStock": "Not in stock"
 }

@@ -3,6 +3,7 @@ import { Client } from 'ttypes/http';
 import { IHeadersManager } from 'src/manager/HeadersManager';
 import { buildQueryString } from 'src/utils/queryString';
 
+// LIST
 export interface IProductListResponseMeta {
   count: number;
   pages_count: number;
@@ -20,6 +21,12 @@ export interface IProductListResponseItem {
   images: string[];
 }
 
+export interface IProductListResponseData {
+  data: IProductListResponseItem[];
+  meta: IProductListResponseMeta;
+}
+
+// DETAIL
 export interface IProductResponseItem {
   id: number;
   discount: number;
@@ -30,15 +37,35 @@ export interface IProductResponseItem {
   images: string[];
 }
 
-export interface IProductListResponseData {
-  data: IProductListResponseItem[];
-  meta: IProductListResponseMeta;
-}
-
 export interface IProductResponseData {
   data: IProductResponseItem;
 }
 
+// FOR PRODUCT TYPE
+export interface IProductForProductTypeResponseItem {
+  discount: number;
+  feature_values: Array<{
+    feature_type: { id: number; name: string };
+    id: number;
+    name: string;
+  }>;
+  id: number;
+  images: string[];
+  price: number;
+  product_type: {
+    category: number;
+    feature_types: number[];
+    id: number;
+    name: string;
+  };
+  quantity: number;
+}
+
+export interface IProductForProductTypeResponseData {
+  data: IProductForProductTypeResponseItem[];
+}
+
+// PAYLOADS
 export interface IProductCreatePayload {
   discount: number;
   price: number;
@@ -56,6 +83,7 @@ export interface IProductAPI {
   edit(id: number, payload: IProductEditPayload): Promise<IProductResponseData>;
   status(id: number): Promise<{}>;
   getOne(id: number): Promise<IProductResponseData>;
+  getForProductType(productTypeID: number): Promise<IProductForProductTypeResponseData>;
 }
 
 export const errors = {
@@ -158,5 +186,13 @@ export class ProductAPI implements IProductAPI {
       }
       throw e;
     }
+  }
+
+  public async getForProductType(productTypeID: number) {
+    const response = await this.client.get<IProductForProductTypeResponseData>(
+      `/api/product_types/${productTypeID}/products`,
+      { headers: this.headersManager.getHeaders() },
+    );
+    return response.data;
   }
 }

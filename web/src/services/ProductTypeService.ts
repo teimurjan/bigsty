@@ -40,6 +40,7 @@ export interface IProductTypeService {
     };
     result: number[];
   }>;
+  getByID(id: number): Promise<productTypeAPI.IProductTypeDetailResponseItem | undefined>;
   getAllRawIntl(
     page: number,
   ): Promise<{
@@ -83,6 +84,18 @@ export class ProductTypeService implements IProductTypeService {
       ...normalize(productTypes.data, [new schema.Entity('productTypes')]),
       meta: productTypes.meta,
     };
+  }
+
+  public async getByID(id: number) {
+    try {
+      return (await this.API.getByID(id)).data;
+    } catch (e) {
+      if (e instanceof productTypeAPI.errors.ProductTypeNotFound) {
+        return undefined;
+      }
+
+      throw e;
+    }
   }
 
   public async getAllRawIntl(page: number) {

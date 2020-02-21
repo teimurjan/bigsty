@@ -148,5 +148,7 @@
   "common.buy": "Купить",
   "errors.categoryDeletion.hasChildren": "Категория у которой есть дочерние категории не может быть удалена.",
   "errors.categoryDeletion.hasProductTypes": "Категория у которой есть типы продуктов не может быть удалена.",
-  "errors.productTypeDeletion.hasProducts": "Тип продукта у которого есть продукты не может быть удален."
+  "errors.productTypeDeletion.hasProducts": "Тип продукта у которого есть продукты не может быть удален.",
+  "ProductPage.notFound": "Продукт не существует.",
+  "ProductPage.notInStock": "Нет в наличии"
 }

@@ -61,6 +61,7 @@ from src.views.feature_type.list import FeatureTypeListView
 from src.views.feature_value.detail import FeatureValueDetailView
 from src.views.feature_value.list import FeatureValueListView
 from src.views.language.list import LanguageListView
+from src.views.product.by_product_type import ProductByProductTypeView
 from src.views.product.detail import ProductDetailView
 from src.views.product.list import ProductListView
 from src.views.product_type.by_category import ProductTypeByCategoryView
@@ -268,6 +269,16 @@ class App:
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
+        )
+        self.flask_app.add_url_rule(
+            '/api/product_types/<int:product_type_id>/products',
+            view_func=AbstractView.as_view(
+                'product_type_products',
+                concrete_view=ProductByProductTypeView(
+                    self.__product_service, ProductSerializer),
+                middlewares=middlewares
+            ),
+            methods=['GET']
         )
         self.flask_app.add_url_rule(
             '/api/product_types',

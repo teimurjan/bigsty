@@ -28,6 +28,7 @@ export interface IProductService {
   edit(id: number, payload: productAPI.IProductEditPayload): Promise<productAPI.IProductListResponseItem>;
   exists(id: number): Promise<boolean>;
   getOne(id: number): Promise<productAPI.IProductListResponseItem | undefined>;
+  getForProductType(productTypeID: number): Promise<productAPI.IProductForProductTypeResponseItem[]>;
 }
 
 export class ProductService implements IProductService {
@@ -95,5 +96,9 @@ export class ProductService implements IProductService {
 
       throw e;
     }
+  }
+
+  public async getForProductType(productTypeID: number) {
+    return (await this.API.getForProductType(productTypeID)).data;
   }
 }
