@@ -28,7 +28,7 @@ interface IProviderProps {
 }
 
 const USER_NOT_SET_STATE = null;
-const USER_ANONYMOUSE_STATE = null;
+const USER_ANONYMOUSE_STATE = {};
 
 export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const {
