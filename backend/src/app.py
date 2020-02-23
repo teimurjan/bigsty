@@ -76,9 +76,9 @@ from src.views.search import SearchView
 class App:
     def __init__(self):
         self.flask_app = Flask(__name__)
-        CORS(self.flask_app, origins=[os.environ.get('ORIGIN_URL')])
         self.flask_app.config.from_object(os.environ.get(
             'APP_SETTINGS', 'config.DevelopmentConfig'))
+        CORS(self.flask_app, origins=self.flask_app.config['ALLOWED_ORIGINS'])
         self.__file_storage = FileStorage(
             self.flask_app.config['UPLOAD_FOLDER'])
         engine = db.create_engine(self.flask_app.config['DB_URL'], echo=True)
@@ -132,7 +132,7 @@ class App:
             self.__product_type_service.set_to_search_index(product_type)
 
     def __init_api_routes(self):
-        middlewares=[
+        middlewares = [
             AuthorizeHttpMiddleware(self.__user_service),
             LanguageHttpMiddleware(self.__language_repo)
         ]
@@ -320,8 +320,8 @@ class App:
         )
 
     def __handle_media_request(self, path):
-        abs_media_path=os.path.join(APP_ROOT_PATH, 'media')
-        abs_path=os.path.join(abs_media_path, path)
+        abs_media_path = os.path.join(APP_ROOT_PATH, 'media')
+        abs_path = os.path.join(abs_media_path, path)
         if os.path.isfile(abs_path):
             return send_from_directory(abs_media_path, path)
 

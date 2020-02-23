@@ -3,3 +3,4 @@ logs
 media
 .vscode
 .env
+.env.development
