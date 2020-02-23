@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from paths import APP_ROOT_PATH
 
-load_dotenv(os.path.join(APP_ROOT_PATH, '.env'))
+# load_dotenv(os.path.join(APP_ROOT_PATH, '.env'))
 
 class Config:
     DEBUG = False

@@ -26,11 +26,12 @@ class CategoryService:
     @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
         with self._repo.session() as s:
-            return self._repo.add_category(
+            category = self._repo.add_category(
                 data['names'],
                 data.get('parent_category_id'),
                 session=s
             )
+            self.set_to_search_index(category)
 
     @allow_roles(['admin', 'manager'])
     def update(self, id_, data, *args, **kwargs):

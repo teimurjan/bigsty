@@ -5,7 +5,7 @@ import json
 
 
 class AuthenticationView(ValidatableView):
-    def __init__(self, validator, user_service):
+    def __init__(self, user_service, validator):
         super().__init__(validator)
         self._user_service = user_service
 

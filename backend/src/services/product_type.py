@@ -42,7 +42,7 @@ class ProductTypeService:
                 if len(feature_types) != len(data['feature_types']):
                     raise self.FeatureTypesInvalid()
 
-                return self._repo.add_product_type(
+                product_type = self._repo.add_product_type(
                     data['names'],
                     data['descriptions'],
                     data['short_descriptions'],
@@ -51,6 +51,10 @@ class ProductTypeService:
                     feature_types,
                     session=s
                 )
+
+                self.set_to_search_index(product_type)
+
+                return product_type
         except self._category_repo.DoesNotExist:
             raise self.CategoryInvalid()
         except self._feature_type_repo.DoesNotExist:

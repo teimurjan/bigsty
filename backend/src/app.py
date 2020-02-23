@@ -6,6 +6,7 @@ import sqlalchemy as db
 from cerberus.validator import Validator
 from elasticsearch import Elasticsearch
 from flask import Flask, send_from_directory
+from flask_cors import CORS
 
 from paths import APP_ROOT_PATH
 from src.abstract_view import AbstractView
@@ -75,7 +76,9 @@ from src.views.search import SearchView
 class App:
     def __init__(self):
         self.flask_app = Flask(__name__)
-        self.flask_app.config.from_object(os.environ.get('APP_SETTINGS'))
+        CORS(self.flask_app, origins=[os.environ.get('ORIGIN_URL')])
+        self.flask_app.config.from_object(os.environ.get(
+            'APP_SETTINGS', 'config.DevelopmentConfig'))
         self.__file_storage = FileStorage(
             self.flask_app.config['UPLOAD_FOLDER'])
         engine = db.create_engine(self.flask_app.config['DB_URL'], echo=True)
@@ -117,6 +120,11 @@ class App:
         self.__user_service = UserService(self.__user_repo)
 
     def __init_search(self):
+        if not self.__es.indices.exists(index="category"):
+            self.__es.indices.create(index='category')
+        if not self.__es.indices.exists(index="product_type"):
+            self.__es.indices.create(index='product_type')
+
         for category in self.__category_repo.get_all():
             self.__category_service.set_to_search_index(category)
 
@@ -124,7 +132,7 @@ class App:
             self.__product_type_service.set_to_search_index(product_type)
 
     def __init_api_routes(self):
-        middlewares = [
+        middlewares=[
             AuthorizeHttpMiddleware(self.__user_service),
             LanguageHttpMiddleware(self.__language_repo)
         ]
@@ -312,8 +320,8 @@ class App:
         )
 
     def __handle_media_request(self, path):
-        abs_media_path = os.path.join(APP_ROOT_PATH, 'media')
-        abs_path = os.path.join(abs_media_path, path)
+        abs_media_path=os.path.join(APP_ROOT_PATH, 'media')
+        abs_path=os.path.join(abs_media_path, path)
         if os.path.isfile(abs_path):
             return send_from_directory(abs_media_path, path)
 
