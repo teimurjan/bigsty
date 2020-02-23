@@ -1,13 +1,14 @@
 # build environment
-FROM node:12.2.0-alpine as build
+FROM node:10.15.1-alpine as build
 WORKDIR /app
+RUN npm install -g yarn@1.17.3
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
-RUN npm install --silent
+RUN yarn
 COPY . /app
 ARG REACT_APP_SERVER_URL
 RUN echo REACT_APP_SERVER_URL=$REACT_APP_SERVER_URL > .env
-RUN npm run build
+RUN yarn build
 
 # production environment
 FROM nginx:1.16.0-alpine

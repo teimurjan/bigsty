@@ -51,17 +51,17 @@ export class CategoryService implements ICategoryService {
     this.API = API;
   }
 
-  public async getAll() {
+  public getAll: ICategoryService['getAll'] = async () => {
     const categories = await this.API.getAll();
     return normalize(categories.data, [new schema.Entity('categories')]);
-  }
+  };
 
-  public async getAllRawIntl() {
+  public getAllRawIntl: ICategoryService['getAllRawIntl'] = async () => {
     const categories = await this.API.getAllRawIntl();
     return normalize(categories.data, [new schema.Entity('categories')]);
-  }
+  };
 
-  public async delete(id: number) {
+  public delete: ICategoryService['delete'] = async (id: number) => {
     try {
       return await this.API.delete(id);
     } catch (e) {
@@ -77,13 +77,13 @@ export class CategoryService implements ICategoryService {
 
       throw e;
     }
-  }
+  };
 
-  public async create(payload: categoryAPI.ICategoryCreatePayload) {
+  public create: ICategoryService['create'] = async (payload: categoryAPI.ICategoryCreatePayload) => {
     return (await this.API.create(payload)).data;
-  }
+  };
 
-  public async exists(id: number) {
+  public exists: ICategoryService['exists'] = async (id: number) => {
     try {
       await this.API.status(id);
       return true;
@@ -94,9 +94,9 @@ export class CategoryService implements ICategoryService {
 
       throw e;
     }
-  }
+  };
 
-  public async edit(id: number, payload: categoryAPI.ICategoryCreatePayload) {
+  public edit: ICategoryService['edit'] = async (id: number, payload: categoryAPI.ICategoryCreatePayload) => {
     try {
       return (await this.API.edit(id, payload)).data;
     } catch (e) {
@@ -106,9 +106,9 @@ export class CategoryService implements ICategoryService {
 
       throw e;
     }
-  }
+  };
 
-  public async getOneRawIntl(id: number) {
+  public getOneRawIntl: ICategoryService['getOneRawIntl'] = async (id: number) => {
     try {
       return (await this.API.getOneRawIntl(id)).data;
     } catch (e) {
@@ -118,5 +118,5 @@ export class CategoryService implements ICategoryService {
 
       throw e;
     }
-  }
+  };
 }

@@ -96,7 +96,6 @@
     "tslib": "^1.10.0",
     "typescript": "^3.5.3"
   },
-  "proxy": "http://127.0.0.1:5000",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",

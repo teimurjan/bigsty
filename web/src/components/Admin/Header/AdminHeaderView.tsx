@@ -1,12 +1,10 @@
 /** @jsx jsx */
-import * as React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 
 import { css, jsx } from '@emotion/core';
-import { useIntl, IntlShape } from 'react-intl';
+import { IntlShape } from 'react-intl';
 
 import { Menu } from 'src/components/common/Menu/Menu';
-import { ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
 
 import { fullWidthMixin } from 'src/styles/mixins';
 
@@ -14,27 +12,6 @@ import { LanguageDropdownContainer as LanguageDropdown } from '../../Client/Lang
 
 import { IViewProps as IProps } from './AdminHeaderPresenter';
 import { mediaQueries } from 'src/styles/media';
-
-const LanguageDrodownTrigger = ({ onClick, ...props }: ITriggerProps) => {
-  const intl = useIntl();
-
-  const modifiedOnClick = React.useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-
-      if (onClick) {
-        onClick(e);
-      }
-    },
-    [onClick],
-  );
-
-  return (
-    <Link css={fullWidthMixin} to="#" onClick={modifiedOnClick} {...props}>
-      {intl.formatMessage({ id: 'AdminMenu.changeLangaugeLinkText' })}
-    </Link>
-  );
-};
 
 export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlShape }) => {
   return (
@@ -88,7 +65,7 @@ export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlSh
       <Menu.Label>{intl.formatMessage({ id: 'AdminMenu.actionsLabel' })}</Menu.Label>
       <Menu.List>
         <Menu.Item>
-          <LanguageDropdown css={fullWidthMixin} TriggerComponent={LanguageDrodownTrigger} />
+          <LanguageDropdown css={fullWidthMixin} />
         </Menu.Item>
         <Menu.Item>
           <Link to="#" onClick={onLogOutClick}>

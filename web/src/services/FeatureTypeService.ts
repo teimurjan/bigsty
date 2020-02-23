@@ -46,15 +46,15 @@ export class FeatureTypeService implements IFeatureTypeService {
     this.API = API;
   }
 
-  public async getAll() {
+  public getAll: IFeatureTypeService['getAll'] = async () => {
     const featureTypes = await this.API.getAll();
     return normalize(featureTypes.data, [new schema.Entity('featureTypes')]);
-  }
+  };
 
-  public async getAllRawIntl() {
+  public getAllRawIntl: IFeatureTypeService['getAllRawIntl'] = async () => {
     const featureTypes = await this.API.getAllRawIntl();
     return normalize(featureTypes.data, [new schema.Entity('featureTypes')]);
-  }
+  };
 
   public delete(id: number) {
     try {
@@ -68,11 +68,11 @@ export class FeatureTypeService implements IFeatureTypeService {
     }
   }
 
-  public async create(payload: featureTypeAPI.IFeatureTypeCreatePayload) {
+  public create: IFeatureTypeService['create'] = async (payload: featureTypeAPI.IFeatureTypeCreatePayload) => {
     return (await this.API.create(payload)).data;
-  }
+  };
 
-  public async edit(id: number, payload: featureTypeAPI.IFeatureTypeEditPayload) {
+  public edit: IFeatureTypeService['edit'] = async (id: number, payload: featureTypeAPI.IFeatureTypeEditPayload) => {
     try {
       return (await this.API.edit(id, payload)).data;
     } catch (e) {
@@ -82,9 +82,9 @@ export class FeatureTypeService implements IFeatureTypeService {
 
       throw e;
     }
-  }
+  };
 
-  public async exists(id: number) {
+  public exists: IFeatureTypeService['exists'] = async (id: number) => {
     try {
       await this.API.status(id);
       return true;
@@ -95,9 +95,9 @@ export class FeatureTypeService implements IFeatureTypeService {
 
       throw e;
     }
-  }
+  };
 
-  public async getOneRawIntl(id: number) {
+  public getOneRawIntl: IFeatureTypeService['getOneRawIntl'] = async (id: number) => {
     try {
       return (await this.API.getOneRawIntl(id)).data;
     } catch (e) {
@@ -107,5 +107,5 @@ export class FeatureTypeService implements IFeatureTypeService {
 
       throw e;
     }
-  }
+  };
 }

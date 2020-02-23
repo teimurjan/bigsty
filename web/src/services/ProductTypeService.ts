@@ -70,23 +70,23 @@ export class ProductTypeService implements IProductTypeService {
     this.API = API;
   }
 
-  public async getForCategory(categoryId: number, page: number) {
+  public getForCategory: IProductTypeService['getForCategory'] = async (categoryId: number, page: number) => {
     const productTypes = await this.API.getForCategory(categoryId, page);
     return {
       ...normalize(productTypes.data, [new schema.Entity('productTypes')]),
       meta: productTypes.meta,
     };
-  }
+  };
 
-  public async getAll(page: number) {
+  public getAll: IProductTypeService['getAll'] = async (page: number) => {
     const productTypes = await this.API.getAll(page);
     return {
       ...normalize(productTypes.data, [new schema.Entity('productTypes')]),
       meta: productTypes.meta,
     };
-  }
+  };
 
-  public async getByID(id: number) {
+  public getByID: IProductTypeService['getByID'] = async (id: number) => {
     try {
       return (await this.API.getByID(id)).data;
     } catch (e) {
@@ -96,17 +96,17 @@ export class ProductTypeService implements IProductTypeService {
 
       throw e;
     }
-  }
+  };
 
-  public async getAllRawIntl(page: number) {
+  public getAllRawIntl: IProductTypeService['getAllRawIntl'] = async (page: number) => {
     const productTypes = await this.API.getAllRawIntl(page);
     return {
       ...normalize(productTypes.data, [new schema.Entity('productTypes')]),
       meta: productTypes.meta,
     };
-  }
+  };
 
-  public async delete(id: number) {
+  public delete: IProductTypeService['delete'] = async (id: number) => {
     try {
       await this.API.delete(id);
     } catch (e) {
@@ -119,13 +119,13 @@ export class ProductTypeService implements IProductTypeService {
 
       throw e;
     }
-  }
+  };
 
-  public async create(payload: productTypeAPI.IProductTypeCreatePayload) {
+  public create: IProductTypeService['create'] = async (payload: productTypeAPI.IProductTypeCreatePayload) => {
     return (await this.API.create(payload)).data;
-  }
+  };
 
-  public async edit(id: number, payload: productTypeAPI.IProductTypeEditPayload) {
+  public edit: IProductTypeService['edit'] = async (id: number, payload: productTypeAPI.IProductTypeEditPayload) => {
     try {
       return (await this.API.edit(id, payload)).data;
     } catch (e) {
@@ -135,9 +135,9 @@ export class ProductTypeService implements IProductTypeService {
 
       throw e;
     }
-  }
+  };
 
-  public async exists(id: number) {
+  public exists: IProductTypeService['exists'] = async (id: number) => {
     try {
       await this.API.status(id);
       return true;
@@ -148,9 +148,9 @@ export class ProductTypeService implements IProductTypeService {
 
       throw e;
     }
-  }
+  };
 
-  public async getOneRawIntl(id: number) {
+  public getOneRawIntl: IProductTypeService['getOneRawIntl'] = async (id: number) => {
     try {
       return (await this.API.getOneRawIntl(id)).data;
     } catch (e) {
@@ -160,5 +160,5 @@ export class ProductTypeService implements IProductTypeService {
 
       throw e;
     }
-  }
+  };
 }

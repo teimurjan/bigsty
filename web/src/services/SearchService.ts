@@ -25,19 +25,22 @@ export class SearchService implements ISearchService {
     this.API = API;
   }
 
-  public async search(query: string) {
+  public search: ISearchService['search'] = async query => {
     const { data } = await this.API.search(query);
 
     const { entities: categoriesEntities, result: categoriesResult } = normalize(data.categories, [
       new schema.Entity('categories'),
-    ]);
+    ]) as { entities: { categories: { [key: string]: categoryAPI.ICategoryListResponseItem } }; result: number[] };
     const { entities: productTypesEntities, result: productTypesResult } = normalize(data.product_types, [
       new schema.Entity('productTypes'),
-    ]);
+    ]) as {
+      entities: { productTypes: { [key: string]: productTypeAPI.IProductTypeListResponseItem } };
+      result: number[];
+    };
 
     return {
       entities: { ...categoriesEntities, ...productTypesEntities },
       result: { categories: categoriesResult, productTypes: productTypesResult },
     };
-  }
+  };
 }

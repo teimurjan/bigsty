@@ -46,15 +46,15 @@ export class FeatureValueService implements IFeatureValueService {
     this.API = API;
   }
 
-  public async getAll() {
+  public getAll: IFeatureValueService['getAll'] = async () => {
     const featureValues = await this.API.getAll();
     return normalize(featureValues.data, [new schema.Entity('featureValues')]);
-  }
+  };
 
-  public async getAllRawIntl() {
+  public getAllRawIntl: IFeatureValueService['getAllRawIntl'] = async () => {
     const featureValues = await this.API.getAllRawIntl();
     return normalize(featureValues.data, [new schema.Entity('featureValues')]);
-  }
+  };
 
   public delete(id: number) {
     try {
@@ -68,11 +68,11 @@ export class FeatureValueService implements IFeatureValueService {
     }
   }
 
-  public async create(payload: featureValueAPI.IFeatureValueCreatePayload) {
+  public create: IFeatureValueService['create'] = async (payload: featureValueAPI.IFeatureValueCreatePayload) => {
     return (await this.API.create(payload)).data;
-  }
+  };
 
-  public async edit(id: number, payload: featureValueAPI.IFeatureValueEditPayload) {
+  public edit: IFeatureValueService['edit'] = async (id: number, payload: featureValueAPI.IFeatureValueEditPayload) => {
     try {
       return (await this.API.edit(id, payload)).data;
     } catch (e) {
@@ -82,9 +82,9 @@ export class FeatureValueService implements IFeatureValueService {
 
       throw e;
     }
-  }
+  };
 
-  public async exists(id: number) {
+  public exists: IFeatureValueService['exists'] = async (id: number) => {
     try {
       await this.API.status(id);
       return true;
@@ -95,9 +95,9 @@ export class FeatureValueService implements IFeatureValueService {
 
       throw e;
     }
-  }
+  };
 
-  public async getOneRawIntl(id: number) {
+  public getOneRawIntl: IFeatureValueService['getOneRawIntl'] = async (id: number) => {
     try {
       return (await this.API.getOneRawIntl(id)).data;
     } catch (e) {
@@ -107,5 +107,5 @@ export class FeatureValueService implements IFeatureValueService {
 
       throw e;
     }
-  }
+  };
 }
