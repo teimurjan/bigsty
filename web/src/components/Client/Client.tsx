@@ -12,36 +12,41 @@ import { SignUpPageContainer } from 'src/components/SignUp/SignUpPage/SignUpPage
 import { Container } from '../common/Container/Container';
 import { NavContainer } from './Nav/NavContainer';
 import { flexMixin } from 'src/styles/mixins';
-import { Section } from '../common/Section/Section';
 import { ProductTypePageContainer } from './ProductTypePage/ProductTypePageContainer';
+import { mediaQueries } from 'src/styles/media';
 
 export const Client = () => (
   <React.Fragment>
     <HeaderContainer />
     <Route exact={true} path="/login" component={LoginPageContainer} />
     <Route exact={true} path="/signup" component={SignUpPageContainer} />
-    <Section>
-      <Container>
+    <Container
+      css={css`
+        @media ${mediaQueries.maxWidth768} {
+          margin: 0 0.5rem;
+        }
+      `}
+    >
+      <div
+        css={css`
+          padding-top: 3rem;
+          ${flexMixin};
+        `}
+      >
+        <NavContainer />
         <div
           css={css`
-            ${flexMixin};
+            flex: 1;
           `}
         >
-          <NavContainer />
-          <div
-            css={css`
-              flex: 1;
-            `}
-          >
-            <Switch>
-              <Route exact={true} path="/categories/:categoryId/productTypes" component={ProductTypesPageContainer} />
-              <Route exact={true} path="/productTypes/:id" component={ProductTypePageContainer} />
+          <Switch>
+            <Route exact={true} path="/categories/:categoryId/productTypes" component={ProductTypesPageContainer} />
+            <Route exact={true} path="/productTypes/:id" component={ProductTypePageContainer} />
 
-              <Route component={NotFoundContainer} />
-            </Switch>
-          </div>
+            <Route component={NotFoundContainer} />
+          </Switch>
         </div>
-      </Container>
-    </Section>
+      </div>
+    </Container>
   </React.Fragment>
 );

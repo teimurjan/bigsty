@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import * as React from 'react';
 
-import { css, jsx } from '@emotion/core';
+import { css, jsx, ClassNames } from '@emotion/core';
 import { uniqBy } from 'lodash';
 
 import { IViewProps as IProps } from './ProductTypePagePresenter';
@@ -16,6 +16,7 @@ import { FormNativeSelectField } from 'src/components/common/FormNativeSelectFie
 import { Message } from 'src/components/common/Message/Message';
 import { makeAbsoluteURLFromRelative } from 'src/utils/url';
 import { mediaQueries } from 'src/styles/media';
+import { flexMixin } from 'src/styles/mixins';
 
 const getAllFeatureValuesGroupedByType = (
   products: IProps['products'],
@@ -104,11 +105,16 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
         css={css`
           align-items: flex-start;
           margin-bottom: 1.5rem;
+          ${flexMixin};
+
+          @media ${mediaQueries.maxWidth768} {
+            flex-direction: column;
+          }
         `}
-        className="level"
       >
         <div
           css={css`
+            ${flexMixin};
             justify-content: flex-start;
             width: 50%;
 
@@ -116,7 +122,6 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
               width: 100%;
             }
           `}
-          className="level-left"
         >
           <ProductTypeImageCarousel
             images={allImages}
@@ -126,6 +131,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
         </div>
         <div
           css={css`
+            ${flexMixin};
             align-items: flex-start;
             padding-left: 1.5rem;
             flex-direction: column;
@@ -136,7 +142,6 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
               width: 100%;
             }
           `}
-          className="level-item"
         >
           <Title
             css={css`
@@ -147,16 +152,21 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
             {productType.name}
           </Title>
           {allFeatureTypes.map(featureType => (
-            <FormNativeSelectField
-              key={featureType.id}
-              labelProps={{ children: featureType.name }}
-              selectProps={{
-                value: chosenFeatureValues[featureType.id] ? chosenFeatureValues[featureType.id].toString() : undefined,
-                onChange: e => onFeatureValueChange(featureType.id, parseInt(e.currentTarget.value, 10)),
-                options: getOptions(featureType),
-              }}
-              fieldProps={{ style: { width: 300 } }}
-            />
+            <ClassNames key={featureType.id}>
+              {({ css: css_ }) => (
+                <FormNativeSelectField
+                  labelProps={{ children: featureType.name }}
+                  selectProps={{
+                    value: chosenFeatureValues[featureType.id]
+                      ? chosenFeatureValues[featureType.id].toString()
+                      : undefined,
+                    onChange: e => onFeatureValueChange(featureType.id, parseInt(e.currentTarget.value, 10)),
+                    options: getOptions(featureType),
+                  }}
+                  fieldProps={{ className: css_`width: 300px; @media ${mediaQueries.maxWidth768} { width: 100%; }` }}
+                />
+              )}
+            </ClassNames>
           ))}
           <div
             css={css`

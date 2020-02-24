@@ -25,12 +25,16 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
 
   const imageSize = useMedia(
     [mediaQueries.minWidth1600, mediaQueries.minWidth2000, mediaQueries.maxWidth768],
-    ['500px', '600px', '90vw'],
+    ['500px', '600px', '80vw'],
     '30vw',
   );
 
   return (
-    <div>
+    <div
+      css={css`
+        margin: auto;
+      `}
+    >
       <Carousel activeIndex={activeImageIndex}>
         {images.map(image => (
           <CarouselItem key={image}>
