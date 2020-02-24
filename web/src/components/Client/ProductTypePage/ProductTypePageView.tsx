@@ -14,6 +14,8 @@ import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { Message } from 'src/components/common/Message/Message';
+import { makeAbsoluteURLFromRelative } from 'src/utils/url';
+import { mediaQueries } from 'src/styles/media';
 
 const getAllFeatureValuesGroupedByType = (
   products: IProps['products'],
@@ -40,9 +42,9 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
   const [initialValuesSet, setInitialValuesSet] = React.useState(false);
   const [chosenFeatureValues, setChosenFeatureValues] = React.useState<{ [key: string]: number }>({});
 
-  const allImages = products.reduce((acc, product) => [...acc, ...product.images], [
-    ...(productType ? [productType.image] : []),
-  ]);
+  const allImages = products
+    .reduce((acc, product) => [...acc, ...product.images], [...(productType ? [productType.image] : [])])
+    .map(makeAbsoluteURLFromRelative);
 
   const allFeatureTypes =
     products.length > 0 ? products[0].feature_values.map(featureValue => featureValue.feature_type) : [];
@@ -108,6 +110,11 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
         <div
           css={css`
             justify-content: flex-start;
+            width: 50%;
+
+            @media ${mediaQueries.maxWidth768} {
+              width: 100%;
+            }
           `}
           className="level-left"
         >
@@ -122,6 +129,12 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
             align-items: flex-start;
             padding-left: 1.5rem;
             flex-direction: column;
+            width: 50%;
+
+            @media ${mediaQueries.maxWidth768} {
+              padding-left: 0;
+              width: 100%;
+            }
           `}
           className="level-item"
         >
@@ -152,7 +165,14 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
           >
             {matchingProduct && matchingProduct.quantity > 0 ? (
               <Subtitle className="has-text-primary" size={3}>
-                ${calculateDiscountedPrice(matchingProduct.price, matchingProduct.discount)}
+                {matchingProduct.discount > 0 ? (
+                  <React.Fragment>
+                    <del className="has-text-danger">&#36;{matchingProduct.price}</del> &#36;
+                    {calculateDiscountedPrice(matchingProduct.price, matchingProduct.discount)}
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>&#36;{matchingProduct.price}</React.Fragment>
+                )}
               </Subtitle>
             ) : (
               <Subtitle className="has-text-grey-light" size={3}>

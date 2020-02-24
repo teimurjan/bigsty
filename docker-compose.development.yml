@@ -36,12 +36,10 @@ services:
   web:
     build:
       context: ./web
-      args:
-        - REACT_APP_SERVER_URL=http://127.0.0.1:5000 
-    environment:
-      - PORT=80
+      dockerfile: Dockerfile.dev
+    volumes: ['./web:/app']
     ports:
-      - 3000:80
+      - 3000:3000
     depends_on:
       - backend
     links:

@@ -4,6 +4,7 @@ WORKDIR /app
 RUN npm install -g yarn@1.17.3
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
+COPY yarn.lock /app/yarn.lock
 RUN yarn
 COPY . /app
 ARG REACT_APP_SERVER_URL

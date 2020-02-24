@@ -15,6 +15,7 @@ import { Table } from 'src/components/common/Table/Table';
 import { textCenterMixin } from 'src/styles/mixins';
 import { mediaQueries } from 'src/styles/media';
 import { UncontrolledPagination } from '../common/UncontrolledPagination/UncontrolledPagination';
+import { makeAbsoluteURLFromRelative } from 'src/utils/url';
 
 interface IAdminTableRendererRequiredArgs {
   componentKey: string;
@@ -84,7 +85,7 @@ export class ImageRenderer<T> extends DefaultRenderer<T> {
           margin: 0 auto;
           display: block !important;
         `}
-        src={entity[colKey]}
+        src={makeAbsoluteURLFromRelative(entity[colKey])}
       />
     </Table.Cell>
   );

@@ -38,7 +38,18 @@ export const WYSIWYG: React.SFC<IProps> = ({ onChange, onBlur, onFocus, initialV
         editor={ClassicEditor}
         config={{
           toolbar: {
-            items: ['heading', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+            items: [
+              'heading',
+              'bold',
+              'italic',
+              'link',
+              'bulletedList',
+              'numberedList',
+              'insertTable',
+              '|',
+              'undo',
+              'redo',
+            ],
           },
           placeholder,
         }}

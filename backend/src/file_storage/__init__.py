@@ -9,6 +9,10 @@ from paths import APP_ROOT_PATH
 class FileStorage:
     def __init__(self, path):
         self.__path = path
+        try:
+            os.makedirs(os.path.join(APP_ROOT_PATH, self.__path))
+        except FileExistsError:
+            pass
 
     def save_file(self, file):
         filename = secure_filename(f'{uuid.uuid4().hex}_{file.filename}')

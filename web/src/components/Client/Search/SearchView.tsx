@@ -16,6 +16,7 @@ import { DropdownItemLink } from 'src/components/common/DropdownItemLink/Dropdow
 import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
 import { Tag } from 'src/components/common/Tag/Tag';
 import { mediaQueries } from 'src/styles/media';
+import { makeAbsoluteURLFromRelative } from 'src/utils/url';
 
 export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoading, error, onSearchValueChange }) => {
   const intl = useIntl();
@@ -50,7 +51,14 @@ export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoadi
         {productTypes.length > 0 && categories.length > 0 && <DropdownDivider />}
         {productTypes.length > 0 &&
           productTypes.map(productType => (
-            <DropdownItemLink key={productType.id} to={`/productTypes/${productType.id}`}>
+            <DropdownItemLink
+              css={css`
+                overflow: hidden;
+                text-overflow: ellipsis;
+              `}
+              key={productType.id}
+              to={`/productTypes/${productType.id}`}
+            >
               <img
                 css={css`
                   width: 30px;
@@ -58,7 +66,7 @@ export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoadi
                   vertical-align: middle;
                   margin-right: 0.25rem;
                 `}
-                src={productType.image}
+                src={makeAbsoluteURLFromRelative(productType.image)}
               />{' '}
               {productType.name}
             </DropdownItemLink>

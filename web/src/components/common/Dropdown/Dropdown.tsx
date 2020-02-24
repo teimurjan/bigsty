@@ -15,14 +15,16 @@ type RenderChildren = (props: {
   isOpen: boolean;
 }) => React.ReactNode;
 
+export type ITriggerProps = {
+  onClick: React.MouseEventHandler;
+};
+
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode | RenderChildren;
   TriggerComponent?: React.ComponentClass<ITriggerProps> | React.StatelessComponent<ITriggerProps>;
   trigger?: React.ReactNode | RenderChildren;
   menuClassName?: string;
 }
-
-export type ITriggerProps = React.HTMLAttributes<HTMLElement>;
 
 export const Dropdown = ({
   children,
