@@ -10,9 +10,9 @@ from flask_cors import CORS
 
 from paths import APP_ROOT_PATH
 from src.abstract_view import AbstractView
-from src.storage.aws_storage import AWSStorage
 from src.middleware.http.authorize import AuthorizeHttpMiddleware
 from src.middleware.http.language import LanguageHttpMiddleware
+from src.repos.banner import BannerRepo
 from src.repos.category import CategoryRepo
 from src.repos.feature_type import FeatureTypeRepo
 from src.repos.feature_value import FeatureValueRepo
@@ -20,12 +20,14 @@ from src.repos.language import LanguageRepo
 from src.repos.product import ProductRepo
 from src.repos.product_type import ProductTypeRepo
 from src.repos.user import UserRepo
+from src.serializers.banner import BannerSerializer
 from src.serializers.category import CategorySerializer
 from src.serializers.feature_type import FeatureTypeSerializer
 from src.serializers.feature_value import FeatureValueSerializer
 from src.serializers.language import LanguageSerializer
 from src.serializers.product import ProductSerializer
 from src.serializers.product_type import ProductTypeSerializer
+from src.services.banner import BannerService
 from src.services.category import CategoryService
 from src.services.feature_type import FeatureTypeService
 from src.services.feature_value import FeatureValueService
@@ -33,7 +35,10 @@ from src.services.language import LanguageService
 from src.services.product import FeatureValuesPolicy, ProductService
 from src.services.product_type import ProductTypeService
 from src.services.user import UserService
+from src.storage.aws_storage import AWSStorage
 from src.validation_rules.authentication import AUTHENTICATION_VALIDATION_RULES
+from src.validation_rules.banner.create import CREATE_BANNER_VALIDATION_RULES
+from src.validation_rules.banner.update import UPDATE_BANNER_VALIDATION_RULES
 from src.validation_rules.category.create import \
     CREATE_CATEGORY_VALIDATION_RULES
 from src.validation_rules.category.update import \
@@ -55,6 +60,8 @@ from src.validation_rules.product_type.update import \
 from src.validation_rules.refresh_token import REFRESH_TOKEN_VALIDATION_RULES
 from src.validation_rules.registration import REGISTRATION_VALIDATION_RULES
 from src.views.authentication import AuthenticationView
+from src.views.banner.detail import BannerDetailView
+from src.views.banner.list import BannerListView
 from src.views.category.detail import CategoryDetailView
 from src.views.category.list import CategoryListView
 from src.views.feature_type.detail import FeatureTypeDetailView
@@ -104,6 +111,7 @@ class App:
             self.__db_conn, self.__file_storage)
         self.__product_repo = ProductRepo(self.__db_conn, self.__file_storage)
         self.__user_repo = UserRepo(self.__db_conn)
+        self.__banner_repo = BannerRepo(self.__db_conn, self.__file_storage)
 
     def __init_services(self):
         self.__category_service = CategoryService(
@@ -122,6 +130,7 @@ class App:
             self.__product_repo, self.__product_type_repo, self.__feature_value_repo, feature_values_policy
         )
         self.__user_service = UserService(self.__user_repo)
+        self.__banner_service = BannerService(self.__banner_repo)
 
     def __init_search(self):
         if not self.__es.indices.exists(index="category"):
@@ -321,6 +330,26 @@ class App:
                 middlewares=middlewares
             ),
             methods=['GET']
+        )
+        self.flask_app.add_url_rule(
+            '/api/banners',
+            view_func=AbstractView.as_view(
+                'banners',
+                concrete_view=BannerListView(Validator(
+                    CREATE_BANNER_VALIDATION_RULES), self.__banner_service, BannerSerializer),
+                middlewares=middlewares
+            ),
+            methods=['GET', 'POST']
+        )
+        self.flask_app.add_url_rule(
+            '/api/banners/<int:banner_id>',
+            view_func=AbstractView.as_view(
+                'banner',
+                concrete_view=BannerDetailView(Validator(
+                    UPDATE_BANNER_VALIDATION_RULES), self.__banner_service, BannerSerializer),
+                middlewares=middlewares
+            ),
+            methods=['GET', 'PUT', 'DELETE']
         )
 
     def __handle_media_request(self, path):

@@ -13,7 +13,6 @@ import { Title } from 'src/components/common/Title/Title';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
-import { Message } from 'src/components/common/Message/Message';
 import { formatMediaURL } from 'src/utils/url';
 import { mediaQueries } from 'src/styles/media';
 import { flexMixin } from 'src/styles/mixins';
@@ -190,13 +189,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
               </Subtitle>
             )}
           </div>
-          <Message
-            css={css`
-              width: 100%;
-            `}
-          >
-            <Message.Body>{productType.short_description}</Message.Body>
-          </Message>
+          {productType.short_description}
         </div>
       </div>
       <div className="content" dangerouslySetInnerHTML={{ __html: productType.description }}></div>

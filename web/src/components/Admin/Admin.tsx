@@ -18,6 +18,7 @@ import { AdminFeatureTypes } from './FeatureTypes/AdminFeatureTypes';
 import { AdminFeatureValues } from './FeatureValues/AdminFeatureValues';
 import { AdminProductTypes } from './ProductTypes/AdminProductTypes';
 import { AdminProducts } from './Products/AdminProducts';
+import { AdminBanners } from './Banners/AdminBanners';
 
 import { NewCategoryButton } from './Categories/List/AdminCategoriesListView';
 import { NewFeatureTypeButton } from './FeatureTypes/List/AdminFeatureTypesListView';
@@ -38,6 +39,8 @@ import { Subtitle } from '../common/Subtitle/Subtitle';
 import { Title } from '../common/Title/Title';
 import { Tag } from '../common/Tag/Tag';
 import { useIntl } from 'react-intl';
+import { mediaQueries } from 'src/styles/media';
+import { AdminBannersStateProvider } from 'src/state/AdminBannersState';
 
 interface IProps {
   match: { path: string };
@@ -159,40 +162,54 @@ const AdminHome = () => {
 };
 
 export const Admin = ({ match }: IProps) => (
-  <AdminCategoriesStateProvider>
-    <AdminFeatureTypesStateProvider>
-      <AdminFeatureValuesStateProvider>
-        <AdminProductTypesStateProvider>
-          <AdminProductsStateProvider>
-            <div
-              css={css`
-                ${alignItemsFlexStartMixin}
-              `}
-              className="level"
-            >
+  <AdminBannersStateProvider>
+    <AdminCategoriesStateProvider>
+      <AdminFeatureTypesStateProvider>
+        <AdminFeatureValuesStateProvider>
+          <AdminProductTypesStateProvider>
+            <AdminProductsStateProvider>
               <div
                 css={css`
-                  flex-grow: 0 !important;
-                  flex-basis: 350px;
+                  ${alignItemsFlexStartMixin};
+                  ${flexMixin};
                 `}
-                className="level-item"
               >
-                <AdminHeaderContainer />
+                <div
+                  css={css`
+                    flex: 0 0 350px;
+
+                    @media ${mediaQueries.maxWidth768} {
+                      position: absolute;
+                      left: -350px;
+                    }
+                  `}
+                >
+                  <AdminHeaderContainer />
+                </div>
+                <div
+                  css={css`
+                    width: calc(100% - 350px);
+
+                    @media ${mediaQueries.maxWidth768} {
+                      width: 100%;
+                    }
+                  `}
+                >
+                  <Switch>
+                    <Route path={`${match.path}/categories`} component={AdminCategories} />
+                    <Route path={`${match.path}/featureTypes`} component={AdminFeatureTypes} />
+                    <Route path={`${match.path}/featureValues`} component={AdminFeatureValues} />
+                    <Route path={`${match.path}/productTypes`} component={AdminProductTypes} />
+                    <Route path={`${match.path}/products`} component={AdminProducts} />
+                    <Route path={`${match.path}/banners`} component={AdminBanners} />
+                    <Route component={AdminHome} />
+                  </Switch>
+                </div>
               </div>
-              <div className="level-item">
-                <Switch>
-                  <Route path={`${match.path}/categories`} component={AdminCategories} />
-                  <Route path={`${match.path}/featureTypes`} component={AdminFeatureTypes} />
-                  <Route path={`${match.path}/featureValues`} component={AdminFeatureValues} />
-                  <Route path={`${match.path}/productTypes`} component={AdminProductTypes} />
-                  <Route path={`${match.path}/products`} component={AdminProducts} />
-                  <Route component={AdminHome} />
-                </Switch>
-              </div>
-            </div>
-          </AdminProductsStateProvider>
-        </AdminProductTypesStateProvider>
-      </AdminFeatureValuesStateProvider>
-    </AdminFeatureTypesStateProvider>
-  </AdminCategoriesStateProvider>
+            </AdminProductsStateProvider>
+          </AdminProductTypesStateProvider>
+        </AdminFeatureValuesStateProvider>
+      </AdminFeatureTypesStateProvider>
+    </AdminCategoriesStateProvider>
+  </AdminBannersStateProvider>
 );
