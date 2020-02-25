@@ -1,13 +1,13 @@
 from sqlalchemy.orm import joinedload
 
-from src.file_storage import FileStorage
+from src.storage.base import Storage
 from src.models import (ProductType, ProductTypeDescription,
                         ProductTypeName, ProductTypeShortDescription)
 from src.repos.base import IntlRepo, with_session
 
 
 class ProductTypeRepo(IntlRepo):
-    def __init__(self, db_conn, file_storage: FileStorage):
+    def __init__(self, db_conn, file_storage: Storage):
         super().__init__(db_conn, ProductType)
         self.__file_storage = file_storage
 

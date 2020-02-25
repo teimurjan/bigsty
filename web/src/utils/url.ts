@@ -9,4 +9,5 @@ export const getNumberParam = <T extends { [key: string]: string }>(
   return paramStr ? parseInt(paramStr, 10) : undefined;
 };
 
-export const makeAbsoluteURLFromRelative = (relativeURL: string) => `${process.env.REACT_APP_SERVER_URL}${relativeURL}`;
+export const formatMediaURL = (url: string) =>
+  url.startsWith('/') ? `${process.env.REACT_APP_SERVER_URL}${url}` : url;

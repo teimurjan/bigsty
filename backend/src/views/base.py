@@ -2,7 +2,6 @@ import math
 
 from src.errors import InvalidEntityFormat
 
-
 class ValidatableView:
     def __init__(self, validator):
         self._validator = validator

@@ -12,7 +12,7 @@ import { useIntl } from 'react-intl';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { mediaQueries } from 'src/styles/media';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
-import { makeAbsoluteURLFromRelative } from 'src/utils/url';
+import { formatMediaURL } from 'src/utils/url';
 
 export interface IProps {
   productType: IProductTypeListResponseItem;
@@ -44,7 +44,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
       `}
     >
       <CardImage>
-        <Image className="image is-square" imgProps={{ src: makeAbsoluteURLFromRelative(productType.image) }} />
+        <Image className="image is-square" imgProps={{ src: formatMediaURL(productType.image) }} />
       </CardImage>
       <CardContent
         css={css`

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { makeAbsoluteURLFromRelative } from 'src/utils/url';
+import { formatMediaURL } from 'src/utils/url';
 
 interface IProps extends Omit<React.HTMLProps<HTMLInputElement>, 'onChange' | 'value'> {
   showPreview?: boolean;
@@ -30,7 +30,7 @@ export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview =
     if (!value) return;
 
     if (typeof value === 'string') {
-      setPreviewURL(makeAbsoluteURLFromRelative(value));
+      setPreviewURL(formatMediaURL(value));
       return;
     }
 

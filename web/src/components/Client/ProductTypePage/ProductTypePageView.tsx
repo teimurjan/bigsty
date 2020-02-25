@@ -14,7 +14,7 @@ import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { Message } from 'src/components/common/Message/Message';
-import { makeAbsoluteURLFromRelative } from 'src/utils/url';
+import { formatMediaURL } from 'src/utils/url';
 import { mediaQueries } from 'src/styles/media';
 import { flexMixin } from 'src/styles/mixins';
 
@@ -45,7 +45,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
 
   const allImages = products
     .reduce((acc, product) => [...acc, ...product.images], [...(productType ? [productType.image] : [])])
-    .map(makeAbsoluteURLFromRelative);
+    .map(formatMediaURL);
 
   const allFeatureTypes =
     products.length > 0 ? products[0].feature_values.map(featureValue => featureValue.feature_type) : [];

@@ -10,7 +10,7 @@ from flask_cors import CORS
 
 from paths import APP_ROOT_PATH
 from src.abstract_view import AbstractView
-from src.file_storage import FileStorage
+from src.storage.aws_storage import AWSStorage
 from src.middleware.http.authorize import AuthorizeHttpMiddleware
 from src.middleware.http.language import LanguageHttpMiddleware
 from src.repos.category import CategoryRepo
@@ -79,8 +79,12 @@ class App:
         self.flask_app.config.from_object(os.environ.get(
             'APP_SETTINGS', 'config.DevelopmentConfig'))
         CORS(self.flask_app, origins=self.flask_app.config['ALLOWED_ORIGINS'])
-        self.__file_storage = FileStorage(
-            self.flask_app.config['UPLOAD_FOLDER'])
+        self.__file_storage = AWSStorage(
+            self.flask_app.config['AWS_BUCKET_NAME'],
+            self.flask_app.config['AWS_DEFAULT_REGION'],
+            self.flask_app.config['AWS_ACCESS_KEY_ID'],
+            self.flask_app.config['AWS_SECRET_ACCESS_KEY']
+        )
         engine = db.create_engine(self.flask_app.config['DB_URL'], echo=True)
         self.__db_conn = engine.connect()
         self.__es = Elasticsearch(self.flask_app.config['ELASTICSEARCH_URL'])
