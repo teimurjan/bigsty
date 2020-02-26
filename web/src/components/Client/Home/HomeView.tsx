@@ -12,7 +12,6 @@ import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { ProductTypesListView } from '../ProductType/ProductTypesList/ProductTypesListView';
 import { Title } from 'src/components/common/Title/Title';
 import { useIntl } from 'react-intl';
-import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 
 const preloadImage = (src: string) => {
   const image = new Image();
@@ -84,18 +83,10 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                   css={css`
                     position: absolute;
                     max-width: 60%;
-                    top: ${banner.text_top_offset ? `${banner.text_top_offset}px` : undefined};
-                    left: ${banner.text_left_offset ? `${banner.text_left_offset}px` : undefined};
-                    right: ${banner.text_right_offset ? `${banner.text_right_offset}px` : undefined};
-                    bottom: ${banner.text_bottom_offset ? `${banner.text_bottom_offset}px` : undefined};
-
-                    @media ${mediaQueries.maxWidth768} {
-                      max-width: 80%;
-                      top: ${banner.text_top_offset ? `${banner.text_top_offset * 0.25}px` : undefined};
-                      left: ${banner.text_left_offset ? `${banner.text_left_offset * 0.25}px` : undefined};
-                      right: ${banner.text_right_offset ? `${banner.text_right_offset * 0.25}px` : undefined};
-                      bottom: ${banner.text_bottom_offset ? `${banner.text_bottom_offset * 0.25}px` : undefined};
-                    }
+                    top: ${banner.text_top_offset ? `${banner.text_top_offset}%` : undefined};
+                    left: ${banner.text_left_offset ? `${banner.text_left_offset}%` : undefined};
+                    right: ${banner.text_right_offset ? `${banner.text_right_offset}%` : undefined};
+                    bottom: ${banner.text_bottom_offset ? `${banner.text_bottom_offset}%` : undefined};
                   `}
                   size={1}
                 >
