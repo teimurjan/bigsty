@@ -85,8 +85,8 @@ class ProductService:
         except self._product_type_repo.DoesNotExist:
             raise self.ProductTypeInvalid()
 
-    def get_all(self):
-        return self._repo.get_all()
+    def get_all(self, offset=None, limit=None):
+        return self._repo.get_all(offset=offset, limit=limit)
 
     def get_for_product_type(self, product_type_id):
         return self._repo.get_for_product_type(product_type_id)

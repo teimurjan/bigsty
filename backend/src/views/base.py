@@ -1,6 +1,8 @@
 import math
 
 from src.errors import InvalidEntityFormat
+from src.utils.number import parse_int
+
 
 class ValidatableView:
     def __init__(self, validator):
@@ -13,13 +15,20 @@ class ValidatableView:
 
 
 class PaginatableView:
-    def _paginate(self, items, page, limit):
+    def _get_meta(self, items, page, limit):
         pages_count = math.ceil(len(items) / limit)
-        starting_item_index = limit * (page - 1)
-        ending_item_index = starting_item_index + limit
-        return items[starting_item_index: ending_item_index], {
+        return {
             'count': len(items),
             'pages_count': pages_count,
             'page': page,
             'limit': limit,
         }
+
+    def _get_pagination_data(self, request):
+        page = parse_int(request.args.get('page'))
+        if page:
+            limit = parse_int(request.args.get('limit', 20))
+            offset = limit * (page - 1)
+            return {'page': page, 'offset': offset, 'limit': limit}
+        
+        return None

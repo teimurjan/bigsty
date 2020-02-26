@@ -14,10 +14,22 @@ class Banner(BaseModel):
         lazy='joined',
         cascade="all, delete, delete-orphan"
     )
+    link_texts = orm.relationship(
+        'BannerLinkText',
+        backref='banner',
+        lazy='joined',
+        cascade="all, delete, delete-orphan"
+    )
     link = Column(String(255), nullable=True)
+    text_left_offset = Column(String(10), nullable=True)
+    text_right_offset = Column(String(10), nullable=True)
+    text_top_offset = Column(String(10), nullable=True)
+    text_bottom_offset = Column(String(10), nullable=True)
 
     def __getitem__(self, key):
         if key == 'texts':
             return self.texts
+        if key == 'link_texts':
+            return self.link_texts
 
         return super().__getitem__(key)

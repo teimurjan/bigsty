@@ -15,3 +15,4 @@ from src.models.product_type.description import ProductTypeDescription
 from src.models.product_type.short_description import ProductTypeShortDescription
 from src.models.banner import Banner
 from src.models.banner.text import BannerText
+from src.models.banner.link_text import BannerLinkText

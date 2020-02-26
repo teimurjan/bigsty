@@ -18,16 +18,24 @@ class ProductTypeListView(ValidatableView, PaginatableView):
         self._serializer_cls = serializer_cls
 
     def get(self, request):
-        product_types = self._service.get_all()
+        product_types = []
+        meta = None
+
+        pagination_data = self._get_pagination_data(request)
+        if pagination_data:
+            product_types = self._service.get_all(
+                offset=pagination_data['offset'],
+                limit=pagination_data['limit']
+            )
+            meta = self._get_meta(
+                product_types,
+                pagination_data['page'],
+                pagination_data['limit']
+            )
+        else:
+            product_types = self._service.get_all()
 
         should_get_raw_intl_field = request.args.get('raw_intl') == '1'
-
-        meta = None
-        page = parse_int(request.args.get('page'))
-
-        if page:
-            limit = parse_int(request.args.get('limit', 20))
-            product_types, meta = self._paginate(product_types, page, limit)
 
         serialized_product_types = [
             self

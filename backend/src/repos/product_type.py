@@ -77,13 +77,15 @@ class ProductTypeRepo(IntlRepo):
         return product_type
 
     @with_session
-    def get_for_categories_with_products(self, category_ids, session):
+    def get_for_categories_with_products(self, category_ids, offset, limit, session):
         return (
             session
             .query(ProductType)
             .options(joinedload(ProductType.products))
             .filter(ProductType.category_id.in_(category_ids))
             .order_by(ProductType.id)
+            .offset(offset)
+            .limit(limit)
             .all()
         )
 

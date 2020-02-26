@@ -75,6 +75,7 @@ from src.views.product.list import ProductListView
 from src.views.product_type.by_category import ProductTypeByCategoryView
 from src.views.product_type.detail import ProductTypeDetailView
 from src.views.product_type.list import ProductTypeListView
+from src.views.product_type.newest import ProductTypeNewestView
 from src.views.refresh_token import RefreshTokenView
 from src.views.registration import RegistrationView
 from src.views.search import SearchView
@@ -320,6 +321,15 @@ class App:
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
+        )
+        self.flask_app.add_url_rule(
+            '/api/product_types/newest',
+            view_func=AbstractView.as_view(
+                'product_type_newest',
+                concrete_view=ProductTypeNewestView(self.__product_type_service, ProductTypeSerializer),
+                middlewares=middlewares
+            ),
+            methods=['GET']
         )
         self.flask_app.add_url_rule(
             '/api/languages',

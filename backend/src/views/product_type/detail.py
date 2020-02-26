@@ -31,7 +31,7 @@ class ProductTypeDetailView(ValidatableView):
         try:
             data = {
                 **parse_json_from_form_data(request.form),
-                'image': request.files.get('image'),
+                'image': request.files.get('image') or request.form.get('image'),
             }
             self._validate(data)
 

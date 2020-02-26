@@ -24,8 +24,13 @@ class BannerService:
     def create(self, data, *args, **kwargs):
         return self._repo.add_banner(
             data['texts'],
+            data['link_texts'],
             data.get('link'),
             data.get('image'),
+            data.get('text_top_offset'),
+            data.get('text_left_offset'),
+            data.get('text_right_offset'),
+            data.get('text_bottom_offset'),
         )
 
     @allow_roles(['admin', 'manager'])
@@ -34,8 +39,13 @@ class BannerService:
             category = self._repo.update_banner(
                 id_,
                 data['texts'],
+                data['link_texts'],
                 data.get('link'),
                 data.get('image'),
+                data.get('text_top_offset'),
+                data.get('text_left_offset'),
+                data.get('text_right_offset'),
+                data.get('text_bottom_offset'),
             )
 
             return category

@@ -1,24 +1,32 @@
-from src.views.base import ValidatableView, PaginatableView
 from src.constants.status_codes import OK_CODE
 from src.errors import InvalidEntityFormat
+from src.services.feature_value import FeatureValueService
 from src.utils.number import parse_int
+from src.views.base import PaginatableView, ValidatableView
 
 
 class FeatureValueListView(ValidatableView, PaginatableView):
-    def __init__(self, validator, service, serializer_cls):
+    def __init__(self, validator, service: FeatureValueService, serializer_cls):
         super().__init__(validator)
         self._service = service
         self._serializer_cls = serializer_cls
 
     def get(self, request):
-        feature_values = self._service.get_all()
+        pagination_data = self._get_pagination_data(request)
+        if pagination_data:
+            feature_values = self._service.get_all(
+                offset=pagination_data['offset'],
+                limit=pagination_data['limit']
+            )
+            meta = self._get_meta(
+                feature_values,
+                pagination_data['page'],
+                pagination_data['limit']
+            )
+        else:
+            feature_values = self._service.get_all()
 
-        meta = None
-        page = parse_int(request.args.get('page'))
         should_get_raw_intl_field = request.args.get('raw_intl') == '1'
-        if page:
-            limit = parse_int(request.args.get('limit', 20))
-            feature_values, meta = self._paginate(feature_values, page, limit)
 
         serialized_feature_values = [
             self

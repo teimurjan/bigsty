@@ -98,16 +98,19 @@ class ProductTypeService:
         except self._feature_type_repo.DoesNotExist:
             raise self.FeatureTypesInvalid()
 
-    def get_all(self):
-        return self._repo.get_all()
+    def get_all(self, offset=None, limit=None):
+        return self._repo.get_all(offset=offset, limit=limit)
 
-    def get_all_categorized(self, category_id):
+    def get_newest(self, count):
+        return self._repo.get_all_reversed(limit=count)
+
+    def get_all_categorized(self, category_id, offset, limit):
         with self._repo.session() as s:
             children_categories = self._category_repo.get_children(
                 category_id, session=s)
             categories_ids = [category.id for category in children_categories]
             product_types = self._repo.get_for_categories_with_products(
-                [category_id, *categories_ids], session=s)
+                [category_id, *categories_ids], offset, limit, session=s)
             return product_types
 
     def get_one(self, id_):

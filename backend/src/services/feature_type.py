@@ -18,8 +18,8 @@ class FeatureTypeService:
             data['names']
         )
 
-    def get_all(self):
-        return self._repo.get_all()
+    def get_all(self, offset=None, limit=None):
+        return self._repo.get_all(offset=offset, limit=limit)
 
     def get_one(self, id_):
         try:
