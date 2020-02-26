@@ -14,6 +14,7 @@ import { NavContainer } from './Nav/NavContainer';
 import { flexMixin } from 'src/styles/mixins';
 import { ProductTypePageContainer } from './ProductTypePage/ProductTypePageContainer';
 import { mediaQueries } from 'src/styles/media';
+import { HomeContainer } from './Home/HomeContainer';
 
 export const Client = () => (
   <React.Fragment>
@@ -29,7 +30,7 @@ export const Client = () => (
     >
       <div
         css={css`
-          padding-top: 3rem;
+          padding: 3rem 0;
           ${flexMixin};
         `}
       >
@@ -40,6 +41,7 @@ export const Client = () => (
           `}
         >
           <Switch>
+            <Route exact={true} path="/" component={HomeContainer} />
             <Route exact={true} path="/categories/:categoryId/productTypes" component={ProductTypesPageContainer} />
             <Route exact={true} path="/productTypes/:id" component={ProductTypePageContainer} />
 

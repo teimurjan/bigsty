@@ -117,7 +117,7 @@
   "AdminProducts.notFound.cta": "Создать продукт",
   "AdminProducts.images": "Картинки",
   "AdminProducts.featureValuesSelect.label": "Значения характеристики",
-  "common.productTypeSelect.label": "Тип продукта",
+  "AdminProducts.productTypeSelect.label": "Тип продукта",
   "AdminProducts.productTypeSelect.defaultOption.title": "Нет типа продукта",
   "Admine.create.title": "Создать продукт",
   "AdminProducts.edit.title": "Редактировать",
@@ -161,5 +161,14 @@
   "AdminBanners.textInput.label": "Текст",
   "AdminBanners.textInput.placeholder": "Введите текст",
   "AdminBanners.linkInput.label": "Ссылка",
-  "AdminBanners.linkInput.placeholder": "Введите ссылку"
+  "AdminBanners.linkInput.placeholder": "Введите ссылку",
+  "common.newest": "Новинки",
+  "AdminBanners.notFound": "Баннер не найден",
+  "AdminBanners.edit.title": "Редактировать баннер",
+  "AdminBanners.linkTextInput.label": "Текст ссылки",
+  "AdminBanners.linkTextInput.placeholder": "Введите текст ссылки",
+  "AdminBanners.topOffsetInput.label": "Верхний отступ",
+  "AdminBanners.bottomOffsetInput.label": "Нижний отступ",
+  "AdminBanners.leftOffsetInput.label": "Левый отступ",
+  "AdminBanners.rightOffsetInput.label": "Правый отступ"
 }

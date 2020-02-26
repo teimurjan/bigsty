@@ -68,6 +68,10 @@ export interface IProductTypeListResponseData {
   meta: IProductTypeListResponseMeta;
 }
 
+export interface IProductTypeNewestResponseData {
+  data: IProductTypeListResponseItem[];
+}
+
 export interface IProductTypeListRawIntlResponseData {
   data: IProductTypeListRawIntlResponseItem[];
   meta: IProductTypeListResponseMeta;
@@ -102,6 +106,7 @@ export type IProductTypeEditPayload = IProductTypeCreatePayload;
 export interface IProductTypeAPI {
   getForCategory(categoryId: number, page: number): Promise<IProductTypeListResponseData>;
   getAll(page: number): Promise<IProductTypeListResponseData>;
+  getNewest(): Promise<IProductTypeNewestResponseData>;
   getByID(id: number): Promise<IProductTypeDetailResponseItemData>;
   getAllWithBaseFields(): Promise<IProductTypeBaseListResponseItemData>;
   getAllRawIntl(page: number): Promise<IProductTypeListRawIntlResponseData>;
@@ -158,6 +163,17 @@ export class ProductTypeAPI implements IProductTypeAPI {
           headers: this.headersManager.getHeaders(),
         },
       );
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async getNewest() {
+    try {
+      const response = await this.client.get<IProductTypeNewestResponseData>('/api/product_types/newest', {
+        headers: this.headersManager.getHeaders(),
+      });
       return response.data;
     } catch (e) {
       throw e;

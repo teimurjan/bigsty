@@ -1,4 +1,7 @@
+/** @jsx jsx */
 import * as React from 'react';
+
+import { jsx, css } from '@emotion/core';
 
 import { Field as FinalFormField, FieldRenderProps, useFormState } from 'react-final-form';
 import { IntlShape, injectIntl, useIntl } from 'react-intl';
@@ -18,6 +21,9 @@ import { FormRadioGroupField } from 'src/components/common/FormRadioGroupField/F
 import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { isAllowedForNumberInput } from 'src/utils/number';
+import { Button } from 'src/components/common/Button/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const renderQuantityField = injectIntl(({ input, meta, intl }: FieldRenderProps<string> & { intl: IntlShape }) => {
   const showError = meta.touched && meta.error;
@@ -116,7 +122,7 @@ const FeatureValuesSelect = injectIntl(
     const groupedFeatureValues = useGroupedFeatureValuesByFeatureType(featureValues);
 
     return (
-      <>
+      <React.Fragment>
         {Object.keys(groupedFeatureValues).map(featureTypeName => (
           <FormRadioGroupField
             key={featureTypeName}
@@ -143,7 +149,7 @@ const FeatureValuesSelect = injectIntl(
           />
         ))}
         <HelpText type="is-danger">{showError ? intl.formatMessage({ id: meta.error }) : undefined}</HelpText>
-      </>
+      </React.Fragment>
     );
   },
 );
@@ -165,13 +171,9 @@ const ProductTypeSelect = injectIntl(
     return (
       <FormNativeSelectField
         labelProps={{
-          children: (
-            <>
-              {intl.formatMessage({
-                id: 'common.productTypeSelect.label',
-              })}
-            </>
-          ),
+          children: intl.formatMessage({
+            id: 'AdminProducts.productTypeSelect.label',
+          }),
         }}
         selectProps={{
           ...input,
@@ -217,23 +219,40 @@ const ImagesInput: React.SFC<FieldRenderProps<Array<File | undefined>>> = inject
         <Field>
           <Label>{intl.formatMessage({ id: 'AdminProducts.images' })}</Label>
           {value.map((file, i) => (
-            <FileInput
+            <div
+              css={css`
+                position: relative;
+              `}
               key={typeof file === 'string' ? file : (file as File).lastModified.toString()}
-              value={file}
-              onChange={newFile => {
-                const newFiles = [...value];
-                if (newFile) {
+            >
+              <FileInput
+                value={file}
+                onChange={newFile => {
+                  const newFiles = [...value];
                   newFiles[i] = newFile;
-                } else {
-                  delete newFiles[i];
-                }
-                onChange(newFiles);
-              }}
-              accept="image/*"
-              placeholder={intl.formatMessage({
-                id: 'common.chooseImage',
-              })}
-            />
+                  onChange(newFiles);
+                }}
+                accept="image/*"
+                placeholder={intl.formatMessage({
+                  id: 'common.chooseImage',
+                })}
+              />
+              <Button
+                css={css`
+                  position: absolute;
+                  bottom: 0;
+                  right: 0;
+                `}
+                color="is-danger"
+                onClick={e => {
+                  e.preventDefault();
+                  const newFiles = value.filter((_, j) => j !== i);
+                  onChange(newFiles);
+                }}
+              >
+                <FontAwesomeIcon icon={faTrashAlt} />
+              </Button>
+            </div>
           ))}
           <FileInput
             value={undefined}
@@ -269,7 +288,7 @@ export const Fields: React.SFC<IFieldsProps> = React.memo(
     const productType = productTypes.find(({ id }) => parseInt(productTypeID, 10) === id);
 
     return (
-      <>
+      <React.Fragment>
         <FinalFormField key="price" name="price" render={renderPriceField} />
         <FinalFormField key="discount" name="discount" render={renderDiscountField} />
         <FinalFormField key="quantity" name="quantity" render={renderQuantityField} />
@@ -288,7 +307,7 @@ export const Fields: React.SFC<IFieldsProps> = React.memo(
           )}
         />
         <FinalFormField key="images" name="images" render={renderImagesInput} />
-      </>
+      </React.Fragment>
     );
   },
   (prevProps, nextProps) =>

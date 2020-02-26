@@ -6,8 +6,13 @@ import { buildQueryString } from 'src/utils/queryString';
 export interface IBannerListResponseItem {
   id: number;
   text: string;
+  link_text: string;
   link: string | null;
   image: string;
+  text_top_offset: number | null;
+  text_left_offset: number | null;
+  text_right_offset: number | null;
+  text_bottom_offset: number | null;
 }
 
 export interface IBannerListRawIntlResponseItem {
@@ -15,8 +20,15 @@ export interface IBannerListRawIntlResponseItem {
   text: {
     [key: string]: string;
   };
+  link_text: {
+    [key: string]: string;
+  };
   link: string | null;
   image: string;
+  text_top_offset: number | null;
+  text_left_offset: number | null;
+  text_right_offset: number | null;
+  text_bottom_offset: number | null;
 }
 
 export interface IBannerListResponseData {
@@ -35,8 +47,15 @@ export interface IBannerCreatePayload {
   texts: {
     [key: string]: string;
   };
+  link_texts: {
+    [key: string]: string;
+  };
   link: string | null;
   image: string;
+  text_top_offset: number | null;
+  text_left_offset: number | null;
+  text_right_offset: number | null;
+  text_bottom_offset: number | null;
 }
 
 export interface IBannerAPI {

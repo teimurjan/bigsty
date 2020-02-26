@@ -118,6 +118,7 @@
   "AdminProducts.images": "Images",
   "AdminProducts.featureValuesSelect.label": "Feature values",
   "AdminProducts.productTypeSelect.defaultOption.title": "No Product Type",
+  "AdminProducts.productTypeSelect.label": "Product type",
   "Admine.create.title": "Create product",
   "AdminProducts.edit.title": "Edit product",
   "AdminProducts.notFound": "Product not found.",
@@ -160,5 +161,14 @@
   "AdminBanners.textInput.label": "Text",
   "AdminBanners.textInput.placeholder": "Enter text",
   "AdminBanners.linkInput.label": "Link",
-  "AdminBanners.linkInput.placeholder": "Enter link"
+  "AdminBanners.linkInput.placeholder": "Enter link",
+  "common.newest": "Newest",
+  "AdminBanners.notFound": "Banner not found",
+  "AdminBanners.edit.title": "Edit banner",
+  "AdminBanners.linkTextInput.label": "Link Text",
+  "AdminBanners.linkTextInput.placeholder": "Enter link text",
+  "AdminBanners.topOffsetInput.label": "Top Offset",
+  "AdminBanners.bottomOffsetInput.label": "Bottom Offset",
+  "AdminBanners.leftOffsetInput.label": "Left Offset",
+  "AdminBanners.rightOffsetInput.label": "Right Offset"
 }

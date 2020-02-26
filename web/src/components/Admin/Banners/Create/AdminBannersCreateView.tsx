@@ -4,7 +4,7 @@ import { IntlShape } from 'react-intl';
 
 import { ModalForm } from '../../ModalForm';
 
-import { BANNER_TEXT_FIELD_KEY, IViewProps as IProps } from './AdminBannersCreatePresenter';
+import { BANNER_TEXT_FIELD_KEY, BANNER_LINK_TEXT_FIELD_KEY, IViewProps as IProps } from './AdminBannersCreatePresenter';
 import { Fields } from './Fields';
 
 export const AdminBannersCreateView = ({
@@ -27,7 +27,13 @@ export const AdminBannersCreateView = ({
     isPreloading={isLoading}
     globalError={error}
     title={intl.formatMessage({ id: 'AdminBanners.create.title' })}
-    fields={<Fields availableLocales={availableLocales} textFieldKey={BANNER_TEXT_FIELD_KEY} />}
+    fields={
+      <Fields
+        availableLocales={availableLocales}
+        textFieldKey={BANNER_TEXT_FIELD_KEY}
+        linkTextFieldKey={BANNER_LINK_TEXT_FIELD_KEY}
+      />
+    }
     validate={validate}
   />
 );

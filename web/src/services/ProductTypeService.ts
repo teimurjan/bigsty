@@ -40,6 +40,14 @@ export interface IProductTypeService {
     };
     result: number[];
   }>;
+  getNewest(): Promise<{
+    entities: {
+      productTypes: {
+        [key: string]: productTypeAPI.IProductTypeListResponseItem;
+      };
+    };
+    result: number[];
+  }>;
   getByID(id: number): Promise<productTypeAPI.IProductTypeDetailResponseItem | undefined>;
   getAllRawIntl(
     page: number,
@@ -84,6 +92,11 @@ export class ProductTypeService implements IProductTypeService {
       ...normalize(productTypes.data, [new schema.Entity('productTypes')]),
       meta: productTypes.meta,
     };
+  };
+
+  public getNewest: IProductTypeService['getNewest'] = async () => {
+    const productTypes = await this.API.getNewest();
+    return normalize(productTypes.data, [new schema.Entity('productTypes')]);
   };
 
   public getByID: IProductTypeService['getByID'] = async (id: number) => {

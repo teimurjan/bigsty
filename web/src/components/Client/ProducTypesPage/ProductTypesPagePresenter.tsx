@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { IProductTypeListResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
 import { IProductTypeService } from 'src/services/ProductTypeService';
+import { IProps as IListViewProps } from 'src/components/Client/ProductType/ProductTypesList/ProductTypesListView';
 
 export interface IProps {
   ListView: React.ComponentClass<IListViewProps> | React.SFC<IListViewProps>;
@@ -15,13 +16,6 @@ interface IState {
   productTypes: { [key: string]: IProductTypeListResponseItem };
   productTypesMeta: IProductTypeListResponseMeta;
   productTypesOrder: number[];
-}
-
-export interface IListViewProps {
-  productTypes: IProductTypeListResponseItem[];
-  meta: IProductTypeListResponseMeta;
-  error: string | undefined;
-  isLoading: boolean;
 }
 
 export class ProductTypesPagePresenter extends React.Component<IProps, IState> {

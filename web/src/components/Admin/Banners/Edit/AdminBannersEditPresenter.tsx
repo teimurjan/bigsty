@@ -5,25 +5,28 @@ import * as yup from 'yup';
 
 import * as schemaValidator from 'src/components/SchemaValidator';
 
-import { IBannerService } from 'src/services/BannerService';
-
 import { IContextValue as AdminBannersStateContextValue } from 'src/state/AdminBannersState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
+import { IBannerListRawIntlResponseItem } from 'src/api/BannerAPI';
+
+import { IBannerService } from 'src/services/BannerService';
+
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
-import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
+import { useLazy } from 'src/hooks/useLazy';
 
 export interface IProps extends AdminBannersStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: IBannerService;
   history: History;
+  bannerId: number;
 }
 
 export interface IViewProps {
   isOpen: boolean;
-  create: (values: {
+  edit: (values: {
     texts: {
       [key: string]: string;
     };
@@ -37,26 +40,33 @@ export interface IViewProps {
     text_right_offset?: string;
     text_bottom_offset?: string;
   }) => void;
-  isLoading: boolean;
-  isCreating: boolean;
   error?: string;
   close: () => void;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
+  isLoading: boolean;
+  isUpdating: boolean;
+  preloadingError?: string;
+  initialValues: object;
 }
 
 export const BANNER_TEXT_FIELD_KEY = 'text';
 export const BANNER_LINK_TEXT_FIELD_KEY = 'link_text';
 
-export const AdminBannersCreatePresenter: React.FC<IProps> = ({
+export const AdminBannersEditPresenter: React.FC<IProps> = ({
   intlState,
   history,
-  adminBannersState: { addBanner, isListLoading: bannersLoading },
+  adminBannersState: { setBanner: setBannerToState, isListLoading: bannersLoading },
+  intlState: { availableLocales },
   service,
   View,
+  bannerId,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
-  const [isCreating, setCreating] = React.useState(false);
+  const [banner, setBanner] = React.useState<IBannerListRawIntlResponseItem | undefined>(undefined);
+  const [isUpdating, setUpdating] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
+  const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
   const isTimeoutExpired = useTimeoutExpired(1000);
 
@@ -71,8 +81,7 @@ export const AdminBannersCreatePresenter: React.FC<IProps> = ({
               [getFieldName(BANNER_LINK_TEXT_FIELD_KEY, locale)]: yup.string(),
             }),
             {
-              link: yup.string(),
-              image: yup.mixed().required('common.errors.field.empty'),
+              parent_banner_id: yup.number().nullable(true),
             },
           ),
         ),
@@ -82,14 +91,33 @@ export const AdminBannersCreatePresenter: React.FC<IProps> = ({
 
   const validator = useLazy({
     make: makeValidator,
-    trigger: intlState.availableLocales.length,
+    trigger: availableLocales.length,
   });
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const banner = await service.getOneRawIntl(bannerId);
+        if (banner) {
+          setBanner(banner);
+        } else {
+          setPreloadingError('AdminBanners.notFound');
+        }
+      } catch (e) {
+        setPreloadingError('errors.common');
+      } finally {
+        setLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const close = React.useCallback(() => history.push('/admin/banners'), [history]);
 
-  const create: IViewProps['create'] = React.useCallback(
+  const edit: IViewProps['edit'] = React.useCallback(
     async values => {
-      setCreating(true);
+      setUpdating(true);
 
       const formattedValues = Object.keys(values).reduce(
         (acc, fieldName) => {
@@ -112,8 +140,8 @@ export const AdminBannersCreatePresenter: React.FC<IProps> = ({
         {
           texts: {},
           link_texts: {},
-          link: values.link ? values.link : null,
           image: values.image,
+          link: values.link ? values.link : null,
           text_top_offset: values.text_top_offset ? parseInt(values.text_top_offset, 10) : null,
           text_bottom_offset: values.text_bottom_offset ? parseInt(values.text_bottom_offset, 10) : null,
           text_left_offset: values.text_left_offset ? parseInt(values.text_left_offset, 10) : null,
@@ -122,28 +150,53 @@ export const AdminBannersCreatePresenter: React.FC<IProps> = ({
       );
 
       try {
-        const category = await service.create(formattedValues);
-        addBanner(category);
-        setCreating(false);
+        const banner = await service.edit(bannerId, formattedValues);
+        setBannerToState(banner);
+        setUpdating(false);
         close();
       } catch (e) {
         setError('errors.common');
-        setCreating(false);
+        setUpdating(false);
       }
     },
-    [addBanner, close, service],
+    [bannerId, close, service, setBannerToState],
   );
+
+  const initialValues = React.useMemo(() => {
+    if (banner) {
+      return {
+        ...availableLocales.reduce(
+          (acc, locale) => ({
+            ...acc,
+            [getFieldName(BANNER_TEXT_FIELD_KEY, locale)]: banner.text[locale.id],
+            [getFieldName(BANNER_LINK_TEXT_FIELD_KEY, locale)]: banner.link_text[locale.id],
+          }),
+          {},
+        ),
+        image: banner.image,
+        link: banner.link,
+        text_top_offset: banner.text_top_offset,
+        text_bottom_offset: banner.text_bottom_offset,
+        text_left_offset: banner.text_left_offset,
+        text_right_offset: banner.text_right_offset,
+      };
+    }
+
+    return {};
+  }, [availableLocales, banner]);
 
   return (
     <View
       isOpen={true}
-      create={create}
+      edit={edit}
       error={error}
-      isLoading={isTimeoutExpired && bannersLoading}
-      isCreating={isCreating}
+      isUpdating={isUpdating}
+      isLoading={isTimeoutExpired && (isLoading || bannersLoading)}
       close={close}
-      availableLocales={intlState.availableLocales}
+      availableLocales={availableLocales}
       validate={(validator || { validate: undefined }).validate}
+      initialValues={initialValues}
+      preloadingError={preloadingError}
     />
   );
 };
