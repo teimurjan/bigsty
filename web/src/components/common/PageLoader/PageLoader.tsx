@@ -58,7 +58,7 @@ const Loader = ({ status, timeout, className, ...props }: ILoaderProps) => {
 
   return (
     <div css={getCSS(timeout, shouldShow)} className={className} {...props}>
-      <SyncLoader color={theme.primary} sizeUnit="px" size={20} loading={true} />
+      <SyncLoader color={theme.info} sizeUnit="px" size={20} loading={true} />
     </div>
   );
 };

@@ -173,7 +173,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
             `}
           >
             {matchingProduct && matchingProduct.quantity > 0 ? (
-              <Subtitle className="has-text-primary" size={3}>
+              <Subtitle className="has-text-dark" size={3}>
                 {matchingProduct.discount > 0 ? (
                   <React.Fragment>
                     <del className="has-text-danger">&#36;{matchingProduct.price}</del> &#36;

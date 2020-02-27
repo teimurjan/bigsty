@@ -41,7 +41,7 @@ export const DeleteModalView = ({
               <ModalCard.Close onClick={onClose} />
             </ModalCard.Head>
             <ModalCard.Foot>
-              <Button color="is-primary" onClick={onConfirmClick} isLoading={isLoading} disabled={!!error}>
+              <Button color="is-primary" onClick={onConfirmClick} loading={isLoading} disabled={!!error}>
                 {intl.formatMessage({ id: 'common.yes' })}
               </Button>
               <Button color="is-danger" onClick={onClose}>

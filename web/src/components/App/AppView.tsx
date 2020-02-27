@@ -19,6 +19,10 @@ export const AppView = ({ isLoading }: IProps) => (
         html {
           overflow: auto;
         }
+
+        .button {
+          border-radius: 0 !important;
+        }
       `}
     />
     <Router>

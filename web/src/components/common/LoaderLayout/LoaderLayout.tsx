@@ -22,7 +22,7 @@ export const LoaderLayout = (props: React.HTMLAttributes<HTMLDivElement>) => {
       `}
       {...props}
     >
-      <ClipLoader color={theme.primary} sizeUnit="rem" size={3} loading={true} />
+      <ClipLoader color={theme.info} sizeUnit="rem" size={3} loading={true} />
     </div>
   );
 };

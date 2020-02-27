@@ -27,7 +27,7 @@ export class SignUpFormView extends React.Component<IProps & { intl: IntlShape }
         <Field name="email" render={this.renderEmailField} />
         <Field name="password" render={this.renderPasswordField} />
         <div className="level is-mobile">
-          <Button className="level-left is-uppercase" color="is-success" isLoading={submitting} type="submit">
+          <Button className="level-left is-uppercase" color="is-success" loading={submitting} type="submit">
             {intl.formatMessage({ id: 'SignUpForm.submitButton.text' })}
           </Button>
           <Link to="/login" className="level-right">

@@ -92,7 +92,7 @@ const renderInnerForm = ({
       )}
     </ModalCard.Body>
     <ModalCard.Foot>
-      <Button form={formID} type="submit" color="is-primary" isLoading={isLoading || isPreloading}>
+      <Button form={formID} type="submit" color="is-primary" loading={isLoading || isPreloading}>
         {submitText || intl.formatMessage({ id: 'common.submit' })}
       </Button>
       <Button color="is-danger" onClick={onClose}>

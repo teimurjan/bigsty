@@ -71,7 +71,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
                 cursor: pointer;
                 height: ${CONTROL_IMAGE_SIZE};
                 width: ${CONTROL_IMAGE_SIZE};
-                border: ${isActive ? `3px solid ${theme.primary}` : 'unset'};
+                border: ${isActive ? `3px solid ${theme.info}` : 'unset'};
                 margin-right: 10px;
                 ${flexMixin};
               `}

@@ -28,6 +28,7 @@ const DefaultDropdownTrigger = ({ onClick, ...props }: ITriggerProps) => {
       css={css`
         font-size: 1.5rem;
       `}
+      className="has-text-dark"
       {...props}
       onClick={modifiedOnClick}
     >

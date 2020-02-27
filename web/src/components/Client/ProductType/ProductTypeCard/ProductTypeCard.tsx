@@ -11,8 +11,9 @@ import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { useIntl } from 'react-intl';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { mediaQueries } from 'src/styles/media';
-import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
+import { Button } from 'src/components/common/Button/Button';
 import { formatMediaURL } from 'src/utils/url';
+import { Link } from 'react-router-dom';
 
 export interface IProps {
   productType: IProductTypeListResponseItem;
@@ -36,41 +37,49 @@ export const ProductTypeCard = ({ productType }: IProps) => {
   const intl = useIntl();
 
   return (
-    <Card
-      css={css`
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      `}
-    >
-      <CardImage>
-        <Image className="image is-square" imgProps={{ src: formatMediaURL(productType.image) }} />
-      </CardImage>
-      <CardContent
+    <Link to={`/productTypes/${productType.id}`}>
+      <Card
         css={css`
-          @media ${mediaQueries.maxWidth768} {
-            padding: 0.5rem;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+          &:hover {
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
           }
         `}
       >
-        <Subtitle size={5}>{productType.name}</Subtitle>
-        {productType.products && (
-          <PriceText
-            priceRange={productType.products.map(product => calculateDiscountedPrice(product.price, product.discount))}
-          />
-        )}
-      </CardContent>
-      <LinkButton
-        css={css`
-          width: 100%;
-          border-radius: unset;
-          margin-top: auto;
-        `}
-        to={`/productTypes/${productType.id}`}
-        color="is-primary"
-      >
-        {intl.formatMessage({ id: 'common.buy' })}
-      </LinkButton>
-    </Card>
+        <CardImage>
+          <Image className="image is-square" imgProps={{ src: formatMediaURL(productType.image) }} />
+        </CardImage>
+        <CardContent
+          css={css`
+            @media ${mediaQueries.maxWidth768} {
+              padding: 0.5rem;
+            }
+          `}
+        >
+          <Subtitle size={5}>{productType.name}</Subtitle>
+          {productType.products && (
+            <PriceText
+              priceRange={productType.products.map(product =>
+                calculateDiscountedPrice(product.price, product.discount),
+              )}
+            />
+          )}
+        </CardContent>
+        <Button
+          css={css`
+            width: 100%;
+            border-radius: unset;
+            margin-top: auto;
+          `}
+          color="is-info"
+        >
+          {intl.formatMessage({ id: 'common.buy' })}
+        </Button>
+      </Card>
+    </Link>
   );
 };

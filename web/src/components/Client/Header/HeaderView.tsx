@@ -60,21 +60,21 @@ export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlS
             <NavbarItem>
               {user ? (
                 <div className="buttons">
-                  <Button onClick={onLogOutClick} color="is-primary">
+                  <Button onClick={onLogOutClick} outlined>
                     {intl.formatMessage({ id: 'Header.logOut' })}
                   </Button>
                   {isUserAdmin(user) && (
-                    <LinkButton color="is-info" to="/admin">
+                    <LinkButton outlined to="/admin">
                       {intl.formatMessage({ id: 'Header.admin' })}
                     </LinkButton>
                   )}
                 </div>
               ) : (
                 <div className="buttons">
-                  <LinkButton color="is-primary" to="/login">
+                  <LinkButton outlined to="/login">
                     {intl.formatMessage({ id: 'Header.logIn' })}
                   </LinkButton>
-                  <LinkButton color="is-info" to="/signup">
+                  <LinkButton outlined to="/signup">
                     {intl.formatMessage({ id: 'Header.signUp' })}
                   </LinkButton>
                 </div>
