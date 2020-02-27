@@ -27,9 +27,10 @@ export const CarouselItem = React.forwardRef<HTMLDivElement, ICarouselItemProps>
 interface IProps {
   activeIndex: number;
   fullWidth?: boolean;
+  className?: string;
 }
 
-export const Carousel: React.FC<IProps> = ({ children, activeIndex, fullWidth = false }) => {
+export const Carousel: React.FC<IProps> = ({ className, children, activeIndex, fullWidth = false }) => {
   const width = React.useMemo(() => {
     if (fullWidth) {
       return '100%';
@@ -39,6 +40,7 @@ export const Carousel: React.FC<IProps> = ({ children, activeIndex, fullWidth = 
 
   return (
     <div
+      className={className}
       css={css`
         overflow: hidden;
       `}
