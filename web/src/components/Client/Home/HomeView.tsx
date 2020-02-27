@@ -12,20 +12,27 @@ import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { ProductTypesListView } from '../ProductType/ProductTypesList/ProductTypesListView';
 import { Title } from 'src/components/common/Title/Title';
 import { useIntl } from 'react-intl';
+import { useMedia } from 'src/hooks/useMedia';
 
-const preloadImage = (src: string) => {
-  const image = new Image();
-  image.src = src;
+const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
+  const horizontalRule = banner.text_left_offset
+    ? { key: 'left', value: banner.text_left_offset, tranlate: -banner.text_left_offset }
+    : { key: 'right', value: banner.text_right_offset, tranlate: banner.text_right_offset };
+  const verticalRule = banner.text_top_offset
+    ? { key: 'top', value: banner.text_left_offset, tranlate: -banner.text_top_offset }
+    : { key: 'bottom', value: banner.text_right_offset, tranlate: banner.text_bottom_offset };
+  return `
+    ${verticalRule.key}: ${verticalRule.value}%;
+    ${horizontalRule.key}: ${horizontalRule.value}%;
+    transform: translate(${horizontalRule.tranlate}%, ${verticalRule.tranlate}%);
+  `;
 };
 
 export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
   const intl = useIntl();
   const [activeBannerIndex, setActiveBannerIndex] = React.useState(0);
 
-  React.useEffect(() => {
-    banners.forEach(banner => preloadImage(banner.image));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [banners.length]);
+  const titleSize = useMedia<2 | 1>([mediaQueries.maxWidth768], [2], 1);
 
   React.useEffect(() => {
     const intervalID = setInterval(() => {
@@ -73,22 +80,26 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                   css={css`
                     margin: auto;
                     display: block;
+                    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
                   `}
                   onLoad={triggerDimensionsCorrect}
                   src={banner.image}
                 />
                 {button}
                 <Title
-                  className="has-text-white"
+                  className="has-text-white is-spaced"
                   css={css`
+                  text-align: center;
                     position: absolute;
-                    max-width: 60%;
-                    top: ${banner.text_top_offset ? `${banner.text_top_offset}%` : undefined};
-                    left: ${banner.text_left_offset ? `${banner.text_left_offset}%` : undefined};
-                    right: ${banner.text_right_offset ? `${banner.text_right_offset}%` : undefined};
-                    bottom: ${banner.text_bottom_offset ? `${banner.text_bottom_offset}%` : undefined};
+                    width: 60%;
+                    text-shadow: 1px 1px #333;
+                    ${getTextPositioningCSS(banner)}
+
+                    @media ${mediaQueries.maxWidth768} {
+                      width: 90%;
+                    }
                   `}
-                  size={1}
+                  size={titleSize}
                 >
                   {banner.text}
                 </Title>

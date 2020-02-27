@@ -37,7 +37,7 @@ export const Client = () => (
         <NavContainer />
         <div
           css={css`
-            flex: 1;
+            width: 100%;
           `}
         >
           <Switch>

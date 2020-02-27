@@ -32,7 +32,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
   return (
     <div
       css={css`
-        margin: auto;
+        width: 100%;
       `}
     >
       <Carousel activeIndex={activeImageIndex}>
