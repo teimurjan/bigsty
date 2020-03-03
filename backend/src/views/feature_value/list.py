@@ -13,6 +13,10 @@ class FeatureValueListView(ValidatableView, PaginatableView):
 
     def get(self, request):
         pagination_data = self._get_pagination_data(request)
+
+        meta = None
+        feature_values = []
+
         if pagination_data:
             feature_values = self._service.get_all(
                 offset=pagination_data['offset'],
