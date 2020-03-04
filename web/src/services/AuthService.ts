@@ -1,5 +1,6 @@
 import * as authAPI from '../api/AuthAPI';
 import * as authStorage from '../storage/AuthStorage';
+import * as stateCacheStorage from '../storage/StateCacheStorage';
 
 export interface IAuthService {
   logIn(email: string, password: string): Promise<{ error: string | undefined }>;
@@ -27,10 +28,16 @@ export const errors = {
 export class AuthService implements IAuthService {
   private API: authAPI.IAuthAPI;
   private storage: authStorage.IAuthStorage;
+  private stateCacheStorage_: stateCacheStorage.IStateCacheStorage;
 
-  constructor(API: authAPI.IAuthAPI, storage: authStorage.IAuthStorage) {
+  constructor(
+    API: authAPI.IAuthAPI,
+    storage: authStorage.IAuthStorage,
+    stateCacheStorage_: stateCacheStorage.IStateCacheStorage,
+  ) {
     this.API = API;
     this.storage = storage;
+    this.stateCacheStorage_ = stateCacheStorage_;
   }
 
   public async logIn(email: string, password: string) {
@@ -79,5 +86,6 @@ export class AuthService implements IAuthService {
   public logOut() {
     this.storage.clearAccessToken();
     this.storage.clearRefreshToken();
+    this.stateCacheStorage_.clearAll();
   }
 }

@@ -25,6 +25,8 @@ export const AdminProductTypesCreateView = ({
   preloadingError,
   isCreating,
   featureTypes,
+  onChange,
+  initialValues,
 }: IProps & { intl: IntlShape }) => (
   <ModalForm
     formID="adminProductTypesCreateForm"
@@ -46,7 +48,9 @@ export const AdminProductTypesCreateView = ({
         shortDescriptionFieldKey={PRODUCT_TYPE_SHORT_DESCRIPTION_FIELD_KEY}
       />
     }
+    onChange={onChange}
     validate={validate}
+    initialValues={initialValues}
     wide
   />
 );

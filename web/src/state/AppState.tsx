@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IContextValue {
   appState: {
@@ -15,22 +16,20 @@ interface IProviderProps {
 }
 
 export const AppStateProvider: React.FC<IProviderProps> = ({ children }) => {
-  const [loadingRequestsCount, setLoadingRequestsCount] = React.useState(0);
+  const [isLoading, setLoading] = React.useState(true);
 
-  const setLoading = React.useCallback(() => {
-    setLoadingRequestsCount(loadingRequestsCount + 1);
-  }, [loadingRequestsCount]);
-  const setIdle = React.useCallback(() => {
-    setLoadingRequestsCount(Math.max(loadingRequestsCount - 1, 0));
-  }, [loadingRequestsCount]);
+  const isLoadingDebounced = useDebounce(isLoading, 1000);
+
+  const setLoading_ = React.useCallback(() => setLoading(true), []);
+  const setIdle = React.useCallback(() => setLoading(false), []);
 
   return (
     <Context.Provider
       value={{
         appState: {
-          isLoading: loadingRequestsCount > 0,
+          isLoading: isLoadingDebounced,
           setIdle,
-          setLoading,
+          setLoading: setLoading_,
         },
       }}
     >

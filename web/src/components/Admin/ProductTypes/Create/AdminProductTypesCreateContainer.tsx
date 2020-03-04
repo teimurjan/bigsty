@@ -31,6 +31,7 @@ export const AdminProductTypesCreateContainer = () => {
       adminProductTypesState={adminProductTypesState}
       adminCategoriesState={adminCategoriesState}
       adminFeatureTypesState={adminFeatureTypesState}
+      stateCacheStorage={dependencies.storages.stateCache}
     />
   );
 };

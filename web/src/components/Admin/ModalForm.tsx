@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import * as React from 'react';
 
-import { css, jsx, SerializedStyles } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 
 import { IntlShape, injectIntl } from 'react-intl';
 
-import { Form, FormRenderProps } from 'react-final-form';
+import { Form, FormRenderProps, useFormState } from 'react-final-form';
 
 import { Button } from 'src/components/common/Button/Button';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
@@ -22,11 +22,12 @@ import { mediaQueries } from 'src/styles/media';
 import { LoaderLayout } from '../common/LoaderLayout/LoaderLayout';
 import { Message } from '../common/Message/Message';
 import { arePropsEqual } from 'src/utils/propEquality';
+import { useDebounce } from 'src/hooks/useDebounce';
 
-export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface IProps {
   isOpen: boolean;
-  onClose: () => any;
-  onSubmit: (values: object) => any;
+  onClose: () => void;
+  onSubmit: (values: object) => void;
   isLoading?: boolean;
   isPreloading?: boolean;
   validate?: (values: object) => object | Promise<object>;
@@ -39,6 +40,7 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   initialValues?: object;
   preloadingError?: string;
   wide?: boolean;
+  onChange?: (values: object) => void;
 }
 
 interface IMemoizedFormProps {
@@ -65,7 +67,7 @@ const MemoizedForm: React.SFC<IMemoizedFormProps> = React.memo(
   customName: 'ModalForm.MemoizedForm',
 };
 
-const renderInnerForm = ({
+const InnerForm = ({
   handleSubmit,
   title,
   onClose,
@@ -78,29 +80,41 @@ const renderInnerForm = ({
   cancelText,
   isLoading,
   className,
-}: FormRenderProps & IProps & { intl: IntlShape; className?: string }) => (
-  <ModalCard className={className}>
-    <ModalCard.Head>
-      <ModalCard.Title>{title}</ModalCard.Title>
-      <ModalCard.Close onClick={onClose} />
-    </ModalCard.Head>
-    <ModalCard.Body>
-      {isPreloading ? (
-        <LoaderLayout />
-      ) : (
-        <MemoizedForm id={formID} handleSubmit={handleSubmit} fields={fields} globalError={globalError} intl={intl} />
-      )}
-    </ModalCard.Body>
-    <ModalCard.Foot>
-      <Button form={formID} type="submit" color="is-primary" loading={isLoading || isPreloading}>
-        {submitText || intl.formatMessage({ id: 'common.submit' })}
-      </Button>
-      <Button color="is-danger" onClick={onClose}>
-        {cancelText || intl.formatMessage({ id: 'common.cancel' })}
-      </Button>
-    </ModalCard.Foot>
-  </ModalCard>
-);
+  onChange,
+}: FormRenderProps & IProps & { intl: IntlShape; className?: string }) => {
+  const { values, dirty } = useFormState();
+
+  const debouncedValues = useDebounce(values, 5000);
+  React.useEffect(() => {
+    if (dirty && onChange) {
+      onChange(debouncedValues);
+    }
+  }, [debouncedValues, dirty, onChange]);
+
+  return (
+    <ModalCard className={className}>
+      <ModalCard.Head>
+        <ModalCard.Title>{title}</ModalCard.Title>
+        <ModalCard.Close onClick={onClose} />
+      </ModalCard.Head>
+      <ModalCard.Body>
+        {isPreloading ? (
+          <LoaderLayout />
+        ) : (
+          <MemoizedForm id={formID} handleSubmit={handleSubmit} fields={fields} globalError={globalError} intl={intl} />
+        )}
+      </ModalCard.Body>
+      <ModalCard.Foot>
+        <Button form={formID} type="submit" color="is-primary" loading={isLoading || isPreloading}>
+          {submitText || intl.formatMessage({ id: 'common.submit' })}
+        </Button>
+        <Button color="is-danger" onClick={onClose}>
+          {cancelText || intl.formatMessage({ id: 'common.cancel' })}
+        </Button>
+      </ModalCard.Foot>
+    </ModalCard>
+  );
+};
 
 export const ModalForm = injectIntl((props: IProps & { intl: IntlShape }) => {
   const modalCSS = props.wide
@@ -138,7 +152,7 @@ export const ModalForm = injectIntl((props: IProps & { intl: IntlShape }) => {
             css={modalCSS}
             validate={validate}
             onSubmit={onSubmit}
-            render={renderInnerForm}
+            component={InnerForm}
             initialValues={initialValues}
             {...props}
           />

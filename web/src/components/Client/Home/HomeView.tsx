@@ -19,8 +19,8 @@ const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
     ? { key: 'left', value: banner.text_left_offset, tranlate: -banner.text_left_offset }
     : { key: 'right', value: banner.text_right_offset, tranlate: banner.text_right_offset };
   const verticalRule = banner.text_top_offset
-    ? { key: 'top', value: banner.text_left_offset, tranlate: -banner.text_top_offset }
-    : { key: 'bottom', value: banner.text_right_offset, tranlate: banner.text_bottom_offset };
+    ? { key: 'top', value: banner.text_top_offset, tranlate: -banner.text_top_offset }
+    : { key: 'bottom', value: banner.text_bottom_offset, tranlate: banner.text_bottom_offset };
   return `
     ${verticalRule.key}: ${verticalRule.value}%;
     ${horizontalRule.key}: ${horizontalRule.value}%;

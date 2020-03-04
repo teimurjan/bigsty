@@ -12,10 +12,14 @@ import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/A
 import { IContextValue as AdminProductTypesStateContextValue } from 'src/state/AdminProductTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
+import { IStateCacheStorage } from 'src/storage/StateCacheStorage';
+
 import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
+import { IProps as IModalFormProps } from '../../ModalForm';
+import { objectWithout } from 'src/utils/object';
 
 export interface IProps
   extends AdminCategoriesStateContextValue,
@@ -25,6 +29,7 @@ export interface IProps
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: IProductTypeService;
   history: History;
+  stateCacheStorage: IStateCacheStorage;
 }
 
 export interface IViewProps {
@@ -36,21 +41,25 @@ export interface IViewProps {
     feature_types: string[];
     category_id?: string;
     image: string;
-  }) => any;
+  }) => void;
   isLoading: boolean;
   isCreating: boolean;
   error?: string;
   preloadingError?: string;
-  close: () => any;
+  close: () => void;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
+  onChange: IModalFormProps['onChange'];
+  initialValues: object;
 }
 
 export const PRODUCT_TYPE_NAME_FIELD_KEY = 'name';
 export const PRODUCT_TYPE_DESCRIPTION_FIELD_KEY = 'description';
 export const PRODUCT_TYPE_SHORT_DESCRIPTION_FIELD_KEY = 'short_description';
+
+const STATE_CACHE_KEY = 'adminProductTypeCreationForm';
 
 export const AdminProductTypesCreatePresenter: React.FC<IProps> = ({
   intlState,
@@ -60,6 +69,7 @@ export const AdminProductTypesCreatePresenter: React.FC<IProps> = ({
   adminProductTypesState: { getProductTypes },
   service,
   View,
+  stateCacheStorage,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isCreating, setCreating] = React.useState(false);
@@ -157,6 +167,18 @@ export const AdminProductTypesCreatePresenter: React.FC<IProps> = ({
     [getProductTypes, close, service],
   );
 
+  const onChange: IViewProps['onChange'] = React.useCallback(
+    values => {
+      // Filter if cached feature type does not exist anymore
+      values.feature_types = values.feature_types.filter((idStr: string) =>
+        featureTypes.some(({ id }) => id.toString() === idStr),
+      );
+
+      stateCacheStorage.set(STATE_CACHE_KEY, objectWithout(values, 'image'), { expireIn: 3600 });
+    },
+    [featureTypes, stateCacheStorage],
+  );
+
   return (
     <View
       categories={categories}
@@ -170,6 +192,8 @@ export const AdminProductTypesCreatePresenter: React.FC<IProps> = ({
       availableLocales={intlState.availableLocales}
       validate={(validator || { validate: undefined }).validate}
       preloadingError={preloadingError}
+      onChange={onChange}
+      initialValues={stateCacheStorage.get(STATE_CACHE_KEY) || {}}
     />
   );
 };
