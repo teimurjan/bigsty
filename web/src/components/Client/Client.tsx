@@ -41,9 +41,9 @@ export const Client = () => (
           `}
         >
           <Switch>
-            <Route exact={true} path="/" component={HomeContainer} />
             <Route exact={true} path="/categories/:categoryId/productTypes" component={ProductTypesPageContainer} />
             <Route exact={true} path="/productTypes/:id" component={ProductTypePageContainer} />
+            <Route path="/" component={HomeContainer} />
 
             <Route component={NotFoundContainer} />
           </Switch>

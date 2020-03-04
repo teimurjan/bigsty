@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import { IntlShape } from 'react-intl';
 
 import logo from 'src/assets/images/logo.png';
+
 import { Button } from 'src/components/common/Button/Button';
 import { Container } from 'src/components/common/Container/Container';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
@@ -18,7 +19,7 @@ import { NavbarItem } from 'src/components/common/NavbarItem/NavbarItem';
 import { NavbarMenu } from 'src/components/common/NavbarMenu/NavbarMenu';
 import { NavbarStart } from 'src/components/common/NavbarStart/NavbarStart';
 
-import { isUserAdmin } from 'src/helpers/user';
+import { isUserAdmin, isUserAnonymous, isUserNotSetYet } from 'src/helpers/user';
 
 import { LanguageDropdownContainer as LanguageDropdown } from '../LanguageDropdown/LanguageDropdownContainer';
 import { IViewProps as IProps } from './HeaderPresenter';
@@ -58,7 +59,16 @@ export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlS
               <LanguageDropdown />
             </NavbarItem>
             <NavbarItem>
-              {user ? (
+              {isUserAnonymous(user) || isUserNotSetYet(user) ? (
+                <div className="buttons">
+                  <LinkButton outlined to="/login">
+                    {intl.formatMessage({ id: 'Header.logIn' })}
+                  </LinkButton>
+                  <LinkButton outlined to="/signup">
+                    {intl.formatMessage({ id: 'Header.signUp' })}
+                  </LinkButton>
+                </div>
+              ) : (
                 <div className="buttons">
                   <Button onClick={onLogOutClick} outlined>
                     {intl.formatMessage({ id: 'Header.logOut' })}
@@ -68,15 +78,6 @@ export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlS
                       {intl.formatMessage({ id: 'Header.admin' })}
                     </LinkButton>
                   )}
-                </div>
-              ) : (
-                <div className="buttons">
-                  <LinkButton outlined to="/login">
-                    {intl.formatMessage({ id: 'Header.logIn' })}
-                  </LinkButton>
-                  <LinkButton outlined to="/signup">
-                    {intl.formatMessage({ id: 'Header.signUp' })}
-                  </LinkButton>
                 </div>
               )}
             </NavbarItem>

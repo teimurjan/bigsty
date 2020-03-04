@@ -170,9 +170,9 @@ export const AdminProductTypesCreatePresenter: React.FC<IProps> = ({
   const onChange: IViewProps['onChange'] = React.useCallback(
     values => {
       // Filter if cached feature type does not exist anymore
-      values.feature_types = values.feature_types.filter((idStr: string) =>
-        featureTypes.some(({ id }) => id.toString() === idStr),
-      );
+      values.feature_types = values.feature_types
+        ? values.feature_types.filter((idStr: string) => featureTypes.some(({ id }) => id.toString() === idStr))
+        : undefined;
 
       stateCacheStorage.set(STATE_CACHE_KEY, objectWithout(values, 'image'), { expireIn: 3600 });
     },
