@@ -19,4 +19,4 @@ RUN pip install -r requirements.txt
 # copy project
 COPY . /usr/src/app/
 
-CMD alembic upgrade head && gunicorn --bind $HOST:$PORT wsgi:app
+CMD alembic upgrade head && gunicorn --bind :8080 wsgi:app
