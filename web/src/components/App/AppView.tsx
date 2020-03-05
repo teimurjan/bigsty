@@ -16,6 +16,16 @@ export const AppView = ({ isLoading }: IProps) => (
   <>
     <Global
       styles={css`
+        @import url('https://fonts.googleapis.com/css?family=Oswald:300,400,500,700&display=swap');
+
+        body,
+        button,
+        input,
+        select,
+        textarea {
+          font-family: 'Oswald', sans-serif;
+        }
+
         html {
           overflow: auto;
         }
