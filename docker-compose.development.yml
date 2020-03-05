@@ -27,6 +27,7 @@ services:
       - 5000:5000
     env_file: ./backend/.env.development
     volumes: ['./backend:/usr/src/app']
+    restart: on-failure
     depends_on:
       - db
       - es

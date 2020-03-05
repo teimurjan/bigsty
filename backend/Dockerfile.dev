@@ -19,4 +19,4 @@ RUN pip install -r requirements.txt
 # copy project
 COPY . /usr/src/app/
 
-CMD alembic upgrade head && env python manage.py runserver -h $HOST -p $PORT
+CMD alembic upgrade head && python manage.py runserver -h $HOST -p $PORT
