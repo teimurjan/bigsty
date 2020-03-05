@@ -33,6 +33,8 @@ class CategoryService:
             )
             self.set_to_search_index(category)
 
+            return category
+
     @allow_roles(['admin', 'manager'])
     def update(self, id_, data, *args, **kwargs):
         try:
