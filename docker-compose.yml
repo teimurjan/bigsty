@@ -20,7 +20,12 @@ services:
     ports:
       - 9200:9200
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      args:
+        - HOST=0.0.0.0
+        - PORT=$PORT
+    env_file: ./backend/.env
     restart: on-failure
     ports:
       - $PORT:5000
