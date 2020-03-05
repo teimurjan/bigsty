@@ -21,7 +21,6 @@ services:
       - 9200:9200
   backend:
     build: ./backend
-    dockerfile: Dockerfile
     restart: on-failure
     ports:
       - $PORT:5000
