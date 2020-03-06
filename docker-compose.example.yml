@@ -3,8 +3,10 @@ services:
   db:
     restart: always
     image: postgres:alpine
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=db
     ports:
       - "5432:5432"
     volumes:
@@ -20,8 +22,19 @@ services:
     ports:
       - 9200:9200
   backend:
-    build: ./backend
-    env_file: ./backend/.env
+    build: 
+      context: ./backend
+    environment:
+      - SECRET_KEY=secret
+      - DB_URL=db_url
+      - ADMIN_EMAIL=email@email.com
+      - ADMIN_PASSWORD=password
+      - ELASTICSEARCH_URL=es:9200
+      - ALLOWED_ORIGINS=http://www.test.com,http://test.com
+      - AWS_ACCESS_KEY_ID=aws_access_key_id
+      - AWS_SECRET_ACCESS_KEY=aws_secret_key
+      - AWS_BUCKET_NAME=aws_bucket_name
+      - AWS_DEFAULT_REGION=eu-central-1
     restart: on-failure
     ports:
       - 8080:8080
@@ -34,8 +47,6 @@ services:
   web:
     build:
       context: ./web
-      args:
-        - REACT_APP_SERVER_URL=$REACT_APP_SERVER_URL 
     environment:
       - PORT=80
     ports:

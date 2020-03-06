@@ -3,8 +3,10 @@ services:
   db:
     restart: always
     image: postgres:alpine
-    env_file:
-      - .env
+    environment: 
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=test
+      - POSTGRES_DB=bigsty
     ports:
       - "5432:5432"
     volumes:
@@ -25,7 +27,17 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - 5000:5000
-    env_file: ./backend/.env.development
+    environment: 
+      - ALLOWED_ORIGINS=http://localhost:3000
+      - SECRET_KEY=secret
+      - DB_URL=postgresql://test:password@db:5432/bigsty
+      - ADMIN_EMAIL=test@test.com
+      - ADMIN_PASSWORD=password
+      - ELASTICSEARCH_URL=es:9200
+      - AWS_ACCESS_KEY_ID=aws_access_key_id
+      - AWS_SECRET_ACCESS_KEY=aws_secret_access_key
+      - AWS_BUCKET_NAME=aws_bucket_name
+      - AWS_DEFAULT_REGION=eu-central-1
     volumes: ['./backend:/usr/src/app']
     restart: on-failure
     depends_on:
