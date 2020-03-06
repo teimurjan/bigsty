@@ -24,7 +24,7 @@ export const AppView = ({ isLoading }: IProps) => {
   );
 
   const intl = useIntl();
-  console.log(intl.formatMessage({ id: 'Meta.description' }));
+
   return (
     <>
       <Helmet>
