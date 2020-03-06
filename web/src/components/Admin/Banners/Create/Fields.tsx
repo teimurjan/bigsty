@@ -64,6 +64,32 @@ const LinkField = ({ input, meta }: FieldRenderProps<string>) => {
 
 const renderLinkField = (props: FieldRenderProps<string>) => <LinkField {...props} />;
 
+const TextColorField = ({ input, meta }: FieldRenderProps<string>) => {
+  const intl = useIntl();
+  const showError = meta.touched && meta.error;
+  return (
+    <FormTextField
+      labelProps={{
+        children: intl.formatMessage({ id: 'AdminBanners.textColorInput.label' }),
+      }}
+      inputProps={{
+        ...input,
+        isDanger: showError,
+        placeholder: intl.formatMessage({
+          id: 'AdminBanners.textColorInput.placeholder',
+        }),
+        type: 'text',
+      }}
+      helpTextProps={{
+        children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
+        type: 'is-danger',
+      }}
+    />
+  );
+};
+
+const renderTextColorField = (props: FieldRenderProps<string>) => <TextColorField {...props} />;
+
 const getOffsetFieldRenderer = (label: string, placeholder: string) => ({ input, meta }: FieldRenderProps<string>) => {
   const intl = useIntl();
 
@@ -114,6 +140,7 @@ export const Fields = injectIntl(
       />
       <FinalFormField key="image" name="image" render={renderImageField} />
       <FinalFormField key="link" name="link" render={renderLinkField} />
+      <FinalFormField key="text_color" name="text_color" render={renderTextColorField} />
       <FinalFormField
         key="text_top_offset"
         name="text_top_offset"

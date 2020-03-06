@@ -21,6 +21,7 @@ class Banner(BaseModel):
         cascade="all, delete, delete-orphan"
     )
     link = Column(String(255), nullable=True)
+    text_color = Column(String(255), nullable=True)
     text_left_offset = Column(String(10), nullable=True)
     text_right_offset = Column(String(10), nullable=True)
     text_top_offset = Column(String(10), nullable=True)

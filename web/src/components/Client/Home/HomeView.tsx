@@ -98,12 +98,12 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                   />
                   {button}
                   <Title
-                    className="has-text-white is-spaced"
+                    className="is-spaced"
                     css={css`
                     text-align: center;
                       position: absolute;
                       width: 60%;
-                      text-shadow: 1px 1px #333;
+                      color: ${banner.text_color || '#fff'};
                       ${getTextPositioningCSS(banner)}
 
                       @media ${mediaQueries.maxWidth768} {

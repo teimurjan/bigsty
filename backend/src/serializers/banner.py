@@ -10,6 +10,7 @@ class BannerSerializer(IntlSerializer):
         self._link_texts = banner.link_texts
         self._link = banner.link
         self._image = banner.image
+        self._text_color = banner.text_color
         self._text_top_offset = banner.text_top_offset
         self._text_left_offset = banner.text_left_offset
         self._text_right_offset = banner.text_right_offset
@@ -21,6 +22,7 @@ class BannerSerializer(IntlSerializer):
             'text': self._serialize_text(),
             'link_text': self._serialize_link_text(),
             'link': self._link,
+            'text_color': self._text_color,
             'image': self._image,
             'text_top_offset': self._text_top_offset,
             'text_left_offset': self._text_left_offset,

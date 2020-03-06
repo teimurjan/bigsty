@@ -31,6 +31,7 @@ export interface IViewProps {
       [key: string]: string;
     };
     link?: string;
+    text_color?: string;
     image: string;
     text_top_offset?: string;
     text_left_offset?: string;
@@ -113,6 +114,7 @@ export const AdminBannersCreatePresenter: React.FC<IProps> = ({
           texts: {},
           link_texts: {},
           link: values.link ? values.link : null,
+          text_color: values.text_color ? values.text_color : null,
           image: values.image,
           text_top_offset: values.text_top_offset ? parseInt(values.text_top_offset, 10) : null,
           text_bottom_offset: values.text_bottom_offset ? parseInt(values.text_bottom_offset, 10) : null,

@@ -8,6 +8,7 @@ UPDATE_BANNER_VALIDATION_RULES = {
     },
     'image': {'required': True, 'nullable': False},
     'link': {'required': False, 'nullable': True},
+    'text_color': {'required': False, 'nullable': True},
     'link_texts': {
         'type': 'dict',
         'keyschema': {'regex': r'^\d+$'},

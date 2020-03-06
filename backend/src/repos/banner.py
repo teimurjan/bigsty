@@ -17,6 +17,7 @@ class BannerRepo(IntlRepo):
         link_texts,
         link,
         image,
+        text_color,
         text_top_offset,
         text_left_offset,
         text_right_offset,
@@ -29,6 +30,7 @@ class BannerRepo(IntlRepo):
         self._add_intl_texts(link_texts, banner, 'link_texts', BannerLinkText)
 
         banner.link = link
+        banner.text_color = text_color
         banner.text_top_offset = text_top_offset
         banner.text_left_offset = text_left_offset
         banner.text_right_offset = text_right_offset
@@ -52,6 +54,7 @@ class BannerRepo(IntlRepo):
         link_texts,
         link,
         image,
+        text_color,
         text_top_offset,
         text_left_offset,
         text_right_offset,
@@ -64,6 +67,7 @@ class BannerRepo(IntlRepo):
         self._update_intl_texts(link_texts, banner, 'link_texts', BannerLinkText)
 
         banner.link = link
+        banner.text_color = text_color
         banner.text_top_offset = text_top_offset
         banner.text_left_offset = text_left_offset
         banner.text_right_offset = text_right_offset

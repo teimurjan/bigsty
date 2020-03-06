@@ -7,4 +7,4 @@ COPY package.json /app/package.json
 COPY yarn.lock /app/yarn.lock
 RUN yarn
 COPY . /app
-CMD yarn start
+CMD env REACT_APP_SERVER_URL=http://localhost:5000 yarn start

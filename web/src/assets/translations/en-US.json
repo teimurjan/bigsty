@@ -162,6 +162,8 @@
   "AdminBanners.textInput.placeholder": "Enter text",
   "AdminBanners.linkInput.label": "Link",
   "AdminBanners.linkInput.placeholder": "Enter link",
+  "AdminBanners.textColorInput.label": "Text Color",
+  "AdminBanners.textColorInput.placeholder": "#ffffff",
   "common.newest": "Newest",
   "AdminBanners.notFound": "Banner not found",
   "AdminBanners.edit.title": "Edit banner",

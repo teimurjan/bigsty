@@ -8,6 +8,7 @@ export interface IBannerListResponseItem {
   text: string;
   link_text: string;
   link: string | null;
+  text_color: string | null;
   image: string;
   text_top_offset: number | null;
   text_left_offset: number | null;
@@ -24,6 +25,7 @@ export interface IBannerListRawIntlResponseItem {
     [key: string]: string;
   };
   link: string | null;
+  text_color: string | null;
   image: string;
   text_top_offset: number | null;
   text_left_offset: number | null;
@@ -51,6 +53,7 @@ export interface IBannerCreatePayload {
     [key: string]: string;
   };
   link: string | null;
+  text_color: string | null;
   image: string;
   text_top_offset: number | null;
   text_left_offset: number | null;

@@ -162,6 +162,8 @@
   "AdminBanners.textInput.placeholder": "Введите текст",
   "AdminBanners.linkInput.label": "Ссылка",
   "AdminBanners.linkInput.placeholder": "Введите ссылку",
+  "AdminBanners.textColorInput.label": "Цвет текста",
+  "AdminBanners.textColorInput.placeholder": "#ffffff",
   "common.newest": "Новинки",
   "AdminBanners.notFound": "Баннер не найден",
   "AdminBanners.edit.title": "Редактировать баннер",
