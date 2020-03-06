@@ -21,6 +21,8 @@ import { NavbarStart } from 'src/components/common/NavbarStart/NavbarStart';
 
 import { isUserAdmin, isUserAnonymous, isUserNotSetYet } from 'src/helpers/user';
 
+import { mediaQueries } from 'src/styles/media';
+
 import { LanguageDropdownContainer as LanguageDropdown } from '../LanguageDropdown/LanguageDropdownContainer';
 import { IViewProps as IProps } from './HeaderPresenter';
 import { SearchContainer } from '../Search/SearchContainer';
@@ -41,7 +43,13 @@ export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlS
           <Link className="navbar-item" to="/">
             <img
               css={css`
-                max-height: 3rem !important;
+                max-height: 5rem !important;
+                padding-top: 1rem;
+
+                @media ${mediaQueries.maxWidth768} {
+                  max-height: 3rem !important;
+                  padding-top: 0;
+                }
               `}
               src={logo}
             />
