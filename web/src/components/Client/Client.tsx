@@ -30,7 +30,7 @@ export const Client = () => (
     >
       <div
         css={css`
-          padding: 3rem 0;
+          padding: 6.5rem 0;
           ${flexMixin};
         `}
       >

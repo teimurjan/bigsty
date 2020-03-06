@@ -20,6 +20,7 @@ import { NavbarMenu } from 'src/components/common/NavbarMenu/NavbarMenu';
 import { NavbarStart } from 'src/components/common/NavbarStart/NavbarStart';
 
 import { isUserAdmin, isUserAnonymous, isUserNotSetYet } from 'src/helpers/user';
+import { useWindowScroll } from 'src/hooks/useWindowScroll';
 
 import { mediaQueries } from 'src/styles/media';
 
@@ -32,10 +33,17 @@ export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlS
 
   const toggleOpen = () => setOpen(!isOpen);
 
+  const { y } = useWindowScroll();
+
   return (
     <Navbar
+      className={y !== 0 ? 'has-shadow' : undefined}
       css={css`
-        height: 3.25rem;
+        height: 4rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
       `}
     >
       <Container>
@@ -43,7 +51,7 @@ export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlS
           <Link className="navbar-item" to="/">
             <img
               css={css`
-                max-height: 5rem !important;
+                max-height: 4.5rem !important;
                 padding-top: 1rem;
 
                 @media ${mediaQueries.maxWidth768} {
