@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { times } from 'lodash';
+import times from 'lodash/times';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { Pagination } from 'src/components/common/Pagination/Pagination';

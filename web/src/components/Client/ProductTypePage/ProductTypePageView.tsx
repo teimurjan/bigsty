@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 import { css, jsx, ClassNames } from '@emotion/core';
-import { uniqBy } from 'lodash';
+import uniqBy from 'lodash/uniqBy';
 
 import { IViewProps as IProps } from './ProductTypePagePresenter';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';

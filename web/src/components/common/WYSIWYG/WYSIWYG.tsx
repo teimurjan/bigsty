@@ -2,10 +2,11 @@
 import * as React from 'react';
 
 import { Global, css, jsx } from '@emotion/core';
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useTheme } from 'emotion-theming';
+
 import { ITheme } from 'src/themes';
+
+import { LoaderLayout } from '../LoaderLayout/LoaderLayout';
 
 interface IProps {
   className?: string;
@@ -21,6 +22,13 @@ interface IEditor {
   getData: () => string;
 }
 
+const CKEditorLazy = React.lazy(async () => {
+  const CKEditor = await import('@ckeditor/ckeditor5-react');
+  const ClassicEditor = await import('@ckeditor/ckeditor5-build-classic');
+
+  return { default: (props: any) => <CKEditor editor={ClassicEditor} {...props} /> };
+});
+
 export const WYSIWYG: React.SFC<IProps> = ({ onChange, onBlur, onFocus, initialValue, placeholder, hasError }) => {
   const theme = useTheme<ITheme>();
 
@@ -34,34 +42,35 @@ export const WYSIWYG: React.SFC<IProps> = ({ onChange, onBlur, onFocus, initialV
           }
         `}
       />
-      <CKEditor
-        editor={ClassicEditor}
-        config={{
-          toolbar: {
-            items: [
-              'heading',
-              'bold',
-              'italic',
-              'link',
-              'bulletedList',
-              'numberedList',
-              'insertTable',
-              '|',
-              'undo',
-              'redo',
-            ],
-          },
-          placeholder,
-        }}
-        data={initialValue}
-        onInit={() => document.querySelector('.ck.ck-content')}
-        onChange={(_: any, editor: IEditor) => {
-          const data = editor.getData();
-          onChange && onChange(data);
-        }}
-        onBlur={onBlur}
-        onFocus={onFocus}
-      />
+      <React.Suspense fallback={<LoaderLayout />}>
+        <CKEditorLazy
+          config={{
+            toolbar: {
+              items: [
+                'heading',
+                'bold',
+                'italic',
+                'link',
+                'bulletedList',
+                'numberedList',
+                'insertTable',
+                '|',
+                'undo',
+                'redo',
+              ],
+            },
+            placeholder,
+          }}
+          data={initialValue}
+          onInit={() => document.querySelector('.ck.ck-content')}
+          onChange={(_: any, editor: IEditor) => {
+            const data = editor.getData();
+            onChange && onChange(data);
+          }}
+          onBlur={onBlur}
+          onFocus={onFocus}
+        />
+      </React.Suspense>
     </div>
   );
 };

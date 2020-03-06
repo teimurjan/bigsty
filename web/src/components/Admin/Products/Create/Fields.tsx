@@ -5,7 +5,7 @@ import { jsx, css } from '@emotion/core';
 
 import { Field as FinalFormField, FieldRenderProps, useFormState } from 'react-final-form';
 import { IntlShape, injectIntl, useIntl } from 'react-intl';
-import { difference } from 'lodash';
+import difference from 'lodash/difference';
 
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 
