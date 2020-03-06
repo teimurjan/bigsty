@@ -1,5 +1,6 @@
 import { IAuthStorage } from 'src/storage/AuthStorage';
 import { IIntlStorage } from 'src/storage/IntlStorage';
+import { DEFAULT_LOCALE } from 'src/services/IntlService';
 
 export interface IHeadersManager {
   getHeaders(): { [key: string]: string | null };
@@ -18,7 +19,7 @@ export class HeadersManager implements IHeadersManager {
     const locale = this.intlStorage.getLocale();
     const accessToken = this.authStorage.getAccessToken();
     return {
-      'Accept-Language': locale || 'en-US',
+      'Accept-Language': locale || DEFAULT_LOCALE,
       Authorization: accessToken ? `Bearer ${accessToken}` : null,
     };
   }

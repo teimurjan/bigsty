@@ -3,10 +3,11 @@ import * as React from 'react';
 import { defineMessages, IntlProvider as ReactIntlProvider } from 'react-intl';
 
 import { IIntlListResponseItem } from 'src/api/IntlAPI.js';
-import defaultMessages from 'src/assets/translations/en-US.json';
+import defaultMessages from 'src/assets/translations/ru-RU.json';
 import { useDependencies } from 'src/DI/DI';
 
 import { useAppState } from './AppState';
+import { DEFAULT_LOCALE } from 'src/services/IntlService';
 
 export interface IContextValue {
   intlState: {
@@ -84,7 +85,7 @@ export const IntlStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   } = useAppState();
 
   const [availableLocales, setAvailableLocales] = React.useState<IIntlListResponseItem[]>([]);
-  const [locale, setLocale] = React.useState<string>('en-US');
+  const [locale, setLocale] = React.useState<string>(DEFAULT_LOCALE);
   const [messages, setMessages] = React.useState<{ [key: string]: string }>(defaultMessages);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isInitialized, setInitialized] = React.useState(false);

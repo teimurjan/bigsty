@@ -16,6 +16,7 @@ import { FormNativeSelectField } from 'src/components/common/FormNativeSelectFie
 import { formatMediaURL } from 'src/utils/url';
 import { mediaQueries } from 'src/styles/media';
 import { flexMixin } from 'src/styles/mixins';
+import Helmet from 'react-helmet';
 
 const getAllFeatureValuesGroupedByType = (
   products: IProps['products'],
@@ -100,6 +101,10 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
 
   return productType ? (
     <div>
+      <Helmet>
+        <title>{productType.name}</title>
+        <meta name="description" content={productType.short_description} />
+      </Helmet>
       <div
         css={css`
           align-items: flex-start;

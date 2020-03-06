@@ -11,4 +11,5 @@ export const mediaQueries = {
   maxWidth1600: '(max-width: 1601px)',
   minWidth2000: '(min-width: 2001px)',
   maxWidth2000: '(max-width: 2001px)',
+  darkMode: '(prefers-color-scheme: dark)',
 };
