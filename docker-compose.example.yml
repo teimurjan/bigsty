@@ -47,11 +47,11 @@ services:
   web:
     build:
       context: ./web
-    environment:
-      - PORT=80
     ports:
       - 80:80
     depends_on:
       - backend
     links:
       - backend
+    volumes: 
+      - ./nginx/conf.d:/etc/nginx/conf.d
