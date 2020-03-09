@@ -15,6 +15,7 @@ export const ProductTypePageContainer = () => {
       id={parseInt(id, 10)}
       productService={dependencies.services.product}
       productTypeService={dependencies.services.productType}
+      cartStorage={dependencies.storages.cart}
       View={ProductTypePageView}
     />
   );

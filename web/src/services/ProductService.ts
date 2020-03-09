@@ -23,6 +23,16 @@ export interface IProductService {
     result: number[];
     meta: productAPI.IProductListResponseMeta;
   }>;
+  getForCart(
+    ids: number[],
+  ): Promise<{
+    entities: {
+      products: {
+        [key: string]: productAPI.IProductForCartResponseItem;
+      };
+    };
+    result: number[];
+  }>;
   delete(id: number): Promise<{}>;
   create(payload: productAPI.IProductCreatePayload): Promise<productAPI.IProductListResponseItem>;
   edit(id: number, payload: productAPI.IProductEditPayload): Promise<productAPI.IProductListResponseItem>;
@@ -43,6 +53,11 @@ export class ProductService implements IProductService {
       ...normalize(products.data, [new schema.Entity('products')]),
       meta: products.meta,
     };
+  };
+
+  public getForCart: IProductService['getForCart'] = async (ids: number[]) => {
+    const products = await this.API.getForCart(ids);
+    return normalize(products.data, [new schema.Entity('products')]);
   };
 
   public delete(id: number) {

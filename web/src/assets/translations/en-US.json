@@ -175,5 +175,18 @@
   "AdminBanners.rightOffsetInput.label": "Right Offset",
   "Meta.title": "Eye8 - sunglasses shop",
   "Meta.description": "Sunglasses shop in Bishkek. The sunglasses are selected with a great attention and are sold in limited quantity",
-  "Meta.keywords": "Eye8, sunglasses, sunglasses shop, shop, buy glasses Bishkek, delievery, glasses delievery"
+  "Meta.keywords": "Eye8, sunglasses, sunglasses shop, shop, buy glasses Bishkek, delievery, glasses delievery",
+  "common.addToCart": "Add to cart",
+  "common.remove": "Remove",
+  "common.add": "Add",
+  "common.quantity": "Quantity",
+  "Cart.onlySomeAvailable": "Only {quantity} available at the moment",
+  "Cart.order": "Order",
+  "Cart.nameInput.label": "Full Name",
+  "Cart.nameInput.placeholder": "John Johnson",
+  "Cart.phoneInput.label": "Phone",
+  "Cart.phoneInput.placeholder": "+996555xxxxxx",
+  "Cart.addressInput.label": "Address",
+  "Cart.addressInput.placeholder": "Sovetskaia 127",
+  "Cart.empty": "Your cart is empty"
 }

@@ -26,6 +26,27 @@ export interface IProductListResponseData {
   meta: IProductListResponseMeta;
 }
 
+export interface IProductForCartResponseItem {
+  discount: number;
+  feature_values: Array<{
+    feature_type: { id: number; name: string };
+    id: number;
+    name: string;
+  }>;
+  id: number;
+  images: string[];
+  price: number;
+  product_type: {
+    id: number;
+    name: string;
+  };
+  quantity: number;
+}
+
+export interface IProductForCartResponseData {
+  data: IProductForCartResponseItem[];
+}
+
 // DETAIL
 export interface IProductResponseItem {
   id: number;
@@ -78,6 +99,7 @@ export type IProductEditPayload = IProductCreatePayload;
 
 export interface IProductAPI {
   getAll(page: number): Promise<IProductListResponseData>;
+  getForCart(ids: number[]): Promise<IProductForCartResponseData>;
   delete(id: number): Promise<{}>;
   create(payload: IProductCreatePayload): Promise<IProductResponseData>;
   edit(id: number, payload: IProductEditPayload): Promise<IProductResponseData>;
@@ -109,6 +131,20 @@ export class ProductAPI implements IProductAPI {
       const response = await this.client.get<IProductListResponseData>(`/api/products${buildQueryString({ page })}`, {
         headers: this.headersManager.getHeaders(),
       });
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async getForCart(ids: number[]) {
+    try {
+      const response = await this.client.get<IProductForCartResponseData>(
+        `/api/products/for_cart${buildQueryString({ ids, fields: ['hello', 'world'] })}`,
+        {
+          headers: this.headersManager.getHeaders(),
+        },
+      );
       return response.data;
     } catch (e) {
       throw e;

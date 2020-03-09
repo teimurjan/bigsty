@@ -19,7 +19,7 @@ export interface IProps {
   productType: IProductTypeListResponseItem;
 }
 
-const PriceText = ({ priceRange }: { priceRange: number[] }) => {
+export const ProductTypePriceText = ({ priceRange }: { priceRange: number[] }) => {
   const intl = useIntl();
 
   if (priceRange.length === 0) {
@@ -62,7 +62,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
         >
           <Subtitle size={5}>{productType.name}</Subtitle>
           {productType.products && (
-            <PriceText
+            <ProductTypePriceText
               priceRange={productType.products.map(product =>
                 calculateDiscountedPrice(product.price, product.discount),
               )}

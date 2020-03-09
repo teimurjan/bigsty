@@ -23,6 +23,7 @@ import * as bannerService from 'src/services/BannerService';
 import * as authStorage from 'src/storage/AuthStorage';
 import * as intlStorage from 'src/storage/IntlStorage';
 import * as stateCacheStorage from 'src/storage/StateCacheStorage';
+import * as cartStorage from 'src/storage/CartStorage';
 
 import { HeadersManager } from 'src/manager/HeadersManager';
 
@@ -54,6 +55,7 @@ export interface IStoragesContainer {
   auth: authStorage.IAuthStorage;
   intl: intlStorage.IIntlStorage;
   stateCache: stateCacheStorage.IStateCacheStorage;
+  cart: cartStorage.ICartStorage;
 }
 
 export interface IDependenciesContainer {
@@ -78,6 +80,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     auth: new authStorage.AuthStorage(localStorage),
     intl: new intlStorage.IntlStorage(localStorage),
     stateCache: new stateCacheStorage.StateCacheStorage(localStorage),
+    cart: new cartStorage.CartStorage(localStorage),
   };
 
   const headersManager = new HeadersManager(storagesContainer.auth, storagesContainer.intl);

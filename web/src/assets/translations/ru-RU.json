@@ -175,5 +175,18 @@
   "AdminBanners.rightOffsetInput.label": "Правый отступ",
   "Meta.title": "Eye8 - магазин солнцезащитных очков",
   "Meta.description": "Магазин солнцезащитных очков премиум брендов в Бишкеке. Очки отбраны с особой щепетильностью и продаются лишь в ограниченном количестве",
-  "Meta.keywords": "Eye8, очки, солнцезащитные очки, магазин, купить очки в Бишкеке, доставка, доставка очков"
+  "Meta.keywords": "Eye8, очки, солнцезащитные очки, магазин, купить очки в Бишкеке, доставка, доставка очков",
+  "common.addToCart": "Добавить в корзину",
+  "common.remove": "Удалить",
+  "common.add": "Добавить",
+  "common.quantity": "Количество",
+  "Cart.onlySomeAvailable": "На данный момент доступно только {quantity}",
+  "Cart.order": "Заказать",
+  "Cart.nameInput.label": "Имя",
+  "Cart.nameInput.placeholder": "Ибраимов Бакыт",
+  "Cart.phoneInput.label": "Телефон",
+  "Cart.phoneInput.placeholder": "+996555xxxxxx",
+  "Cart.addressInput.label": "Адрес",
+  "Cart.addressInput.placeholder": "Советская 127",
+  "Cart.empty": "Ваша корзина пуста"
 }

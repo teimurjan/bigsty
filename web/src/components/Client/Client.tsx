@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import * as React from 'react';
-import { css, jsx } from '@emotion/core';
 
+import { css, jsx } from '@emotion/core';
 import { Route, Switch } from 'react-router-dom';
 
 import { HeaderContainer } from 'src/components/Client/Header/HeaderContainer';
@@ -9,12 +9,16 @@ import { LoginPageContainer } from 'src/components/Login/LoginPage/LoginPageCont
 import { NotFoundContainer } from 'src/components/NotFound/NotFoundContainer';
 import { ProductTypesPageContainer } from 'src/components/Client/ProducTypesPage/ProductTypesPageContainer';
 import { SignUpPageContainer } from 'src/components/SignUp/SignUpPage/SignUpPageContainer';
-import { Container } from '../common/Container/Container';
-import { NavContainer } from './Nav/NavContainer';
+
 import { flexMixin } from 'src/styles/mixins';
-import { ProductTypePageContainer } from './ProductTypePage/ProductTypePageContainer';
 import { mediaQueries } from 'src/styles/media';
+
+import { Container } from '../common/Container/Container';
+
+import { NavContainer } from './Nav/NavContainer';
+import { ProductTypePageContainer } from './ProductTypePage/ProductTypePageContainer';
 import { HomeContainer } from './Home/HomeContainer';
+import { CartContainer } from './Cart/CartContainer';
 
 export const Client = () => (
   <React.Fragment>
@@ -49,6 +53,7 @@ export const Client = () => (
           </Switch>
         </div>
       </div>
+      <CartContainer />
     </Container>
   </React.Fragment>
 );

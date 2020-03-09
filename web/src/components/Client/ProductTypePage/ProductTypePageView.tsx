@@ -17,6 +17,20 @@ import { formatMediaURL } from 'src/utils/url';
 import { mediaQueries } from 'src/styles/media';
 import { flexMixin } from 'src/styles/mixins';
 import Helmet from 'react-helmet';
+import { Button } from 'src/components/common/Button/Button';
+
+export const ProductPriceText = ({ price, discount }: { price: number; discount: number }) => (
+  <Subtitle className="has-text-dark" size={3}>
+    {discount > 0 ? (
+      <React.Fragment>
+        <del className="has-text-danger">&#36;{price}</del> &#36;
+        {calculateDiscountedPrice(price, discount)}
+      </React.Fragment>
+    ) : (
+      <React.Fragment>&#36;{price}</React.Fragment>
+    )}
+  </Subtitle>
+);
 
 const getAllFeatureValuesGroupedByType = (
   products: IProps['products'],
@@ -37,7 +51,7 @@ const getAllFeatureValuesGroupedByType = (
     {},
   );
 
-export const ProductTypePageView = ({ productType, products, error, isLoading }: IProps) => {
+export const ProductTypePageView = ({ productType, products, error, isLoading, addProductToCart }: IProps) => {
   const intl = useIntl();
   const [activeImageIndex, setActiveImageIndex] = React.useState(0);
   const [initialValuesSet, setInitialValuesSet] = React.useState(false);
@@ -84,6 +98,12 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
     },
     [autoChangeImage, chosenFeatureValues],
   );
+
+  const onAddToCartClick = React.useCallback(() => {
+    if (matchingProduct) {
+      addProductToCart(matchingProduct);
+    }
+  }, [addProductToCart, matchingProduct]);
 
   if (isLoading) {
     return <LoaderLayout />;
@@ -195,6 +215,18 @@ export const ProductTypePageView = ({ productType, products, error, isLoading }:
             )}
           </div>
           {productType.short_description}
+          {matchingProduct && matchingProduct.quantity > 0 && (
+            <Button
+              onClick={onAddToCartClick}
+              css={css`
+                margin-top: 1.5rem;
+                text-transform: uppercase;
+              `}
+              color="is-info"
+            >
+              {intl.formatMessage({ id: 'common.addToCart' })}
+            </Button>
+          )}
         </div>
       </div>
       <div className="content" dangerouslySetInnerHTML={{ __html: productType.description }}></div>

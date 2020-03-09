@@ -4,14 +4,18 @@ import * as jwtDecode from 'jwt-decode';
 
 import { useDependencies } from 'src/DI/DI';
 
-export type User =
-  | {
-      id: number;
-      name: string;
-      group: string;
-    }
-  | null
-  | {};
+export type AuthorizedUser = {
+  id: number;
+  name: string;
+  email: string;
+  group: string;
+};
+
+export type EmptyUser = null;
+
+export type AnonymousUser = {};
+
+export type User = AuthorizedUser | EmptyUser | AnonymousUser;
 
 export interface IContextValue {
   userState: {
@@ -28,7 +32,7 @@ interface IProviderProps {
 }
 
 const USER_NOT_SET_STATE = null;
-const USER_ANONYMOUSE_STATE = {};
+const USER_ANONYMOUS_STATE = {};
 
 export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const {
@@ -41,12 +45,12 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
 
   const syncUser = React.useCallback(() => {
     const accessToken = service.getAccessToken();
-    setUser(accessToken ? jwtDecode(accessToken) : USER_ANONYMOUSE_STATE);
+    setUser(accessToken ? jwtDecode(accessToken) : USER_ANONYMOUS_STATE);
   }, [service]);
 
   const clearUser = React.useCallback(() => {
     service.logOut();
-    setUser(USER_ANONYMOUSE_STATE);
+    setUser(USER_ANONYMOUS_STATE);
   }, [service]);
 
   return (
