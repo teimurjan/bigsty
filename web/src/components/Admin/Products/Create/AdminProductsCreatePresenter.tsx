@@ -33,12 +33,12 @@ export interface IViewProps {
     feature_values: string[];
     product_type_id: string;
     images: Array<string | File>;
-  }) => any;
+  }) => void;
   isLoading: boolean;
   isCreating: boolean;
   error?: string;
   preloadingError?: string;
-  close: () => any;
+  close: () => void;
   validate?: (values: object) => object | Promise<object>;
   featureValues: AdminFeatureValuesStateContextValue['adminFeatureValuesState']['featureValues'];
   productTypes: IProductTypeListRawIntlResponseItem[];
@@ -63,6 +63,8 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
       quantity: yup.number().required('common.errors.field.empty'),
       discount: yup.number().required('common.errors.field.empty'),
       price: yup.number().required('common.errors.field.empty'),
+      upc: yup.string().nullable(true),
+      sku: yup.string().nullable(true),
       product_type_id: yup.number().required('common.errors.field.empty'),
       feature_values: yup
         .array()

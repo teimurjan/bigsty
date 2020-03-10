@@ -61,6 +61,7 @@
   "NativeSelect.multipleHint": "Hold CMD/Ctrl and click on the items you want to add.",
   "AdminCategories.parentCategorySelect.label": "Parent Category",
   "AdminCategories.parentCategorySelect.defaultOption.title": "No Parent Category",
+  "AdminMenu.client": "Shop",
   "AdminMenu.modelsLabel": "Models",
   "AdminMenu.actionsLabel": "Actions",
   "AdminMenu.categoriesLinkText": "Categories",
@@ -109,6 +110,8 @@
   "AdminProducts.quantity": "Quantity",
   "AdminProducts.price": "Price",
   "AdminProducts.discount": "Discount",
+  "AdminProducts.upc": "UPC",
+  "AdminProducts.sku": "SKU",
   "common.productType": "Product Type",
   "AdminProductTypes.notFound": "Product type not found.",
   "AdminProducts.create.title": "Create product",
@@ -188,5 +191,6 @@
   "Cart.phoneInput.placeholder": "+996555xxxxxx",
   "Cart.addressInput.label": "Address",
   "Cart.addressInput.placeholder": "Sovetskaia 127",
-  "Cart.empty": "Your cart is empty"
+  "Cart.empty": "Your cart is empty",
+  "common.upc": "UPC"
 }

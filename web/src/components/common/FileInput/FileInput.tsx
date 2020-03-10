@@ -7,7 +7,7 @@ import { formatMediaURL } from 'src/utils/url';
 interface IProps extends Omit<React.HTMLProps<HTMLInputElement>, 'onChange' | 'value'> {
   showPreview?: boolean;
   defaultValue?: string;
-  onChange: (file: File | undefined) => any;
+  onChange: (file: File | undefined) => void;
   value?: File | string;
 }
 
@@ -23,7 +23,7 @@ const Filename = ({ file }: { file: IProps['value'] }) => {
   return null;
 };
 
-export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview = true, onChange }) => {
+export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview = true, onChange, accept }) => {
   const [previewURL, setPreviewURL] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
@@ -53,7 +53,7 @@ export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview =
     <div className="file-container">
       <div className="file has-name is-fullwidth">
         <label className="file-label">
-          <input className="file-input" type="file" onChange={handleChange} />
+          <input className="file-input" type="file" onChange={handleChange} accept={accept} />
           <span className="file-cta">
             <span className="file-icon">
               <FontAwesomeIcon icon={faFile} />

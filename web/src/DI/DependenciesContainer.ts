@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
 import * as authAPI from 'src/api/AuthAPI';
 import * as categoryAPI from 'src/api/CategoryAPI';
@@ -28,6 +28,7 @@ import * as cartStorage from 'src/storage/CartStorage';
 import { HeadersManager } from 'src/manager/HeadersManager';
 
 export interface IAPIsContainer {
+  client: AxiosInstance;
   auth: authAPI.IAuthAPI;
   category: categoryAPI.ICategoryAPI;
   productType: productTypeAPI.IProductTypeAPI;
@@ -87,6 +88,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
   const APIClient = axios.create({ baseURL: process.env.REACT_APP_SERVER_URL });
 
   const APIsContainer = {
+    client: APIClient,
     auth: new authAPI.AuthAPI(APIClient),
     category: new categoryAPI.CategoryAPI(APIClient, headersManager),
     featureType: new featureTypeAPI.FeatureTypeAPI(APIClient, headersManager),

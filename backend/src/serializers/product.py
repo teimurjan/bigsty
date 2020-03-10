@@ -11,6 +11,8 @@ class ProductSerializer(IntlSerializer):
         self._discount = product.discount
         self._price = product.price
         self._quantity = product.quantity
+        self._sku = product.sku
+        self._upc = product.upc
         self._init_relation_safely('_product_type', product, 'product_type')
         self._images = product.images
         self._feature_values = product.feature_values
@@ -21,6 +23,8 @@ class ProductSerializer(IntlSerializer):
             'discount': self._discount,
             'price': self._price,
             'quantity': self._quantity,
+            'sku': self._sku,
+            'upc': self._upc,
             'product_type': self._serialize_product_type(),
             'images': self._serialize_images(),
             'feature_values': self._serialize_feature_values(),

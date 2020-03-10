@@ -38,6 +38,7 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const {
     dependencies: {
       services: { auth: service },
+      APIs: { client },
     },
   } = useDependencies();
 
@@ -52,6 +53,18 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
     service.logOut();
     setUser(USER_ANONYMOUS_STATE);
   }, [service]);
+
+  React.useEffect(() => {
+    const interceptor = client.interceptors.response.use(undefined, error => {
+      if (error.response.status === 401) {
+        clearUser();
+      }
+
+      return error;
+    });
+
+    return () => client.interceptors.response.eject(interceptor);
+  }, [clearUser, client.interceptors.request, client.interceptors.response]);
 
   return (
     <Context.Provider

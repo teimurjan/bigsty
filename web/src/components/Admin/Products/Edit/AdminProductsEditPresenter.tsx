@@ -30,6 +30,8 @@ interface IFormValues {
   quantity: string;
   discount: string;
   price: string;
+  upc?: string;
+  sku?: string;
   feature_values: string[];
   product_type_id: string;
   images: Array<string | File>;
@@ -37,12 +39,12 @@ interface IFormValues {
 
 export interface IViewProps {
   isOpen: boolean;
-  edit: (values: IFormValues) => any;
+  edit: (values: IFormValues) => void;
   isLoading: boolean;
   isUpdating: boolean;
   error?: string;
   preloadingError?: string;
-  close: () => any;
+  close: () => void;
   validate?: (values: object) => object | Promise<object>;
   featureValues: AdminFeatureValuesStateContextValue['adminFeatureValuesState']['featureValues'];
   productTypes: IProductTypeListRawIntlResponseItem[];
@@ -71,6 +73,8 @@ export const AdminProductsEditPresenter: React.FC<IProps> = ({
       quantity: yup.number().required('common.errors.field.empty'),
       discount: yup.number().required('common.errors.field.empty'),
       price: yup.number().required('common.errors.field.empty'),
+      upc: yup.string().nullable(true),
+      sku: yup.string().nullable(true),
       product_type_id: yup.number().required('common.errors.field.empty'),
       feature_values: yup
         .array()
@@ -157,6 +161,8 @@ export const AdminProductsEditPresenter: React.FC<IProps> = ({
               quantity: product.quantity.toString(),
               discount: product.discount.toString(),
               price: product.price.toString(),
+              upc: product.upc,
+              sku: product.sku,
               feature_values: product.feature_values.map(id => id.toString()),
               product_type_id: product.product_type.id.toString(),
               images: product.images,

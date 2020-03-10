@@ -4,3 +4,6 @@ class InvalidEntityFormat(Exception):
 
 class AccessRoleError(Exception):
     pass
+
+class NotAuthorizedError(Exception):
+    pass

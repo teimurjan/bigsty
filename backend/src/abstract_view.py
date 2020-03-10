@@ -1,11 +1,11 @@
+from flask import jsonify, request
 from flask.views import View
-from flask import request, jsonify
-from src.errors import InvalidEntityFormat, AccessRoleError
-from src.constants.status_codes import (
-    UNPROCESSABLE_ENTITY_CODE,
-    METHOD_NOT_ALLOWED_CODE,
-    FORBIDDEN_CODE
-)
+
+from src.constants.status_codes import (FORBIDDEN_CODE,
+                                        METHOD_NOT_ALLOWED_CODE,
+                                        UNAUTHORIZED_CODE,
+                                        UNPROCESSABLE_ENTITY_CODE)
+from src.errors import AccessRoleError, InvalidEntityFormat, NotAuthorizedError
 
 
 class AbstractView(View):
@@ -14,13 +14,13 @@ class AbstractView(View):
         self._middlewares = middlewares
 
     def dispatch_request(self, *args, **kwargs):
-        self._handle_with_middlewares(request)
-
-        handler = self._get_handler(request.method.lower())
-        if handler is None:
-            return None, METHOD_NOT_ALLOWED_CODE
-
         try:
+            self._handle_with_middlewares(request)
+
+            handler = self._get_handler(request.method.lower())
+            if handler is None:
+                return None, METHOD_NOT_ALLOWED_CODE
+                
             body, status = handler(request, **kwargs)
             return jsonify(
                 body or {},
@@ -30,6 +30,8 @@ class AbstractView(View):
             return jsonify(errors), UNPROCESSABLE_ENTITY_CODE
         except AccessRoleError:
             return jsonify({}), FORBIDDEN_CODE
+        except NotAuthorizedError:
+            return jsonify({}), UNAUTHORIZED_CODE
 
     def _handle_with_middlewares(self, request):
         for middleware in self._middlewares:

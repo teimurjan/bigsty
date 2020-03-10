@@ -14,6 +14,8 @@ class ProductRepo(Repo):
         price,
         discount,
         quantity,
+        upc,
+        sku,
         images,
         product_type,
         feature_values,
@@ -24,6 +26,8 @@ class ProductRepo(Repo):
         product.price = price
         product.discount = discount
         product.quantity = quantity
+        product.upc = upc
+        product.sku = sku
         product.feature_values = feature_values
         product.product_type = product_type
 
@@ -45,6 +49,8 @@ class ProductRepo(Repo):
         price,
         discount,
         quantity,
+        upc,
+        sku,
         images,
         product_type,
         feature_values,
@@ -55,6 +61,8 @@ class ProductRepo(Repo):
         product.price = price
         product.discount = discount
         product.quantity = quantity
+        product.upc = upc
+        product.sku = sku
         product.feature_values = feature_values
         product.product_type = product_type
 
@@ -81,6 +89,10 @@ class ProductRepo(Repo):
     @with_session
     def has_with_product_type(self, product_type_id, session):
         return session.query(Product).filter(Product.product_type_id == product_type_id).count() > 0
+
+    @with_session
+    def get_first_by_upc(self, upc, session):
+        return session.query(Product).filter(Product.upc == upc).first()
 
     @with_session
     def get_for_product_type(self, product_type_id, session):

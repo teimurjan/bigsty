@@ -61,6 +61,7 @@
   "NativeSelect.multipleHint": "Зажмите CMD/Ctrl и кликайте на объекты для добавления.",
   "AdminCategories.parentCategorySelect.label": "Категория родитель",
   "AdminCategories.parentCategorySelect.defaultOption.title": "Без категории родителя",
+  "AdminMenu.client": "Магазин",
   "AdminMenu.modelsLabel": "Модели",
   "AdminMenu.actionsLabel": "Действия",
   "AdminMenu.categoriesLinkText": "Категории",
@@ -109,6 +110,8 @@
   "AdminProducts.quantity": "Количество",
   "AdminProducts.price": "Цена",
   "AdminProducts.discount": "Скидка",
+  "AdminProducts.upc": "UPC",
+  "AdminProducts.sku": "SKU",
   "common.productType": "Тип продукта",
   "AdminProductTypes.notFound": "Тип продукта не найден",
   "AdminProducts.create.title": "Создать продукт",
@@ -188,5 +191,6 @@
   "Cart.phoneInput.placeholder": "+996555xxxxxx",
   "Cart.addressInput.label": "Адрес",
   "Cart.addressInput.placeholder": "Советская 127",
-  "Cart.empty": "Ваша корзина пуста"
+  "Cart.empty": "Ваша корзина пуста",
+  "common.upc": "UPC"
 }

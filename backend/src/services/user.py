@@ -1,9 +1,10 @@
-from flask import current_app as app
-
 import bcrypt
 import jwt
+from flask import current_app as app
 
-from src.factories.token import TokenFactory, ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE
+from src.errors import NotAuthorizedError
+from src.factories.token import (ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE,
+                                 TokenFactory)
 
 
 class UserService:
@@ -15,8 +16,8 @@ class UserService:
             decoded_token = jwt.decode(token, app.config['SECRET_KEY'])
             user = self._repo.get_by_id(decoded_token['user_id'])
             return user
-        except (jwt.InvalidTokenError, self._repo.DoesNotExist):
-            return None
+        except Exception:
+            raise NotAuthorizedError()
 
     def authenticate(self, data):
         user = self._repo.get_first_by_email(data['email'])

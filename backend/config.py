@@ -16,7 +16,7 @@ class Config:
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_BUCKET_NAME = os.environ.get('AWS_BUCKET_NAME')
     AWS_DEFAULT_REGION = os.environ.get('AWS_DEFAULT_REGION')
-
+    PROPAGATE_EXCEPTIONS=False
 
 class ProductionConfig(Config):
     ENV = "production"

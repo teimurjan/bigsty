@@ -16,6 +16,8 @@ export interface IProductListResponseItem {
   discount: number;
   price: number;
   quantity: number;
+  sku?: string;
+  upc?: string;
   product_type: { id: number; name: string };
   feature_values: number[];
   images: string[];
@@ -26,6 +28,7 @@ export interface IProductListResponseData {
   meta: IProductListResponseMeta;
 }
 
+// FOR CART
 export interface IProductForCartResponseItem {
   discount: number;
   feature_values: Array<{
@@ -41,6 +44,8 @@ export interface IProductForCartResponseItem {
     name: string;
   };
   quantity: number;
+  sku?: string;
+  upc?: string;
 }
 
 export interface IProductForCartResponseData {
@@ -53,6 +58,8 @@ export interface IProductResponseItem {
   discount: number;
   price: number;
   quantity: number;
+  sku?: string;
+  upc?: string;
   product_type: { id: number; name: string };
   feature_values: number[];
   images: string[];
@@ -80,6 +87,8 @@ export interface IProductForProductTypeResponseItem {
     name: string;
   };
   quantity: number;
+  sku?: string;
+  upc?: string;
 }
 
 export interface IProductForProductTypeResponseData {
@@ -93,6 +102,8 @@ export interface IProductCreatePayload {
   quantity: number;
   product_type_id: number;
   images: Array<File | string>;
+  sku?: string;
+  upc?: string;
 }
 
 export type IProductEditPayload = IProductCreatePayload;
