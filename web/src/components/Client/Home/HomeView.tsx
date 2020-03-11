@@ -45,15 +45,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
   }, [activeBannerIndex, banners.length]);
 
   return (
-    <div
-      css={css`
-        padding-right: 1.5rem;
-
-        @media ${mediaQueries.maxWidth768} {
-          padding-right: 0;
-        }
-      `}
-    >
+    <div>
       <Transition in={banners.length > 0} timeout={300}>
         {status => (
           <Carousel

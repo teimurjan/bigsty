@@ -39,6 +39,7 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
     dependencies: {
       services: { auth: service },
       APIs: { client },
+      storages: { auth: authStorage },
     },
   } = useDependencies();
 
@@ -55,8 +56,18 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   }, [service]);
 
   React.useEffect(() => {
-    const interceptor = client.interceptors.response.use(undefined, error => {
+    const interceptor = client.interceptors.response.use(undefined, async error => {
       if (error.response.status === 401) {
+        const refreshToken = authStorage.getRefreshToken();
+
+        if (refreshToken) {
+          try {
+            await service.refreshTokens(refreshToken);
+            window.location.reload();
+            return;
+          } catch (e) {}
+        }
+
         clearUser();
       }
 
@@ -64,7 +75,7 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
     });
 
     return () => client.interceptors.response.eject(interceptor);
-  }, [clearUser, client.interceptors.request, client.interceptors.response]);
+  }, [authStorage, clearUser, client, client.interceptors.request, client.interceptors.response, service]);
 
   return (
     <Context.Provider

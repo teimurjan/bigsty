@@ -34,7 +34,11 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) 
         `}
         imgProps={{ src: product.images[0], style: { margin: 'auto' } }}
       />
-      <div>
+      <div
+        css={css`
+          padding-left: 2rem;
+        `}
+      >
         <Title size={4}>{product.product_type.name}</Title>
         <Subtitle size={5}>{product.feature_values.map(featureValue => featureValue.name).join(', ')}</Subtitle>
         {intl.formatMessage({ id: 'common.quantity' })}: {count}
