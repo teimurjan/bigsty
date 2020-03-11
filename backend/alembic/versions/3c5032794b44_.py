@@ -145,7 +145,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_on', sa.DateTime(), nullable=True),
     sa.Column('updated_on', sa.DateTime(), nullable=True),
-    sa.Column('value', sa.String(length=50), nullable=False),
+    sa.Column('value', sa.String(length=1000), nullable=False),
     sa.Column('product_type_id', sa.Integer(), nullable=False),
     sa.Column('language_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['language_id'], ['language.id'], ),
