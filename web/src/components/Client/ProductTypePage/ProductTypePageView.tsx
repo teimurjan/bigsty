@@ -3,34 +3,28 @@ import * as React from 'react';
 
 import { css, jsx, ClassNames } from '@emotion/core';
 import uniqBy from 'lodash/uniqBy';
+import { useTheme } from 'emotion-theming';
+import { useIntl } from 'react-intl';
+import Helmet from 'react-helmet';
 
-import { IViewProps as IProps } from './ProductTypePagePresenter';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
-import { useIntl } from 'react-intl';
-import { ProductTypeImageCarousel } from '../ProductType/ProductTypeImageCarousel/ProductTypeImageCarousel';
 import { Title } from 'src/components/common/Title/Title';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
-import { calculateDiscountedPrice } from 'src/utils/number';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
-import { formatMediaURL } from 'src/utils/url';
-import { mediaQueries } from 'src/styles/media';
-import { flexMixin } from 'src/styles/mixins';
-import Helmet from 'react-helmet';
 import { Button } from 'src/components/common/Button/Button';
 
-export const ProductPriceText = ({ price, discount }: { price: number; discount: number }) => (
-  <Subtitle className="has-text-dark" size={3}>
-    {discount > 0 ? (
-      <React.Fragment>
-        <del className="has-text-danger">&#36;{price}</del> &#36;
-        {calculateDiscountedPrice(price, discount)}
-      </React.Fragment>
-    ) : (
-      <React.Fragment>&#36;{price}</React.Fragment>
-    )}
-  </Subtitle>
-);
+import { formatMediaURL } from 'src/utils/url';
+
+import { mediaQueries } from 'src/styles/media';
+import { flexMixin } from 'src/styles/mixins';
+
+import { ITheme } from 'src/themes';
+
+import { ProductTypeImageCarousel } from '../ProductType/ProductTypeImageCarousel/ProductTypeImageCarousel';
+import { PriceCrossedText } from '../Price/Price';
+
+import { IViewProps as IProps } from './ProductTypePagePresenter';
 
 const getAllFeatureValuesGroupedByType = (
   products: IProps['products'],
@@ -53,6 +47,7 @@ const getAllFeatureValuesGroupedByType = (
 
 export const ProductTypePageView = ({ productType, products, error, isLoading, addProductToCart }: IProps) => {
   const intl = useIntl();
+  const theme = useTheme<ITheme>();
   const [activeImageIndex, setActiveImageIndex] = React.useState(0);
   const [initialValuesSet, setInitialValuesSet] = React.useState(false);
   const [chosenFeatureValues, setChosenFeatureValues] = React.useState<{ [key: string]: number }>({});
@@ -198,15 +193,16 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             `}
           >
             {matchingProduct && matchingProduct.quantity > 0 ? (
-              <Subtitle className="has-text-dark" size={3}>
-                {matchingProduct.discount > 0 ? (
-                  <React.Fragment>
-                    <del className="has-text-danger">&#36;{matchingProduct.price}</del> &#36;
-                    {calculateDiscountedPrice(matchingProduct.price, matchingProduct.discount)}
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>&#36;{matchingProduct.price}</React.Fragment>
-                )}
+              <Subtitle
+                css={css`
+                  del {
+                    color: ${theme.danger};
+                  }
+                `}
+                className="has-text-dark"
+                size={3}
+              >
+                <PriceCrossedText price={matchingProduct.price} discount={matchingProduct.discount} />
               </Subtitle>
             ) : (
               <Subtitle className="has-text-grey-light" size={3}>

@@ -1,13 +1,16 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
+import { useIntl } from 'react-intl';
+import { useTheme } from 'emotion-theming';
 
 import { IProductForCartResponseItem } from 'src/api/ProductAPI';
 import { Image } from 'src/components/common/Image/Image';
 import { Title } from 'src/components/common/Title/Title';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
-import { useIntl } from 'react-intl';
-import { ProductPriceText } from '../../ProductTypePage/ProductTypePageView';
 import { Button } from 'src/components/common/Button/Button';
+import { ITheme } from 'src/themes';
+
+import { PriceCrossedText } from '../../Price/Price';
 
 interface IProps {
   product: IProductForCartResponseItem;
@@ -18,6 +21,7 @@ interface IProps {
 
 export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) => {
   const intl = useIntl();
+  const theme = useTheme<ITheme>();
 
   return (
     <div
@@ -52,7 +56,17 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) 
           text-align: right;
         `}
       >
-        <ProductPriceText price={product.price} discount={product.discount} />
+        <Subtitle
+          css={css`
+            del {
+              color: ${theme.danger};
+            }
+          `}
+          size={3}
+          className="has-text-dark"
+        >
+          <PriceCrossedText price={product.price} discount={product.discount} />
+        </Subtitle>
 
         <Button onClick={onRemoveClick}>{intl.formatMessage({ id: 'common.remove' })}</Button>
         <Button onClick={onAddClick}>{intl.formatMessage({ id: 'common.add' })}</Button>

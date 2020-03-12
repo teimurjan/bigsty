@@ -1,37 +1,27 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
+import { useIntl } from 'react-intl';
+import { Link } from 'react-router-dom';
 
 import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
+
 import { Card } from 'src/components/common/Card/Card';
 import { CardContent } from 'src/components/common/CardContent/CardContent';
 import { CardImage } from 'src/components/common/CardImage/CardImage';
 import { Image } from 'src/components/common/Image/Image';
-import { Title } from 'src/components/common/Title/Title';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
-import { useIntl } from 'react-intl';
-import { calculateDiscountedPrice } from 'src/utils/number';
-import { mediaQueries } from 'src/styles/media';
 import { Button } from 'src/components/common/Button/Button';
+import { Title } from 'src/components/common/Title/Title';
+
+import { mediaQueries } from 'src/styles/media';
+
 import { formatMediaURL } from 'src/utils/url';
-import { Link } from 'react-router-dom';
+
+import { PriceRangeText } from '../../Price/Price';
 
 export interface IProps {
   productType: IProductTypeListResponseItem;
 }
-
-export const ProductTypePriceText = ({ priceRange }: { priceRange: number[] }) => {
-  const intl = useIntl();
-
-  if (priceRange.length === 0) {
-    return <Title size={5}>{intl.formatMessage({ id: 'common.notSpecified' })}</Title>;
-  }
-
-  return (
-    <Title size={5}>
-      {priceRange.length > 1 ? `$${Math.min(...priceRange)} - $${Math.max(...priceRange)}` : `$${priceRange[0]}`}
-    </Title>
-  );
-};
 
 export const ProductTypeCard = ({ productType }: IProps) => {
   const intl = useIntl();
@@ -61,13 +51,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
           `}
         >
           <Subtitle size={5}>{productType.name}</Subtitle>
-          {productType.products && (
-            <ProductTypePriceText
-              priceRange={productType.products.map(product =>
-                calculateDiscountedPrice(product.price, product.discount),
-              )}
-            />
-          )}
+          <Title size={5}>{productType.products && <PriceRangeText range={productType.products} />}</Title>
         </CardContent>
         <Button
           css={css`
