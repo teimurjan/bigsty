@@ -12,11 +12,19 @@ import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { textCenterMixin } from 'src/styles/mixins';
 
 import { IViewProps as IProps } from './SignUpFormPresenter';
+import { Message } from 'src/components/common/Message/Message';
 
 export class SignUpFormView extends React.Component<IProps & { intl: IntlShape }> {
   public render() {
-    const { onSubmit, validate } = this.props;
-    return <Form validate={validate} onSubmit={onSubmit} render={this.renderInnerForm} />;
+    const { onSubmit, validate, isSuccess, intl } = this.props;
+    return isSuccess ? (
+      <Message color="is-success">
+        <Message.Header>{intl.formatMessage({ id: 'common.congratulations' })}</Message.Header>
+        <Message.Body>{intl.formatMessage({ id: 'SignupForm.success.body' })}</Message.Body>
+      </Message>
+    ) : (
+      <Form validate={validate} onSubmit={onSubmit} render={this.renderInnerForm} />
+    );
   }
 
   private renderInnerForm = ({ handleSubmit, submitting }: FormRenderProps) => {

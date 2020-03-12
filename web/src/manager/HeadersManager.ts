@@ -29,7 +29,7 @@ export class HeadersManager implements IHeadersManager {
     const locale = this.intlStorage.getLocale();
     const accessToken = this.authStorage.getAccessToken();
     return this.filterHeaders({
-      'Accept-Language': locale || DEFAULT_LOCALE,
+      'X-Locale': locale || DEFAULT_LOCALE,
       Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
     });
   }

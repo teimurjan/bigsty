@@ -16,3 +16,4 @@ from src.models.product_type.short_description import ProductTypeShortDescriptio
 from src.models.banner import Banner
 from src.models.banner.text import BannerText
 from src.models.banner.link_text import BannerLinkText
+from src.models.signup import Signup

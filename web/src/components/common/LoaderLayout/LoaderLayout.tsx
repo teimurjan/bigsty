@@ -9,7 +9,11 @@ import { alignItemsCenterMixin, flexMixin, fullWidthMixin, justifyContentCenterM
 
 import { ITheme } from 'src/themes';
 
-export const LoaderLayout = (props: React.HTMLAttributes<HTMLDivElement>) => {
+interface IProps extends React.HTMLAttributes<HTMLDivElement> {
+  color?: string;
+}
+
+export const LoaderLayout = ({ color, ...props }: IProps) => {
   const theme = useTheme<ITheme>();
 
   return (
@@ -22,7 +26,7 @@ export const LoaderLayout = (props: React.HTMLAttributes<HTMLDivElement>) => {
       `}
       {...props}
     >
-      <ClipLoader color={theme.info} sizeUnit="rem" size={3} loading={true} />
+      <ClipLoader color={color || theme.info} sizeUnit="rem" size={3} loading={true} />
     </div>
   );
 };

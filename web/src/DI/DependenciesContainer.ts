@@ -89,7 +89,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
 
   const APIsContainer = {
     client: APIClient,
-    auth: new authAPI.AuthAPI(APIClient),
+    auth: new authAPI.AuthAPI(APIClient, headersManager),
     category: new categoryAPI.CategoryAPI(APIClient, headersManager),
     featureType: new featureTypeAPI.FeatureTypeAPI(APIClient, headersManager),
     featureValue: new featureValueAPI.FeatureValueAPI(APIClient, headersManager),

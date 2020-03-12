@@ -3,7 +3,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { css, jsx } from '@emotion/core';
-import classNames from 'classnames';
 import SyncLoader from 'react-spinners/SyncLoader';
 import Transition from 'react-transition-group/Transition';
 import { useTheme } from 'emotion-theming';
@@ -18,6 +17,7 @@ import {
 } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
 import { useModalScrollLock } from 'src/hooks/useModalScrollLock';
+import { PAGE_LOADER_ID } from 'src/utils/dom';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   isActive: boolean;
@@ -27,6 +27,7 @@ interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 interface ILoaderProps extends React.HTMLAttributes<HTMLDivElement> {
   timeout: number;
   status: string;
+  color?: string;
 }
 
 const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
@@ -50,15 +51,15 @@ const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
   }
 `;
 
-const Loader = ({ status, timeout, className, ...props }: ILoaderProps) => {
+const Loader = ({ status, timeout, className, color, ...props }: ILoaderProps) => {
   useModalScrollLock();
   const theme = useTheme<ITheme>();
 
   const shouldShow = status === 'entering' || status === 'entered';
 
   return (
-    <div css={getCSS(timeout, shouldShow)} className={className} {...props}>
-      <SyncLoader color={theme.info} sizeUnit="px" size={20} loading={true} />
+    <div id={PAGE_LOADER_ID} css={getCSS(timeout, shouldShow)} className={className} {...props}>
+      <SyncLoader color={color || theme.info} sizeUnit="px" size={20} loading={true} />
     </div>
   );
 };

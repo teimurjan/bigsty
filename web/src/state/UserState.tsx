@@ -71,7 +71,7 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
         clearUser();
       }
 
-      return error;
+      throw error;
     });
 
     return () => client.interceptors.response.eject(interceptor);

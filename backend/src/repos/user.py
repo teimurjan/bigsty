@@ -1,14 +1,5 @@
-import bcrypt
-
 from src.repos.base import Repo, with_session
 from src.models import User
-
-
-def encrypt_password(password):
-    return bcrypt.hashpw(
-        password.encode(),
-        bcrypt.gensalt()
-    ).decode('utf-8')
 
 
 class UserRepo(Repo):
@@ -28,7 +19,7 @@ class UserRepo(Repo):
         user = User()
         user.name = name
         user.email = email
-        user.password = encrypt_password(password)
+        user.password = password
         user.group_id = 1
 
         session.add(user)

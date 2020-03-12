@@ -1,5 +1,4 @@
 
-import logging
 import os
 
 import sqlalchemy as db
@@ -7,9 +6,11 @@ from cerberus.validator import Validator
 from elasticsearch import Elasticsearch
 from flask import Flask, send_from_directory
 from flask_cors import CORS
+from flask_mail import Mail as FlaskMail
 
 from paths import APP_ROOT_PATH
 from src.abstract_view import AbstractView
+from src.mail import Mail
 from src.middleware.http.authorize import AuthorizeHttpMiddleware
 from src.middleware.http.language import LanguageHttpMiddleware
 from src.repos.banner import BannerRepo
@@ -19,6 +20,7 @@ from src.repos.feature_value import FeatureValueRepo
 from src.repos.language import LanguageRepo
 from src.repos.product import ProductRepo
 from src.repos.product_type import ProductTypeRepo
+from src.repos.signup import SignupRepo
 from src.repos.user import UserRepo
 from src.serializers.banner import BannerSerializer
 from src.serializers.category import CategorySerializer
@@ -34,6 +36,7 @@ from src.services.feature_value import FeatureValueService
 from src.services.language import LanguageService
 from src.services.product import FeatureValuesPolicy, ProductService
 from src.services.product_type import ProductTypeService
+from src.services.signup import SignupService
 from src.services.user import UserService
 from src.storage.aws_storage import AWSStorage
 from src.validation_rules.authentication import AUTHENTICATION_VALIDATION_RULES
@@ -43,6 +46,8 @@ from src.validation_rules.category.create import \
     CREATE_CATEGORY_VALIDATION_RULES
 from src.validation_rules.category.update import \
     UPDATE_CATEGORY_VALIDATION_RULES
+from src.validation_rules.confirm_registration import \
+    CONFIRM_REGISTRATION_VALIDATION_RULES
 from src.validation_rules.feature_type.create import \
     CREATE_FEATURE_TYPE_VALIDATION_RULES
 from src.validation_rules.feature_type.update import \
@@ -64,6 +69,7 @@ from src.views.banner.detail import BannerDetailView
 from src.views.banner.list import BannerListView
 from src.views.category.detail import CategoryDetailView
 from src.views.category.list import CategoryListView
+from src.views.confirm_registration import ConfirmRegistrationView
 from src.views.feature_type.detail import FeatureTypeDetailView
 from src.views.feature_type.list import FeatureTypeListView
 from src.views.feature_value.detail import FeatureValueDetailView
@@ -88,6 +94,8 @@ class App:
         self.flask_app.config.from_object(os.environ.get(
             'APP_SETTINGS', 'config.DevelopmentConfig'))
         CORS(self.flask_app, origins=self.flask_app.config['ALLOWED_ORIGINS'])
+        flask_mail = FlaskMail(self.flask_app)
+        self.mail = Mail(flask_mail)
         self.__file_storage = AWSStorage(
             self.flask_app.config['AWS_BUCKET_NAME'],
             self.flask_app.config['AWS_DEFAULT_REGION'],
@@ -114,6 +122,7 @@ class App:
         self.__product_repo = ProductRepo(self.__db_conn, self.__file_storage)
         self.__user_repo = UserRepo(self.__db_conn)
         self.__banner_repo = BannerRepo(self.__db_conn, self.__file_storage)
+        self.__signup_repo = SignupRepo(self.__db_conn)
 
     def __init_services(self):
         self.__category_service = CategoryService(
@@ -133,6 +142,7 @@ class App:
         )
         self.__user_service = UserService(self.__user_repo)
         self.__banner_service = BannerService(self.__banner_repo)
+        self.__signup_service = SignupService(self.__signup_repo, self.__user_repo, self.mail)
 
     def __init_search(self):
         if not self.__es.indices.exists(index="category"):
@@ -169,8 +179,20 @@ class App:
             view_func=AbstractView.as_view(
                 'register',
                 concrete_view=RegistrationView(
-                    self.__user_service, Validator(
+                    self.__signup_service, Validator(
                         REGISTRATION_VALIDATION_RULES)
+                ),
+                middlewares=middlewares
+            ),
+            methods=['POST']
+        )
+        self.flask_app.add_url_rule(
+            '/api/auth/register/confirm',
+            view_func=AbstractView.as_view(
+                'register_confirm',
+                concrete_view=ConfirmRegistrationView(
+                    self.__signup_service, Validator(
+                        CONFIRM_REGISTRATION_VALIDATION_RULES)
                 ),
                 middlewares=middlewares
             ),

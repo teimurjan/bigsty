@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 import os
 
-from src.repos.user import encrypt_password
+from src.repos.signup import encrypt_password
 
 
 # revision identifiers, used by Alembic.

@@ -8,6 +8,6 @@ class LanguageHttpMiddleware:
 
     def handle(self, request):
         with self._language_repo.session() as s:
-            language_name = request.headers.get('Accept-Language', 'en-US')
+            language_name = request.headers.get('X-Locale', 'en-US')
             languages = self._language_repo.filter_by_name(language_name)
             request.language = None if not languages else languages[0]

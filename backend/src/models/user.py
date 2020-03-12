@@ -9,7 +9,7 @@ class User(BaseModel):
 
     email = Column(String(80), unique=True, nullable=False)
     name = Column(String(60), nullable=False)
-    password = Column(String(60), nullable=False)
+    password = Column(String(250), nullable=False)
     group_id = Column(
         Integer,
         ForeignKey(

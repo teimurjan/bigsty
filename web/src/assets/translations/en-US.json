@@ -25,6 +25,8 @@
   "SignUpForm.emailInput.placeholder": "Enter email",
   "SignUpForm.passwordInput.label": "Password",
   "SignUpForm.passwordInput.placeholder": "Enter password",
+  "common.congratulations": "Congratulations!",
+  "SignupForm.success.body": "Check out your email to complete the registration.",
   "NotFound.title": "404 - Not Found",
   "NotFound.goHome.text": "Home",
   "Nav.categories.title": "Categories",
@@ -192,5 +194,7 @@
   "Cart.addressInput.label": "Address",
   "Cart.addressInput.placeholder": "Sovetskaia 127",
   "Cart.empty": "Your cart is empty",
-  "common.upc": "UPC"
+  "common.upc": "UPC",
+  "ConfirmSignup.success": "Confirmation is successful. Redirecting you the login page.",
+  "common.loading": "Loading..."
 }

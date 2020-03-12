@@ -16,7 +16,14 @@ class Config:
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_BUCKET_NAME = os.environ.get('AWS_BUCKET_NAME')
     AWS_DEFAULT_REGION = os.environ.get('AWS_DEFAULT_REGION')
+    HOST = os.environ.get('HOST')
     PROPAGATE_EXCEPTIONS=False
+    MAIL_SERVER='smtp.yandex.com'
+    MAIL_PORT=465
+    MAIL_USE_TLS=False
+    MAIL_USE_SSL=True
+    MAIL_USERNAME=os.environ.get('EMAIL_USERNAME')
+    MAIL_PASSWORD=os.environ.get('EMAIL_PASSWORD')
 
 class ProductionConfig(Config):
     ENV = "production"
@@ -25,7 +32,6 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     ENV = "development"
-    DEVELOPMENT = True
     DEBUG = True
 
 

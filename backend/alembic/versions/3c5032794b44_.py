@@ -91,7 +91,7 @@ def upgrade():
     sa.Column('updated_on', sa.DateTime(), nullable=True),
     sa.Column('email', sa.String(length=80), nullable=False),
     sa.Column('name', sa.String(length=60), nullable=False),
-    sa.Column('password', sa.String(length=60), nullable=False),
+    sa.Column('password', sa.String(length=250), nullable=False),
     sa.Column('group_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['group_id'], ['group.id'], ),
     sa.PrimaryKeyConstraint('id'),

@@ -36,17 +36,6 @@ class UserService:
             TokenFactory.create(REFRESH_TOKEN_TYPE, user)
         )
 
-    def register(self, data):
-        name, email, password = data['name'], data['email'], data['password']
-        if self._repo.is_email_used(email):
-            raise self.SameEmailError()
-
-        user = self._repo.create_user(name, email, password)
-        return (
-            TokenFactory.create(ACCESS_TOKEN_TYPE, user),
-            TokenFactory.create(REFRESH_TOKEN_TYPE, user)
-        )
-
     def refresh_token(self, data):
         try:
             decoded_token = jwt.decode(
@@ -61,9 +50,6 @@ class UserService:
             raise self.TokenInvalid()
 
     class AuthCredsInvalid(Exception):
-        pass
-
-    class SameEmailError(Exception):
         pass
 
     class TokenInvalid(Exception):

@@ -3,8 +3,9 @@ import * as authStorage from '../storage/AuthStorage';
 import * as stateCacheStorage from '../storage/StateCacheStorage';
 
 export interface IAuthService {
-  logIn(email: string, password: string): Promise<{ error: string | undefined }>;
-  signUp(name: string, email: string, password: string): Promise<{ error: string | undefined }>;
+  logIn(email: string, password: string): Promise<void>;
+  signUp(name: string, email: string, password: string): Promise<void>;
+  confirmSignup(token: string): Promise<void>;
   refreshTokens(refreshToken: string): void;
   getAccessToken(): string | null;
   logOut(): void;
@@ -18,6 +19,12 @@ export const errors = {
     }
   },
   InvalidCredentialsError: class extends Error {
+    constructor() {
+      super();
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
+  InvalidSignupToken: class extends Error {
     constructor() {
       super();
       Object.setPrototypeOf(this, new.target.prototype);
@@ -46,8 +53,6 @@ export class AuthService implements IAuthService {
 
       this.storage.setAccessToken(accessToken);
       this.storage.setRefreshToken(refreshToken);
-
-      return { error: undefined };
     } catch (e) {
       if (e instanceof authAPI.errors.EmailOrPasswordInvalidError) {
         throw new errors.InvalidCredentialsError();
@@ -58,15 +63,21 @@ export class AuthService implements IAuthService {
 
   public async signUp(name: string, email: string, password: string) {
     try {
-      const { accessToken, refreshToken } = await this.API.signUp(name, email, password);
-
-      this.storage.setAccessToken(accessToken);
-      this.storage.setRefreshToken(refreshToken);
-
-      return { error: undefined };
+      await this.API.signUp(name, email, password);
     } catch (e) {
       if (e instanceof authAPI.errors.DuplicateEmailError) {
         throw new errors.EmailExistsError();
+      }
+      throw e;
+    }
+  }
+
+  public async confirmSignup(token: string) {
+    try {
+      await this.API.confirmSignup(token);
+    } catch (e) {
+      if (e instanceof authAPI.errors.SignupNotFound) {
+        throw new errors.InvalidSignupToken();
       }
       throw e;
     }
