@@ -142,7 +142,8 @@ class App:
         )
         self.__user_service = UserService(self.__user_repo)
         self.__banner_service = BannerService(self.__banner_repo)
-        self.__signup_service = SignupService(self.__signup_repo, self.__user_repo, self.mail)
+        self.__signup_service = SignupService(
+            self.__signup_repo, self.__user_repo, self.mail)
 
     def __init_search(self):
         if not self.__es.indices.exists(index="category"):
@@ -157,10 +158,9 @@ class App:
             self.__product_type_service.set_to_search_index(product_type)
 
     def __init_api_routes(self):
-        middlewares = [
-            AuthorizeHttpMiddleware(self.__user_service),
-            LanguageHttpMiddleware(self.__language_repo)
-        ]
+        authorize_middleware = AuthorizeHttpMiddleware(self.__user_service)
+        language_middleware = LanguageHttpMiddleware(self.__language_repo)
+        middlewares = [authorize_middleware, language_middleware]
 
         self.flask_app.add_url_rule(
             '/api/auth/login',
@@ -170,7 +170,7 @@ class App:
                     self.__user_service, Validator(
                         AUTHENTICATION_VALIDATION_RULES)
                 ),
-                middlewares=middlewares
+                middlewares=[language_middleware]
             ),
             methods=['POST']
         )
@@ -182,7 +182,7 @@ class App:
                     self.__signup_service, Validator(
                         REGISTRATION_VALIDATION_RULES)
                 ),
-                middlewares=middlewares
+                middlewares=[language_middleware]
             ),
             methods=['POST']
         )
@@ -194,7 +194,7 @@ class App:
                     self.__signup_service, Validator(
                         CONFIRM_REGISTRATION_VALIDATION_RULES)
                 ),
-                middlewares=middlewares
+                middlewares=[language_middleware]
             ),
             methods=['POST']
         )
@@ -206,7 +206,7 @@ class App:
                     self.__user_service, Validator(
                         REFRESH_TOKEN_VALIDATION_RULES)
                 ),
-                middlewares=middlewares
+                middlewares=[language_middleware]
             ),
             methods=['POST']
 

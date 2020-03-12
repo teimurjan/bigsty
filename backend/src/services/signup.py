@@ -2,7 +2,6 @@ import bcrypt
 import jwt
 from flask import current_app as app
 
-from src.errors import NotAuthorizedError
 from src.factories.token import (ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE,
                                  SIGNUP_TOKEN_TYPE, TokenFactory)
 from src.mail import Mail
