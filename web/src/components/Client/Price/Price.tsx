@@ -7,7 +7,7 @@ import { calculateDiscountedPrice } from 'src/utils/number';
 
 interface IPriceProps {
   price: number;
-  discount: number;
+  discount?: number;
 }
 
 interface IPriceRangeTextProps {
@@ -55,7 +55,7 @@ axios.get('https://cors-anywhere.herokuapp.com/http://www.cbr.ru/scripts/XML_dai
 const useFormattedPrice = ({ price, discount }: IPriceProps) => {
   const intl = useIntl();
 
-  const calculatedPrice = calculateDiscountedPrice(price, discount);
+  const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
   if (intl.locale === 'en-US' || !rates.usdToKgs) {
     return `$${calculatedPrice}`;
   } else {
@@ -66,7 +66,7 @@ const useFormattedPrice = ({ price, discount }: IPriceProps) => {
 export const PriceRangeText = ({ range }: IPriceRangeTextProps) => {
   const intl = useIntl();
 
-  const calculatedRange = range.map(price => calculateDiscountedPrice(price.price, price.discount));
+  const calculatedRange = range.map(price => calculateDiscountedPrice(price.price, price.discount || 0));
 
   const biggestFormattedPrice = useFormattedPrice({ price: Math.max(...calculatedRange), discount: 0 });
   const lowestFormattedPrice = useFormattedPrice({ price: Math.min(...calculatedRange), discount: 0 });
@@ -94,3 +94,5 @@ export const PriceCrossedText = ({ price, discount }: IPriceProps) => {
     <React.Fragment>{formattedInitialPrice}</React.Fragment>
   );
 };
+
+export const PriceText = ({ price }: IPriceProps) => <>{useFormattedPrice({ price, discount: 0 })}</>;

@@ -9,6 +9,7 @@ import * as productTypeAPI from 'src/api/ProductTypeAPI';
 import * as productAPI from 'src/api/ProductAPI';
 import * as searchAPI from 'src/api/SearchAPI';
 import * as bannerAPI from 'src/api/BannerAPI';
+import * as orderAPI from 'src/api/OrderAPI';
 
 import * as authService from 'src/services/AuthService';
 import * as categoryService from 'src/services/CategoryService';
@@ -19,6 +20,7 @@ import * as productTypeService from 'src/services/ProductTypeService';
 import * as productService from 'src/services/ProductService';
 import * as searchService from 'src/services/SearchService';
 import * as bannerService from 'src/services/BannerService';
+import * as orderService from 'src/services/OrderService';
 
 import * as authStorage from 'src/storage/AuthStorage';
 import * as intlStorage from 'src/storage/IntlStorage';
@@ -38,6 +40,7 @@ export interface IAPIsContainer {
   intl: intlAPI.IIntlAPI;
   search: searchAPI.ISearchAPI;
   banner: bannerAPI.IBannerAPI;
+  order: orderAPI.IOrderAPI;
 }
 
 export interface IServicesContainer {
@@ -50,6 +53,7 @@ export interface IServicesContainer {
   intl: intlService.IIntlService;
   search: searchService.ISearchService;
   banner: bannerService.IBannerService;
+  order: orderService.IOrderService;
 }
 
 export interface IStoragesContainer {
@@ -98,6 +102,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     product: new productAPI.ProductAPI(APIClient, headersManager),
     search: new searchAPI.SearchAPI(APIClient, headersManager),
     banner: new bannerAPI.BannerAPI(APIClient, headersManager),
+    order: new orderAPI.OrderAPI(APIClient, headersManager),
   };
 
   const servicesContainer = {
@@ -110,6 +115,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     product: new productService.ProductService(APIsContainer.product),
     search: new searchService.SearchService(APIsContainer.search),
     banner: new bannerService.BannerService(APIsContainer.banner),
+    order: new orderService.OrderService(APIsContainer.order),
   };
 
   return new DependenciesContainer(APIsContainer, storagesContainer, servicesContainer);

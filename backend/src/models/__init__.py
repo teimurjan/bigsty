@@ -17,3 +17,5 @@ from src.models.banner import Banner
 from src.models.banner.text import BannerText
 from src.models.banner.link_text import BannerLinkText
 from src.models.signup import Signup
+from src.models.order import Order
+from src.models.order.order_item import OrderItem

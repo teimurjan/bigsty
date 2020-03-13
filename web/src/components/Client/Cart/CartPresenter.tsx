@@ -11,10 +11,12 @@ import { ICartStorage } from 'src/storage/CartStorage';
 import * as schemaValidator from 'src/components/SchemaValidator';
 import { IContextValue as UserStateContextValue } from 'src/state/UserState';
 import { getUserPropertySafe } from 'src/helpers/user';
+import { IOrderService } from 'src/services/OrderService';
 
 export interface IProps extends UserStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
-  service: IProductService;
+  productService: IProductService;
+  orderService: IOrderService;
   storage: ICartStorage;
 }
 
@@ -34,6 +36,7 @@ export interface IViewProps {
   goToNextStep: () => void;
   validator: schemaValidator.ISchemaValidator;
   initialValues: object;
+  onSubmit: (values: IFormValues) => Promise<void>;
 }
 
 const validator = new schemaValidator.SchemaValidator(
@@ -44,7 +47,19 @@ const validator = new schemaValidator.SchemaValidator(
   }),
 );
 
-export const CartPresenter: React.FC<IProps> = ({ View, service, storage, userState: { user } }) => {
+interface IFormValues {
+  name: string;
+  phone: string;
+  address: string;
+}
+
+export const CartPresenter: React.FC<IProps> = ({
+  View,
+  productService,
+  orderService,
+  storage,
+  userState: { user },
+}) => {
   const { value: isOpen, setPositive: open, setNegative: close, toggle } = useBoolean();
 
   const [step, setStep] = React.useState(0);
@@ -66,7 +81,7 @@ export const CartPresenter: React.FC<IProps> = ({ View, service, storage, userSt
       try {
         setLoading(true);
         const ids = storage.getItems().map(item => item.id);
-        const { entities, result } = await service.getForCart(ids);
+        const { entities, result } = await productService.getForCart(ids);
         setProducts(entities.products);
         setProductsOrder(result);
       } catch (e) {
@@ -99,6 +114,30 @@ export const CartPresenter: React.FC<IProps> = ({ View, service, storage, userSt
     setStep(step + 1);
   }, [step]);
 
+  const onSubmit = React.useCallback(
+    async ({ name, phone, address }: IFormValues) => {
+      const cartItems = storage.getItems();
+      const itemsToSubmit = cartItems.map(({ id, count }) => ({
+        product_id: id,
+        quantity: count || 0,
+      }));
+
+      try {
+        await orderService.create({
+          items: itemsToSubmit,
+          user_name: name,
+          user_phone_number: phone,
+          user_address: address,
+        });
+        goToNextStep();
+        storage.clear();
+      } catch (e) {
+        setError('errors.common');
+      }
+    },
+    [goToNextStep, orderService, storage],
+  );
+
   return (
     <View
       isOpen={isOpen}
@@ -121,6 +160,7 @@ export const CartPresenter: React.FC<IProps> = ({ View, service, storage, userSt
         name: getUserPropertySafe(user, 'name'),
       }}
       cartItemsCount={storage.getItems().length}
+      onSubmit={onSubmit}
     />
   );
 };

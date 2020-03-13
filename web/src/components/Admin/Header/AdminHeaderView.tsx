@@ -93,6 +93,11 @@ export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlSh
             {intl.formatMessage({ id: 'AdminMenu.bannersLinkText' })}
           </NavLink>
         </Menu.Item>
+        <Menu.Item>
+          <NavLink to="/admin/orders" activeClassName="is-active">
+            {intl.formatMessage({ id: 'AdminMenu.ordersLinkText' })}
+          </NavLink>
+        </Menu.Item>
       </Menu.List>
 
       <Menu.Label>{intl.formatMessage({ id: 'AdminMenu.actionsLabel' })}</Menu.Label>

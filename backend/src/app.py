@@ -18,6 +18,7 @@ from src.repos.category import CategoryRepo
 from src.repos.feature_type import FeatureTypeRepo
 from src.repos.feature_value import FeatureValueRepo
 from src.repos.language import LanguageRepo
+from src.repos.order import OrderRepo
 from src.repos.product import ProductRepo
 from src.repos.product_type import ProductTypeRepo
 from src.repos.signup import SignupRepo
@@ -27,6 +28,7 @@ from src.serializers.category import CategorySerializer
 from src.serializers.feature_type import FeatureTypeSerializer
 from src.serializers.feature_value import FeatureValueSerializer
 from src.serializers.language import LanguageSerializer
+from src.serializers.order import OrderSerializer
 from src.serializers.product import ProductSerializer
 from src.serializers.product_type import ProductTypeSerializer
 from src.services.banner import BannerService
@@ -34,6 +36,7 @@ from src.services.category import CategoryService
 from src.services.feature_type import FeatureTypeService
 from src.services.feature_value import FeatureValueService
 from src.services.language import LanguageService
+from src.services.order import OrderService
 from src.services.product import FeatureValuesPolicy, ProductService
 from src.services.product_type import ProductTypeService
 from src.services.signup import SignupService
@@ -56,6 +59,7 @@ from src.validation_rules.feature_value.create import \
     CREATE_FEATURE_VALUE_VALIDATION_RULES
 from src.validation_rules.feature_value.update import \
     UPDATE_FEATURE_VALUE_VALIDATION_RULES
+from src.validation_rules.order.create import CREATE_ORDER_VALIDATION_RULES
 from src.validation_rules.product.create import CREATE_PRODUCT_VALIDATION_RULES
 from src.validation_rules.product.update import UPDATE_PRODUCT_VALIDATION_RULES
 from src.validation_rules.product_type.create import \
@@ -75,6 +79,7 @@ from src.views.feature_type.list import FeatureTypeListView
 from src.views.feature_value.detail import FeatureValueDetailView
 from src.views.feature_value.list import FeatureValueListView
 from src.views.language.list import LanguageListView
+from src.views.order.list import OrderListView
 from src.views.product.by_product_type import ProductByProductTypeView
 from src.views.product.detail import ProductDetailView
 from src.views.product.for_cart import ProductForCartView
@@ -93,7 +98,8 @@ class App:
         self.flask_app = Flask(__name__)
         self.flask_app.config.from_object(os.environ.get(
             'APP_SETTINGS', 'config.DevelopmentConfig'))
-        CORS(self.flask_app, origins=self.flask_app.config['ALLOWED_ORIGINS'])
+        CORS(self.flask_app,
+             origins=self.flask_app.config['ALLOWED_ORIGINS'])
         flask_mail = FlaskMail(self.flask_app)
         self.mail = Mail(flask_mail)
         self.__file_storage = AWSStorage(
@@ -123,6 +129,7 @@ class App:
         self.__user_repo = UserRepo(self.__db_conn)
         self.__banner_repo = BannerRepo(self.__db_conn, self.__file_storage)
         self.__signup_repo = SignupRepo(self.__db_conn)
+        self.__order_repo = OrderRepo(self.__db_conn)
 
     def __init_services(self):
         self.__category_service = CategoryService(
@@ -144,6 +151,8 @@ class App:
         self.__banner_service = BannerService(self.__banner_repo)
         self.__signup_service = SignupService(
             self.__signup_repo, self.__user_repo, self.mail)
+        self.__order_service = OrderService(
+            self.__order_repo, self.__product_repo)
 
     def __init_search(self):
         if not self.__es.indices.exists(index="category"):
@@ -394,6 +403,16 @@ class App:
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
+        )
+        self.flask_app.add_url_rule(
+            '/api/orders',
+            view_func=AbstractView.as_view(
+                'orders',
+                concrete_view=OrderListView(Validator(
+                    CREATE_ORDER_VALIDATION_RULES), self.__order_service, OrderSerializer),
+                middlewares=middlewares
+            ),
+            methods=['GET', 'POST']
         )
 
     def __handle_media_request(self, path):

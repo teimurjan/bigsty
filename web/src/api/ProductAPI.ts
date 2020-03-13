@@ -151,7 +151,7 @@ export class ProductAPI implements IProductAPI {
   public async getForCart(ids: number[]) {
     try {
       const response = await this.client.get<IProductForCartResponseData>(
-        `/api/products/for_cart${buildQueryString({ ids, fields: ['hello', 'world'] })}`,
+        `/api/products/for_cart${buildQueryString({ ids })}`,
         {
           headers: this.headersManager.getHeaders(),
         },

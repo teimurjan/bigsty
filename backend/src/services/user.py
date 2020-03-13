@@ -14,8 +14,7 @@ class UserService:
     def authorize(self, token):
         try:
             decoded_token = jwt.decode(token, app.config['SECRET_KEY'])
-            user = self._repo.get_by_id(decoded_token['user_id'])
-            return user
+            return self._repo.get_by_id(decoded_token['user_id'])
         except Exception:
             raise NotAuthorizedError()
 

@@ -6,6 +6,7 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useIntl } from 'react-intl';
 import { Form, Field as FinalFormField, FieldRenderProps } from 'react-final-form';
+import { useTheme } from 'emotion-theming';
 
 import { Modal } from 'src/components/common/Modal/Modal';
 import { Button } from 'src/components/common/Button/Button';
@@ -13,13 +14,22 @@ import { ModalBackground } from 'src/components/common/ModalBackground/ModalBack
 import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+import { Title } from 'src/components/common/Title/Title';
+import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { Message } from 'src/components/common/Message/Message';
+import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
+
+import { textCenterMixin } from 'src/styles/mixins';
+
+import { ITheme } from 'src/themes';
+
+import { calculateDiscountedPrice } from 'src/utils/number';
+
+import { PriceText } from '../Price/Price';
 
 import { IViewProps as IProps } from './CartPresenter';
 import { CartItem } from './CartItem/CartItem';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { useTheme } from 'emotion-theming';
-import { ITheme } from 'src/themes';
-import { Title } from 'src/components/common/Title/Title';
 
 const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, addMore, remove, goToNextStep }) => {
   const intl = useIntl();
@@ -31,6 +41,11 @@ const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, add
   if (products.length === 0) {
     return <Title size={5}>{intl.formatMessage({ id: 'Cart.empty' })}</Title>;
   }
+
+  const totalPrice = products.reduce(
+    (acc, product) => acc + calculateDiscountedPrice(product.price, product.discount) * getProductCount(product.id),
+    0,
+  );
 
   return (
     <React.Fragment>
@@ -45,6 +60,9 @@ const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, add
           />
         ))}
       </div>
+      <Subtitle size={4}>
+        {intl.formatMessage({ id: 'Cart.total' })}: <PriceText price={totalPrice} />
+      </Subtitle>
       <Button
         color="is-info"
         css={css`
@@ -132,12 +150,12 @@ const AddressField = ({ input, meta }: FieldRenderProps<string>) => {
   );
 };
 
-const SecondStep: React.FC<IProps> = ({ validator, initialValues }) => {
+const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, error }) => {
   const intl = useIntl();
 
   return (
     <Form
-      onSubmit={console.log}
+      onSubmit={onSubmit}
       initialValues={initialValues}
       validate={validator.validate}
       render={({ handleSubmit }) => (
@@ -156,9 +174,22 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues }) => {
           >
             {intl.formatMessage({ id: 'Cart.order' })}
           </Button>
+          <div css={textCenterMixin}>
+            {error && <HelpText type="is-danger">{intl.formatMessage({ id: error })}</HelpText>}
+          </div>
         </form>
       )}
     />
+  );
+};
+
+const ThirdStep: React.FC<IProps> = () => {
+  const intl = useIntl();
+
+  return (
+    <Message color="is-success">
+      <Message.Body>{intl.formatMessage({ id: 'Cart.orderReceived' })}</Message.Body>
+    </Message>
   );
 };
 
@@ -216,6 +247,7 @@ export const CartView: React.FC<IProps> = props => {
         >
           {step === 0 && <FirstStep {...props} />}
           {step === 1 && <SecondStep {...props} />}
+          {step === 2 && <ThirdStep {...props} />}
         </ModalContent>
       </Modal>
     </React.Fragment>

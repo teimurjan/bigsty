@@ -19,6 +19,7 @@ import { AdminFeatureValues } from './FeatureValues/AdminFeatureValues';
 import { AdminProductTypes } from './ProductTypes/AdminProductTypes';
 import { AdminProducts } from './Products/AdminProducts';
 import { AdminBanners } from './Banners/AdminBanners';
+import { AdminOrders } from './Orders/AdminOrders';
 
 import { NewCategoryButton } from './Categories/List/AdminCategoriesListView';
 import { NewFeatureTypeButton } from './FeatureTypes/List/AdminFeatureTypesListView';
@@ -41,6 +42,7 @@ import { Tag } from '../common/Tag/Tag';
 import { useIntl } from 'react-intl';
 import { mediaQueries } from 'src/styles/media';
 import { AdminBannersStateProvider } from 'src/state/AdminBannersState';
+import { AdminOrdersStateProvider } from 'src/state/AdminOrdersState';
 
 interface IProps {
   match: { path: string };
@@ -168,44 +170,47 @@ export const Admin = ({ match }: IProps) => (
         <AdminFeatureValuesStateProvider>
           <AdminProductTypesStateProvider>
             <AdminProductsStateProvider>
-              <div
-                css={css`
-                  ${alignItemsFlexStartMixin};
-                  ${flexMixin};
-                `}
-              >
+              <AdminOrdersStateProvider>
                 <div
                   css={css`
-                    flex: 0 0 350px;
-
-                    @media ${mediaQueries.maxWidth768} {
-                      position: absolute;
-                      left: -350px;
-                    }
+                    ${alignItemsFlexStartMixin};
+                    ${flexMixin};
                   `}
                 >
-                  <AdminHeaderContainer />
-                </div>
-                <div
-                  css={css`
-                    width: calc(100% - 350px);
+                  <div
+                    css={css`
+                      flex: 0 0 350px;
 
-                    @media ${mediaQueries.maxWidth768} {
-                      width: 100%;
-                    }
-                  `}
-                >
-                  <Switch>
-                    <Route path={`${match.path}/categories`} component={AdminCategories} />
-                    <Route path={`${match.path}/featureTypes`} component={AdminFeatureTypes} />
-                    <Route path={`${match.path}/featureValues`} component={AdminFeatureValues} />
-                    <Route path={`${match.path}/productTypes`} component={AdminProductTypes} />
-                    <Route path={`${match.path}/products`} component={AdminProducts} />
-                    <Route path={`${match.path}/banners`} component={AdminBanners} />
-                    <Route component={AdminHome} />
-                  </Switch>
+                      @media ${mediaQueries.maxWidth768} {
+                        position: absolute;
+                        left: -350px;
+                      }
+                    `}
+                  >
+                    <AdminHeaderContainer />
+                  </div>
+                  <div
+                    css={css`
+                      width: calc(100% - 350px);
+
+                      @media ${mediaQueries.maxWidth768} {
+                        width: 100%;
+                      }
+                    `}
+                  >
+                    <Switch>
+                      <Route path={`${match.path}/categories`} component={AdminCategories} />
+                      <Route path={`${match.path}/featureTypes`} component={AdminFeatureTypes} />
+                      <Route path={`${match.path}/featureValues`} component={AdminFeatureValues} />
+                      <Route path={`${match.path}/productTypes`} component={AdminProductTypes} />
+                      <Route path={`${match.path}/products`} component={AdminProducts} />
+                      <Route path={`${match.path}/banners`} component={AdminBanners} />
+                      <Route path={`${match.path}/orders`} component={AdminOrders} />
+                      <Route component={AdminHome} />
+                    </Switch>
+                  </div>
                 </div>
-              </div>
+              </AdminOrdersStateProvider>
             </AdminProductsStateProvider>
           </AdminProductTypesStateProvider>
         </AdminFeatureValuesStateProvider>
