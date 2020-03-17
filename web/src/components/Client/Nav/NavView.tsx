@@ -34,7 +34,7 @@ export const NavView = ({ intl, categories }: IProps & { intl: IntlShape }) => {
       <Menu.List>
         {categories.map(category => (
           <Menu.Item key={category.id}>
-            <NavLink to={`/categories/${category.id}/productTypes`} activeClassName="is-active">
+            <NavLink to={`/categories/${category.id}/products`} activeClassName="is-active">
               {category.name}
             </NavLink>
           </Menu.Item>

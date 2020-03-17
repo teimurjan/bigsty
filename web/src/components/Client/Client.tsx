@@ -35,8 +35,8 @@ export const Client = () => (
     >
       <div
         css={css`
-          padding-top: 80px;
-          min-height: calc(100vh - 120px);
+          padding-top: 100px;
+          min-height: calc(100vh - 130px);
           ${flexMixin};
         `}
       >
