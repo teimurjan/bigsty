@@ -120,7 +120,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         <title>{productType.name}</title>
         <meta name="description" content={productType.short_description} />
         <meta property="og:title" content={productType.name} />
-        <meta property="og:description" content={productType.description} />
+        <meta property="og:description" content={productType.short_description} />
         <meta property="og:type" content="og:product" />
         {matchingProduct && <meta property="product:price:amount" content={matchingProduct.price.toString()} />}
         {matchingProduct && <meta property="product:price:currency" content="USD" />}
