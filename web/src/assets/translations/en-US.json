@@ -204,5 +204,6 @@
   "AdminOrders.userAddress": "User Address",
   "AdminOrders.createdOn": "Created On",
   "AdminOrders.notFound.title": "No orders created yet.",
-  "AdminMenu.ordersLinkText": "Orders"
+  "AdminMenu.ordersLinkText": "Orders",
+  "Footer.copy": "© {year} Eye8"
 }

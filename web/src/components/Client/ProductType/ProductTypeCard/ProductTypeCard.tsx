@@ -27,7 +27,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
   const intl = useIntl();
 
   return (
-    <Link to={`/productTypes/${productType.id}`}>
+    <Link to={`/products/${productType.id}`}>
       <Card
         css={css`
           height: 100%;

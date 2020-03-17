@@ -204,5 +204,6 @@
   "AdminOrders.userAddress": "Адрес клиента",
   "AdminOrders.createdOn": "Дата заказа",
   "AdminOrders.notFound.title": "Нет ни одного заказа.",
-  "AdminMenu.ordersLinkText": "Заказы"
+  "AdminMenu.ordersLinkText": "Заказы",
+  "Footer.copy": "© {year} Eye8"
 }

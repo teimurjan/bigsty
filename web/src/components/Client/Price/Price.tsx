@@ -52,6 +52,19 @@ axios.get('https://cors-anywhere.herokuapp.com/http://www.cbr.ru/scripts/XML_dai
   }
 });
 
+export const useAllPrices = (prices: IPriceProps[]) => {
+  const intl = useIntl();
+
+  return prices.map(({ price, discount }) => {
+    const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
+    if (intl.locale === 'en-US' || !rates.usdToKgs) {
+      return { price: calculatedPrice, currency: 'USD' };
+    } else {
+      return { price: Math.round(calculatedPrice * rates.usdToKgs), currency: 'KGS' };
+    }
+  });
+};
+
 const useFormattedPrice = ({ price, discount }: IPriceProps) => {
   const intl = useIntl();
 

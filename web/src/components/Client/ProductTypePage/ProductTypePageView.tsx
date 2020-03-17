@@ -119,6 +119,12 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
       <Helmet>
         <title>{productType.name}</title>
         <meta name="description" content={productType.short_description} />
+        <meta property="og:title" content={productType.name} />
+        <meta property="og:description" content={productType.description} />
+        <meta property="og:type" content="og:product" />
+        {matchingProduct && <meta property="product:price:amount" content={matchingProduct.price.toString()} />}
+        {matchingProduct && <meta property="product:price:currency" content="USD" />}
+        <meta property="og:image" content={productType.image} />
       </Helmet>
       <div
         css={css`

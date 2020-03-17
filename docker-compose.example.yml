@@ -35,6 +35,10 @@ services:
       - AWS_SECRET_ACCESS_KEY=aws_secret_key
       - AWS_BUCKET_NAME=aws_bucket_name
       - AWS_DEFAULT_REGION=eu-central-1
+      - EMAIL_USERNAME=noreply@example.com
+      - EMAIL_PASSWORD=password
+      - EMAIL_UNSUBSCRIBE_USERNAME=support@example.com
+      - HOST=https://example.com
     restart: on-failure
     ports:
       - 8080:8080

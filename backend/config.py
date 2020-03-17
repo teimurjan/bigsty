@@ -22,7 +22,9 @@ class Config:
     MAIL_PORT=465
     MAIL_USE_TLS=False
     MAIL_USE_SSL=True
+    MAIL_DEBUG=False
     MAIL_USERNAME=os.environ.get('EMAIL_USERNAME')
+    MAIL_UNSUBSCRIBE_USERNAME=os.environ.get('EMAIL_UNSUBSCRIBE_USERNAME')
     MAIL_PASSWORD=os.environ.get('EMAIL_PASSWORD')
 
 class ProductionConfig(Config):

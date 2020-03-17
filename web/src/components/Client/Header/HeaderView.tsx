@@ -39,7 +39,7 @@ export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlS
     <Navbar
       className={y !== 0 ? 'has-shadow' : undefined}
       css={css`
-        height: 4rem;
+        height: 80px;
         position: fixed;
         top: 0;
         left: 0;

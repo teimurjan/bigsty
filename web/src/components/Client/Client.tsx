@@ -19,6 +19,7 @@ import { NavContainer } from './Nav/NavContainer';
 import { ProductTypePageContainer } from './ProductTypePage/ProductTypePageContainer';
 import { HomeContainer } from './Home/HomeContainer';
 import { CartContainer } from './Cart/CartContainer';
+import { FooterView } from './Footer/FooterView';
 
 export const Client = () => (
   <React.Fragment>
@@ -34,7 +35,8 @@ export const Client = () => (
     >
       <div
         css={css`
-          padding: 6.5rem 0;
+          padding-top: 80px;
+          min-height: calc(100vh - 120px);
           ${flexMixin};
         `}
       >
@@ -45,8 +47,8 @@ export const Client = () => (
           `}
         >
           <Switch>
-            <Route exact={true} path="/categories/:categoryId/productTypes" component={ProductTypesPageContainer} />
-            <Route exact={true} path="/productTypes/:id" component={ProductTypePageContainer} />
+            <Route exact={true} path="/categories/:categoryId/products" component={ProductTypesPageContainer} />
+            <Route exact={true} path="/products/:id" component={ProductTypePageContainer} />
             <Route path="/" component={HomeContainer} />
 
             <Route component={NotFoundContainer} />
@@ -55,5 +57,6 @@ export const Client = () => (
       </div>
       <CartContainer />
     </Container>
+    <FooterView />
   </React.Fragment>
 );

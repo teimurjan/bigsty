@@ -15,9 +15,13 @@ import { useMedia } from 'src/hooks/useMedia';
 
 import { mediaQueries } from 'src/styles/media';
 
+import logo from 'src/assets/images/logo.png';
+
 interface IProps {
   isLoading: boolean;
 }
+
+const CUSTOM_OG_PAGES_REGEXES = [/^\/products\/\d+/g];
 
 export const AppView = ({ isLoading }: IProps) => {
   const { iconPathPrefix, manifestPath } = useMedia(
@@ -28,6 +32,7 @@ export const AppView = ({ isLoading }: IProps) => {
 
   const intl = useIntl();
 
+  const isCustomOGPage = CUSTOM_OG_PAGES_REGEXES.some(r => window.location.pathname.match(r));
   return (
     <>
       <Helmet>
@@ -39,6 +44,12 @@ export const AppView = ({ isLoading }: IProps) => {
         <title>{intl.formatMessage({ id: 'Meta.title' })}</title>
         <meta name="description" content={intl.formatMessage({ id: 'Meta.description' })} />
         <meta name="keywords" content={intl.formatMessage({ id: 'Meta.keywords' })} />
+        {!isCustomOGPage && <meta name="og:title" content={intl.formatMessage({ id: 'Meta.title' })} />}
+        {!isCustomOGPage && <meta name="og:description" content={intl.formatMessage({ id: 'Meta.description' })} />}
+        {!isCustomOGPage && <meta name="og:image" content={logo} />}
+        {!isCustomOGPage && <meta name="og:type" content="website" />}
+        <meta name="og:site_name" content="eye8.kg" />
+        <meta name="og:url" content={window.location.href} />
       </Helmet>
       <Global
         styles={css`

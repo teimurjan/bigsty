@@ -57,7 +57,7 @@ export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoadi
                 text-overflow: ellipsis;
               `}
               key={productType.id}
-              to={`/productTypes/${productType.id}`}
+              to={`/products/${productType.id}`}
             >
               <img
                 css={css`
