@@ -18,11 +18,10 @@ class Config:
     AWS_DEFAULT_REGION = os.environ.get('AWS_DEFAULT_REGION')
     HOST = os.environ.get('HOST')
     PROPAGATE_EXCEPTIONS=False
-    MAIL_SERVER='smtp.yandex.com'
-    MAIL_PORT=465
-    MAIL_USE_TLS=False
+    MAIL_SERVER=os.environ.get('EMAIL_SMTP_SERVER')
+    MAIL_PORT=os.environ.get('EMAIL_SMTP_PORT')
+    MAIL_USE_TLS=True
     MAIL_USE_SSL=True
-    MAIL_DEBUG=False
     MAIL_USERNAME=os.environ.get('EMAIL_USERNAME')
     MAIL_UNSUBSCRIBE_USERNAME=os.environ.get('EMAIL_UNSUBSCRIBE_USERNAME')
     MAIL_PASSWORD=os.environ.get('EMAIL_PASSWORD')
