@@ -20,7 +20,7 @@ class Config:
     PROPAGATE_EXCEPTIONS=False
     MAIL_SERVER=os.environ.get('EMAIL_SMTP_SERVER')
     MAIL_PORT=os.environ.get('EMAIL_SMTP_PORT')
-    MAIL_USE_TLS=True
+    MAIL_USE_TLS=False
     MAIL_USE_SSL=True
     MAIL_USERNAME=os.environ.get('EMAIL_USERNAME')
     MAIL_UNSUBSCRIBE_USERNAME=os.environ.get('EMAIL_UNSUBSCRIBE_USERNAME')
