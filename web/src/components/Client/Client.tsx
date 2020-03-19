@@ -13,6 +13,8 @@ import { SignUpPageContainer } from 'src/components/SignUp/SignUpPage/SignUpPage
 import { flexMixin } from 'src/styles/mixins';
 import { mediaQueries } from 'src/styles/media';
 
+import { useMedia } from 'src/hooks/useMedia';
+
 import { Container } from '../common/Container/Container';
 
 import { NavContainer } from './Nav/NavContainer';
@@ -21,42 +23,48 @@ import { HomeContainer } from './Home/HomeContainer';
 import { CartContainer } from './Cart/CartContainer';
 import { FooterView } from './Footer/FooterView';
 
-export const Client = () => (
-  <React.Fragment>
-    <HeaderContainer />
-    <Route exact={true} path="/login" component={LoginPageContainer} />
-    <Route exact={true} path="/signup" component={SignUpPageContainer} />
-    <Container
-      css={css`
-        @media ${mediaQueries.maxWidth768} {
-          margin: 0 0.5rem;
-        }
-      `}
-    >
-      <div
+export const Client = () => {
+  const isMobile = useMedia([mediaQueries.maxWidth768], [true], false);
+
+  const navNode = <NavContainer />;
+
+  return (
+    <React.Fragment>
+      <HeaderContainer nav={isMobile ? navNode : null} />
+      <Route exact={true} path="/login" component={LoginPageContainer} />
+      <Route exact={true} path="/signup" component={SignUpPageContainer} />
+      <Container
         css={css`
-          padding-top: 100px;
-          min-height: calc(100vh - 130px);
-          ${flexMixin};
+          @media ${mediaQueries.maxWidth768} {
+            margin: 0 0.5rem;
+          }
         `}
       >
-        <NavContainer />
         <div
           css={css`
-            width: 100%;
+            padding-top: 100px;
+            min-height: calc(100vh - 130px);
+            ${flexMixin};
           `}
         >
-          <Switch>
-            <Route exact={true} path="/categories/:categoryId/products" component={ProductTypesPageContainer} />
-            <Route exact={true} path="/products/:id" component={ProductTypePageContainer} />
-            <Route path="/" component={HomeContainer} />
+          {!isMobile && navNode}
+          <div
+            css={css`
+              width: 100%;
+            `}
+          >
+            <Switch>
+              <Route exact={true} path="/categories/:categoryId/products" component={ProductTypesPageContainer} />
+              <Route exact={true} path="/products/:id" component={ProductTypePageContainer} />
+              <Route path="/" component={HomeContainer} />
 
-            <Route component={NotFoundContainer} />
-          </Switch>
+              <Route component={NotFoundContainer} />
+            </Switch>
+          </div>
         </div>
-      </div>
-      <CartContainer />
-    </Container>
-    <FooterView />
-  </React.Fragment>
-);
+        <CartContainer />
+      </Container>
+      <FooterView />
+    </React.Fragment>
+  );
+};

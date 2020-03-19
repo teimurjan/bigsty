@@ -1,16 +1,14 @@
 import * as React from 'react';
 
-import { injectIntl } from 'react-intl';
-
 import { useAppState } from 'src/state/AppState';
 import { useUserState } from 'src/state/UserState';
 
-import { HeaderPresenter } from './HeaderPresenter';
+import { HeaderPresenter, IViewProps } from './HeaderPresenter';
 import { HeaderView } from './HeaderView';
 
-export const HeaderContainer = () => {
+export const HeaderContainer = (props: Pick<IViewProps, 'nav'>) => {
   const { appState } = useAppState();
   const { userState } = useUserState();
 
-  return <HeaderPresenter appState={appState} userState={userState} View={injectIntl(HeaderView)} />;
+  return <HeaderPresenter appState={appState} userState={userState} View={HeaderView} {...props} />;
 };

@@ -3,8 +3,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { css, jsx } from '@emotion/core';
-import classNames from 'classnames';
-import { IntlShape } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import logo from 'src/assets/images/logo.png';
 
@@ -28,7 +27,9 @@ import { LanguageDropdownContainer as LanguageDropdown } from '../LanguageDropdo
 import { IViewProps as IProps } from './HeaderPresenter';
 import { SearchContainer } from '../Search/SearchContainer';
 
-export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlShape }) => {
+export const HeaderView = ({ user, onLogOutClick, nav }: IProps) => {
+  const intl = useIntl();
+
   const [isOpen, setOpen] = React.useState(false);
 
   const toggleOpen = () => setOpen(!isOpen);
@@ -71,31 +72,46 @@ export const HeaderView = ({ user, intl, onLogOutClick }: IProps & { intl: IntlS
             </NavbarItem>
           </NavbarStart>
           <NavbarEnd>
-            <NavbarItem className={classNames('navbar-link is-uppercase is-arrowless')}>
-              <LanguageDropdown />
-            </NavbarItem>
+            <NavbarItem onClick={toggleOpen}>{nav}</NavbarItem>
             <NavbarItem>
-              {isUserAnonymous(user) || isUserNotSetYet(user) ? (
-                <div className="buttons">
-                  <LinkButton outlined to="/login">
-                    {intl.formatMessage({ id: 'Header.logIn' })}
-                  </LinkButton>
-                  <LinkButton outlined to="/signup">
-                    {intl.formatMessage({ id: 'Header.signUp' })}
-                  </LinkButton>
-                </div>
-              ) : (
-                <div className="buttons">
-                  <Button onClick={onLogOutClick} outlined>
-                    {intl.formatMessage({ id: 'Header.logOut' })}
-                  </Button>
-                  {isUserAdmin(user) && (
-                    <LinkButton outlined to="/admin">
-                      {intl.formatMessage({ id: 'Header.admin' })}
+              <div
+                css={css`
+                  display: flex;
+                  align-items: center;
+                `}
+              >
+                <LanguageDropdown
+                  css={css`
+                    margin-right: 1rem;
+
+                    @media ${mediaQueries.maxWidth768} {
+                      margin-right: auto;
+                    }
+                  `}
+                />
+
+                {isUserAnonymous(user) || isUserNotSetYet(user) ? (
+                  <div className="buttons">
+                    <LinkButton outlined to="/login">
+                      {intl.formatMessage({ id: 'Header.logIn' })}
                     </LinkButton>
-                  )}
-                </div>
-              )}
+                    <LinkButton outlined to="/signup">
+                      {intl.formatMessage({ id: 'Header.signUp' })}
+                    </LinkButton>
+                  </div>
+                ) : (
+                  <div className="buttons">
+                    <Button onClick={onLogOutClick} outlined>
+                      {intl.formatMessage({ id: 'Header.logOut' })}
+                    </Button>
+                    {isUserAdmin(user) && (
+                      <LinkButton outlined to="/admin">
+                        {intl.formatMessage({ id: 'Header.admin' })}
+                      </LinkButton>
+                    )}
+                  </div>
+                )}
+              </div>
             </NavbarItem>
           </NavbarEnd>
         </NavbarMenu>

@@ -23,19 +23,18 @@ export const AppStateProvider: React.FC<IProviderProps> = ({ children }) => {
   const setLoading_ = React.useCallback(() => setLoading(true), []);
   const setIdle = React.useCallback(() => setLoading(false), []);
 
-  return (
-    <Context.Provider
-      value={{
-        appState: {
-          isLoading: isLoadingDebounced,
-          setIdle,
-          setLoading: setLoading_,
-        },
-      }}
-    >
-      {children}
-    </Context.Provider>
+  const contextValue = React.useMemo(
+    () => ({
+      appState: {
+        isLoading: isLoadingDebounced,
+        setIdle,
+        setLoading: setLoading_,
+      },
+    }),
+    [isLoadingDebounced, setIdle, setLoading_],
   );
+
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
 
 export const useAppState = () => React.useContext(Context) as IContextValue;

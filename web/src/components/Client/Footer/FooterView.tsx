@@ -7,6 +7,7 @@ import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { useIntl } from 'react-intl';
 
 import { Container } from 'src/components/common/Container/Container';
+import { mediaQueries } from 'src/styles/media';
 
 export const FooterView = () => {
   const intl = useIntl();
@@ -19,6 +20,10 @@ export const FooterView = () => {
         height: 80px;
         padding: 15px 0;
         box-sizing: content-box;
+
+        @media ${mediaQueries.maxWidth768} {
+          padding: 15px 10px;
+        }
       `}
       className="footer"
     >

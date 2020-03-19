@@ -31,6 +31,7 @@ export const NavPresenter = ({ appState, categoryService, View }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+
   return (
     <View
       categories={agregateOrderedMapToArray(categories, categoriesOrder).filter(

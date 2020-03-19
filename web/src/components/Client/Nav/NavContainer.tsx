@@ -4,9 +4,10 @@ import { injectIntl } from 'react-intl';
 
 import { useAppState } from 'src/state/AppState';
 
+import { useDependencies } from 'src/DI/DI';
+
 import { NavPresenter } from './NavPresenter';
 import { NavView } from './NavView';
-import { useDependencies } from 'src/DI/DI';
 
 export const NavContainer = () => {
   const { appState } = useAppState();

@@ -17,9 +17,8 @@ export const NavView = ({ intl, categories }: IProps & { intl: IntlShape }) => {
         padding: 0 1.5rem;
 
         @media ${mediaQueries.maxWidth768} {
-          height: auto;
-          position: absolute;
-          left: -250px;
+          width: 100%;
+          padding: 0;
         }
       `}
     >
