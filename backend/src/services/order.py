@@ -1,3 +1,6 @@
+from flask import current_app as app, render_template
+
+from src.mail import Mail
 from src.policies.feature_values import FeatureValuesPolicy
 from src.repos.feature_value import FeatureValueRepo
 from src.repos.order import OrderRepo
@@ -11,9 +14,11 @@ class OrderService:
         self,
         repo: OrderRepo,
         product_repo: ProductRepo,
+        mail: Mail
     ):
         self._repo = repo
         self._product_repo = product_repo
+        self._mail = mail
 
     def create(self, data, user):
         try:
@@ -25,9 +30,7 @@ class OrderService:
                     )
                     item['product'] = product
 
-
-
-                return self._repo.add_order(
+                order = self._repo.add_order(
                     user,
                     data['user_name'],
                     data['user_phone_number'],
@@ -35,6 +38,19 @@ class OrderService:
                     data['items'],
                     session=s
                 )
+
+                link = app.config.get('HOST') + '/admin/orders/' + str(order.id)
+
+                title = 'Заказ!'
+                description = 'Имя: ' + order.user_name + '<br/>' + 'Телефон: ' + order.user_phone_number + '<br/>' + 'Адрес: ' + order.user_address
+                link_text = 'Подробнее'
+                subject = link_text
+                body = render_template('link_email.html', link=link,
+                                    title=title, description=description, link_text=link_text)
+
+                self._mail.send(subject, body, [app.config.get('MAIL_ORDERS_USERNAME')])
+
+                return order
         except self._product_repo.DoesNotExist:
             raise self.ProductInvalid()
 
@@ -50,4 +66,3 @@ class OrderService:
 
     class ProductInvalid(Exception):
         pass
-    

@@ -23,6 +23,7 @@ class Config:
     MAIL_USE_TLS=False
     MAIL_USE_SSL=True
     MAIL_USERNAME=os.environ.get('EMAIL_USERNAME')
+    MAIL_ORDERS_USERNAME=os.environ.get('EMAIL_ORDERS_USERNAME')
     MAIL_UNSUBSCRIBE_USERNAME=os.environ.get('EMAIL_UNSUBSCRIBE_USERNAME')
     MAIL_PASSWORD=os.environ.get('EMAIL_PASSWORD')
 

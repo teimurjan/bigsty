@@ -152,7 +152,7 @@ class App:
         self.__signup_service = SignupService(
             self.__signup_repo, self.__user_repo, self.mail)
         self.__order_service = OrderService(
-            self.__order_repo, self.__product_repo)
+            self.__order_repo, self.__product_repo, self.mail)
 
     def __init_search(self):
         if not self.__es.indices.exists(index="category"):
