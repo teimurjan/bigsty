@@ -829,19 +829,20 @@ class SignupService:
         self._user_repo = user_repo
         self._mail = mail
 
-    def create(self, data):
-        signup = self._repo.get_first_by_email(data['email'])
+    def create_or_update(self, data):
+      with self._repo.session() as s:
+        signup = self._repo.get_first_by_email(data['email'], session=s)
 
         if signup:
-            return signup
+            return self._repo.update_signup(signup.id, data['name'], data['password'], session=s)
 
-        if self._user_repo.is_email_used(data['email']):
+        if self._user_repo.is_email_used(data['email'], session=s):
             raise self.SameEmail()
 
-        return self._repo.create_signup(data['name'], data['email'], data['password'])
+        return self._repo.create_signup(data['name'], data['email'], data['password'], session=s)
 
     def create_and_send(self, data, language=None):
-        signup = self.create(data)
+        signup = self.create_or_update(data)
 
         link = app.config.get('HOST') + '/auth/register/confirm?token=' + \
             TokenFactory.create(SIGNUP_TOKEN_TYPE, signup)

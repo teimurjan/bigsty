@@ -22,12 +22,23 @@ class SignupRepo(Repo):
     @with_session
     def is_email_used(self, email, session):
         return session.query(Signup).filter(Signup.emuser_ail == email).count() > 0
-    
+
     @with_session
     def create_signup(self, name, email, password, session):
         signup = Signup()
         signup.user_name = name
         signup.user_email = email
+        signup.user_password = encrypt_password(password)
+
+        session.add(signup)
+        session.flush()
+
+        return signup
+
+    @with_session
+    def update_signup(self, signup_id, name, password, session):
+        signup = self.get_by_id(signup_id, session=session)
+        signup.user_name = name
         signup.user_password = encrypt_password(password)
 
         session.add(signup)
