@@ -9,7 +9,7 @@ Cerberus==1.1
 certifi==2019.11.28
 cffi==1.11.2
 Click==7.0
-coverage==4.4.1
+coverage==5.0.4
 docutils==0.15.2
 elasticsearch==7.5.1
 Flask==1.1.1
