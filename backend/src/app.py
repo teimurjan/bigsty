@@ -60,6 +60,7 @@ from src.validation_rules.feature_value.create import \
 from src.validation_rules.feature_value.update import \
     UPDATE_FEATURE_VALUE_VALIDATION_RULES
 from src.validation_rules.order.create import CREATE_ORDER_VALIDATION_RULES
+from src.validation_rules.order.update import UPDATE_ORDER_VALIDATION_RULES
 from src.validation_rules.product.create import CREATE_PRODUCT_VALIDATION_RULES
 from src.validation_rules.product.update import UPDATE_PRODUCT_VALIDATION_RULES
 from src.validation_rules.product_type.create import \
@@ -79,6 +80,7 @@ from src.views.feature_type.list import FeatureTypeListView
 from src.views.feature_value.detail import FeatureValueDetailView
 from src.views.feature_value.list import FeatureValueListView
 from src.views.language.list import LanguageListView
+from src.views.order.detail import OrderDetailView
 from src.views.order.list import OrderListView
 from src.views.product.by_product_type import ProductByProductTypeView
 from src.views.product.detail import ProductDetailView
@@ -400,6 +402,16 @@ class App:
                 'banner',
                 concrete_view=BannerDetailView(Validator(
                     UPDATE_BANNER_VALIDATION_RULES), self.__banner_service, BannerSerializer),
+                middlewares=middlewares
+            ),
+            methods=['GET', 'PUT', 'DELETE']
+        )
+        self.flask_app.add_url_rule(
+            '/api/orders/<int:order_id>',
+            view_func=AbstractView.as_view(
+                'order',
+                concrete_view=OrderDetailView(Validator(
+                    UPDATE_ORDER_VALIDATION_RULES), self.__order_service, OrderSerializer),
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']

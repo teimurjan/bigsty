@@ -20,7 +20,6 @@ export interface IViewProps {
 export const AdminProductsListPresenter = ({
   View,
   adminProductsState: { isListLoading, products, getProducts, hasListLoaded, meta },
-  intlState: { availableLocales },
 }: IProps & AdminProductsContextValue & IntlStateContextValue) => {
   const isLoadingTimeoutExpired = useTimeoutExpired(1000);
 

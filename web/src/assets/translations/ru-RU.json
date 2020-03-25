@@ -205,5 +205,15 @@
   "AdminOrders.createdOn": "Дата заказа",
   "AdminOrders.notFound.title": "Нет ни одного заказа.",
   "AdminMenu.ordersLinkText": "Заказы",
-  "Footer.copy": "© {year} Eye8"
+  "Footer.copy": "© {year} Eye8",
+  "AdminOrders.notFound": "Заказ не найден",
+  "AdminOrders.status": "Статус",
+  "AdminOrders.edit.title": "Изменить заказ",
+  "common.choose": "Выбрать",
+  "ProductSelect.placeholder": "Найти продукт",
+  "AdminOrders.anotherProduct.placeholder": "Найти другой продукт",
+  "AdminOrders.newProduct.placeholder": "Добавить продукт",
+  "AdminOrders.items": "Товары",
+  "AdminOrders.statusSelect.label": "Статус",
+  "common.errors.field.atLeast1": "Нужно добавить минимум 1 элемент"
 }

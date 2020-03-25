@@ -34,6 +34,7 @@ export const SearchPresenter = ({ service, View }: IProps) => {
 
   const onSearchValueChange = React.useCallback(
     async (value: string) => {
+      setError(undefined);
       try {
         if (value.length === 0) {
           setData({ categories: {}, productTypes: {} });

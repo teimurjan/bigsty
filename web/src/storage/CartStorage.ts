@@ -64,9 +64,9 @@ export class CartStorage implements ICartStorage {
     return 0;
   }
 
-  public add(item: ICartItem) {
+  public add = (item: ICartItem) => {
     return this.updateItem(item, 1);
-  }
+  };
 
   public remove(item: ICartItem) {
     return this.updateItem(item, -1);

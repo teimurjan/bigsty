@@ -4,14 +4,14 @@ import { IProductTypeDetailResponseItem } from 'src/api/ProductTypeAPI';
 import { IProductTypeService } from 'src/services/ProductTypeService';
 import { IProductService } from 'src/services/ProductService';
 import { IProductForProductTypeResponseItem } from 'src/api/ProductAPI';
-import { ICartStorage } from 'src/storage/CartStorage';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   productTypeService: IProductTypeService;
   productService: IProductService;
-  cartStorage: ICartStorage;
   id: number;
+  actionText: string;
+  action: (product: IProductForProductTypeResponseItem) => void;
 }
 
 export interface IViewProps {
@@ -19,7 +19,8 @@ export interface IViewProps {
   products: IProductForProductTypeResponseItem[];
   error: string | undefined;
   isLoading: boolean;
-  addProductToCart: (product: IProductForProductTypeResponseItem) => void;
+  action: IProps['action'];
+  actionText: IProps['actionText'];
 }
 
 export const ProductTypePagePresenter: React.FC<IProps> = ({
@@ -27,7 +28,8 @@ export const ProductTypePagePresenter: React.FC<IProps> = ({
   productService,
   productTypeService,
   id,
-  cartStorage,
+  action,
+  actionText,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isLoading, setLoading] = React.useState<boolean>(true);
@@ -54,16 +56,10 @@ export const ProductTypePagePresenter: React.FC<IProps> = ({
     })();
   }, [id, productService, productTypeService]);
 
-  const addProductToCart = React.useCallback(
-    (product: IProductForProductTypeResponseItem) => {
-      cartStorage.add(product);
-    },
-    [cartStorage],
-  );
-
   return (
     <View
-      addProductToCart={addProductToCart}
+      actionText={actionText}
+      action={action}
       isLoading={isLoading}
       productType={productType}
       products={products}

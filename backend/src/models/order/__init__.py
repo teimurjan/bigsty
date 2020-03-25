@@ -20,7 +20,7 @@ class Order(BaseModel):
     items = relationship(
         'OrderItem',
         backref='order',
-        lazy='joined',
+        cascade="all, delete, delete-orphan"
     )
     # statuses are: idle, approved, rejected, completed
     status = Column(String(60), default='idle', nullable=False)

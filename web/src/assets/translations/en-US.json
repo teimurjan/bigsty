@@ -205,5 +205,15 @@
   "AdminOrders.createdOn": "Created On",
   "AdminOrders.notFound.title": "No orders created yet.",
   "AdminMenu.ordersLinkText": "Orders",
-  "Footer.copy": "© {year} Eye8"
+  "Footer.copy": "© {year} Eye8",
+  "AdminOrders.notFound": "Order not found",
+  "AdminOrders.status": "Status",
+  "AdminOrders.edit.title": "Edit an order",
+  "common.choose": "Choose",
+  "ProductSelect.placeholder": "Find a product",
+  "AdminOrders.anotherProduct.placeholder": "Find another product",
+  "AdminOrders.newProduct.placeholder": "Add a new product",
+  "AdminOrders.items": "Items",
+  "AdminOrders.statusSelect.label": "Status",
+  "common.errors.field.atLeast1": "At least one is required"
 }

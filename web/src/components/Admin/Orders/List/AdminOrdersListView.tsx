@@ -38,6 +38,7 @@ export const AdminOrdersListView = ({ orders, intl, isLoading, isDataLoaded }: I
         title={intl.formatMessage({ id: 'AdminOrders.userPhoneNumber' })}
       />
       <AdminTable.Col<Order> key_="user_address" title={intl.formatMessage({ id: 'AdminOrders.userAddress' })} />
+      <AdminTable.Col<Order> key_="status" title={intl.formatMessage({ id: 'AdminOrders.status' })} />
       <AdminTable.Col<Order> key_="created_on" title={intl.formatMessage({ id: 'AdminOrders.createdOn' })} />
     </AdminTable>
   </Section>

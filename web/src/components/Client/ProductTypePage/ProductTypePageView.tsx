@@ -45,7 +45,7 @@ const getAllFeatureValuesGroupedByType = (
     {},
   );
 
-export const ProductTypePageView = ({ productType, products, error, isLoading, addProductToCart }: IProps) => {
+export const ProductTypePageView = ({ productType, products, error, isLoading, action, actionText }: IProps) => {
   const intl = useIntl();
   const theme = useTheme<ITheme>();
   const [activeImageIndex, setActiveImageIndex] = React.useState(0);
@@ -94,11 +94,11 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
     [autoChangeImage, chosenFeatureValues],
   );
 
-  const onAddToCartClick = React.useCallback(() => {
+  const onActionClick = React.useCallback(() => {
     if (matchingProduct) {
-      addProductToCart(matchingProduct);
+      action(matchingProduct);
     }
-  }, [addProductToCart, matchingProduct]);
+  }, [action, matchingProduct]);
 
   if (isLoading) {
     return <LoaderLayout />;
@@ -219,14 +219,14 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
           {productType.short_description}
           {matchingProduct && matchingProduct.quantity > 0 && (
             <Button
-              onClick={onAddToCartClick}
+              onClick={onActionClick}
               css={css`
                 margin-top: 1.5rem;
                 text-transform: uppercase;
               `}
               color="is-info"
             >
-              {intl.formatMessage({ id: 'common.addToCart' })}
+              {actionText}
             </Button>
           )}
         </div>
