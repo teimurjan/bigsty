@@ -93,7 +93,6 @@ const renderSKUField = injectIntl(({ input, meta, intl }: FieldRenderProps<strin
         children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
         type: 'is-danger',
       }}
-      allowValue={isAllowedForNumberInput}
     />
   );
 });

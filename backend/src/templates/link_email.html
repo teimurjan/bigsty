@@ -349,8 +349,13 @@
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
-                        <p>{{ title }}</p>
-                        <p>{{ description }}</p>
+                        <h1>{{ title }}</h1>
+                        {% set description_lines = description.split('<br/>') %}
+                        <p>
+                          {% for description_line in description_lines %}
+                            {{ description_line }}<br/>
+                          {% endfor %}
+                        </p>
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                           <tbody>
                             <tr>
@@ -358,7 +363,7 @@
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                   <tbody>
                                     <tr>
-                                      <td> <a href="{{ link }}" target="_blank">{{ link_text }}</a> </td>
+                                      <td> <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ link_text }}</a> </td>
                                     </tr>
                                   </tbody>
                                 </table>
