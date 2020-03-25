@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import axios from 'axios';
 
 import { calculateDiscountedPrice } from 'src/utils/number';
+import { useIntlState } from 'src/state/IntlState';
 
 interface IPriceProps {
   price: number;
@@ -66,10 +67,12 @@ export const useAllPrices = (prices: IPriceProps[]) => {
 };
 
 const useFormattedPrice = ({ price, discount }: IPriceProps) => {
-  const intl = useIntl();
+  const {
+    intlState: { locale },
+  } = useIntlState();
 
   const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
-  if (intl.locale === 'en-US' || !rates.usdToKgs) {
+  if (locale === 'en-US' || !rates.usdToKgs) {
     return `$${calculatedPrice}`;
   } else {
     return `${Math.round(calculatedPrice * rates.usdToKgs)} сом`;
