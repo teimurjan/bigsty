@@ -4,7 +4,9 @@ import os
 import sqlalchemy as db
 from cerberus.validator import Validator
 from elasticsearch import Elasticsearch
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, Response
+from flask.templating import render_template
+from flask_caching import Cache
 from flask_cors import CORS
 from flask_mail import Mail as FlaskMail
 
@@ -100,6 +102,7 @@ class App:
         self.flask_app = Flask(__name__)
         self.flask_app.config.from_object(os.environ.get(
             'APP_SETTINGS', 'config.DevelopmentConfig'))
+        self.cache = Cache(self.flask_app)
         CORS(self.flask_app,
              origins=self.flask_app.config['ALLOWED_ORIGINS'])
         flask_mail = FlaskMail(self.flask_app)
@@ -119,6 +122,7 @@ class App:
         self.__init_search()
         self.__init_api_routes()
         self.__init_media_route()
+        self.__init_sitemap_route()
 
     def __init_repos(self):
         self.__category_repo = CategoryRepo(self.__db_conn)
@@ -441,3 +445,16 @@ class App:
             view_func=self.__handle_media_request,
             methods=['GET']
         )
+
+    def __init_sitemap_route(self):
+        @self.flask_app.route('/sitemap.xml')
+        @self.cache.cached(timeout=60*60*24)
+        def handle_sitemap_request():
+            categories = self.__category_repo.get_all()
+            product_types = self.__product_type_repo.get_all()
+            xml = render_template('sitemap.xml',
+                                  categories=categories,
+                                  product_types=product_types,
+                                  base_url=self.flask_app.config.get('HOST'))
+
+            return Response(xml, mimetype='text/xml')

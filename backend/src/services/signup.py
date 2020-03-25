@@ -38,7 +38,7 @@ class SignupService:
         link_text = 'Complete registration' if language.name == 'en-US' else 'Завершить регистрацию'
         subject = link_text
         body = render_template('link_email.html', link=link,
-                               title=title, description=description, link_text=link_text)
+                               title=title, description=description, link_text=link_text, preheader='Регистрация на eye8.kg')
 
         self._mail.send(subject, body, [signup.user_email])
 

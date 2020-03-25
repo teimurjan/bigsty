@@ -47,7 +47,7 @@ class OrderService:
                 link_text = 'Подробнее'
                 subject = link_text
                 body = render_template('link_email.html', link=link,
-                                    title=title, description=description, link_text=link_text)
+                                    title=title, description=description, link_text=link_text, preheader=title)
 
                 self._mail.send(subject, body, [app.config.get('MAIL_ORDERS_USERNAME')])
 
@@ -82,7 +82,7 @@ class OrderService:
                 link_text = 'Подробнее'
                 subject = link_text
                 body = render_template('link_email.html', link=link,
-                                    title=title, description=description, link_text=link_text)
+                                    title=title, description=description, link_text=link_text, preheader=title)
 
                 self._mail.send(subject, body, [app.config.get('MAIL_ORDERS_USERNAME')])
 
