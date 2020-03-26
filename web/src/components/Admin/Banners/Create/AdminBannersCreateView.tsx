@@ -11,7 +11,6 @@ export const AdminBannersCreateView = ({
   isOpen,
   create,
   close,
-  isLoading,
   error,
   intl,
   availableLocales,
@@ -24,7 +23,6 @@ export const AdminBannersCreateView = ({
     onSubmit={create}
     onClose={close}
     isLoading={isCreating}
-    isPreloading={isLoading}
     globalError={error}
     title={intl.formatMessage({ id: 'AdminBanners.create.title' })}
     fields={
