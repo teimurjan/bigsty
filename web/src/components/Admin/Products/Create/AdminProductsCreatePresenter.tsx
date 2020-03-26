@@ -31,7 +31,7 @@ export interface IViewProps {
     price: string;
     feature_values: string[];
     product_type_id: string;
-    images: Array<string | File>;
+    images?: Array<string | File>;
   }) => void;
   isLoading: boolean;
   isCreating: boolean;

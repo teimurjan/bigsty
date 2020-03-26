@@ -101,7 +101,7 @@ export interface IProductCreatePayload {
   price: number;
   quantity: number;
   product_type_id: number;
-  images: Array<File | string>;
+  images?: Array<File | string>;
   sku?: string;
   upc?: string;
 }
@@ -180,7 +180,9 @@ export class ProductAPI implements IProductAPI {
     try {
       const formData = new FormData();
       formData.append('json', JSON.stringify(json));
-      images.forEach(image => formData.append('images', image));
+      if (images) {
+        images.forEach(image => formData.append('images', image));
+      }
       const response = await this.client.post<IProductResponseData>(`/api/products`, formData, {
         headers: this.headersManager.getHeaders(),
       });
@@ -194,7 +196,9 @@ export class ProductAPI implements IProductAPI {
     try {
       const formData = new FormData();
       formData.append('json', JSON.stringify(json));
-      images.forEach(image => formData.append('images', image));
+      if (images) {
+        images.forEach(image => formData.append('images', image));
+      }
       const response = await this.client.put<IProductResponseData>(`/api/products/${id}`, formData, {
         headers: this.headersManager.getHeaders(),
       });
