@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IContextValue as AdminFeatureValuesContextValue } from 'src/state/AdminFeatureValuesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -21,7 +20,7 @@ export const AdminFeatureValuesListPresenter = ({
   adminFeatureValuesState: { isListLoading, featureValues, getFeatureValues, hasListLoaded },
   intlState: { availableLocales },
 }: IProps & AdminFeatureValuesContextValue & IntlStateContextValue) => {
-  const isLoadingTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isListLoading, 1000);
 
   React.useEffect(() => {
     getFeatureValues();
@@ -30,7 +29,7 @@ export const AdminFeatureValuesListPresenter = ({
   return (
     <View
       isDataLoaded={hasListLoaded}
-      isLoading={isListLoading && isLoadingTimeoutExpired}
+      isLoading={isLoadingDebounced}
       locales={availableLocales.map(({ name }) => name)}
       featureValues={featureValues}
     />

@@ -9,8 +9,8 @@ import { IOrderService } from 'src/services/OrderService';
 
 import { IContextValue as AdminOrdersStateContextValue } from 'src/state/AdminOrdersState';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { IOrderListResponseItem } from 'src/api/OrderAPI';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps extends AdminOrdersStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -64,7 +64,7 @@ export const AdminOrdersEditPresenter: React.FC<IProps> = ({
   const [isLoading, setLoading] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isLoading, 500);
 
   React.useEffect(() => {
     (async () => {
@@ -111,7 +111,7 @@ export const AdminOrdersEditPresenter: React.FC<IProps> = ({
       isOpen={true}
       edit={edit}
       error={error}
-      isLoading={isTimeoutExpired && isLoading}
+      isLoading={isLoadingDebounced}
       isUpdating={isUpdating}
       close={close}
       validate={validator.validate}

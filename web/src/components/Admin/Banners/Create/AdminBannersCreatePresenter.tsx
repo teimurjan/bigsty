@@ -10,7 +10,6 @@ import { IBannerService } from 'src/services/BannerService';
 import { IContextValue as AdminBannersStateContextValue } from 'src/state/AdminBannersState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
@@ -38,7 +37,6 @@ export interface IViewProps {
     text_right_offset?: string;
     text_bottom_offset?: string;
   }) => void;
-  isLoading: boolean;
   isCreating: boolean;
   error?: string;
   close: () => void;
@@ -52,14 +50,12 @@ export const BANNER_LINK_TEXT_FIELD_KEY = 'link_text';
 export const AdminBannersCreatePresenter: React.FC<IProps> = ({
   intlState,
   history,
-  adminBannersState: { addBanner, isListLoading: bannersLoading },
+  adminBannersState: { addBanner },
   service,
   View,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isCreating, setCreating] = React.useState(false);
-
-  const isTimeoutExpired = useTimeoutExpired(1000);
 
   const makeValidator = React.useCallback(
     () =>
@@ -141,7 +137,6 @@ export const AdminBannersCreatePresenter: React.FC<IProps> = ({
       isOpen={true}
       create={create}
       error={error}
-      isLoading={isTimeoutExpired && bannersLoading}
       isCreating={isCreating}
       close={close}
       availableLocales={intlState.availableLocales}

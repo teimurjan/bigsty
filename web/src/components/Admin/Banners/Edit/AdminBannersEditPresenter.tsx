@@ -12,10 +12,9 @@ import { IBannerListRawIntlResponseItem } from 'src/api/BannerAPI';
 
 import { IBannerService } from 'src/services/BannerService';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
-
 import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps extends AdminBannersStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -57,7 +56,7 @@ export const BANNER_LINK_TEXT_FIELD_KEY = 'link_text';
 export const AdminBannersEditPresenter: React.FC<IProps> = ({
   intlState,
   history,
-  adminBannersState: { setBanner: setBannerToState, isListLoading: bannersLoading },
+  adminBannersState: { setBanner: setBannerToState },
   intlState: { availableLocales },
   service,
   View,
@@ -69,7 +68,7 @@ export const AdminBannersEditPresenter: React.FC<IProps> = ({
   const [isLoading, setLoading] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isLoading, 500);
 
   const makeValidator = React.useCallback(
     () =>
@@ -194,7 +193,7 @@ export const AdminBannersEditPresenter: React.FC<IProps> = ({
       edit={edit}
       error={error}
       isUpdating={isUpdating}
-      isLoading={isTimeoutExpired && (isLoading || bannersLoading)}
+      isLoading={isLoadingDebounced}
       close={close}
       availableLocales={availableLocales}
       validate={(validator || { validate: undefined }).validate}

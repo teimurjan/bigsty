@@ -10,10 +10,10 @@ import { ICategoryService } from 'src/services/CategoryService';
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps extends AdminCategoriesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -23,12 +23,12 @@ export interface IProps extends AdminCategoriesStateContextValue, IntlStateConte
 
 export interface IViewProps {
   isOpen: boolean;
-  create: (values: { names: { [key: string]: string }; parent_category_id?: string }) => any;
+  create: (values: { names: { [key: string]: string }; parent_category_id?: string }) => void;
   isLoading: boolean;
   isCreating: boolean;
   error?: string;
   preloadingError?: string;
-  close: () => any;
+  close: () => void;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
@@ -47,7 +47,7 @@ export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
   const [isCreating, setCreating] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(categoriesLoading, 500);
 
   const makeValidator = React.useCallback(
     () =>
@@ -122,7 +122,7 @@ export const AdminCategoriesCreatePresenter: React.FC<IProps> = ({
       isOpen={true}
       create={create}
       error={error}
-      isLoading={isTimeoutExpired && categoriesLoading}
+      isLoading={isLoadingDebounced}
       isCreating={isCreating}
       close={close}
       availableLocales={intlState.availableLocales}

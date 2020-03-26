@@ -12,10 +12,9 @@ import { ICategoryListRawIntlResponseItem } from 'src/api/CategoryAPI';
 
 import { ICategoryService } from 'src/services/CategoryService';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
-
 import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps extends AdminCategoriesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -26,9 +25,9 @@ export interface IProps extends AdminCategoriesStateContextValue, IntlStateConte
 
 export interface IViewProps {
   isOpen: boolean;
-  edit: (values: { names: { [key: string]: string }; parent_category_id?: string }) => any;
+  edit: (values: { names: { [key: string]: string }; parent_category_id?: string }) => void;
   error?: string;
-  close: () => any;
+  close: () => void;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
@@ -60,7 +59,7 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
   const [isLoading, setLoading] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isLoading || categoriesLoading, 500);
 
   const makeValidator = React.useCallback(
     () =>
@@ -165,7 +164,7 @@ export const AdminCategoriesEditPresenter: React.FC<IProps> = ({
       edit={edit}
       error={error}
       isUpdating={isUpdating}
-      isLoading={isTimeoutExpired && (isLoading || categoriesLoading)}
+      isLoading={isLoadingDebounced}
       close={close}
       availableLocales={availableLocales}
       validate={(validator || { validate: undefined }).validate}

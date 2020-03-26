@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IContextValue as AdminProductTypesContextValue } from 'src/state/AdminProductTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -23,7 +22,7 @@ export const AdminProductTypesListPresenter = ({
   adminProductTypesState: { isListLoading, productTypes, getProductTypes, hasListLoaded, meta },
   intlState: { availableLocales },
 }: IProps & AdminProductTypesContextValue & IntlStateContextValue) => {
-  const isLoadingTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isListLoading, 1000);
 
   React.useEffect(() => {
     getProductTypes();
@@ -40,7 +39,7 @@ export const AdminProductTypesListPresenter = ({
     <View
       meta={meta}
       isDataLoaded={hasListLoaded}
-      isLoading={isListLoading && isLoadingTimeoutExpired}
+      isLoading={isLoadingDebounced}
       locales={availableLocales.map(({ name }) => name)}
       productTypes={productTypes}
       onPageChange={onPageChange}

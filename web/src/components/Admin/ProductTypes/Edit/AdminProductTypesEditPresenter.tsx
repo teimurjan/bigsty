@@ -14,8 +14,6 @@ import { IProductTypeListRawIntlResponseItem } from 'src/api/ProductTypeAPI';
 
 import { IProductTypeService } from 'src/services/ProductTypeService';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
-
 import { getFieldName, parseFieldName } from '../../IntlField';
 import { useLazy } from 'src/hooks/useLazy';
 import {
@@ -23,6 +21,7 @@ import {
   PRODUCT_TYPE_DESCRIPTION_FIELD_KEY,
   PRODUCT_TYPE_SHORT_DESCRIPTION_FIELD_KEY,
 } from '../Create/AdminProductTypesCreatePresenter';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps
   extends AdminCategoriesStateContextValue,
@@ -44,12 +43,12 @@ export interface IViewProps {
     feature_types: string[];
     category_id?: string;
     image: string;
-  }) => any;
+  }) => void;
   isLoading: boolean;
   isUpdating: boolean;
   error?: string;
   preloadingError?: string;
-  close: () => any;
+  close: () => void;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
@@ -76,7 +75,7 @@ export const AdminProductTypesEditPresenter: React.FC<IProps> = ({
   const [isLoading, setLoading] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isLoading || categoriesLoading || featureTypesLoading, 500);
 
   const makeValidator = React.useCallback(
     () =>
@@ -209,7 +208,7 @@ export const AdminProductTypesEditPresenter: React.FC<IProps> = ({
       edit={edit}
       error={error}
       isUpdating={isUpdating}
-      isLoading={isTimeoutExpired && (isLoading || categoriesLoading || featureTypesLoading)}
+      isLoading={isLoadingDebounced}
       close={close}
       availableLocales={availableLocales}
       validate={(validator || { validate: undefined }).validate}

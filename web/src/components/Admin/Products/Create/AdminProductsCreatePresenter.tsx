@@ -11,9 +11,8 @@ import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/
 import { IContextValue as AdminProductsStateContextValue } from 'src/state/AdminProductsState';
 import { IContextValue as AdminProductTypesStateContextValue } from 'src/state/AdminProductTypesState';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
-
 import { IProductTypeListRawIntlResponseItem } from 'src/api/ProductTypeAPI';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps
   extends AdminFeatureValuesStateContextValue,
@@ -56,7 +55,7 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
   const [isCreating, setCreating] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(featureValuesLoading || productTypesLoading, 500);
 
   const validator = new schemaValidator.SchemaValidator(
     yup.object().shape({
@@ -77,10 +76,7 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
           const chosenProductType = productTypes.find(({ id }) => this.parent.product_type_id === id);
           return chosenProductType ? chosenProductType.feature_types.length === (value || []).length : false;
         }),
-      images: yup
-        .array()
-        .of(yup.mixed())
-        .required('common.errors.field.empty'),
+      images: yup.array().of(yup.mixed()),
     }),
   );
 
@@ -130,7 +126,7 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
       isOpen={true}
       create={create}
       error={error}
-      isLoading={isTimeoutExpired && (featureValuesLoading || productTypesLoading)}
+      isLoading={isLoadingDebounced}
       isCreating={isCreating}
       close={close}
       validate={(validator || { validate: undefined }).validate}

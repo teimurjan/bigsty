@@ -12,8 +12,8 @@ import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { IFeatureTypeListRawIntlResponseItem } from 'src/api/FeatureTypeAPI';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { useLazy } from 'src/hooks/useLazy';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
 
@@ -26,11 +26,11 @@ export interface IProps extends AdminFeatureTypesStateContextValue, IntlStateCon
 
 export interface IViewProps {
   isOpen: boolean;
-  edit: (values: { names: { [key: string]: string } }) => any;
+  edit: (values: { names: { [key: string]: string } }) => void;
   isLoading: boolean;
   isUpdating: boolean;
   error: string | undefined;
-  close: () => any;
+  close: () => void;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   validate?: (values: object) => object | Promise<object>;
   initialValues: object;
@@ -53,7 +53,7 @@ export const AdminFeatureTypesEditPresenter: React.FC<IProps> = ({
   const [isUpdating, setUpdating] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isLoading, 500);
 
   React.useEffect(() => {
     (async () => {
@@ -138,7 +138,7 @@ export const AdminFeatureTypesEditPresenter: React.FC<IProps> = ({
       error={error}
       preloadingError={preloadingError}
       isUpdating={isUpdating}
-      isLoading={isLoading && isTimeoutExpired}
+      isLoading={isLoadingDebounced}
       initialValues={initialValues}
       close={close}
       availableLocales={availableLocales}

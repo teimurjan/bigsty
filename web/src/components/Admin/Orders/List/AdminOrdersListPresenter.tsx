@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IContextValue as AdminOrdersContextValue } from 'src/state/AdminOrdersState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -19,11 +18,11 @@ export const AdminOrdersListPresenter = ({
   View,
   adminOrdersState: { isListLoading, orders, getOrders, hasListLoaded },
 }: IProps & AdminOrdersContextValue & IntlStateContextValue) => {
-  const isLoadingTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isListLoading, 1000);
 
   React.useEffect(() => {
     getOrders();
   }, [getOrders]);
 
-  return <View isDataLoaded={hasListLoaded} isLoading={isListLoading && isLoadingTimeoutExpired} orders={orders} />;
+  return <View isDataLoaded={hasListLoaded} isLoading={isLoadingDebounced} orders={orders} />;
 };

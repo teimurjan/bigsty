@@ -11,10 +11,10 @@ import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/A
 import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps
   extends AdminFeatureValuesStateContextValue,
@@ -27,11 +27,11 @@ export interface IProps
 
 export interface IViewProps {
   isOpen: boolean;
-  create: (values: { names: { [key: string]: string }; feature_type_id: string }) => any;
+  create: (values: { names: { [key: string]: string }; feature_type_id: string }) => void;
   isCreating: boolean;
   isLoading: boolean;
   error: string | undefined;
-  close: () => any;
+  close: () => void;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
   validate?: (values: object) => object | Promise<object>;
@@ -50,7 +50,7 @@ export const AdminFeatureValuesCreatePresenter: React.FC<IProps> = ({
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isCreating, setCreating] = React.useState(false);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(featureTypesLoading, 500);
 
   React.useEffect(() => {
     getFeatureTypes();
@@ -117,7 +117,7 @@ export const AdminFeatureValuesCreatePresenter: React.FC<IProps> = ({
       create={create}
       error={error}
       isCreating={isCreating}
-      isLoading={isTimeoutExpired && featureTypesLoading}
+      isLoading={isLoadingDebounced}
       close={close}
       availableLocales={availableLocales}
       featureTypes={featureTypes}

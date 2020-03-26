@@ -14,12 +14,12 @@ import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { IStateCacheStorage } from 'src/storage/StateCacheStorage';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
 import { IProps as IModalFormProps } from '../../ModalForm';
 import { objectWithout } from 'src/utils/object';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps
   extends AdminCategoriesStateContextValue,
@@ -75,7 +75,7 @@ export const AdminProductTypesCreatePresenter: React.FC<IProps> = ({
   const [isCreating, setCreating] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(categoriesLoading && featureTypesLoading, 500);
 
   const makeValidator = React.useCallback(
     () =>
@@ -186,7 +186,7 @@ export const AdminProductTypesCreatePresenter: React.FC<IProps> = ({
       isOpen={true}
       create={create}
       error={error}
-      isLoading={isTimeoutExpired && categoriesLoading && featureTypesLoading}
+      isLoading={isLoadingDebounced}
       isCreating={isCreating}
       close={close}
       availableLocales={intlState.availableLocales}

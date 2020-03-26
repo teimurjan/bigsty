@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IContextValue as AdminFeatureTypesContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps extends AdminFeatureTypesContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -21,7 +20,7 @@ export const AdminFeatureTypesListPresenter = ({
   adminFeatureTypesState: { isListLoading, featureTypes, getFeatureTypes, hasListLoaded },
   intlState: { availableLocales },
 }: IProps) => {
-  const isLoadingTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isListLoading, 1000);
 
   React.useEffect(() => {
     getFeatureTypes();
@@ -30,7 +29,7 @@ export const AdminFeatureTypesListPresenter = ({
   return (
     <View
       isDataLoaded={hasListLoaded}
-      isLoading={isListLoading && isLoadingTimeoutExpired}
+      isLoading={isLoadingDebounced}
       locales={availableLocales.map(({ name }) => name)}
       featureTypes={featureTypes}
     />

@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { ISearchService } from 'src/services/SearchService';
 import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
 import { IProductForProductTypeResponseItem } from 'src/api/ProductAPI';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -25,7 +25,6 @@ export interface IViewProps {
 }
 
 export const ProductSelectPresenter = ({ searchService, onChange, View, placeholder }: IProps) => {
-  const isLoadingTimeoutExpired = useTimeoutExpired(1000);
   const [productTypes, setProductTypes] = React.useState<{ [id: string]: IProductTypeListResponseItem }>({});
   const [selectedProductType, setSelectedProductType] = React.useState<IProductTypeListResponseItem | undefined>(
     undefined,
@@ -33,6 +32,8 @@ export const ProductSelectPresenter = ({ searchService, onChange, View, placehol
   const [order, setOrder] = React.useState<number[]>([]);
   const [isLoading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | undefined>(undefined);
+
+  const isLoadingDebounced = useDebounce(isLoading, 1000);
 
   const onSearchValueChange = React.useCallback(
     async (value: string) => {
@@ -61,7 +62,7 @@ export const ProductSelectPresenter = ({ searchService, onChange, View, placehol
 
   return (
     <View
-      isLoading={isLoading && isLoadingTimeoutExpired}
+      isLoading={isLoadingDebounced}
       productTypes={agregateOrderedMapToArray(productTypes, order)}
       onSearchValueChange={onSearchValueChange}
       error={error}

@@ -13,10 +13,10 @@ import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps
   extends AdminFeatureTypesStateContextValue,
@@ -30,11 +30,11 @@ export interface IProps
 
 export interface IViewProps {
   isOpen: boolean;
-  edit: (values: { names: { [key: string]: string }; feature_type_id: string }) => any;
+  edit: (values: { names: { [key: string]: string }; feature_type_id: string }) => void;
   isLoading: boolean;
   isUpdating: boolean;
   error: string | undefined;
-  close: () => any;
+  close: () => void;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
   validate?: (values: object) => object | Promise<object>;
@@ -59,7 +59,7 @@ export const AdminFeatureValuesEditPresenter: React.FC<IProps> = ({
   const [isLoading, setLoading] = React.useState(false);
   const [featureValue, setFeatureValue] = React.useState<undefined | IFeatureValueListRawIntlResponseItem>(undefined);
 
-  const isTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isLoading || featureTypesLoading, 500);
 
   React.useEffect(() => {
     (async () => {
@@ -152,7 +152,7 @@ export const AdminFeatureValuesEditPresenter: React.FC<IProps> = ({
       edit={edit}
       error={error}
       isUpdating={isUpdating}
-      isLoading={isTimeoutExpired && isLoading && featureTypesLoading}
+      isLoading={isLoadingDebounced}
       close={close}
       availableLocales={availableLocales}
       featureTypes={featureTypes}

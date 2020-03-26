@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { RouteComponentProps } from 'react-router';
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 interface IPreloadDataArgs {
   id: number;
@@ -46,7 +46,7 @@ export const DeleteModalPresenter = ({
     preloadData({ id, close, setError, setIsLoading });
   }, [close, id, preloadData]);
 
-  const isPreloadingTimeoutExpired = useTimeoutExpired(1000);
+  const isLoadingDebounced = useDebounce(isLoading, 1000);
 
   const remove = React.useCallback(async () => {
     try {
@@ -60,13 +60,5 @@ export const DeleteModalPresenter = ({
     }
   }, [close, deleteEntity, getErrorMessageID, id]);
 
-  return (
-    <View
-      isOpen={!!id}
-      onConfirm={remove}
-      onClose={close}
-      error={error}
-      isLoading={isPreloadingTimeoutExpired && isLoading}
-    />
-  );
+  return <View isOpen={!!id} onConfirm={remove} onClose={close} error={error} isLoading={isLoadingDebounced} />;
 };

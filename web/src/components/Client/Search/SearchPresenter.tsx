@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { useTimeoutExpired } from 'src/hooks/useTimeoutExpired';
 import { ICategoryListResponseItem } from 'src/api/CategoryAPI';
 import { ISearchService } from 'src/services/SearchService';
 import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -20,7 +20,6 @@ export interface IViewProps {
 }
 
 export const SearchPresenter = ({ service, View }: IProps) => {
-  const isLoadingTimeoutExpired = useTimeoutExpired(1000);
   const [data, setData] = React.useState<{
     categories: { [id: string]: ICategoryListResponseItem };
     productTypes: { [id: string]: IProductTypeListResponseItem };
@@ -31,6 +30,8 @@ export const SearchPresenter = ({ service, View }: IProps) => {
   });
   const [isLoading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | undefined>(undefined);
+
+  const isLoadingDebounced = useDebounce(isLoading, 1000);
 
   const onSearchValueChange = React.useCallback(
     async (value: string) => {
@@ -55,7 +56,7 @@ export const SearchPresenter = ({ service, View }: IProps) => {
 
   return (
     <View
-      isLoading={isLoading && isLoadingTimeoutExpired}
+      isLoading={isLoadingDebounced}
       categories={agregateOrderedMapToArray(data.categories, order.categories)}
       productTypes={agregateOrderedMapToArray(data.productTypes, order.productTypes)}
       onSearchValueChange={onSearchValueChange}
