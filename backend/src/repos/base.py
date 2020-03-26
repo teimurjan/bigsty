@@ -48,10 +48,6 @@ class Repo(Generic[T]):
         return session.query(self.__Model).order_by(self.__Model.id).offset(offset).limit(limit).all()
     
     @with_session
-    def get_all_reversed(self, offset = None, limit = None, session=None):
-        return session.query(self.__Model).order_by(self.__Model.id.desc()).offset(offset).limit(limit).all()
-
-    @with_session
     def filter_by_ids(self, ids, session):
         return session.query(self.__Model).filter(self.__Model.id.in_(ids)).all()
 

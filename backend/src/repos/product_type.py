@@ -77,14 +77,25 @@ class ProductTypeRepo(IntlRepo):
         return product_type
 
     @with_session
-    def get_for_categories_with_products(self, category_ids, offset, limit, session):
+    def get_for_categories(self, category_ids, offset, limit, join_products, session):
         return (
             session
             .query(ProductType)
-            .options(joinedload(ProductType.products))
+            .options(joinedload(ProductType.products) if join_products else None)
             .filter(ProductType.category_id.in_(category_ids))
             .order_by(ProductType.id)
             .offset(offset)
+            .limit(limit)
+            .all()
+        )
+
+    @with_session
+    def get_newest(self, limit, join_products, session):
+        return (
+            session
+            .query(ProductType)
+            .options(joinedload(ProductType.products) if join_products else None)
+            .order_by(ProductType.id.desc())
             .limit(limit)
             .all()
         )

@@ -372,32 +372,32 @@ class App:
         )
         self.flask_app.add_url_rule(
             '/api/product_types/newest',
-            view_func=AbstractView.as_view(
+            view_func=self.cache.cached(60)(AbstractView.as_view(
                 'product_type_newest',
                 concrete_view=ProductTypeNewestView(
                     self.__product_type_service, ProductTypeSerializer),
                 middlewares=middlewares
-            ),
+            )),
             methods=['GET']
         )
         self.flask_app.add_url_rule(
             '/api/languages',
-            view_func=AbstractView.as_view(
+            view_func=self.cache.cached(120)(AbstractView.as_view(
                 'languages',
                 concrete_view=LanguageListView(
                     self.__language_service, LanguageSerializer),
                 middlewares=middlewares
-            ),
+            )),
             methods=['GET']
         )
         self.flask_app.add_url_rule(
             '/api/banners',
-            view_func=AbstractView.as_view(
+            view_func=self.cache.cached(120)(AbstractView.as_view(
                 'banners',
                 concrete_view=BannerListView(Validator(
                     CREATE_BANNER_VALIDATION_RULES), self.__banner_service, BannerSerializer),
                 middlewares=middlewares
-            ),
+            )),
             methods=['GET', 'POST']
         )
         self.flask_app.add_url_rule(

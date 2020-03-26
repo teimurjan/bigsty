@@ -17,6 +17,7 @@ class ProductTypeNewestView:
         serialized_product_types = [
             self
             ._serializer_cls(product_type)
+            .add_products(product_type.products)
             .in_language(request.language)
             .serialize()
             for product_type in product_types
