@@ -4,15 +4,19 @@ import * as ReactDOM from 'react-dom';
 import { ThemeProvider } from 'emotion-theming';
 
 import { AppContainer } from 'src/components/App/AppContainer';
-import { makeDependenciesContainer } from 'src/DI/DependenciesContainer';
-import { DIProvider } from 'src/DI/DI';
-import registerServiceWorker from 'src/registerServiceWorker';
 import { AppStateProvider } from 'src/state/AppState';
 import { IntlStateProvider } from 'src/state/IntlState';
 import { UserStateProvider } from 'src/state/UserState';
+
+import { DIProvider } from 'src/DI/DI';
+import { makeDependenciesContainer } from 'src/DI/DependenciesContainer';
+
 import { defaultTheme } from 'src/themes';
 
+import registerServiceWorker from 'src/registerServiceWorker';
+
 import 'bulma/css/bulma.css';
+import { RatesStateProvider } from './state/RatesState';
 
 if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -27,9 +31,11 @@ ReactDOM.render(
     <ThemeProvider theme={defaultTheme}>
       <AppStateProvider>
         <IntlStateProvider>
-          <UserStateProvider>
-            <AppContainer />
-          </UserStateProvider>
+          <RatesStateProvider>
+            <UserStateProvider>
+              <AppContainer />
+            </UserStateProvider>
+          </RatesStateProvider>
         </IntlStateProvider>
       </AppStateProvider>
     </ThemeProvider>

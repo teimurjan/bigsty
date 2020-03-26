@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { useIntl } from 'react-intl';
-import axios from 'axios';
 
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { useIntlState } from 'src/state/IntlState';
+import { useRatesState } from 'src/state/RatesState';
 
 interface IPriceProps {
   price: number;
@@ -15,46 +15,11 @@ interface IPriceRangeTextProps {
   range: IPriceProps[];
 }
 
-const nodeValueToFloat = (node: Element) => parseFloat(node.textContent ? node.textContent.replace(',', '.') : '');
-
-const getValuteNode = (valuteNodes: Element[], code: string) =>
-  valuteNodes.find(valute => {
-    const charCode = valute.querySelector('CharCode');
-    return charCode ? charCode.textContent === code : false;
-  });
-
-const getExchangeRate = (valuteNode: Element | undefined) => {
-  if (valuteNode) {
-    const valuteValueNode = valuteNode.querySelector('Value');
-    const valuteNominalNode = valuteNode.querySelector('Nominal');
-    if (valuteValueNode && valuteValueNode.textContent && valuteNominalNode && valuteNominalNode.textContent) {
-      const rate = nodeValueToFloat(valuteValueNode) / nodeValueToFloat(valuteNominalNode);
-      return Number.isNaN(rate) ? undefined : rate;
-    }
-  }
-
-  return undefined;
-};
-
-interface IRates {
-  usdToKgs?: number;
-}
-const rates: IRates = {};
-axios.get('https://cors-anywhere.herokuapp.com/http://www.cbr.ru/scripts/XML_daily.asp').then(res => {
-  const xml = new DOMParser().parseFromString(res.data, 'application/xml');
-  const valutes = Array.from(xml.querySelectorAll('Valute'));
-  const kgsValute = getValuteNode(valutes, 'KGS');
-  const usdValute = getValuteNode(valutes, 'USD');
-  const rubToKgsRate = getExchangeRate(kgsValute);
-  const rubToUsdRate = getExchangeRate(usdValute);
-  if (rubToUsdRate && rubToKgsRate) {
-    const delta = 5;
-    rates.usdToKgs = rubToUsdRate / rubToKgsRate + delta;
-  }
-});
-
 export const useAllPrices = (prices: IPriceProps[]) => {
   const intl = useIntl();
+  const {
+    ratesState: { rates },
+  } = useRatesState();
 
   return prices.map(({ price, discount }) => {
     const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
@@ -70,6 +35,9 @@ const useFormattedPrice = ({ price, discount }: IPriceProps) => {
   const {
     intlState: { locale },
   } = useIntlState();
+  const {
+    ratesState: { rates },
+  } = useRatesState();
 
   const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
   if (locale === 'en-US' || !rates.usdToKgs) {
