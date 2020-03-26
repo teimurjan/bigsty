@@ -4,7 +4,7 @@ import os
 import sqlalchemy as db
 from cerberus.validator import Validator
 from elasticsearch import Elasticsearch
-from flask import Flask, send_from_directory, Response
+from flask import Flask, Response, send_from_directory
 from flask.templating import render_template
 from flask_caching import Cache
 from flask_cors import CORS
@@ -12,6 +12,7 @@ from flask_mail import Mail as FlaskMail
 
 from paths import APP_ROOT_PATH
 from src.abstract_view import AbstractView
+from src.constants.status_codes import OK_CODE
 from src.mail import Mail
 from src.middleware.http.authorize import AuthorizeHttpMiddleware
 from src.middleware.http.language import LanguageHttpMiddleware
@@ -372,7 +373,7 @@ class App:
         )
         self.flask_app.add_url_rule(
             '/api/product_types/newest',
-            view_func=self.cache.cached(60)(AbstractView.as_view(
+            view_func=self.cache.cached(60, response_filter=lambda res: res[1] == OK_CODE)(AbstractView.as_view(
                 'product_type_newest',
                 concrete_view=ProductTypeNewestView(
                     self.__product_type_service, ProductTypeSerializer),
@@ -382,7 +383,7 @@ class App:
         )
         self.flask_app.add_url_rule(
             '/api/languages',
-            view_func=self.cache.cached(120)(AbstractView.as_view(
+            view_func=self.cache.cached(120, response_filter=lambda res: res[1] == OK_CODE)(AbstractView.as_view(
                 'languages',
                 concrete_view=LanguageListView(
                     self.__language_service, LanguageSerializer),
@@ -392,7 +393,7 @@ class App:
         )
         self.flask_app.add_url_rule(
             '/api/banners',
-            view_func=self.cache.cached(120)(AbstractView.as_view(
+            view_func=self.cache.cached(120, response_filter=lambda res: res[1] == OK_CODE)(AbstractView.as_view(
                 'banners',
                 concrete_view=BannerListView(Validator(
                     CREATE_BANNER_VALIDATION_RULES), self.__banner_service, BannerSerializer),
