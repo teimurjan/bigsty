@@ -38,6 +38,9 @@ class ProductRepo(Repo):
 
         session.add(product)
 
+        # fetch images within the session for future use
+        product.images
+
         session.flush()
 
         return product
