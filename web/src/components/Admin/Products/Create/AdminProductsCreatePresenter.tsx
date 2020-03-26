@@ -80,8 +80,7 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
       images: yup
         .array()
         .of(yup.mixed())
-        .required('common.errors.field.empty')
-        .min(1, 'common.errors.field.empty'),
+        .required('common.errors.field.empty'),
     }),
   );
 

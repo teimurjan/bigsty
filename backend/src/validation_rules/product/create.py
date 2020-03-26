@@ -5,7 +5,7 @@ CREATE_PRODUCT_VALIDATION_RULES = {
         'schema': {'required': True, 'nullable': False},
         'required': True,
         'nullable': False,
-        'minlength': 1,
+        'minlength': 0,
         'maxlength': 4,
     },
     'price': {'type': 'integer', 'required': True, 'min': 1, 'nullable': False},

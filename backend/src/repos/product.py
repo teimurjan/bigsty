@@ -68,11 +68,11 @@ class ProductRepo(Repo):
 
         new_images = []
         for image in images:
-            if type(image) == int:
+            if type(image) == str:
                 new_images.append([
                     product_image
                     for product_image in product.images
-                    if product_image.id == image
+                    if product_image.image == image
                 ][0])
             else:
                 product_image = ProductImage()
