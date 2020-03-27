@@ -24,6 +24,7 @@ class AWSStorage(Storage):
         self.__conn.put_object(
             Bucket=self.__bucket_name,
             Key=key,
-            Body=file
+            Body=file,
+            CacheControl='max-age=259200'
         )
         return f'https://{self.__bucket_name}.s3.{self.__region}.amazonaws.com/{key}'
