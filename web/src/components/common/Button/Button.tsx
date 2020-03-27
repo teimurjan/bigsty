@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import classNames from 'classnames';
 
-export interface IProps extends React.HTMLProps<HTMLButtonElement> {
-  children?: React.ReactNode;
+export interface IProps {
   color?:
     | 'is-primary'
     | 'is-link'
@@ -16,14 +15,25 @@ export interface IProps extends React.HTMLProps<HTMLButtonElement> {
     | 'is-dark';
   outlined?: boolean;
   loading?: boolean;
+  disabled?: boolean;
+  type?: 'submit' | 'reset' | 'button';
 }
 
-export const Button = ({ children, color, className, loading: isLoading = false, outlined, ...props }: IProps) => (
+export const Button = ({
+  children,
+  color,
+  className,
+  loading: isLoading = false,
+  outlined,
+  type = 'button',
+  ...props
+}: IProps & React.HTMLProps<HTMLButtonElement>) => (
   <button
     className={classNames('button', className, color, {
       'is-loading': isLoading,
       'is-outlined': outlined,
     })}
+    type={type}
     {...props}
   >
     {children}

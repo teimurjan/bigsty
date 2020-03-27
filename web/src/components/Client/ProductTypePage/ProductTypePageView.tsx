@@ -35,11 +35,11 @@ const getAllFeatureValuesGroupedByType = (
       ...acc,
       [featureType.id]: products.reduce(
         (acc, product) =>
-          uniqBy<IProps['products'][0]['feature_values'][0]>(
+          uniqBy(
             [...acc, ...product.feature_values.filter(featureValue => featureValue.feature_type.id === featureType.id)],
             'id',
           ),
-        [],
+        [] as IProps['products'][0]['feature_values'],
       ),
     }),
     {},

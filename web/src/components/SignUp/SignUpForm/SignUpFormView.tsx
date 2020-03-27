@@ -11,7 +11,7 @@ import { FormTextField } from 'src/components/common/FormTextField/FormTextField
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { textCenterMixin } from 'src/styles/mixins';
 
-import { IViewProps as IProps } from './SignUpFormPresenter';
+import { IViewProps as IProps, IFormValues } from './SignUpFormPresenter';
 import { Message } from 'src/components/common/Message/Message';
 
 export class SignUpFormView extends React.Component<IProps & { intl: IntlShape }> {
@@ -23,11 +23,11 @@ export class SignUpFormView extends React.Component<IProps & { intl: IntlShape }
         <Message.Body>{intl.formatMessage({ id: 'SignupForm.success.body' })}</Message.Body>
       </Message>
     ) : (
-      <Form validate={validate} onSubmit={onSubmit} render={this.renderInnerForm} />
+      <Form<IFormValues> validate={validate} onSubmit={onSubmit} render={this.renderInnerForm} />
     );
   }
 
-  private renderInnerForm = ({ handleSubmit, submitting }: FormRenderProps) => {
+  private renderInnerForm = ({ handleSubmit, submitting }: FormRenderProps<IFormValues>) => {
     const { globalError, intl } = this.props;
     return (
       <form onSubmit={handleSubmit}>

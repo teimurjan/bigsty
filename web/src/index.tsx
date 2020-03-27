@@ -7,16 +7,16 @@ import { AppContainer } from 'src/components/App/AppContainer';
 import { AppStateProvider } from 'src/state/AppState';
 import { IntlStateProvider } from 'src/state/IntlState';
 import { UserStateProvider } from 'src/state/UserState';
+import { RatesStateProvider } from 'src/state/RatesState';
 
 import { DIProvider } from 'src/DI/DI';
 import { makeDependenciesContainer } from 'src/DI/DependenciesContainer';
 
 import { defaultTheme } from 'src/themes';
 
-import registerServiceWorker from 'src/registerServiceWorker';
+import { unregister } from 'src/registerServiceWorker';
 
 import 'bulma/css/bulma.css';
-import { RatesStateProvider } from './state/RatesState';
 
 if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -43,4 +43,4 @@ ReactDOM.render(
   document.getElementById('root') as HTMLElement,
 );
 
-registerServiceWorker();
+unregister();

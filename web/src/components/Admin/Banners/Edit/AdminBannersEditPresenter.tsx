@@ -23,31 +23,33 @@ export interface IProps extends AdminBannersStateContextValue, IntlStateContextV
   bannerId: number;
 }
 
+interface IFormValues {
+  texts: {
+    [key: string]: string;
+  };
+  link_texts: {
+    [key: string]: string;
+  };
+  link?: string;
+  text_color?: string;
+  image: string;
+  text_top_offset?: string;
+  text_left_offset?: string;
+  text_right_offset?: string;
+  text_bottom_offset?: string;
+}
+
 export interface IViewProps {
   isOpen: boolean;
-  edit: (values: {
-    texts: {
-      [key: string]: string;
-    };
-    link_texts: {
-      [key: string]: string;
-    };
-    link?: string;
-    text_color?: string;
-    image: string;
-    text_top_offset?: string;
-    text_left_offset?: string;
-    text_right_offset?: string;
-    text_bottom_offset?: string;
-  }) => void;
+  edit: (values: IFormValues) => void;
   error?: string;
   close: () => void;
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];
-  validate?: (values: object) => object | Promise<object>;
+  validate?: (values: IFormValues) => object | Promise<object>;
   isLoading: boolean;
   isUpdating: boolean;
   preloadingError?: string;
-  initialValues: object;
+  initialValues?: Partial<IFormValues>;
 }
 
 export const BANNER_TEXT_FIELD_KEY = 'text';

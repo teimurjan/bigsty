@@ -15,8 +15,13 @@ export interface IProps extends UserStateContextValue {
   history: History;
 }
 
+export interface IFormValues {
+  email: string;
+  password: string;
+}
+
 export interface IViewProps {
-  onSubmit: (values: { email: string; password: string }) => void;
+  onSubmit: (values: IFormValues) => void;
   globalError: string | undefined;
   validate: (values: object) => object | Promise<object>;
 }

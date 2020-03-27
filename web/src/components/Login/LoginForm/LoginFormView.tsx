@@ -12,15 +12,15 @@ import { Button } from 'src/components/common/Button/Button';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 
-import { IViewProps as IProps } from './LoginFormPresenter';
+import { IViewProps as IProps, IFormValues } from './LoginFormPresenter';
 
 export class LoginFormView extends React.Component<IProps & { intl: IntlShape }> {
   public render() {
     const { onSubmit, validate } = this.props;
-    return <Form validate={validate} onSubmit={onSubmit} render={this.renderInnerForm} />;
+    return <Form<IFormValues> validate={validate} onSubmit={onSubmit} render={this.renderInnerForm} />;
   }
 
-  private renderInnerForm = ({ handleSubmit, submitting }: FormRenderProps) => {
+  private renderInnerForm = ({ handleSubmit, submitting }: FormRenderProps<IFormValues>) => {
     const { globalError, intl } = this.props;
     return (
       <form onSubmit={handleSubmit}>

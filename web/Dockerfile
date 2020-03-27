@@ -1,8 +1,7 @@
 # build environment
-FROM node:10.15.1-alpine as build
+FROM node:12.14.0-alpine as build
 WORKDIR /app
 RUN npm config set unsafe-perm true
-RUN npm install -g yarn@1.17.3
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 COPY yarn.lock /app/yarn.lock

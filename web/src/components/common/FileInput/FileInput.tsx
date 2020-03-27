@@ -17,7 +17,7 @@ const Filename = ({ file }: { file: IProps['value'] }) => {
   }
 
   if (file && file.name) {
-    <span className="file-name">{file.name}</span>;
+    return <span className="file-name">{file.name}</span>;
   }
 
   return null;

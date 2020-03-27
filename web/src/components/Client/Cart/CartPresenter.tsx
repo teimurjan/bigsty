@@ -35,7 +35,7 @@ export interface IViewProps {
   step: number;
   goToNextStep: () => void;
   validator: schemaValidator.ISchemaValidator;
-  initialValues: object;
+  initialValues: Partial<IFormValues>;
   onSubmit: (values: IFormValues) => Promise<void>;
 }
 
@@ -47,7 +47,7 @@ const validator = new schemaValidator.SchemaValidator(
   }),
 );
 
-interface IFormValues {
+export interface IFormValues {
   name: string;
   phone: string;
   address: string;
@@ -157,7 +157,7 @@ export const CartPresenter: React.FC<IProps> = ({
       goToNextStep={goToNextStep}
       validator={validator}
       initialValues={{
-        name: getUserPropertySafe(user, 'name'),
+        name: getUserPropertySafe(user, 'name', '') as string,
       }}
       cartItemsCount={storage.getItems().length}
       onSubmit={onSubmit}

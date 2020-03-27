@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
 
-import { IntlShape, injectIntl } from 'react-intl';
+import { IntlShape, injectIntl, useIntl } from 'react-intl';
 
 import { Form, FormRenderProps, useFormState } from 'react-final-form';
 
@@ -24,42 +24,45 @@ import { Message } from '../common/Message/Message';
 import { arePropsEqual } from 'src/utils/propEquality';
 import { useDebounce } from 'src/hooks/useDebounce';
 
-export interface IProps {
+export interface IProps<T> {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: object) => void;
+  onSubmit: (values: T) => void;
   isLoading?: boolean;
   isPreloading?: boolean;
-  validate?: (values: object) => object | Promise<object>;
+  validate?: (values: T) => object | Promise<object>;
   globalError?: string;
   fields: React.ReactNode;
   title: string;
   formID: string;
   submitText?: string;
   cancelText?: string;
-  initialValues?: object;
+  initialValues?: Partial<T>;
   preloadingError?: string;
   wide?: boolean;
-  onChange?: (values: object) => void;
+  onChange?: (values: T) => void;
 }
 
-interface IMemoizedFormProps {
+interface IMemoizedFormProps<T extends {}> {
   id: string;
-  fields: IProps['fields'];
-  globalError: IProps['globalError'];
-  intl: IntlShape;
+  fields: IProps<T>['fields'];
+  globalError: IProps<T>['globalError'];
   handleSubmit: FormRenderProps['handleSubmit'];
 }
 
-const MemoizedForm: React.SFC<IMemoizedFormProps> = React.memo(
-  ({ id, handleSubmit, fields, globalError, intl }) => (
-    <form id={id} onSubmit={handleSubmit}>
-      {fields}
-      <div css={textCenterMixin}>
-        {globalError && <HelpText type="is-danger">{intl.formatMessage({ id: globalError })}</HelpText>}
-      </div>
-    </form>
-  ),
+const MemoizedForm = React.memo(
+  <T extends {}>({ id, handleSubmit, fields, globalError }: IMemoizedFormProps<T>) => {
+    const intl = useIntl();
+
+    return (
+      <form id={id} onSubmit={handleSubmit}>
+        {fields}
+        <div css={textCenterMixin}>
+          {globalError && <HelpText type="is-danger">{intl.formatMessage({ id: globalError })}</HelpText>}
+        </div>
+      </form>
+    );
+  },
   (prevProps, nextProps) => arePropsEqual(prevProps, nextProps, ['id', 'globalError', 'fields']),
 );
 
@@ -67,22 +70,37 @@ const MemoizedForm: React.SFC<IMemoizedFormProps> = React.memo(
   customName: 'ModalForm.MemoizedForm',
 };
 
-const InnerForm = ({
+interface IInnerFormProps<T> {
+  title: IProps<T>['title'];
+  onClose: IProps<T>['onClose'];
+  isPreloading?: IProps<T>['isPreloading'];
+  formID: IProps<T>['formID'];
+  fields: IProps<T>['fields'];
+  globalError?: IProps<T>['globalError'];
+  submitText?: IProps<T>['submitText'];
+  cancelText?: IProps<T>['cancelText'];
+  isLoading?: IProps<T>['isLoading'];
+  className?: string;
+  onChange?: IProps<T>['onChange'];
+}
+
+const InnerForm = <T extends {}>({
   handleSubmit,
   title,
   onClose,
   isPreloading,
   formID,
   fields,
-  intl,
   globalError,
   submitText,
   cancelText,
   isLoading,
   className,
   onChange,
-}: FormRenderProps & IProps & { intl: IntlShape; className?: string }) => {
-  const { values, dirty } = useFormState();
+}: FormRenderProps<T> & IInnerFormProps<T>) => {
+  const { values, dirty } = useFormState<T>();
+
+  const intl = useIntl();
 
   const debouncedValues = useDebounce(values, 5000);
   React.useEffect(() => {
@@ -101,7 +119,7 @@ const InnerForm = ({
         {isPreloading ? (
           <LoaderLayout />
         ) : (
-          <MemoizedForm id={formID} handleSubmit={handleSubmit} fields={fields} globalError={globalError} intl={intl} />
+          <MemoizedForm id={formID} handleSubmit={handleSubmit} fields={fields} globalError={globalError} />
         )}
       </ModalCard.Body>
       <ModalCard.Foot>
@@ -116,29 +134,33 @@ const InnerForm = ({
   );
 };
 
-export const ModalForm = injectIntl((props: IProps & { intl: IntlShape }) => {
-  const modalCSS = props.wide
-    ? useMedia(
-        [mediaQueries.minWidth1024],
-        [
-          css`
-            width: 90vw;
-            margin: 0;
-          `,
-        ],
-        css`
-          width: 100%;
-          margin: 0;
-        `,
-      )
-    : undefined;
+const getInnerFormRenderer = <T extends {}>(props: IInnerFormProps<T> & { className?: string }) => (
+  formRenderProps: FormRenderProps<T>,
+) => <InnerForm {...{ ...formRenderProps, ...props }} />;
 
-  const { isOpen, onClose, preloadingError, intl, validate, onSubmit, initialValues } = props;
+export const ModalForm = <T extends {}>(props: IProps<T>) => {
+  const intl = useIntl();
+
+  const modalCSS = useMedia(
+    [mediaQueries.minWidth1024],
+    [
+      css`
+        width: 90vw;
+        margin: 0;
+      `,
+    ],
+    css`
+      width: 100%;
+      margin: 0;
+    `,
+  );
+
+  const { isOpen, onClose, preloadingError, validate, onSubmit, initialValues } = props;
 
   return (
     <Modal isOpen={isOpen}>
       <ModalBackground onClick={onClose} />
-      <ModalContent css={modalCSS}>
+      <ModalContent css={props.wide ? modalCSS : undefined}>
         {preloadingError ? (
           <Message color="is-danger">
             <Message.Header>
@@ -148,16 +170,15 @@ export const ModalForm = injectIntl((props: IProps & { intl: IntlShape }) => {
             <Message.Body>{intl.formatMessage({ id: preloadingError })}</Message.Body>
           </Message>
         ) : (
-          <Form
-            css={modalCSS}
+          <Form<T>
+            css={props.wide ? modalCSS : undefined}
             validate={validate}
             onSubmit={onSubmit}
-            component={InnerForm}
-            initialValues={initialValues}
-            {...props}
+            render={getInnerFormRenderer(props)}
+            initialValues={initialValues as T}
           />
         )}
       </ModalContent>
     </Modal>
   );
-});
+};

@@ -28,7 +28,7 @@ import { calculateDiscountedPrice } from 'src/utils/number';
 
 import { PriceText } from '../Price/Price';
 
-import { IViewProps as IProps } from './CartPresenter';
+import { IViewProps as IProps, IFormValues } from './CartPresenter';
 import { CartItem } from './CartItem/CartItem';
 
 const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, addMore, remove, goToNextStep }) => {
@@ -154,9 +154,9 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, erro
   const intl = useIntl();
 
   return (
-    <Form
+    <Form<IFormValues>
       onSubmit={onSubmit}
-      initialValues={initialValues}
+      initialValues={initialValues as IFormValues}
       validate={validator.validate}
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>

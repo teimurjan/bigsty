@@ -32,16 +32,18 @@ export interface IProps
   stateCacheStorage: IStateCacheStorage;
 }
 
+interface IFormValues {
+  names: { [key: string]: string };
+  descriptions: { [key: string]: string };
+  short_descriptions: { [key: string]: string };
+  feature_types: string[];
+  category_id?: string;
+  image: string;
+}
+
 export interface IViewProps {
   isOpen: boolean;
-  create: (values: {
-    names: { [key: string]: string };
-    descriptions: { [key: string]: string };
-    short_descriptions: { [key: string]: string };
-    feature_types: string[];
-    category_id?: string;
-    image: string;
-  }) => void;
+  create: (values: IFormValues) => void;
   isLoading: boolean;
   isCreating: boolean;
   error?: string;
@@ -51,7 +53,7 @@ export interface IViewProps {
   validate?: (values: object) => object | Promise<object>;
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
-  onChange: IModalFormProps['onChange'];
+  onChange: IModalFormProps<IFormValues>['onChange'];
   initialValues: object;
 }
 

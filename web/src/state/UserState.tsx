@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as jwtDecode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 
 import { useDependencies } from 'src/DI/DI';
 
@@ -47,7 +47,7 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
 
   const syncUser = React.useCallback(() => {
     const accessToken = service.getAccessToken();
-    setUser(accessToken ? jwtDecode(accessToken) : USER_ANONYMOUS_STATE);
+    setUser(accessToken ? jwtDecode<{ id: string }>(accessToken) : USER_ANONYMOUS_STATE);
   }, [service]);
 
   const clearUser = React.useCallback(() => {

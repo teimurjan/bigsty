@@ -12,7 +12,7 @@ export const buildQueryString = (queryObj: { [key: string]: string | number | un
     }
 
     return [...acc, `${encodedKey}=${encodeURIComponent(value as string)}`];
-  }, []);
+  }, [] as string[]);
 
   return queryArr.length > 0 ? `?${queryArr.join('&')}` : '';
 };

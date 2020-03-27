@@ -12,8 +12,8 @@ interface IProps {
   className?: string;
   placeholder?: string;
   onChange?: (serializedContent: string) => void;
-  onBlur?: (e?: React.FocusEvent) => void;
-  onFocus?: (e?: React.FocusEvent) => void;
+  onBlur?: (e?: React.FocusEvent<HTMLElement>) => void;
+  onFocus?: (e?: React.FocusEvent<HTMLElement>) => void;
   hasError?: boolean;
   initialValue?: string;
 }

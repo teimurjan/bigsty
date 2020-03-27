@@ -1,9 +1,8 @@
-export const arePropsEqual = <T extends object>(
+export const arePropsEqual = <T extends { [key: string]: any }>(
   prevProps: T,
   nextProps: T,
   pickedProps: Array<keyof T | { key: keyof T; compare: (prev: T[keyof T], next: T[keyof T]) => boolean }>,
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const deepEqual = require('fast-deep-equal/es6/react');
 
   return pickedProps.every(pickedProp => {
@@ -25,4 +24,4 @@ export const arePropsEqual = <T extends object>(
   });
 };
 
-export const lengthCompare = <T>(prev: T[], next: T[]) => prev.length === next.length;
+export const lengthCompare = (prev: any, next: any) => prev.length === next.length;

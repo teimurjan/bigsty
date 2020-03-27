@@ -13,10 +13,16 @@ export interface IProps {
   history: History;
 }
 
+export interface IFormValues {
+  email: string;
+  name: string;
+  password: string;
+}
+
 export interface IViewProps {
-  onSubmit: (values: { email: string; password: string }) => void;
+  onSubmit: (values: IFormValues) => void;
   globalError: string | undefined;
-  validate: (values: object) => object | Promise<object>;
+  validate: (values: IFormValues) => object | Promise<object>;
   isSuccess: boolean;
 }
 
@@ -57,7 +63,7 @@ export class SignUpFormPresenter extends React.Component<IProps, IState> {
     );
   }
 
-  private onSubmit = async (values: { email: string; name: string; password: string }) => {
+  private onSubmit = async (values: IFormValues) => {
     this.startLoading();
 
     const { service } = this.props;

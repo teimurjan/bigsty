@@ -322,7 +322,7 @@ export const Fields: React.SFC<IFieldsProps> = React.memo(
   },
   (prevProps, nextProps) =>
     arePropsEqual(prevProps, nextProps, [
-      { key: 'productTypes', compare: lengthCompare },
-      { key: 'featureValues', compare: lengthCompare },
+      { key: 'productTypes' as keyof IFieldsProps, compare: lengthCompare },
+      { key: 'featureValues' as keyof IFieldsProps, compare: lengthCompare },
     ]),
 );
