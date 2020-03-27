@@ -4,7 +4,6 @@ import { useHistory } from 'react-router';
 import { injectIntl } from 'react-intl';
 
 import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
-import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 
 import { useDependencies } from 'src/DI/DI';
 
@@ -17,16 +16,15 @@ export const AdminProductsCreateContainer = () => {
 
   const { dependencies } = useDependencies();
   const { adminFeatureValuesState } = useAdminFeatureValuesState();
-  const { adminProductTypesState } = useAdminProductTypesState();
   const { adminProductsState } = useAdminProductsState();
 
   return (
     <AdminProductsCreatePresenter
       history={history}
       View={injectIntl(AdminProductsCreateView)}
-      service={dependencies.services.product}
+      productService={dependencies.services.product}
+      productTypeService={dependencies.services.productType}
       adminProductsState={adminProductsState}
-      adminProductTypesState={adminProductTypesState}
       adminFeatureValuesState={adminFeatureValuesState}
     />
   );

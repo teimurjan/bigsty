@@ -3,6 +3,7 @@ import { Client } from 'ttypes/http';
 import { IHeadersManager } from 'src/manager/HeadersManager';
 import { buildQueryString } from 'src/utils/queryString';
 
+// LIST
 export interface IProductTypeListResponseMeta {
   count: number;
   pages_count: number;
@@ -27,6 +28,12 @@ export interface IProductTypeListResponseItem {
   }>;
 }
 
+export interface IProductTypeListResponseData {
+  data: IProductTypeListResponseItem[];
+  meta: IProductTypeListResponseMeta;
+}
+
+// DETAIL
 export interface IProductTypeDetailResponseItem {
   id: number;
   name: string;
@@ -44,6 +51,11 @@ export interface IProductTypeDetailResponseItem {
   }>;
 }
 
+export interface IProductTypeDetailResponseItemData {
+  data: IProductTypeDetailResponseItem;
+}
+
+// LIST RAW INTL
 export interface IProductTypeListRawIntlResponseItem {
   id: number;
   name: { [key: string]: string };
@@ -54,36 +66,33 @@ export interface IProductTypeListRawIntlResponseItem {
   feature_types: number[];
 }
 
-export interface IProductTypeBaseListResponseItem {
-  id: number;
-  name: string;
-}
-
-export interface IProductTypeBaseListResponseItemData {
-  data: IProductTypeBaseListResponseItem[];
-}
-
-export interface IProductTypeListResponseData {
-  data: IProductTypeListResponseItem[];
-  meta: IProductTypeListResponseMeta;
-}
-
-export interface IProductTypeNewestResponseData {
-  data: IProductTypeListResponseItem[];
-}
-
 export interface IProductTypeListRawIntlResponseData {
   data: IProductTypeListRawIntlResponseItem[];
   meta: IProductTypeListResponseMeta;
 }
 
+// NEWEST
+export interface IProductTypeNewestResponseData {
+  data: IProductTypeListResponseItem[];
+}
+
+// DETAIL RAW INTL
 export interface IProductTypeRawIntlResponseData {
   data: IProductTypeListRawIntlResponseItem;
   meta: IProductTypeListResponseMeta;
 }
 
-export interface IProductTypeDetailResponseItemData {
-  data: IProductTypeDetailResponseItem;
+// LIST RAW INTL MINIFIED
+export interface IProductTypeListRawIntlMinifiedResponseItem {
+  id: number;
+  name: {
+    [key: string]: string;
+  };
+  feature_types: number[];
+}
+
+export interface IProductTypeListRawIntlMinifiedResponseData {
+  data: IProductTypeListRawIntlMinifiedResponseItem[];
 }
 
 export interface IProductTypeCreatePayload {
@@ -108,7 +117,7 @@ export interface IProductTypeAPI {
   getAll(page: number): Promise<IProductTypeListResponseData>;
   getNewest(): Promise<IProductTypeNewestResponseData>;
   getByID(id: number): Promise<IProductTypeDetailResponseItemData>;
-  getAllWithBaseFields(): Promise<IProductTypeBaseListResponseItemData>;
+  getAllRawIntlMinified(): Promise<IProductTypeListRawIntlMinifiedResponseData>;
   getAllRawIntl(page: number): Promise<IProductTypeListRawIntlResponseData>;
   delete(id: number): Promise<{}>;
   create(payload: IProductTypeCreatePayload): Promise<IProductTypeRawIntlResponseData>;
@@ -194,10 +203,10 @@ export class ProductTypeAPI implements IProductTypeAPI {
     }
   }
 
-  public async getAllWithBaseFields() {
+  public async getAllRawIntlMinified() {
     try {
-      const response = await this.client.get<IProductTypeBaseListResponseItemData>(
-        `/api/product_types${buildQueryString({ fields: ['id', 'name'] })}`,
+      const response = await this.client.get<IProductTypeListRawIntlMinifiedResponseData>(
+        `/api/product_types${buildQueryString({ fields: ['id', 'name', 'feature_types'], raw_intl: 1 })}`,
         {
           headers: this.headersManager.getHeaders(),
         },

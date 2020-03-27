@@ -3,7 +3,6 @@ import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { ModalForm } from '../../ModalForm';
-
 import { IViewProps as IProps } from './AdminProductsCreatePresenter';
 import { Fields } from './Fields';
 
@@ -15,10 +14,10 @@ export const AdminProductsCreateView = ({
   error,
   intl,
   validate,
-  productTypes,
   preloadingError,
   isCreating,
   featureValues,
+  productTypes,
 }: IProps & { intl: IntlShape }) => (
   <ModalForm
     formID="adminProductsCreateForm"

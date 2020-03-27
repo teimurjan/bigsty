@@ -3,14 +3,15 @@ import * as React from 'react';
 
 import { jsx, css } from '@emotion/core';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Field as FinalFormField, FieldRenderProps, useFormState } from 'react-final-form';
 import { IntlShape, injectIntl, useIntl } from 'react-intl';
 import difference from 'lodash/difference';
 
-import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
-
 import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
-import { IContextValue as AdminProductTypesStateContextValue } from 'src/state/AdminProductTypesState';
+
+import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
 
 import { FileInput } from 'src/components/common/FileInput/FileInput';
 import { Field } from 'src/components/common/Field/Field';
@@ -22,8 +23,8 @@ import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { isAllowedForNumberInput } from 'src/utils/number';
 import { Button } from 'src/components/common/Button/Button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+
+import { ProductTypeSelectView } from 'src/components/Admin/ProductTypeSelect/ProductTypeSelectView';
 
 const renderQuantityField = injectIntl(({ input, meta, intl }: FieldRenderProps<string> & { intl: IntlShape }) => {
   const showError = meta.touched && meta.error;
@@ -148,7 +149,7 @@ const renderPriceField = injectIntl(({ input, meta, intl }: FieldRenderProps<str
 });
 
 const useGroupedFeatureValuesByFeatureType = (
-  featureValues: AdminFeatureValuesStateContextValue['adminFeatureValuesState']['featureValues'],
+  featureValues: IFieldsProps['featureValues'],
 ): { [key: string]: IFeatureValueListRawIntlResponseItem[] } => {
   const intl = useIntl();
 
@@ -159,7 +160,7 @@ const useGroupedFeatureValuesByFeatureType = (
 };
 
 interface IFeatureValuesSelectProps extends FieldRenderProps<string[]> {
-  featureValues: AdminFeatureValuesStateContextValue['adminFeatureValuesState']['featureValues'];
+  featureValues: IFieldsProps['featureValues'];
 }
 
 const FeatureValuesSelect = injectIntl(
@@ -201,53 +202,13 @@ const FeatureValuesSelect = injectIntl(
   },
 );
 
-const getFeatureValuesSelectRenderer = (
-  featureValues: AdminFeatureValuesStateContextValue['adminFeatureValuesState']['featureValues'],
-) => (fieldRenderProps: FieldRenderProps<string[]>) => {
-  return <FeatureValuesSelect featureValues={featureValues} {...fieldRenderProps} />;
-};
+const getFeatureValuesSelectRenderer = (featureValues: IFieldsProps['featureValues']) => (
+  fieldRenderProps: FieldRenderProps<string[]>,
+) => <FeatureValuesSelect featureValues={featureValues} {...fieldRenderProps} />;
 
-interface IProductTypeSelectProps extends FieldRenderProps<string> {
-  categories: AdminProductTypesStateContextValue['adminProductTypesState']['productTypes'];
-}
-
-const ProductTypeSelect = injectIntl(
-  ({ categories, intl, input, meta }: IProductTypeSelectProps & { intl: IntlShape }) => {
-    const showError = meta.touched && meta.error;
-
-    return (
-      <FormNativeSelectField
-        labelProps={{
-          children: intl.formatMessage({
-            id: 'AdminProducts.productTypeSelect.label',
-          }),
-        }}
-        selectProps={{
-          ...input,
-          defaultOption: {
-            title: intl.formatMessage({
-              id: 'AdminProducts.productTypeSelect.defaultOption.title',
-            }),
-          },
-          options: categories.map(({ id, name }) => ({
-            title: name[intl.locale],
-            value: `${id}`,
-          })),
-        }}
-        helpTextProps={{
-          children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
-          type: 'is-danger',
-        }}
-      />
-    );
-  },
-);
-
-const getProductTypesSelectRenderer = (
-  categories: AdminProductTypesStateContextValue['adminProductTypesState']['productTypes'],
-) => (fieldRenderProps: FieldRenderProps<string>) => (
-  <ProductTypeSelect categories={categories} {...fieldRenderProps} />
-);
+const getProductTypeSelectRenderer = (productTypes: IFieldsProps['productTypes']) => (
+  fieldRenderProps: FieldRenderProps<string>,
+) => <ProductTypeSelectView productTypes={productTypes} {...fieldRenderProps} />;
 
 const ImagesInput: React.SFC<FieldRenderProps<Array<File | undefined>>> = injectIntl<
   'intl',
@@ -322,7 +283,7 @@ const ImagesInput: React.SFC<FieldRenderProps<Array<File | undefined>>> = inject
 const renderImagesInput = (props: FieldRenderProps<Array<File | undefined>>) => <ImagesInput {...props} />;
 
 export interface IFieldsProps {
-  productTypes: AdminProductTypesStateContextValue['adminProductTypesState']['productTypes'];
+  productTypes: IProductTypeListRawIntlMinifiedResponseItem[];
   featureValues: AdminFeatureValuesStateContextValue['adminFeatureValuesState']['featureValues'];
 }
 
@@ -344,7 +305,7 @@ export const Fields: React.SFC<IFieldsProps> = React.memo(
         <FinalFormField
           key="product_type_id"
           name="product_type_id"
-          render={getProductTypesSelectRenderer(productTypes)}
+          component={getProductTypeSelectRenderer(productTypes)}
         />
         <FinalFormField
           key="feature_values"

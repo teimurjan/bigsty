@@ -9,17 +9,17 @@ import { IProductService } from 'src/services/ProductService';
 
 import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
 import { IContextValue as AdminProductsStateContextValue } from 'src/state/AdminProductsState';
-import { IContextValue as AdminProductTypesStateContextValue } from 'src/state/AdminProductTypesState';
 
-import { IProductTypeListRawIntlResponseItem } from 'src/api/ProductTypeAPI';
 import { useDebounce } from 'src/hooks/useDebounce';
+import { IProductTypeService } from 'src/services/ProductTypeService';
+import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
 
-export interface IProps
-  extends AdminFeatureValuesStateContextValue,
-    AdminProductsStateContextValue,
-    AdminProductTypesStateContextValue {
+import { useSelectProductTypes } from '../../ProductTypeSelect/useSelectProductTypes';
+
+export interface IProps extends AdminFeatureValuesStateContextValue, AdminProductsStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
-  service: IProductService;
+  productService: IProductService;
+  productTypeService: IProductTypeService;
   history: History;
 }
 
@@ -40,20 +40,23 @@ export interface IViewProps {
   close: () => void;
   validate?: (values: object) => object | Promise<object>;
   featureValues: AdminFeatureValuesStateContextValue['adminFeatureValuesState']['featureValues'];
-  productTypes: IProductTypeListRawIntlResponseItem[];
+  productTypes: IProductTypeListRawIntlMinifiedResponseItem[];
 }
 
 export const AdminProductsCreatePresenter: React.FC<IProps> = ({
   history,
   adminFeatureValuesState: { getFeatureValues, featureValues, isListLoading: featureValuesLoading },
-  adminProductTypesState: { getProductTypes, productTypes, isListLoading: productTypesLoading },
   adminProductsState: { getProducts },
-  service,
+  productService,
+  productTypeService,
   View,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isCreating, setCreating] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
+  const { productTypes, isLoading: productTypesLoading, error: productTypesError } = useSelectProductTypes({
+    productTypeService,
+  });
 
   const isLoadingDebounced = useDebounce(featureValuesLoading || productTypesLoading, 500);
 
@@ -73,7 +76,7 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
             return true;
           }
 
-          const chosenProductType = productTypes.find(({ id }) => this.parent.product_type_id === id);
+          const chosenProductType = productTypes[this.parent.product_type_id];
           return chosenProductType ? chosenProductType.feature_types.length === (value || []).length : false;
         }),
       images: yup.array().of(yup.mixed()),
@@ -83,7 +86,7 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
   React.useEffect(() => {
     (async () => {
       try {
-        await Promise.all([getProductTypes(), getFeatureValues()]);
+        await getFeatureValues();
       } catch (e) {
         setPreloadingError('errors.common');
       }
@@ -107,7 +110,7 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
       };
 
       try {
-        await service.create(formattedValues);
+        await productService.create(formattedValues);
         getProducts();
         setCreating(false);
         close();
@@ -116,16 +119,16 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
         setCreating(false);
       }
     },
-    [close, getProducts, service],
+    [close, getProducts, productService],
   );
 
   return (
     <View
-      productTypes={productTypes}
       featureValues={featureValues}
+      productTypes={productTypes}
       isOpen={true}
       create={create}
-      error={error}
+      error={error ? error : productTypesError}
       isLoading={isLoadingDebounced}
       isCreating={isCreating}
       close={close}

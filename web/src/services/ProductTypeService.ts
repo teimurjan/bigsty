@@ -60,6 +60,14 @@ export interface IProductTypeService {
     result: number[];
     meta: productTypeAPI.IProductTypeListResponseMeta;
   }>;
+  getAllRawIntlMinified(): Promise<{
+    entities: {
+      productTypes: {
+        [key: string]: productTypeAPI.IProductTypeListRawIntlMinifiedResponseItem;
+      };
+    };
+    result: number[];
+  }>;
   delete(id: number): Promise<void>;
   create(
     payload: productTypeAPI.IProductTypeCreatePayload,
@@ -92,6 +100,11 @@ export class ProductTypeService implements IProductTypeService {
       ...normalize(productTypes.data, [new schema.Entity('productTypes')]),
       meta: productTypes.meta,
     };
+  };
+
+  public getAllRawIntlMinified: IProductTypeService['getAllRawIntlMinified'] = async () => {
+    const productTypes = await this.API.getAllRawIntlMinified();
+    return normalize(productTypes.data, [new schema.Entity('productTypes')]);
   };
 
   public getNewest: IProductTypeService['getNewest'] = async () => {

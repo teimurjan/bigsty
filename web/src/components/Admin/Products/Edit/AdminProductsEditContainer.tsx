@@ -4,7 +4,6 @@ import { useHistory, useParams } from 'react-router';
 import { injectIntl } from 'react-intl';
 
 import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
-import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 
 import { useDependencies } from 'src/DI/DI';
 
@@ -18,7 +17,6 @@ export const AdminProductsEditContainer = () => {
 
   const { dependencies } = useDependencies();
   const { adminFeatureValuesState } = useAdminFeatureValuesState();
-  const { adminProductTypesState } = useAdminProductTypesState();
   const { adminProductsState } = useAdminProductsState();
 
   return (
@@ -26,9 +24,9 @@ export const AdminProductsEditContainer = () => {
       productId={parseInt(params.id, 10)}
       history={history}
       View={injectIntl(AdminProductsEditView)}
-      service={dependencies.services.product}
+      productService={dependencies.services.product}
+      productTypeService={dependencies.services.productType}
       adminProductsState={adminProductsState}
-      adminProductTypesState={adminProductTypesState}
       adminFeatureValuesState={adminFeatureValuesState}
     />
   );
