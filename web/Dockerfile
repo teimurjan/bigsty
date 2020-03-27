@@ -5,7 +5,7 @@ RUN npm config set unsafe-perm true
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 COPY yarn.lock /app/yarn.lock
-RUN yarn
+RUN yarn --network-timeout 1000000
 COPY . /app
 RUN yarn build
 
