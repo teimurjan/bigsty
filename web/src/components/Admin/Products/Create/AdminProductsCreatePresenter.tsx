@@ -76,7 +76,7 @@ export const AdminProductsCreatePresenter: React.FC<IProps> = ({
             return true;
           }
 
-          const chosenProductType = productTypes[this.parent.product_type_id];
+          const chosenProductType = productTypes.find(({ id }) => this.parent.product_type_id === id);
           return chosenProductType ? chosenProductType.feature_types.length === (value || []).length : false;
         }),
       images: yup.array().of(yup.mixed()),
