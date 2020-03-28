@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 
 import * as authAPI from 'src/api/AuthAPI';
 import * as categoryAPI from 'src/api/CategoryAPI';
@@ -30,7 +30,6 @@ import * as cartStorage from 'src/storage/CartStorage';
 import { HeadersManager } from 'src/manager/HeadersManager';
 
 export interface IAPIsContainer {
-  client: AxiosInstance;
   auth: authAPI.IAuthAPI;
   category: categoryAPI.ICategoryAPI;
   productType: productTypeAPI.IProductTypeAPI;
@@ -91,8 +90,26 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
   const headersManager = new HeadersManager(storagesContainer.auth, storagesContainer.intl);
   const APIClient = axios.create({ baseURL: process.env.REACT_APP_SERVER_URL });
 
+  APIClient.interceptors.response.use(undefined, async error => {
+    if (error.response.status === 401) {
+      const refreshToken = storagesContainer.auth.getRefreshToken();
+      if (refreshToken) {
+        try {
+          await servicesContainer.auth.refreshTokens(refreshToken);
+          const config = error.config;
+          config.headers = { ...config.headers, ...headersManager.getHeaders() };
+          return APIClient.request(config);
+        } catch (e) {}
+      }
+
+      servicesContainer.auth.logOut();
+      window.location.reload();
+    }
+
+    throw error;
+  });
+
   const APIsContainer = {
-    client: APIClient,
     auth: new authAPI.AuthAPI(APIClient, headersManager),
     category: new categoryAPI.CategoryAPI(APIClient, headersManager),
     featureType: new featureTypeAPI.FeatureTypeAPI(APIClient, headersManager),

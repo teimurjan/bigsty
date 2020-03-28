@@ -38,7 +38,6 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const {
     dependencies: {
       services: { auth: service },
-      APIs: { client },
       storages: { auth: authStorage },
     },
   } = useDependencies();
@@ -47,35 +46,18 @@ export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
 
   const syncUser = React.useCallback(() => {
     const accessToken = service.getAccessToken();
-    setUser(accessToken ? jwtDecode<{ id: string }>(accessToken) : USER_ANONYMOUS_STATE);
-  }, [service]);
+    try {
+      setUser(accessToken ? jwtDecode<{ id: string }>(accessToken) : USER_ANONYMOUS_STATE);
+    } catch (e) {
+      authStorage.clearAccessToken();
+      setUser(USER_ANONYMOUS_STATE);
+    }
+  }, [authStorage, service]);
 
   const clearUser = React.useCallback(() => {
     service.logOut();
     setUser(USER_ANONYMOUS_STATE);
   }, [service]);
-
-  React.useEffect(() => {
-    const interceptor = client.interceptors.response.use(undefined, async error => {
-      if (error.response.status === 401) {
-        const refreshToken = authStorage.getRefreshToken();
-
-        if (refreshToken) {
-          try {
-            await service.refreshTokens(refreshToken);
-            window.location.reload();
-            return;
-          } catch (e) {}
-        }
-
-        clearUser();
-      }
-
-      throw error;
-    });
-
-    return () => client.interceptors.response.eject(interceptor);
-  }, [authStorage, clearUser, client, client.interceptors.request, client.interceptors.response, service]);
 
   return (
     <Context.Provider
