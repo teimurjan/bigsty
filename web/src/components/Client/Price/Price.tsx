@@ -5,6 +5,7 @@ import { useIntl } from 'react-intl';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { useIntlState } from 'src/state/IntlState';
 import { useRatesState } from 'src/state/RatesState';
+import { Tag } from 'src/components/common/Tag/Tag';
 
 interface IPriceProps {
   price: number;
@@ -51,6 +52,7 @@ export const PriceRangeText = ({ range }: IPriceRangeTextProps) => {
   const intl = useIntl();
 
   const calculatedRange = range.map(price => calculateDiscountedPrice(price.price, price.discount || 0));
+  const discounts = range.map(price => price.discount || 0).filter(discount => discount !== 0);
 
   const biggestFormattedPrice = useFormattedPrice({ price: Math.max(...calculatedRange), discount: 0 });
   const lowestFormattedPrice = useFormattedPrice({ price: Math.min(...calculatedRange), discount: 0 });
@@ -62,6 +64,17 @@ export const PriceRangeText = ({ range }: IPriceRangeTextProps) => {
   return (
     <>
       {calculatedRange.length > 1 ? `${lowestFormattedPrice} - ${biggestFormattedPrice}` : `${biggestFormattedPrice}`}
+      <br />
+      {range.length === 1 && discounts.length === 1 && (
+        <Tag color="is-warning">
+          {intl.formatMessage({ id: 'Price.discount' }, { value: Math.max(...discounts) })}
+        </Tag>
+      )}
+      {range.length > 1 && discounts.length > 1 && (
+        <Tag color="is-warning">
+          {intl.formatMessage({ id: 'Price.discountUpTo' }, { value: Math.max(...discounts) })}
+        </Tag>
+      )}
     </>
   );
 };

@@ -215,5 +215,7 @@
   "AdminOrders.newProduct.placeholder": "Add a new product",
   "AdminOrders.items": "Items",
   "AdminOrders.statusSelect.label": "Status",
-  "common.errors.field.atLeast1": "At least one is required"
+  "common.errors.field.atLeast1": "At least one is required",
+  "Price.discountUpTo": "Discounts up to {value}%",
+  "Price.discount": "Discount {value}%"
 }

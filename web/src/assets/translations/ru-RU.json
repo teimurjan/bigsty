@@ -215,5 +215,7 @@
   "AdminOrders.newProduct.placeholder": "Добавить продукт",
   "AdminOrders.items": "Товары",
   "AdminOrders.statusSelect.label": "Статус",
-  "common.errors.field.atLeast1": "Нужно добавить минимум 1 элемент"
+  "common.errors.field.atLeast1": "Нужно добавить минимум 1 элемент",
+  "Price.discountUpTo": "Скидки до {value}%",
+  "Price.discount": "Скидка {value}%"
 }
