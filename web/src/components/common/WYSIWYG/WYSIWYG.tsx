@@ -23,8 +23,8 @@ interface IEditor {
 }
 
 const CKEditorLazy = React.lazy(async () => {
-  const CKEditor = await import('@ckeditor/ckeditor5-react');
-  const ClassicEditor = await import('@ckeditor/ckeditor5-build-classic');
+  const CKEditor = (await import('@ckeditor/ckeditor5-react')).default;
+  const ClassicEditor = (await import('@ckeditor/ckeditor5-build-classic')).default;
 
   return { default: (props: any) => <CKEditor editor={ClassicEditor} {...props} /> };
 });

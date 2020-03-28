@@ -4,6 +4,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 COPY yarn.lock /app/yarn.lock
+RUN set http_proxy= && set https_proxy= && yarn config delete proxy && npm config rm https-proxy && npm config rm proxy
 RUN yarn
 COPY . /app
-CMD env REACT_APP_SERVER_URL=http://localhost:5000 yarn start
+CMD env REACT_APP_SERVER_URL=http://localhost:5000 CHOKIDAR_USEPOLLING=true yarn start
