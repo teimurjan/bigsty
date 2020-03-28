@@ -3,20 +3,20 @@
   
   <url>
     <loc>{{ base_url }}</loc>
-    <lastmod>2020-03-25T04:38:55+00:00</lastmod>
+    <lastmod>2020-03-25</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   {%- for product_type in product_types %}
   <url>
     <loc>{{ base_url }}/products/{{ product_type.id }}</loc>
-    <lastmod>{{ product_type.updated_on.isoformat() }}</lastmod>
+    <lastmod>{{ product_type.updated_on.strftime('%Y-%m-%d') }}</lastmod>
     <changefreq>daily</changefreq>
   </url>
   {%- endfor -%}
   {%- for category in categories %}
   <url>
     <loc>{{ base_url }}/categories/{{ category.id }}/products</loc>
-    <lastmod>{{ category.updated_on.isoformat() }}</lastmod>
+    <lastmod>{{ category.updated_on.strftime('%Y-%m-%d') }}</lastmod>
     <changefreq>daily</changefreq>
   </url>
   {%- endfor -%}
