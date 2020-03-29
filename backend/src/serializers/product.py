@@ -33,7 +33,7 @@ class ProductSerializer(IntlSerializer):
     def with_serialized_product_type(self):
         from src.serializers.product_type import ProductTypeSerializer
         self._with_serialized_relation('_product_type', ProductType, ProductTypeSerializer, lambda serializer: serializer.in_language(
-            self._language).only(['id', 'name', 'category', 'feature_types']))
+            self._language).only(['id', 'name', 'image', 'category', 'feature_types']))
         return self
 
     def _serialize_product_type(self):

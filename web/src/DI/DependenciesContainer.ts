@@ -86,7 +86,6 @@ const makeResponseErrorInterceptor = (
       try {
         tokensRefreshStatusWV.set(Status.Busy);
         await authService.refreshTokens();
-        error.config.headers = { ...error.config.headers, ...headersManager.getHeaders() };
       } catch (e) {
         authService.logOut();
       } finally {
@@ -94,8 +93,9 @@ const makeResponseErrorInterceptor = (
       }
     } else if (tokensRefreshStatusWV.get() === Status.Busy) {
       await tokensRefreshStatusWV.watchPromise(status => status === Status.Idle);
-      error.config.headers = { ...error.config.headers, ...headersManager.getHeaders() };
     }
+
+    error.config.headers = headersManager.getHeaders();
 
     return APIClient.request(error.config);
   }

@@ -42,6 +42,7 @@ export interface IProductForCartResponseItem {
   product_type: {
     id: number;
     name: string;
+    image: string;
   };
   quantity: number;
   sku?: string;
