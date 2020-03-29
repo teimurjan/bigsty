@@ -27,7 +27,7 @@ export const Quantity = ({ count, allowedCount, onAddClick, onRemoveClick }: IPr
       <div>
         {intl.formatMessage({ id: 'common.quantity' })}: {count}
         {count > allowedCount && (
-          <small>
+          <small className="has-text-danger">
             <br />
             {intl.formatMessage({ id: 'Cart.onlySomeAvailable' }, { quantity: allowedCount })}
           </small>

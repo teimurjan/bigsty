@@ -47,6 +47,8 @@ const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, add
     0,
   );
 
+  const isAnyProductCountNotAllowed = products.some(product => product.quantity < getProductCount(product.id));
+
   return (
     <React.Fragment>
       <div>
@@ -70,6 +72,7 @@ const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, add
           width: 100%;
           text-transform: uppercase;
         `}
+        disabled={isAnyProductCountNotAllowed}
         onClick={goToNextStep}
       >
         {intl.formatMessage({ id: 'Cart.order' })}
@@ -158,7 +161,7 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, erro
       onSubmit={onSubmit}
       initialValues={initialValues as IFormValues}
       validate={validator.validate}
-      render={({ handleSubmit }) => (
+      render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <FinalFormField name="name" component={NameField} />
           <FinalFormField name="phone" component={PhoneField} />
@@ -171,6 +174,7 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, erro
               width: 100%;
               text-transform: uppercase;
             `}
+            loading={submitting}
           >
             {intl.formatMessage({ id: 'Cart.order' })}
           </Button>
