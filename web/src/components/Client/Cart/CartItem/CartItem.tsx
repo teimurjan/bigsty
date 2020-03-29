@@ -35,8 +35,7 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) 
         <Image
           css={css`
             height: 100px;
-            width: 100px;
-            display: flex;
+            flex: 0 0 100px;
           `}
           imgProps={{
             src: product.images[0] || product.product_type.image,
