@@ -30,7 +30,7 @@ export const Client = () => {
 
   return (
     <React.Fragment>
-      <HeaderContainer nav={isMobile ? navNode : null} />
+      <HeaderContainer nav={isMobile ? navNode : null} cart={<CartContainer />} />
       <Route exact={true} path="/login" component={LoginPageContainer} />
       <Route exact={true} path="/signup" component={SignUpPageContainer} />
       <Container
@@ -62,7 +62,6 @@ export const Client = () => {
             </Switch>
           </div>
         </div>
-        <CartContainer />
       </Container>
       <FooterView />
     </React.Fragment>

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import * as React from 'react';
 
-import { css, jsx } from '@emotion/core';
+import { css, jsx, keyframes } from '@emotion/core';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useIntl } from 'react-intl';
@@ -193,6 +193,16 @@ const ThirdStep: React.FC<IProps> = () => {
   );
 };
 
+const bounce = keyframes`
+  0%   { transform: scale(1,1)      translateY(0); }
+  10%  { transform: scale(1.1,.9)   translateY(0); }
+  30%  { transform: scale(.9,1.1)   translateY(-20px); }
+  50%  { transform: scale(1.05,.95) translateY(0); }
+  57%  { transform: scale(1,1)      translateY(-3px); }
+  64%  { transform: scale(1,1)      translateY(0); }
+  100% { transform: scale(1,1)      translateY(0); }
+`;
+
 export const CartView: React.FC<IProps> = props => {
   const { isOpen, open, close, step, cartItemsCount } = props;
   const theme = useTheme<ITheme>();
@@ -200,24 +210,24 @@ export const CartView: React.FC<IProps> = props => {
     <React.Fragment>
       <Button
         onClick={open}
-        className="is-large"
-        color="is-info"
         css={css`
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          border-radius: 100% !important;
+          border: none !important;
         `}
       >
         <span
           css={css`
             position: relative;
+            &:hover {
+              color: ${theme.dark};
+            }
           `}
           className="icon"
         >
           {cartItemsCount > 0 && (
             <span
+              key={cartItemsCount}
               css={css`
+                animation: ${bounce} 1s ease;
                 position: absolute;
                 width: 16px;
                 height: 16px;
@@ -225,14 +235,15 @@ export const CartView: React.FC<IProps> = props => {
                 font-size: 10px;
                 top: -10px;
                 right: -10px;
-                background: ${theme.danger};
+                background: ${theme.info};
+                color: white;
                 border-radius: 50%;
               `}
             >
               {cartItemsCount}
             </span>
           )}
-          <FontAwesomeIcon icon={faShoppingCart} />
+          <FontAwesomeIcon size="lg" icon={faShoppingCart} />
         </span>
       </Button>
       <Modal isOpen={isOpen}>

@@ -11,7 +11,7 @@ export interface IProps {
   productService: IProductService;
   id: number;
   actionText: string;
-  action: (product: IProductForProductTypeResponseItem) => void;
+  action?: (product: IProductForProductTypeResponseItem) => void;
 }
 
 export interface IViewProps {

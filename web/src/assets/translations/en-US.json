@@ -219,5 +219,6 @@
   "Price.discountUpTo": "Discounts up to {value}%",
   "Price.discount": "Discount {value}%",
   "common.logo": "Logo",
-  "FileInput.alt": "Preview image"
+  "FileInput.alt": "Preview image",
+  "common.addedToCart": "Added!"
 }

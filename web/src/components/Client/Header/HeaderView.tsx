@@ -27,7 +27,14 @@ import { LanguageDropdownContainer as LanguageDropdown } from '../LanguageDropdo
 import { IViewProps as IProps } from './HeaderPresenter';
 import { SearchContainer } from '../Search/SearchContainer';
 
-export const HeaderView = ({ user, onLogOutClick, nav }: IProps) => {
+const buttonsCSS = css`
+  margin: 0.25rem 1rem 0 1rem !important;
+  @media ${mediaQueries.maxWidth768} {
+    margin: 0 auto 0 auto !important;
+  }
+`;
+
+export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
   const intl = useIntl();
 
   const [isOpen, setOpen] = React.useState(false);
@@ -81,18 +88,10 @@ export const HeaderView = ({ user, onLogOutClick, nav }: IProps) => {
                   align-items: center;
                 `}
               >
-                <LanguageDropdown
-                  css={css`
-                    margin-right: 1rem;
-
-                    @media ${mediaQueries.maxWidth768} {
-                      margin-right: auto;
-                    }
-                  `}
-                />
+                <LanguageDropdown />
 
                 {isUserAnonymous(user) || isUserNotSetYet(user) ? (
-                  <div className="buttons">
+                  <div css={buttonsCSS} className="buttons">
                     <LinkButton outlined to="/login">
                       {intl.formatMessage({ id: 'Header.logIn' })}
                     </LinkButton>
@@ -101,7 +100,7 @@ export const HeaderView = ({ user, onLogOutClick, nav }: IProps) => {
                     </LinkButton>
                   </div>
                 ) : (
-                  <div className="buttons">
+                  <div css={buttonsCSS} className="buttons">
                     <Button onClick={onLogOutClick} outlined>
                       {intl.formatMessage({ id: 'Header.logOut' })}
                     </Button>
@@ -112,6 +111,8 @@ export const HeaderView = ({ user, onLogOutClick, nav }: IProps) => {
                     )}
                   </div>
                 )}
+
+                {cart}
               </div>
             </NavbarItem>
           </NavbarEnd>

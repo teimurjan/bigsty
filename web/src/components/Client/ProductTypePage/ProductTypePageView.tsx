@@ -95,7 +95,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
   );
 
   const onActionClick = React.useCallback(() => {
-    if (matchingProduct) {
+    if (matchingProduct && action) {
       action(matchingProduct);
     }
   }, [action, matchingProduct]);
