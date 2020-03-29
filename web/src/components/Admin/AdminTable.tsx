@@ -77,9 +77,17 @@ export class IntlRenderer<T> implements IRenderer<T> {
 }
 
 export class ImageRenderer<T> extends DefaultRenderer<T> {
+  private getAlt: (entity: T) => string;
+
+  constructor(getAlt: (entity: T) => string) {
+    super();
+    this.getAlt = getAlt;
+  }
+
   public renderEntity = (entity: T, { colKey }: IAdminTableRendererRequiredArgs) => (
     <Table.Cell>
       <img
+        alt={this.getAlt(entity)}
         css={css`
           max-width: 100px;
           margin: 0 auto;

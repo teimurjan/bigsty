@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
 
-import { IntlShape, injectIntl, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { Form, FormRenderProps, useFormState } from 'react-final-form';
 

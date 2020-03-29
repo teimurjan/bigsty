@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useIntl } from 'react-intl';
+
 import { formatMediaURL } from 'src/utils/url';
 
 interface IProps extends Omit<React.HTMLProps<HTMLInputElement>, 'onChange' | 'value'> {
@@ -24,6 +26,7 @@ const Filename = ({ file }: { file: IProps['value'] }) => {
 };
 
 export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview = true, onChange, accept }) => {
+  const intl = useIntl();
   const [previewURL, setPreviewURL] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
@@ -63,7 +66,7 @@ export const FileInput: React.SFC<IProps> = ({ placeholder, value, showPreview =
           <Filename file={value} />
         </label>
       </div>
-      {showPreview && previewURL && <img src={previewURL} />}
+      {showPreview && previewURL && <img alt={intl.formatMessage({ id: 'FileInput.alt' })} src={previewURL} />}
     </div>
   );
 };

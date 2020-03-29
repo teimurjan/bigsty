@@ -393,12 +393,12 @@ class App:
         )
         self.flask_app.add_url_rule(
             '/api/banners',
-            view_func=self.cache.cached(120, response_filter=lambda res: res[1] == OK_CODE)(AbstractView.as_view(
+            view_func=AbstractView.as_view(
                 'banners',
                 concrete_view=BannerListView(Validator(
                     CREATE_BANNER_VALIDATION_RULES), self.__banner_service, BannerSerializer),
                 middlewares=middlewares
-            )),
+            ),
             methods=['GET', 'POST']
         )
         self.flask_app.add_url_rule(

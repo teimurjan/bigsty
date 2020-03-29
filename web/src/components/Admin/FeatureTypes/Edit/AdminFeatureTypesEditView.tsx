@@ -24,8 +24,6 @@ const Fields = injectIntl(({ availableLocales, intl }: IFieldsProps & { intl: In
   />
 ));
 
-const getFieldsRenderer = (props: IFieldsProps) => () => <Fields {...props} />;
-
 export const AdminFeatureTypesEditView = ({
   isOpen,
   edit,

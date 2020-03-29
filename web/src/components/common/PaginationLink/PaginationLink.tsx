@@ -9,6 +9,8 @@ export interface IProps extends React.HTMLAttributes<HTMLLIElement> {
 
 export const PaginationLink = ({ children, className, isCurrent, ...props }: IProps) => (
   <li {...props}>
-    <a className={classNames('pagination-link', { 'is-current': isCurrent })}>{children}</a>
+    <button className={classNames('pagination-link', { 'is-current': isCurrent })}>
+      {children}
+    </button>
   </li>
 );

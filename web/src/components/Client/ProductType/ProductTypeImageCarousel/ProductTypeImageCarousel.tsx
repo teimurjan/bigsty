@@ -45,7 +45,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
                 margin: auto;
                 ${flexMixin};
               `}
-              imgProps={{ src: image, style: { margin: 'auto' } }}
+              imgProps={{ src: image, style: { margin: 'auto' }, alt: image }}
             />
           </CarouselItem>
         ))}
@@ -75,7 +75,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
                 margin-right: 10px;
                 ${flexMixin};
               `}
-              imgProps={{ src: image, style: { margin: 'auto' } }}
+              imgProps={{ src: image, style: { margin: 'auto' }, alt: image }}
             />
           );
         })}

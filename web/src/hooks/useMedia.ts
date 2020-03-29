@@ -15,6 +15,8 @@ export const useMedia = <T>(queries: string[], values: T[], defaultValue: T) => 
     const handler = () => setValue(getValue);
     mediaQueryLists.forEach(mql => mql.addListener(handler));
     return () => mediaQueryLists.forEach(mql => mql.removeListener(handler));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return value;

@@ -51,6 +51,7 @@ export const HeaderView = ({ user, onLogOutClick, nav }: IProps) => {
         <NavbarBrand>
           <Link className="navbar-item" to="/">
             <img
+              alt={intl.formatMessage({ id: 'common.logo' })}
               css={css`
                 max-height: 4.5rem !important;
                 padding-top: 1rem;

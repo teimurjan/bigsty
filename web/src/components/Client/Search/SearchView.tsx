@@ -60,6 +60,7 @@ export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoadi
               to={`/products/${productType.id}`}
             >
               <img
+                alt={productType.name}
                 css={css`
                   width: 30px;
                   height: 30px;

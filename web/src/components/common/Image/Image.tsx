@@ -8,6 +8,6 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Image = ({ imgProps, className, ...props }: IProps) => (
   <figure className={classNames('image', className)} {...props}>
-    <img {...imgProps} />
+    <img alt={imgProps.alt} {...imgProps} />
   </figure>
 );

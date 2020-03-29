@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios';
 
 import * as authAPI from 'src/api/AuthAPI';
 import * as categoryAPI from 'src/api/CategoryAPI';
@@ -28,6 +28,8 @@ import * as stateCacheStorage from 'src/storage/StateCacheStorage';
 import * as cartStorage from 'src/storage/CartStorage';
 
 import { HeadersManager } from 'src/manager/HeadersManager';
+
+import { WatchingValue } from 'src/utils/watching-value';
 
 export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
@@ -68,6 +70,39 @@ export interface IDependenciesContainer {
   storages: IStoragesContainer;
 }
 
+enum Status {
+  Idle,
+  Busy,
+}
+
+const tokensRefreshStatusWV = new WatchingValue<Status>(Status.Idle);
+const makeResponseErrorInterceptor = (
+  authService: authService.IAuthService,
+  APIClient: AxiosInstance,
+  headersManager: HeadersManager,
+) => async (error: { response: AxiosResponse; config: AxiosRequestConfig }) => {
+  if (error.response.status === 401) {
+    if (tokensRefreshStatusWV.get() === Status.Idle) {
+      try {
+        tokensRefreshStatusWV.set(Status.Busy);
+        await authService.refreshTokens();
+        error.config.headers = { ...error.config.headers, ...headersManager.getHeaders() };
+      } catch (e) {
+        authService.logOut();
+      } finally {
+        tokensRefreshStatusWV.set(Status.Idle);
+      }
+    } else if (tokensRefreshStatusWV.get() === Status.Busy) {
+      await tokensRefreshStatusWV.watchPromise(status => status === Status.Idle);
+      error.config.headers = { ...error.config.headers, ...headersManager.getHeaders() };
+    }
+
+    return APIClient.request(error.config);
+  }
+
+  throw error;
+};
+
 class DependenciesContainer implements IDependenciesContainer {
   public APIs: IAPIsContainer;
   public services: IServicesContainer;
@@ -89,25 +124,6 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
 
   const headersManager = new HeadersManager(storagesContainer.auth, storagesContainer.intl);
   const APIClient = axios.create({ baseURL: process.env.REACT_APP_SERVER_URL });
-
-  APIClient.interceptors.response.use(undefined, async error => {
-    if (error.response.status === 401) {
-      const refreshToken = storagesContainer.auth.getRefreshToken();
-      if (refreshToken) {
-        try {
-          await servicesContainer.auth.refreshTokens(refreshToken);
-          const config = error.config;
-          config.headers = { ...config.headers, ...headersManager.getHeaders() };
-          return APIClient.request(config);
-        } catch (e) {}
-      }
-
-      servicesContainer.auth.logOut();
-      window.location.reload();
-    }
-
-    throw error;
-  });
 
   const APIsContainer = {
     auth: new authAPI.AuthAPI(APIClient, headersManager),
@@ -134,6 +150,11 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
     banner: new bannerService.BannerService(APIsContainer.banner),
     order: new orderService.OrderService(APIsContainer.order),
   };
+
+  APIClient.interceptors.response.use(
+    undefined,
+    makeResponseErrorInterceptor(servicesContainer.auth, APIClient, headersManager),
+  );
 
   return new DependenciesContainer(APIsContainer, storagesContainer, servicesContainer);
 };

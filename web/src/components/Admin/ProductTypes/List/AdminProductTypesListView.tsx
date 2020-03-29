@@ -66,7 +66,7 @@ export const AdminProductTypesListView = ({
       <AdminTable.Col<ProductType>
         key_="image"
         title={intl.formatMessage({ id: 'AdminProductTypes.image' })}
-        renderer={new ImageRenderer()}
+        renderer={new ImageRenderer(productType => productType.name[intl.locale])}
       />
     </AdminTable>
 

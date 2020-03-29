@@ -41,7 +41,10 @@ export const ProductTypeCard = ({ productType }: IProps) => {
         `}
       >
         <CardImage>
-          <Image className="image is-square" imgProps={{ src: formatMediaURL(productType.image) }} />
+          <Image
+            className="image is-square"
+            imgProps={{ src: formatMediaURL(productType.image), alt: productType.name }}
+          />
         </CardImage>
         <CardContent
           css={css`

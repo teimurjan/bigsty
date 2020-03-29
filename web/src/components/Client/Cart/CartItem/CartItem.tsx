@@ -38,7 +38,7 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) 
             width: 100px;
             display: flex;
           `}
-          imgProps={{ src: product.images[0], style: { margin: 'auto' } }}
+          imgProps={{ src: product.images[0], style: { margin: 'auto' }, alt: product.product_type.name }}
         />
         <div
           css={css`

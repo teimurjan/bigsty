@@ -46,6 +46,7 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
     appState: { setLoading, setIdle },
   } = useAppState();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [rates, setRates] = React.useState<IRates>({});
 

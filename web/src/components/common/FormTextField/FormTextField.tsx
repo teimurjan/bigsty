@@ -5,7 +5,6 @@ import { Field, IProps as FieldProps } from '../Field/Field';
 import { HelpText, IProps as HelpTextProps } from '../HelpText/HelpText';
 import { Input, IProps as InputProps } from '../Input/Input';
 import { IProps as LabelProps, Label } from '../Label/Label';
-import { string } from 'yup';
 
 interface IProps {
   controlProps?: ControlProps;

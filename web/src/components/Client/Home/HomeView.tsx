@@ -77,6 +77,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                   `}
                 >
                   <img
+                    alt={banner.text}
                     css={css`
                       margin: auto;
                       display: block;

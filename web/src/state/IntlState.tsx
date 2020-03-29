@@ -87,6 +87,7 @@ export const IntlStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const [availableLocales, setAvailableLocales] = React.useState<IIntlListResponseItem[]>([]);
   const [locale, setLocale] = React.useState<string>(DEFAULT_LOCALE);
   const [messages, setMessages] = React.useState<{ [key: string]: string }>(defaultMessages);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isInitialized, setInitialized] = React.useState(false);
 

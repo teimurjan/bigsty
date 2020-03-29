@@ -6,7 +6,7 @@ export interface IAuthService {
   logIn(email: string, password: string): Promise<void>;
   signUp(name: string, email: string, password: string): Promise<void>;
   confirmSignup(token: string): Promise<void>;
-  refreshTokens(refreshToken: string): void;
+  refreshTokens(): Promise<void>;
   getAccessToken(): string | null;
   logOut(): void;
 }
@@ -25,6 +25,12 @@ export const errors = {
     }
   },
   InvalidSignupToken: class extends Error {
+    constructor() {
+      super();
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
+  NoRefreshToken: class extends Error {
     constructor() {
       super();
       Object.setPrototypeOf(this, new.target.prototype);
@@ -83,11 +89,16 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async refreshTokens(oldRefreshToken: string) {
-    const { accessToken, refreshToken } = await this.API.refreshTokens(oldRefreshToken);
+  public async refreshTokens() {
+    const oldRefreshToken = this.storage.getRefreshToken();
+    if (oldRefreshToken) {
+      const { accessToken, refreshToken } = await this.API.refreshTokens(oldRefreshToken);
 
-    this.storage.setAccessToken(accessToken);
-    this.storage.setRefreshToken(refreshToken);
+      this.storage.setAccessToken(accessToken);
+      this.storage.setRefreshToken(refreshToken);
+    } else {
+      throw new errors.NoRefreshToken();
+    }
   }
 
   public getAccessToken() {

@@ -81,6 +81,7 @@ export const ProductSelectView: React.FC<IProps> = ({
               key={productType.id}
             >
               <img
+                alt={productType.name}
                 css={css`
                   width: 30px;
                   height: 30px;
