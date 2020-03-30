@@ -5,14 +5,14 @@ import { useIntl, IntlShape } from 'react-intl';
 import { NavLink, Link } from 'react-router-dom';
 
 
+import { IViewProps as IProps } from 'src/components/Admin/Header/AdminHeaderPresenter';
+import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
 import { ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
 import { Menu } from 'src/components/common/Menu/Menu';
 import { mediaQueries } from 'src/styles/media';
 import { fullWidthMixin } from 'src/styles/mixins';
 
-import { LanguageDropdownContainer as LanguageDropdown } from '../../Client/LanguageDropdown/LanguageDropdownContainer';
 
-import { IViewProps as IProps } from './AdminHeaderPresenter';
 
 
 const LanguageDrodownTrigger = ({ onClick, ...props }: ITriggerProps) => {

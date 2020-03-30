@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 
+import { AdminFeatureTypesListPresenter } from 'src/components/Admin/FeatureTypes/List/AdminFeatureTypesListPresenter';
+import { AdminFeatureTypesListView } from 'src/components/Admin/FeatureTypes/List/AdminFeatureTypesListView';
 import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 import { useIntlState } from 'src/state/IntlState';
 
-import { AdminFeatureTypesListPresenter } from './AdminFeatureTypesListPresenter';
-import { AdminFeatureTypesListView } from './AdminFeatureTypesListView';
 
 export const AdminFeatureTypesListContainer = () => {
   const { adminFeatureTypesState } = useAdminFeatureTypesState();

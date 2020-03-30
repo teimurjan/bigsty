@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { useDependencies } from 'src/DI/DI';
 
-import { SearchPresenter } from './SearchPresenter';
-import { SearchView } from './SearchView';
+import { SearchPresenter } from 'src/components/Client/Search/SearchPresenter';
+import { SearchView } from 'src/components/Client/Search/SearchView';
+import { useDependencies } from 'src/DI/DI';
 
 export const SearchContainer = () => {
   const { dependencies } = useDependencies();

@@ -9,9 +9,9 @@ import { Button } from 'src/components/common/Button/Button';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { Message } from 'src/components/common/Message/Message';
+import { IViewProps as IProps, IFormValues } from 'src/components/SignUp/SignUpForm/SignUpFormPresenter';
 import { textCenterMixin } from 'src/styles/mixins';
 
-import { IViewProps as IProps, IFormValues } from './SignUpFormPresenter';
 
 export class SignUpFormView extends React.Component<IProps & { intl: IntlShape }> {
   public render() {

@@ -5,15 +5,15 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Transition } from 'react-transition-group';
 
+import { IViewProps as IProps } from 'src/components/Client/Home/HomePresenter';
+import { ProductTypesListView } from 'src/components/Client/ProductType/ProductTypesList/ProductTypesListView';
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { Title } from 'src/components/common/Title/Title';
 import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
 
-import { ProductTypesListView } from '../ProductType/ProductTypesList/ProductTypesListView';
 
-import { IViewProps as IProps } from './HomePresenter';
 
 const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
   const horizontalRule = banner.text_left_offset

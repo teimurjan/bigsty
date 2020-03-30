@@ -6,6 +6,9 @@ import { useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import logo from 'src/assets/images/logo.png';
+import { IViewProps as IProps } from 'src/components/Client/Header/HeaderPresenter';
+import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
+import { SearchContainer } from 'src/components/Client/Search/SearchContainer';
 import { Button } from 'src/components/common/Button/Button';
 import { Container } from 'src/components/common/Container/Container';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
@@ -20,10 +23,7 @@ import { isUserAdmin, isUserAnonymous, isUserNotSetYet } from 'src/helpers/user'
 import { useWindowScroll } from 'src/hooks/useWindowScroll';
 import { mediaQueries } from 'src/styles/media';
 
-import { LanguageDropdownContainer as LanguageDropdown } from '../LanguageDropdown/LanguageDropdownContainer';
-import { SearchContainer } from '../Search/SearchContainer';
 
-import { IViewProps as IProps } from './HeaderPresenter';
 
 const buttonsCSS = css`
   margin: 0.25rem 1rem 0 1rem !important;

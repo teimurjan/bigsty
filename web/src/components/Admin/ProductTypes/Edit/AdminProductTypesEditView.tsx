@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { ModalForm } from '../../ModalForm';
+import { ModalForm } from 'src/components/Admin/ModalForm';
 import {
   PRODUCT_TYPE_NAME_FIELD_KEY,
   PRODUCT_TYPE_DESCRIPTION_FIELD_KEY,
   PRODUCT_TYPE_SHORT_DESCRIPTION_FIELD_KEY,
-} from '../Create/AdminProductTypesCreatePresenter';
-import { Fields } from '../Create/Fields';
+} from 'src/components/Admin/ProductTypes/Create/AdminProductTypesCreatePresenter';
+import { Fields } from 'src/components/Admin/ProductTypes/Create/Fields';
+import { IViewProps as IProps } from 'src/components/Admin/ProductTypes/Edit/AdminProductTypesEditPresenter';
 
-import { IViewProps as IProps } from './AdminProductTypesEditPresenter';
+
 
 
 export const AdminProductTypesEditView = ({

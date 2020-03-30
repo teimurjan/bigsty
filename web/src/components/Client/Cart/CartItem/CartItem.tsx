@@ -3,14 +3,14 @@ import { css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 
 import { IProductForCartResponseItem } from 'src/api/ProductAPI';
+import { Quantity } from 'src/components/Client/Cart/CartItem/Quantity';
+import { PriceCrossedText } from 'src/components/Client/Price/Price';
 import { Image } from 'src/components/common/Image/Image';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Title } from 'src/components/common/Title/Title';
 import { ITheme } from 'src/themes';
 
-import { PriceCrossedText } from '../../Price/Price';
 
-import { Quantity } from './Quantity';
 
 interface IProps {
   product: IProductForCartResponseItem;

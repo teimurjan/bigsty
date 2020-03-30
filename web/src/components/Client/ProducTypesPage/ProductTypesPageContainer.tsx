@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useParams } from 'react-router';
 
+import { ProductTypesListView } from 'src/components/Client/ProductType/ProductTypesList/ProductTypesListView';
+import { ProductTypesPagePresenter } from 'src/components/Client/ProducTypesPage/ProductTypesPagePresenter';
 import { useDependencies } from 'src/DI/DI';
 
-import { ProductTypesListView } from '../ProductType/ProductTypesList/ProductTypesListView';
 
-import { ProductTypesPagePresenter } from './ProductTypesPagePresenter';
 
 export const ProductTypesPageContainer = () => {
   const { dependencies } = useDependencies();

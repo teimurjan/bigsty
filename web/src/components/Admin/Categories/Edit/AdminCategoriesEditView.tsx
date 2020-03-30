@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { ModalForm } from '../../ModalForm';
-import { Fields } from '../Create/Fields';
+import { Fields } from 'src/components/Admin/Categories/Create/Fields';
+import { CATEGORY_NAME_FIELD_KEY, IViewProps as IProps } from 'src/components/Admin/Categories/Edit/AdminCategoriesEditPresenter';
+import { ModalForm } from 'src/components/Admin/ModalForm';
 
-import { CATEGORY_NAME_FIELD_KEY, IViewProps as IProps } from './AdminCategoriesEditPresenter';
 
 
 export const AdminCategoriesEditView = ({

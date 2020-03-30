@@ -6,6 +6,20 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Route, Switch } from 'react-router';
 
+import { AdminBanners } from 'src/components/Admin/Banners/AdminBanners';
+import { AdminCategories } from 'src/components/Admin/Categories/AdminCategories';
+import { NewCategoryButton } from 'src/components/Admin/Categories/List/AdminCategoriesListView';
+import { AdminFeatureTypes } from 'src/components/Admin/FeatureTypes/AdminFeatureTypes';
+import { NewFeatureTypeButton } from 'src/components/Admin/FeatureTypes/List/AdminFeatureTypesListView';
+import { AdminFeatureValues } from 'src/components/Admin/FeatureValues/AdminFeatureValues';
+import { NewFeatureValueButton } from 'src/components/Admin/FeatureValues/List/AdminFeatureValuesListView';
+import { AdminHeaderContainer } from 'src/components/Admin/Header/AdminHeaderContainer';
+import { AdminOrders } from 'src/components/Admin/Orders/AdminOrders';
+import { AdminProducts } from 'src/components/Admin/Products/AdminProducts';
+import { Section } from 'src/components/common/Section/Section';
+import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
+import { Tag } from 'src/components/common/Tag/Tag';
+import { Title } from 'src/components/common/Title/Title';
 import { AdminBannersStateProvider } from 'src/state/AdminBannersState';
 import { AdminCategoriesStateProvider } from 'src/state/AdminCategoriesState';
 import { AdminFeatureTypesStateProvider } from 'src/state/AdminFeatureTypesState';
@@ -22,24 +36,10 @@ import {
   marginAutoMixin,
 } from 'src/styles/mixins';
 
-import { Section } from '../common/Section/Section';
-import { Subtitle } from '../common/Subtitle/Subtitle';
-import { Tag } from '../common/Tag/Tag';
-import { Title } from '../common/Title/Title';
 
-import { AdminBanners } from './Banners/AdminBanners';
-import { AdminCategories } from './Categories/AdminCategories';
-import { NewCategoryButton } from './Categories/List/AdminCategoriesListView';
-import { AdminFeatureTypes } from './FeatureTypes/AdminFeatureTypes';
-import { NewFeatureTypeButton } from './FeatureTypes/List/AdminFeatureTypesListView';
-import { AdminFeatureValues } from './FeatureValues/AdminFeatureValues';
-import { NewFeatureValueButton } from './FeatureValues/List/AdminFeatureValuesListView';
-import { AdminHeaderContainer } from './Header/AdminHeaderContainer';
-import { AdminOrders } from './Orders/AdminOrders';
-import { AdminProducts } from './Products/AdminProducts';
-import { NewProductButton } from './Products/List/AdminProductsListView';
-import { AdminProductTypes } from './ProductTypes/AdminProductTypes';
-import { NewProductTypeButton } from './ProductTypes/List/AdminProductTypesListView';
+import { NewProductButton } from 'src/components/Admin/Products/List/AdminProductsListView';
+import { AdminProductTypes } from 'src/components/Admin/ProductTypes/AdminProductTypes';
+import { NewProductTypeButton } from 'src/components/Admin/ProductTypes/List/AdminProductTypesListView';
 
 interface IProps {
   match: { path: string };

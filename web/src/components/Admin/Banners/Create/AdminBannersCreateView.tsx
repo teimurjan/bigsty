@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { ModalForm } from '../../ModalForm';
 
-import { BANNER_TEXT_FIELD_KEY, BANNER_LINK_TEXT_FIELD_KEY, IViewProps as IProps } from './AdminBannersCreatePresenter';
-import { Fields } from './Fields';
+import { BANNER_TEXT_FIELD_KEY, BANNER_LINK_TEXT_FIELD_KEY, IViewProps as IProps } from 'src/components/Admin/Banners/Create/AdminBannersCreatePresenter';
+import { Fields } from 'src/components/Admin/Banners/Create/Fields';
+import { ModalForm } from 'src/components/Admin/ModalForm';
 
 export const AdminBannersCreateView = ({
   isOpen,

@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
-import { ModalForm } from '../../ModalForm';
-
-import { IViewProps as IProps } from './AdminOrdersEditPresenter';
-import { Fields } from './Fields';
+import { ModalForm } from 'src/components/Admin/ModalForm';
+import { IViewProps as IProps } from 'src/components/Admin/Orders/Edit/AdminOrdersEditPresenter';
+import { Fields } from 'src/components/Admin/Orders/Edit/Fields';
 
 export const AdminOrdersEditView = ({
   isOpen,

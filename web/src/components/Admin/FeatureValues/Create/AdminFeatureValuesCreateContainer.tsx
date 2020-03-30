@@ -2,14 +2,14 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
+import { AdminFeatureValuesCreatePresenter } from 'src/components/Admin/FeatureValues/Create/AdminFeatureValuesCreatePresenter';
+import { AdminFeatureValuesCreateView } from 'src/components/Admin/FeatureValues/Create/AdminFeatureValuesCreateView';
 import { useDependencies } from 'src/DI/DI';
 import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
 import { useIntlState } from 'src/state/IntlState';
 
 
-import { AdminFeatureValuesCreatePresenter } from './AdminFeatureValuesCreatePresenter';
-import { AdminFeatureValuesCreateView } from './AdminFeatureValuesCreateView';
 
 export const AdminFeatureValuesCreateContainer = () => {
   const history = useHistory();

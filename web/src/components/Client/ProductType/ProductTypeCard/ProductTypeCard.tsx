@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
+import { PriceRangeText } from 'src/components/Client/Price/Price';
 import { Button } from 'src/components/common/Button/Button';
 import { Card } from 'src/components/common/Card/Card';
 import { CardContent } from 'src/components/common/CardContent/CardContent';
@@ -14,7 +15,6 @@ import { Title } from 'src/components/common/Title/Title';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
 
-import { PriceRangeText } from '../../Price/Price';
 
 export interface IProps {
   productType: IProductTypeListResponseItem;

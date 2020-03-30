@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as React from 'react';
 
 
-import { useAppState } from './AppState';
+import { useAppState } from 'src/state/AppState';
 
 const nodeValueToFloat = (node: Element) => parseFloat(node.textContent ? node.textContent.replace(',', '.') : '');
 

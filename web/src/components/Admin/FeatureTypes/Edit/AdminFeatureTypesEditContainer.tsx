@@ -2,13 +2,13 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import { useHistory, useParams } from 'react-router';
 
+import { AdminFeatureTypesEditPresenter } from 'src/components/Admin/FeatureTypes/Edit/AdminFeatureTypesEditPresenter';
+import { AdminFeatureTypesEditView } from 'src/components/Admin/FeatureTypes/Edit/AdminFeatureTypesEditView';
 import { useDependencies } from 'src/DI/DI';
 import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 import { useIntlState } from 'src/state/IntlState';
 
 
-import { AdminFeatureTypesEditPresenter } from './AdminFeatureTypesEditPresenter';
-import { AdminFeatureTypesEditView } from './AdminFeatureTypesEditView';
 
 export const AdminFeatureTypesEditContainer = () => {
   const history = useHistory();

@@ -3,6 +3,12 @@ import * as React from 'react';
 import * as yup from 'yup';
 
 import { IProductTypeListRawIntlResponseItem } from 'src/api/ProductTypeAPI';
+import { getFieldName, parseFieldName } from 'src/components/Admin/IntlField';
+import {
+  PRODUCT_TYPE_NAME_FIELD_KEY,
+  PRODUCT_TYPE_DESCRIPTION_FIELD_KEY,
+  PRODUCT_TYPE_SHORT_DESCRIPTION_FIELD_KEY,
+} from 'src/components/Admin/ProductTypes/Create/AdminProductTypesCreatePresenter';
 import * as schemaValidator from 'src/components/SchemaValidator';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { useLazy } from 'src/hooks/useLazy';
@@ -12,12 +18,6 @@ import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/A
 import { IContextValue as AdminProductTypesStateContextValue } from 'src/state/AdminProductTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { getFieldName, parseFieldName } from '../../IntlField';
-import {
-  PRODUCT_TYPE_NAME_FIELD_KEY,
-  PRODUCT_TYPE_DESCRIPTION_FIELD_KEY,
-  PRODUCT_TYPE_SHORT_DESCRIPTION_FIELD_KEY,
-} from '../Create/AdminProductTypesCreatePresenter';
 
 export interface IProps
   extends AdminCategoriesStateContextValue,

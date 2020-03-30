@@ -10,11 +10,11 @@ import { IntlShape } from 'react-intl';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Table } from 'src/components/common/Table/Table';
+import { UncontrolledPagination } from 'src/components/common/UncontrolledPagination/UncontrolledPagination';
 import { mediaQueries } from 'src/styles/media';
 import { textCenterMixin } from 'src/styles/mixins';
 import { formatMediaURL } from 'src/utils/url';
 
-import { UncontrolledPagination } from '../common/UncontrolledPagination/UncontrolledPagination';
 
 interface IAdminTableRendererRequiredArgs {
   componentKey: string;

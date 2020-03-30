@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
+import { IViewProps as IProps } from 'src/components/Client/LanguageDropdown/LanguageDropdownPresenter';
 import { Dropdown, ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
 import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
 
-import { IViewProps as IProps } from './LanguageDropdownPresenter';
 
 const DefaultDropdownTrigger = ({ onClick, ...props }: ITriggerProps) => {
   const modifiedOnClick = React.useCallback(

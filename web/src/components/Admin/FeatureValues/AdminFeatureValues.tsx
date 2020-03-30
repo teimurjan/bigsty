@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Route, RouteComponentProps } from 'react-router';
 
-import { AdminFeatureValuesCreateContainer } from './Create/AdminFeatureValuesCreateContainer';
-import { AdminFeatureValuesDeleteContainer } from './Delete/AdminFeatureValuesDeleteContainer';
-import { AdminFeatureValuesEditContainer } from './Edit/AdminFeatureValuesEditContainer';
-import { AdminFeatureValuesListContainer } from './List/AdminFeatureValuesListContainer';
+import { AdminFeatureValuesCreateContainer } from 'src/components/Admin/FeatureValues/Create/AdminFeatureValuesCreateContainer';
+import { AdminFeatureValuesDeleteContainer } from 'src/components/Admin/FeatureValues/Delete/AdminFeatureValuesDeleteContainer';
+import { AdminFeatureValuesEditContainer } from 'src/components/Admin/FeatureValues/Edit/AdminFeatureValuesEditContainer';
+import { AdminFeatureValuesListContainer } from 'src/components/Admin/FeatureValues/List/AdminFeatureValuesListContainer';
 
 export const AdminFeatureValues = ({ match }: RouteComponentProps<any>) => (
   <>

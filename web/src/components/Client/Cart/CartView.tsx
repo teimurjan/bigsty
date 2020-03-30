@@ -7,6 +7,9 @@ import * as React from 'react';
 import { Form, Field as FinalFormField, FieldRenderProps } from 'react-final-form';
 import { useIntl } from 'react-intl';
 
+import { CartItem } from 'src/components/Client/Cart/CartItem/CartItem';
+import { IViewProps as IProps, IFormValues } from 'src/components/Client/Cart/CartPresenter';
+import { PriceText } from 'src/components/Client/Price/Price';
 import { Button } from 'src/components/common/Button/Button';
 import { FormPhoneField } from 'src/components/common/FormPhoneField/FormPhoneField';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
@@ -24,10 +27,7 @@ import { ITheme } from 'src/themes';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { parsePhoneNumber } from 'src/utils/phone';
 
-import { PriceText } from '../Price/Price';
 
-import { CartItem } from './CartItem/CartItem';
-import { IViewProps as IProps, IFormValues } from './CartPresenter';
 
 const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, addMore, remove, goToNextStep }) => {
   const intl = useIntl();

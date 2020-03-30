@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router';
 
+import { AdminBannersEditPresenter } from 'src/components/Admin/Banners/Edit/AdminBannersEditPresenter';
+import { AdminBannersEditView } from 'src/components/Admin/Banners/Edit/AdminBannersEditView';
 import { useDependencies } from 'src/DI/DI';
 import { useAdminBannersState } from 'src/state/AdminBannersState';
 import { useIntlState } from 'src/state/IntlState';
 
 
-import { AdminBannersEditPresenter } from './AdminBannersEditPresenter';
-import { AdminBannersEditView } from './AdminBannersEditView';
 
 export const AdminBannersEditContainer = () => {
   const history = useHistory();

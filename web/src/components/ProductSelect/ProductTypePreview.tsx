@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
-import { useDependencies } from 'src/DI/DI';
-
 import {
   ProductTypePagePresenter,
   IProps as IPresenterProps,
-} from '../Client/ProductTypePage/ProductTypePagePresenter';
-import { ProductTypePageView } from '../Client/ProductTypePage/ProductTypePageView';
+} from 'src/components/Client/ProductTypePage/ProductTypePagePresenter';
+import { ProductTypePageView } from 'src/components/Client/ProductTypePage/ProductTypePageView';
+import { useDependencies } from 'src/DI/DI';
+
 
 export interface IProps {
   id: number;

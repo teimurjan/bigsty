@@ -3,13 +3,13 @@ import { jsx } from '@emotion/core';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
+import { IViewProps as IProps } from 'src/components/Admin/FeatureValues/List/AdminFeatureValuesListPresenter';
+import { FeatureValueTypeRenderer } from 'src/components/Admin/FeatureValues/List/FeatureValueTypeRenderer';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
 import { fullWidthMixin } from 'src/styles/mixins';
 
-import { IViewProps as IProps } from './AdminFeatureValuesListPresenter';
-import { FeatureValueTypeRenderer } from './FeatureValueTypeRenderer';
 
 export const NewFeatureValueButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/featureValues/new" color="is-primary">

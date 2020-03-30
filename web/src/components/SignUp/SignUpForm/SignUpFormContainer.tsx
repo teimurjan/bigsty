@@ -2,10 +2,10 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
-import { useDependencies } from 'src/DI/DI';
 
-import { SignUpFormPresenter } from './SignUpFormPresenter';
-import { SignUpFormView } from './SignUpFormView';
+import { SignUpFormPresenter } from 'src/components/SignUp/SignUpForm/SignUpFormPresenter';
+import { SignUpFormView } from 'src/components/SignUp/SignUpForm/SignUpFormView';
+import { useDependencies } from 'src/DI/DI';
 
 export const SignUpFormContainer = () => {
   const history = useHistory();

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 
+import { AdminHeaderPresenter } from 'src/components/Admin/Header/AdminHeaderPresenter';
+import { AdminHeaderView } from 'src/components/Admin/Header/AdminHeaderView';
 import { useAppState } from 'src/state/AppState';
 import { useUserState } from 'src/state/UserState';
 
-import { AdminHeaderPresenter } from './AdminHeaderPresenter';
-import { AdminHeaderView } from './AdminHeaderView';
 
 export const AdminHeaderContainer = () => {
   const { appState } = useAppState();

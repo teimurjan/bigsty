@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
+import { IViewProps as IProps } from 'src/components/Admin/DeleteModal/DeleteModalPresenter';
 import { Button } from 'src/components/common/Button/Button';
 import { Message } from 'src/components/common/Message/Message';
 import { Modal } from 'src/components/common/Modal/Modal';
@@ -8,7 +9,6 @@ import { ModalBackground } from 'src/components/common/ModalBackground/ModalBack
 import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 
-import { IViewProps as IProps } from './DeleteModalPresenter';
 
 export const DeleteModalView = ({
   isOpen,

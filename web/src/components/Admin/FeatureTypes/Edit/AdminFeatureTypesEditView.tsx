@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { IntlShape, injectIntl } from 'react-intl';
 
-import { IntlField } from '../../IntlField';
-import { ModalForm } from '../../ModalForm';
+import { FEATURE_TYPE_NAME_FIELD_KEY, IViewProps as IProps } from 'src/components/Admin/FeatureTypes/Edit/AdminFeatureTypesEditPresenter';
+import { IntlField } from 'src/components/Admin/IntlField';
+import { ModalForm } from 'src/components/Admin/ModalForm';
 
-import { FEATURE_TYPE_NAME_FIELD_KEY, IViewProps as IProps } from './AdminFeatureTypesEditPresenter';
 
 interface IFieldsProps {
   availableLocales: IProps['availableLocales'];

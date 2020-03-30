@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 
+import { AdminOrdersListPresenter } from 'src/components/Admin/Orders/List/AdminOrdersListPresenter';
+import { AdminOrdersListView } from 'src/components/Admin/Orders/List/AdminOrdersListView';
 import { useAdminOrdersState } from 'src/state/AdminOrdersState';
 import { useIntlState } from 'src/state/IntlState';
 
-import { AdminOrdersListPresenter } from './AdminOrdersListPresenter';
-import { AdminOrdersListView } from './AdminOrdersListView';
 
 export const AdminOrdersListContainer = () => {
   const { intlState } = useIntlState();

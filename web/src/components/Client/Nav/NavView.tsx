@@ -4,10 +4,10 @@ import { css, jsx } from '@emotion/core';
 import { IntlShape } from 'react-intl';
 import { NavLink } from 'react-router-dom';
 
+import { IViewProps as IProps } from 'src/components/Client/Nav/NavPresenter';
 import { Menu } from 'src/components/common/Menu/Menu';
 import { mediaQueries } from 'src/styles/media';
 
-import { IViewProps as IProps } from './NavPresenter';
 
 export const NavView = ({ intl, categories }: IProps & { intl: IntlShape }) => {
   return (

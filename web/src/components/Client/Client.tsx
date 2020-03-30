@@ -3,8 +3,14 @@ import { css, jsx } from '@emotion/core';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import { CartContainer } from 'src/components/Client/Cart/CartContainer';
+import { FooterView } from 'src/components/Client/Footer/FooterView';
 import { HeaderContainer } from 'src/components/Client/Header/HeaderContainer';
+import { HomeContainer } from 'src/components/Client/Home/HomeContainer';
+import { NavContainer } from 'src/components/Client/Nav/NavContainer';
+import { ProductTypePageContainer } from 'src/components/Client/ProductTypePage/ProductTypePageContainer';
 import { ProductTypesPageContainer } from 'src/components/Client/ProducTypesPage/ProductTypesPageContainer';
+import { Container } from 'src/components/common/Container/Container';
 import { LoginPageContainer } from 'src/components/Login/LoginPage/LoginPageContainer';
 import { NotFoundContainer } from 'src/components/NotFound/NotFoundContainer';
 import { SignUpPageContainer } from 'src/components/SignUp/SignUpPage/SignUpPageContainer';
@@ -12,13 +18,7 @@ import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
 import { flexMixin } from 'src/styles/mixins';
 
-import { Container } from '../common/Container/Container';
 
-import { CartContainer } from './Cart/CartContainer';
-import { FooterView } from './Footer/FooterView';
-import { HomeContainer } from './Home/HomeContainer';
-import { NavContainer } from './Nav/NavContainer';
-import { ProductTypePageContainer } from './ProductTypePage/ProductTypePageContainer';
 
 
 export const Client = () => {

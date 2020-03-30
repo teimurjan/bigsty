@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { useDependencies } from 'src/DI/DI';
 
-import { ProductSelectPresenter, IProps as IPresenterProps } from './ProductSelectPresenter';
-import { ProductSelectView } from './ProductSelectView';
+import { ProductSelectPresenter, IProps as IPresenterProps } from 'src/components/ProductSelect/ProductSelectPresenter';
+import { ProductSelectView } from 'src/components/ProductSelect/ProductSelectView';
+import { useDependencies } from 'src/DI/DI';
 
 interface IProps {
   onChange: IPresenterProps['onChange'];

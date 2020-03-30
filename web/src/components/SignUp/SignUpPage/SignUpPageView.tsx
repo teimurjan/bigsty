@@ -9,11 +9,11 @@ import { ModalBackground } from 'src/components/common/ModalBackground/ModalBack
 import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 import { Title } from 'src/components/common/Title/Title';
+import { SignUpFormContainer } from 'src/components/SignUp/SignUpForm/SignUpFormContainer';
+import { IViewProps } from 'src/components/SignUp/SignUpPage/SignUpPagePresenter';
 import { textCenterMixin } from 'src/styles/mixins';
 
-import { SignUpFormContainer } from '../SignUpForm/SignUpFormContainer';
 
-import { IViewProps } from './SignUpPagePresenter';
 
 export class SignUpPageView extends React.Component<IViewProps & { intl: IntlShape }> {
   public render() {

@@ -3,8 +3,8 @@ import { FieldRenderProps } from 'react-final-form';
 import InputMask from 'react-input-mask';
 import { useIntl } from 'react-intl';
 
-import { FormTextField } from '../FormTextField/FormTextField';
-import { Input } from '../Input/Input';
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+import { Input } from 'src/components/common/Input/Input';
 
 interface IProps {
   label: string;

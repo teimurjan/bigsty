@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
-import { useDependencies } from 'src/DI/DI';
 
-import { ConfirmSignupPresenter } from './ConfirmSignupPresenter';
-import { ConfirmSignupView } from './ConfirmSignupView';
+import { ConfirmSignupPresenter } from 'src/components/ConfirmSignup/ConfirmSignupPresenter';
+import { ConfirmSignupView } from 'src/components/ConfirmSignup/ConfirmSignupView';
+import { useDependencies } from 'src/DI/DI';
 
 export const ConfirmSignupContainer = () => {
   const { dependencies } = useDependencies();

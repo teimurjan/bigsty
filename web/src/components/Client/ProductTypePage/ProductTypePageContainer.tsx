@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router';
 
-import { useDependencies } from 'src/DI/DI';
 
-import { ProductTypePagePresenter, IProps } from './ProductTypePagePresenter';
-import { ProductTypePageView } from './ProductTypePageView';
+import { ProductTypePagePresenter, IProps } from 'src/components/Client/ProductTypePage/ProductTypePagePresenter';
+import { ProductTypePageView } from 'src/components/Client/ProductTypePage/ProductTypePageView';
+import { useDependencies } from 'src/DI/DI';
 
 let addToCartTimeoutID: NodeJS.Timeout;
 export const ProductTypePageContainer = () => {

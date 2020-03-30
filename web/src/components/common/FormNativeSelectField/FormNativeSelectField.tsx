@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { Control, IProps as ControlProps } from '../Control/Control';
-import { Field, IProps as FieldProps } from '../Field/Field';
-import { HelpText, IProps as HelpTextProps } from '../HelpText/HelpText';
-import { IProps as LabelProps, Label } from '../Label/Label';
-import { IProps as NativeSelectProps, NativeSelect, NativeSelectOption } from '../NativeSelect/NativeSelect';
+import { Control, IProps as ControlProps } from 'src/components/common/Control/Control';
+import { Field, IProps as FieldProps } from 'src/components/common/Field/Field';
+import { HelpText, IProps as HelpTextProps } from 'src/components/common/HelpText/HelpText';
+import { IProps as LabelProps, Label } from 'src/components/common/Label/Label';
+import { IProps as NativeSelectProps, NativeSelect, NativeSelectOption } from 'src/components/common/NativeSelect/NativeSelect';
 
 interface IProps {
   controlProps?: ControlProps;

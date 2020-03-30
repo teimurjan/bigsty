@@ -1,9 +1,9 @@
 import * as React from 'react';
 
+import { DeleteModalContainer } from 'src/components/Admin/DeleteModal/DeleteModalContainer';
 import { useDependencies } from 'src/DI/DI';
 import { useAdminBannersState } from 'src/state/AdminBannersState';
 
-import { DeleteModalContainer } from '../../DeleteModal/DeleteModalContainer';
 
 export const AdminBannersDeleteContainer = () => {
   const { dependencies } = useDependencies();

@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { Control, IProps as ControlProps } from '../Control/Control';
-import { Field, IProps as FieldProps } from '../Field/Field';
-import { HelpText, IProps as HelpTextProps } from '../HelpText/HelpText';
-import { Input, IProps as InputProps } from '../Input/Input';
-import { IProps as LabelProps, Label } from '../Label/Label';
+import { Control, IProps as ControlProps } from 'src/components/common/Control/Control';
+import { Field, IProps as FieldProps } from 'src/components/common/Field/Field';
+import { HelpText, IProps as HelpTextProps } from 'src/components/common/HelpText/HelpText';
+import { Input, IProps as InputProps } from 'src/components/common/Input/Input';
+import { IProps as LabelProps, Label } from 'src/components/common/Label/Label';
 
 interface IProps {
   controlProps?: ControlProps;

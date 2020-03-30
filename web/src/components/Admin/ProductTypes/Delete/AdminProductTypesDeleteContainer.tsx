@@ -1,10 +1,10 @@
 import * as React from 'react';
 
+import { DeleteModalContainer } from 'src/components/Admin/DeleteModal/DeleteModalContainer';
 import { useDependencies } from 'src/DI/DI';
 import * as productTypeService from 'src/services/ProductTypeService';
 import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 
-import { DeleteModalContainer } from '../../DeleteModal/DeleteModalContainer';
 
 const getErrorMessageID = (e: Error) => {
   if (e instanceof productTypeService.errors.ProductTypeHasProducts) {

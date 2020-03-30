@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Field, FieldRenderProps } from 'react-final-form';
 import { IntlShape, injectIntl } from 'react-intl';
 
+import { IntlField } from 'src/components/Admin/IntlField';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { IntlField } from '../../IntlField';
 
 interface IParentCategorySelectProps extends FieldRenderProps<string> {
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];

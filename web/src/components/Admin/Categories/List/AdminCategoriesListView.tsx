@@ -2,14 +2,14 @@
 import { jsx } from '@emotion/core';
 import { IntlShape, injectIntl } from 'react-intl';
 
+import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
+import { IViewProps as IProps } from 'src/components/Admin/Categories/List/AdminCategoriesListPresenter';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
 import { fullWidthMixin } from 'src/styles/mixins';
 
-import { AdminTable, IntlRenderer } from '../../AdminTable';
 
-import { IViewProps as IProps } from './AdminCategoriesListPresenter';
 
 export const NewCategoryButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/categories/new" color="is-primary">

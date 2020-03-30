@@ -1,6 +1,6 @@
-import * as authAPI from '../api/AuthAPI';
-import * as authStorage from '../storage/AuthStorage';
-import * as stateCacheStorage from '../storage/StateCacheStorage';
+import * as authAPI from 'src/api/AuthAPI';
+import * as authStorage from 'src/storage/AuthStorage';
+import * as stateCacheStorage from 'src/storage/StateCacheStorage';
 
 export interface IAuthService {
   logIn(email: string, password: string): Promise<void>;

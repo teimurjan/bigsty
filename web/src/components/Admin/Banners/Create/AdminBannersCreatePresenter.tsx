@@ -2,13 +2,13 @@ import { History } from 'history';
 import * as React from 'react';
 import * as yup from 'yup';
 
+import { getFieldName, parseFieldName } from 'src/components/Admin/IntlField';
 import * as schemaValidator from 'src/components/SchemaValidator';
 import { useLazy } from 'src/hooks/useLazy';
 import { IBannerService } from 'src/services/BannerService';
 import { IContextValue as AdminBannersStateContextValue } from 'src/state/AdminBannersState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { getFieldName, parseFieldName } from '../../IntlField';
 
 export interface IProps extends AdminBannersStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;

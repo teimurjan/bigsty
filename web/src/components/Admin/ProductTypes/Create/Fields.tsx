@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Field as FinalFormField, FieldRenderProps } from 'react-final-form';
 import { IntlShape, injectIntl } from 'react-intl';
 
+import { IntlField, IProps as IIntlFieldProps } from 'src/components/Admin/IntlField';
 import { Field } from 'src/components/common/Field/Field';
 import { FileInput } from 'src/components/common/FileInput/FileInput';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
@@ -16,7 +17,6 @@ import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/A
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { arePropsEqual, lengthCompare } from 'src/utils/propEquality';
 
-import { IntlField, IProps as IIntlFieldProps } from '../../IntlField';
 
 interface IFeatureTypesSelectProps extends FieldRenderProps<string[]> {
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];

@@ -7,6 +7,8 @@ import { useIntl } from 'react-intl';
 
 import { Button } from 'src/components/common/Button/Button';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { Message } from 'src/components/common/Message/Message';
 import { Modal } from 'src/components/common/Modal/Modal';
 import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
 import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
@@ -17,8 +19,6 @@ import { mediaQueries } from 'src/styles/media';
 import { textCenterMixin } from 'src/styles/mixins';
 import { arePropsEqual } from 'src/utils/propEquality';
 
-import { LoaderLayout } from '../common/LoaderLayout/LoaderLayout';
-import { Message } from '../common/Message/Message';
 
 export interface IProps<T> {
   isOpen: boolean;

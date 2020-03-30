@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { ModalForm } from '../../ModalForm';
 
-import { IViewProps as IProps } from './AdminFeatureValuesCreatePresenter';
-import { Fields } from './Fields';
+import { IViewProps as IProps } from 'src/components/Admin/FeatureValues/Create/AdminFeatureValuesCreatePresenter';
+import { Fields } from 'src/components/Admin/FeatureValues/Create/Fields';
+import { ModalForm } from 'src/components/Admin/ModalForm';
 
 export const AdminFeatureValuesCreateView = ({
   isOpen,

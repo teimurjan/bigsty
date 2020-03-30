@@ -2,6 +2,7 @@ import { History } from 'history';
 import * as React from 'react';
 import * as yup from 'yup';
 
+import { getFieldName, parseFieldName } from 'src/components/Admin/IntlField';
 import * as schemaValidator from 'src/components/SchemaValidator';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { useLazy } from 'src/hooks/useLazy';
@@ -9,7 +10,6 @@ import { ICategoryService } from 'src/services/CategoryService';
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { getFieldName, parseFieldName } from '../../IntlField';
 
 export interface IProps extends AdminCategoriesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;

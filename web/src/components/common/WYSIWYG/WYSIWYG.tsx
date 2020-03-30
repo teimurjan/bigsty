@@ -4,9 +4,9 @@ import { Global, css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
+import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { ITheme } from 'src/themes';
 
-import { LoaderLayout } from '../LoaderLayout/LoaderLayout';
 
 interface IProps {
   className?: string;

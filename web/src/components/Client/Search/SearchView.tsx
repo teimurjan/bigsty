@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 
 
+import { IViewProps as IProps } from 'src/components/Client/Search/SearchPresenter';
 import { Dropdown } from 'src/components/common/Dropdown/Dropdown';
 import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
 import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
@@ -16,7 +17,6 @@ import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
 
-import { IViewProps as IProps } from './SearchPresenter';
 
 export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoading, error, onSearchValueChange }) => {
   const intl = useIntl();

@@ -1,9 +1,9 @@
 import { Client } from 'ttypes/http';
 
-import { IHeadersManager } from 'src/manager/HeadersManager';
 
-import { ICategoryListResponseItem } from './CategoryAPI';
-import { IProductTypeListResponseItem } from './ProductTypeAPI';
+import { ICategoryListResponseItem } from 'src/api/CategoryAPI';
+import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
+import { IHeadersManager } from 'src/manager/HeadersManager';
 
 export interface ISearchResponseData {
   data: { categories: ICategoryListResponseItem[]; product_types: IProductTypeListResponseItem[] };

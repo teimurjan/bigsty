@@ -2,6 +2,8 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
+import { AdminProductTypesCreatePresenter } from 'src/components/Admin/ProductTypes/Create/AdminProductTypesCreatePresenter';
+import { AdminProductTypesCreateView } from 'src/components/Admin/ProductTypes/Create/AdminProductTypesCreateView';
 import { useDependencies } from 'src/DI/DI';
 import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
 import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
@@ -9,8 +11,6 @@ import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 import { useIntlState } from 'src/state/IntlState';
 
 
-import { AdminProductTypesCreatePresenter } from './AdminProductTypesCreatePresenter';
-import { AdminProductTypesCreateView } from './AdminProductTypesCreateView';
 
 export const AdminProductTypesCreateContainer = () => {
   const history = useHistory();

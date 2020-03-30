@@ -3,6 +3,7 @@ import { FieldRenderProps, Field as FinalFormField } from 'react-final-form';
 import { IntlShape, injectIntl, useIntl } from 'react-intl';
 
 
+import { IntlField } from 'src/components/Admin/IntlField';
 import { Field } from 'src/components/common/Field/Field';
 import { FileInput } from 'src/components/common/FileInput/FileInput';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
@@ -11,7 +12,6 @@ import { Label } from 'src/components/common/Label/Label';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { isAllowedForNumberInput } from 'src/utils/number';
 
-import { IntlField } from '../../IntlField';
 
 export interface IFieldsProps {
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];

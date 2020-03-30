@@ -1,10 +1,10 @@
 import * as React from 'react';
 
+import { DeleteModalContainer } from 'src/components/Admin/DeleteModal/DeleteModalContainer';
 import { useDependencies } from 'src/DI/DI';
 import * as categoryService from 'src/services/CategoryService';
 import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
 
-import { DeleteModalContainer } from '../../DeleteModal/DeleteModalContainer';
 
 const getErrorMessageID = (e: Error) => {
   if (e instanceof categoryService.errors.CategoryHasChildren) {

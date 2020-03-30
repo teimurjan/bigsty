@@ -2,6 +2,8 @@ import { History } from 'history';
 import * as React from 'react';
 import * as yup from 'yup';
 
+import { getFieldName, parseFieldName } from 'src/components/Admin/IntlField';
+import { IProps as IModalFormProps } from 'src/components/Admin/ModalForm';
 import * as schemaValidator from 'src/components/SchemaValidator';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { useLazy } from 'src/hooks/useLazy';
@@ -13,8 +15,6 @@ import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { IStateCacheStorage } from 'src/storage/StateCacheStorage';
 import { objectWithout } from 'src/utils/object';
 
-import { getFieldName, parseFieldName } from '../../IntlField';
-import { IProps as IModalFormProps } from '../../ModalForm';
 
 export interface IProps
   extends AdminCategoriesStateContextValue,

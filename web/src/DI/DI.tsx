@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { IDependenciesContainer } from './DependenciesContainer';
+import { IDependenciesContainer } from 'src/DI/DependenciesContainer';
 
 export interface IContextValue {
   dependencies: IDependenciesContainer;

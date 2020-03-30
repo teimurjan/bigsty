@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { useAppState } from 'src/state/AppState';
 
-import { AppPresenter } from './AppPresenter';
-import { AppView } from './AppView';
+import { AppPresenter } from 'src/components/App/AppPresenter';
+import { AppView } from 'src/components/App/AppView';
+import { useAppState } from 'src/state/AppState';
 
 export const AppContainer = () => {
   const { appState } = useAppState();

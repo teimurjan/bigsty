@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 
+import { AdminProductTypesListPresenter } from 'src/components/Admin/ProductTypes/List/AdminProductTypesListPresenter';
+import { AdminProductTypesListView } from 'src/components/Admin/ProductTypes/List/AdminProductTypesListView';
 import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 import { useIntlState } from 'src/state/IntlState';
 
-import { AdminProductTypesListPresenter } from './AdminProductTypesListPresenter';
-import { AdminProductTypesListView } from './AdminProductTypesListView';
 
 export const AdminProductTypesListContainer = () => {
   const { intlState } = useIntlState();

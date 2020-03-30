@@ -1,10 +1,10 @@
 import * as React from 'react';
 
+import { HomePresenter } from 'src/components/Client/Home/HomePresenter';
+import { HomeView } from 'src/components/Client/Home/HomeView';
 import { useDependencies } from 'src/DI/DI';
 import { useAppState } from 'src/state/AppState';
 
-import { HomePresenter } from './HomePresenter';
-import { HomeView } from './HomeView';
 
 export const HomeContainer = () => {
   const { appState } = useAppState();

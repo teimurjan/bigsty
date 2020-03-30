@@ -7,17 +7,16 @@ import { Dropdown } from 'src/components/common/Dropdown/Dropdown';
 import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
 import { Input } from 'src/components/common/Input/Input';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { Modal } from 'src/components/common/Modal/Modal';
+import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
+import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
+import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
+import { IViewProps as IProps } from 'src/components/ProductSelect/ProductSelectPresenter';
+import { ProductTypePreview, IProps as IProductTypePreviewProps } from 'src/components/ProductSelect/ProductTypePreview';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
 
-import { Modal } from '../common/Modal/Modal';
-import { ModalBackground } from '../common/ModalBackground/ModalBackground';
-import { ModalCard } from '../common/ModalCard/ModalCard';
-import { ModalContent } from '../common/ModalContent/ModalContent';
-
-import { IViewProps as IProps } from './ProductSelectPresenter';
-import { ProductTypePreview, IProps as IProductTypePreviewProps } from './ProductTypePreview';
 
 
 const dropdownCSS = css`

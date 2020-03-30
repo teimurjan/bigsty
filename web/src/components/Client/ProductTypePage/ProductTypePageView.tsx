@@ -7,6 +7,9 @@ import * as React from 'react';
 import Helmet from 'react-helmet';
 import { useIntl } from 'react-intl';
 
+import { PriceCrossedText } from 'src/components/Client/Price/Price';
+import { ProductTypeImageCarousel } from 'src/components/Client/ProductType/ProductTypeImageCarousel/ProductTypeImageCarousel';
+import { IViewProps as IProps } from 'src/components/Client/ProductTypePage/ProductTypePagePresenter';
 import { Button } from 'src/components/common/Button/Button';
 import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
@@ -18,10 +21,7 @@ import { flexMixin } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
 import { formatMediaURL } from 'src/utils/url';
 
-import { PriceCrossedText } from '../Price/Price';
-import { ProductTypeImageCarousel } from '../ProductType/ProductTypeImageCarousel/ProductTypeImageCarousel';
 
-import { IViewProps as IProps } from './ProductTypePagePresenter';
 
 const getAllFeatureValuesGroupedByType = (
   products: IProps['products'],

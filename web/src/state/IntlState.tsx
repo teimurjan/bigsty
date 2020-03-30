@@ -5,8 +5,7 @@ import { IIntlListResponseItem } from 'src/api/IntlAPI.js';
 import defaultMessages from 'src/assets/translations/ru-RU.json';
 import { useDependencies } from 'src/DI/DI';
 import { DEFAULT_LOCALE } from 'src/services/IntlService';
-
-import { useAppState } from './AppState';
+import { useAppState } from 'src/state/AppState';
 
 export interface IContextValue {
   intlState: {

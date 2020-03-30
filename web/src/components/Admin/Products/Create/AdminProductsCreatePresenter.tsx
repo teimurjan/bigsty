@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as yup from 'yup';
 
 import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
+import { useSelectProductTypes } from 'src/components/Admin/ProductTypeSelect/useSelectProductTypes';
 import * as schemaValidator from 'src/components/SchemaValidator';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { IProductService } from 'src/services/ProductService';
@@ -10,7 +11,6 @@ import { IProductTypeService } from 'src/services/ProductTypeService';
 import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
 import { IContextValue as AdminProductsStateContextValue } from 'src/state/AdminProductsState';
 
-import { useSelectProductTypes } from '../../ProductTypeSelect/useSelectProductTypes';
 
 export interface IProps extends AdminFeatureValuesStateContextValue, AdminProductsStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
