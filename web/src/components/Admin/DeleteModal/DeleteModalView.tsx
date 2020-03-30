@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { IntlShape } from 'react-intl';
 
 import { Button } from 'src/components/common/Button/Button';

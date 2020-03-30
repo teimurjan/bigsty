@@ -1,34 +1,30 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios';
 
 import * as authAPI from 'src/api/AuthAPI';
+import * as bannerAPI from 'src/api/BannerAPI';
 import * as categoryAPI from 'src/api/CategoryAPI';
 import * as featureTypeAPI from 'src/api/FeatureTypeAPI';
 import * as featureValueAPI from 'src/api/FeatureValueAPI';
 import * as intlAPI from 'src/api/IntlAPI';
-import * as productTypeAPI from 'src/api/ProductTypeAPI';
-import * as productAPI from 'src/api/ProductAPI';
-import * as searchAPI from 'src/api/SearchAPI';
-import * as bannerAPI from 'src/api/BannerAPI';
 import * as orderAPI from 'src/api/OrderAPI';
-
+import * as productAPI from 'src/api/ProductAPI';
+import * as productTypeAPI from 'src/api/ProductTypeAPI';
+import * as searchAPI from 'src/api/SearchAPI';
+import { HeadersManager } from 'src/manager/HeadersManager';
 import * as authService from 'src/services/AuthService';
+import * as bannerService from 'src/services/BannerService';
 import * as categoryService from 'src/services/CategoryService';
 import * as featureTypeService from 'src/services/FeatureTypeService';
 import * as featureValueService from 'src/services/FeatureValueService';
 import * as intlService from 'src/services/IntlService';
-import * as productTypeService from 'src/services/ProductTypeService';
-import * as productService from 'src/services/ProductService';
-import * as searchService from 'src/services/SearchService';
-import * as bannerService from 'src/services/BannerService';
 import * as orderService from 'src/services/OrderService';
-
+import * as productService from 'src/services/ProductService';
+import * as productTypeService from 'src/services/ProductTypeService';
+import * as searchService from 'src/services/SearchService';
 import * as authStorage from 'src/storage/AuthStorage';
+import * as cartStorage from 'src/storage/CartStorage';
 import * as intlStorage from 'src/storage/IntlStorage';
 import * as stateCacheStorage from 'src/storage/StateCacheStorage';
-import * as cartStorage from 'src/storage/CartStorage';
-
-import { HeadersManager } from 'src/manager/HeadersManager';
-
 import { WatchingValue } from 'src/utils/watching-value';
 
 export interface IAPIsContainer {

@@ -1,21 +1,15 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
+import { IProductListResponseItem } from 'src/api/ProductAPI';
+import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
 import * as schemaValidator from 'src/components/SchemaValidator';
-
+import { useDebounce } from 'src/hooks/useDebounce';
 import { IProductService } from 'src/services/ProductService';
-
+import { IProductTypeService } from 'src/services/ProductTypeService';
 import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
 import { IContextValue as AdminProductsStateContextValue } from 'src/state/AdminProductsState';
-
-import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
-import { IProductListResponseItem } from 'src/api/ProductAPI';
-
-import { useDebounce } from 'src/hooks/useDebounce';
-
-import { IProductTypeService } from 'src/services/ProductTypeService';
 
 import { useSelectProductTypes } from '../../ProductTypeSelect/useSelectProductTypes';
 

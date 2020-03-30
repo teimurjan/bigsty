@@ -1,18 +1,17 @@
 import * as React from 'react';
-
-import { IntlShape, injectIntl, useIntl } from 'react-intl';
 import { FieldRenderProps, Field as FinalFormField } from 'react-final-form';
+import { IntlShape, injectIntl, useIntl } from 'react-intl';
 
-import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
 import { Field } from 'src/components/common/Field/Field';
-import { Label } from 'src/components/common/Label/Label';
 import { FileInput } from 'src/components/common/FileInput/FileInput';
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { Label } from 'src/components/common/Label/Label';
+import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
+import { isAllowedForNumberInput } from 'src/utils/number';
 
 import { IntlField } from '../../IntlField';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { isAllowedForNumberInput } from 'src/utils/number';
 
 export interface IFieldsProps {
   availableLocales: IntlStateContextValue['intlState']['availableLocales'];

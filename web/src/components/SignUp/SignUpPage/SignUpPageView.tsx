@@ -1,7 +1,6 @@
 /** @jsx jsx */
-import * as React from 'react';
-
 import { jsx } from '@emotion/core';
+import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { Box } from 'src/components/common/Box/Box';
@@ -13,6 +12,7 @@ import { Title } from 'src/components/common/Title/Title';
 import { textCenterMixin } from 'src/styles/mixins';
 
 import { SignUpFormContainer } from '../SignUpForm/SignUpFormContainer';
+
 import { IViewProps } from './SignUpPagePresenter';
 
 export class SignUpPageView extends React.Component<IViewProps & { intl: IntlShape }> {

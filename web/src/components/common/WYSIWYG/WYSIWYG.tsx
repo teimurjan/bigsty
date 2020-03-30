@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { Global, css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
+import * as React from 'react';
 
 import { ITheme } from 'src/themes';
 

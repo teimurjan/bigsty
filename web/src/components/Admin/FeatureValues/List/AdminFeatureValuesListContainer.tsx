@@ -1,9 +1,8 @@
 import * as React from 'react';
-
 import { injectIntl } from 'react-intl';
 
-import { useIntlState } from 'src/state/IntlState';
 import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
+import { useIntlState } from 'src/state/IntlState';
 
 import { AdminFeatureValuesListPresenter } from './AdminFeatureValuesListPresenter';
 import { AdminFeatureValuesListView } from './AdminFeatureValuesListView';

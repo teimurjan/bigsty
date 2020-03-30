@@ -1,11 +1,9 @@
 /** @jsx jsx */
-import * as React from 'react';
-
 import { css, jsx } from '@emotion/core';
-
+import * as React from 'react';
+import { Form, FormRenderProps, useFormState } from 'react-final-form';
 import { useIntl } from 'react-intl';
 
-import { Form, FormRenderProps, useFormState } from 'react-final-form';
 
 import { Button } from 'src/components/common/Button/Button';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
@@ -13,16 +11,14 @@ import { Modal } from 'src/components/common/Modal/Modal';
 import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
 import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
-
+import { useDebounce } from 'src/hooks/useDebounce';
 import { useMedia } from 'src/hooks/useMedia';
-
-import { textCenterMixin } from 'src/styles/mixins';
 import { mediaQueries } from 'src/styles/media';
+import { textCenterMixin } from 'src/styles/mixins';
+import { arePropsEqual } from 'src/utils/propEquality';
 
 import { LoaderLayout } from '../common/LoaderLayout/LoaderLayout';
 import { Message } from '../common/Message/Message';
-import { arePropsEqual } from 'src/utils/propEquality';
-import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps<T> {
   isOpen: boolean;

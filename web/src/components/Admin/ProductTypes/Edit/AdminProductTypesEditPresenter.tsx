@@ -1,27 +1,23 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
+import { IProductTypeListRawIntlResponseItem } from 'src/api/ProductTypeAPI';
 import * as schemaValidator from 'src/components/SchemaValidator';
-
+import { useDebounce } from 'src/hooks/useDebounce';
+import { useLazy } from 'src/hooks/useLazy';
+import { IProductTypeService } from 'src/services/ProductTypeService';
+import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as AdminProductTypesStateContextValue } from 'src/state/AdminProductTypesState';
-import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { IProductTypeListRawIntlResponseItem } from 'src/api/ProductTypeAPI';
-
-import { IProductTypeService } from 'src/services/ProductTypeService';
-
 import { getFieldName, parseFieldName } from '../../IntlField';
-import { useLazy } from 'src/hooks/useLazy';
 import {
   PRODUCT_TYPE_NAME_FIELD_KEY,
   PRODUCT_TYPE_DESCRIPTION_FIELD_KEY,
   PRODUCT_TYPE_SHORT_DESCRIPTION_FIELD_KEY,
 } from '../Create/AdminProductTypesCreatePresenter';
-import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps
   extends AdminCategoriesStateContextValue,

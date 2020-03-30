@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { IProductTypeListResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
-import { IProductTypeService } from 'src/services/ProductTypeService';
 import { IProps as IListViewProps } from 'src/components/Client/ProductType/ProductTypesList/ProductTypesListView';
+import { IProductTypeService } from 'src/services/ProductTypeService';
 
 export interface IProps {
   ListView: React.ComponentClass<IListViewProps> | React.SFC<IListViewProps>;

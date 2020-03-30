@@ -1,12 +1,11 @@
 /** @jsx jsx */
-import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { css, jsx } from '@emotion/core';
+import * as React from 'react';
 import { useIntl } from 'react-intl';
+import { Link } from 'react-router-dom';
 
 import logo from 'src/assets/images/logo.png';
-
 import { Button } from 'src/components/common/Button/Button';
 import { Container } from 'src/components/common/Container/Container';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
@@ -17,15 +16,14 @@ import { NavbarEnd } from 'src/components/common/NavbarEnd/NavbarEnd';
 import { NavbarItem } from 'src/components/common/NavbarItem/NavbarItem';
 import { NavbarMenu } from 'src/components/common/NavbarMenu/NavbarMenu';
 import { NavbarStart } from 'src/components/common/NavbarStart/NavbarStart';
-
 import { isUserAdmin, isUserAnonymous, isUserNotSetYet } from 'src/helpers/user';
 import { useWindowScroll } from 'src/hooks/useWindowScroll';
-
 import { mediaQueries } from 'src/styles/media';
 
 import { LanguageDropdownContainer as LanguageDropdown } from '../LanguageDropdown/LanguageDropdownContainer';
-import { IViewProps as IProps } from './HeaderPresenter';
 import { SearchContainer } from '../Search/SearchContainer';
+
+import { IViewProps as IProps } from './HeaderPresenter';
 
 const buttonsCSS = css`
   margin: 0.25rem 1rem 0 1rem !important;

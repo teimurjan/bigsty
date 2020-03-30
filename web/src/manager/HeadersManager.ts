@@ -1,6 +1,6 @@
+import { DEFAULT_LOCALE } from 'src/services/IntlService';
 import { IAuthStorage } from 'src/storage/AuthStorage';
 import { IIntlStorage } from 'src/storage/IntlStorage';
-import { DEFAULT_LOCALE } from 'src/services/IntlService';
 
 interface IHeaders {
   [key: string]: string | null | undefined;

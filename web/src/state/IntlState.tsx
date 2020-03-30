@@ -1,13 +1,12 @@
 import * as React from 'react';
-
 import { defineMessages, IntlProvider as ReactIntlProvider } from 'react-intl';
 
 import { IIntlListResponseItem } from 'src/api/IntlAPI.js';
 import defaultMessages from 'src/assets/translations/ru-RU.json';
 import { useDependencies } from 'src/DI/DI';
+import { DEFAULT_LOCALE } from 'src/services/IntlService';
 
 import { useAppState } from './AppState';
-import { DEFAULT_LOCALE } from 'src/services/IntlService';
 
 export interface IContextValue {
   intlState: {

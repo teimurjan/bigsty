@@ -1,6 +1,6 @@
 import * as React from 'react';
-
 import { RouteComponentProps } from 'react-router';
+
 import { useDebounce } from 'src/hooks/useDebounce';
 
 interface IPreloadDataArgs {

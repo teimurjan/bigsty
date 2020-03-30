@@ -1,17 +1,19 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { jsx, css, Global } from '@emotion/core';
-
+import * as React from 'react';
 import { useIntl } from 'react-intl';
 
-import { IViewProps as IProps } from './ConfirmSignupPresenter';
-import { Title } from '../common/Title/Title';
+import { useDebounce } from 'src/hooks/useDebounce';
+import { PAGE_LOADER_ID } from 'src/utils/dom';
+
+
 import { Container } from '../common/Container/Container';
 import { Hero } from '../common/Hero/Hero';
 import { HeroBody } from '../common/HeroBody/HeroBody';
-import { PAGE_LOADER_ID } from 'src/utils/dom';
-import { useDebounce } from 'src/hooks/useDebounce';
+import { Title } from '../common/Title/Title';
+
+import { IViewProps as IProps } from './ConfirmSignupPresenter';
 
 export const ConfirmSignupView = ({ isLoading, error }: IProps) => {
   const intl = useIntl();

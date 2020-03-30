@@ -1,11 +1,9 @@
 import * as React from 'react';
-
 import { useIntl } from 'react-intl';
 
 import { ModalForm } from '../../ModalForm';
 
 import { IViewProps as IProps } from './AdminOrdersEditPresenter';
-
 import { Fields } from './Fields';
 
 export const AdminOrdersEditView = ({

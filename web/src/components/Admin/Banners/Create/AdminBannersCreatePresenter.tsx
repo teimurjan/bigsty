@@ -1,16 +1,12 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
 import * as schemaValidator from 'src/components/SchemaValidator';
-
+import { useLazy } from 'src/hooks/useLazy';
 import { IBannerService } from 'src/services/BannerService';
-
 import { IContextValue as AdminBannersStateContextValue } from 'src/state/AdminBannersState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-
-import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
 

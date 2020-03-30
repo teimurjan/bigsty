@@ -1,7 +1,6 @@
 /** @jsx jsx */
-import * as React from 'react';
-
 import { jsx } from '@emotion/core';
+import * as React from 'react';
 import { Field, FieldRenderProps, Form, FormRenderProps } from 'react-final-form';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -9,10 +8,10 @@ import { Link } from 'react-router-dom';
 import { Button } from 'src/components/common/Button/Button';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { Message } from 'src/components/common/Message/Message';
 import { textCenterMixin } from 'src/styles/mixins';
 
 import { IViewProps as IProps, IFormValues } from './SignUpFormPresenter';
-import { Message } from 'src/components/common/Message/Message';
 
 export class SignUpFormView extends React.Component<IProps & { intl: IntlShape }> {
   public render() {

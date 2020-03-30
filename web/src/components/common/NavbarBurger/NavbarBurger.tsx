@@ -1,9 +1,8 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
-
 import classNames from 'classnames';
+import * as React from 'react';
 
 interface IProps extends React.HTMLAttributes<HTMLButtonElement> {
   isActive: boolean;

@@ -1,15 +1,13 @@
 import * as React from 'react';
-
-import { useHistory, useParams } from 'react-router';
 import { injectIntl } from 'react-intl';
-
-import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
+import { useHistory, useParams } from 'react-router';
 
 import { useDependencies } from 'src/DI/DI';
+import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
+import { useAdminProductsState } from 'src/state/AdminProductsState';
 
 import { AdminProductsEditPresenter } from './AdminProductsEditPresenter';
 import { AdminProductsEditView } from './AdminProductsEditView';
-import { useAdminProductsState } from 'src/state/AdminProductsState';
 
 export const AdminProductsEditContainer = () => {
   const history = useHistory();

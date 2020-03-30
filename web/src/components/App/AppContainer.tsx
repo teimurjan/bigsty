@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { useAppState } from 'src/state/AppState';
+
 import { AppPresenter } from './AppPresenter';
 import { AppView } from './AppView';
 

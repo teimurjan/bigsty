@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-
 import { useIntl } from 'react-intl';
 
 import { Button } from 'src/components/common/Button/Button';

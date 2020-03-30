@@ -1,20 +1,17 @@
+import { ThemeProvider } from 'emotion-theming';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { ThemeProvider } from 'emotion-theming';
 
 import { AppContainer } from 'src/components/App/AppContainer';
+import { makeDependenciesContainer } from 'src/DI/DependenciesContainer';
+import { DIProvider } from 'src/DI/DI';
+import { unregister } from 'src/registerServiceWorker';
 import { AppStateProvider } from 'src/state/AppState';
 import { IntlStateProvider } from 'src/state/IntlState';
-import { UserStateProvider } from 'src/state/UserState';
 import { RatesStateProvider } from 'src/state/RatesState';
-
-import { DIProvider } from 'src/DI/DI';
-import { makeDependenciesContainer } from 'src/DI/DependenciesContainer';
-
+import { UserStateProvider } from 'src/state/UserState';
 import { defaultTheme } from 'src/themes';
-
-import { unregister } from 'src/registerServiceWorker';
 
 import 'bulma/css/bulma.css';
 

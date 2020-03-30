@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { CartPresenter } from './CartPresenter';
-import { CartView } from './CartView';
 import { useDependencies } from 'src/DI/DI';
 import { useUserState } from 'src/state/UserState';
+
+import { CartPresenter } from './CartPresenter';
+import { CartView } from './CartView';
 
 export const CartContainer = () => {
   const {

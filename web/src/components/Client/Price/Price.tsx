@@ -1,11 +1,10 @@
 import * as React from 'react';
-
 import { useIntl } from 'react-intl';
 
-import { calculateDiscountedPrice } from 'src/utils/number';
+import { Tag } from 'src/components/common/Tag/Tag';
 import { useIntlState } from 'src/state/IntlState';
 import { useRatesState } from 'src/state/RatesState';
-import { Tag } from 'src/components/common/Tag/Tag';
+import { calculateDiscountedPrice } from 'src/utils/number';
 
 interface IPriceProps {
   price: number;
@@ -66,9 +65,7 @@ export const PriceRangeText = ({ range }: IPriceRangeTextProps) => {
       {calculatedRange.length > 1 ? `${lowestFormattedPrice} - ${biggestFormattedPrice}` : `${biggestFormattedPrice}`}
       <br />
       {range.length === 1 && discounts.length === 1 && (
-        <Tag color="is-warning">
-          {intl.formatMessage({ id: 'Price.discount' }, { value: Math.max(...discounts) })}
-        </Tag>
+        <Tag color="is-warning">{intl.formatMessage({ id: 'Price.discount' }, { value: Math.max(...discounts) })}</Tag>
       )}
       {range.length > 1 && discounts.length > 1 && (
         <Tag color="is-warning">

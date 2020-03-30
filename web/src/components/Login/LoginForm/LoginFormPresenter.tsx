@@ -1,12 +1,9 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
 import * as schemaValidator from 'src/components/SchemaValidator';
-
 import * as authService from 'src/services/AuthService';
-
 import { IContextValue as UserStateContextValue } from 'src/state/UserState';
 
 export interface IProps extends UserStateContextValue {

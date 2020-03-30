@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { IntlField } from '../../IntlField';

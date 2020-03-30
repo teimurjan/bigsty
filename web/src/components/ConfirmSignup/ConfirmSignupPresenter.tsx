@@ -1,9 +1,8 @@
+import { History } from 'history';
 import * as React from 'react';
 
-import { History } from 'history';
 
 import { useQuery } from 'src/hooks/useQuery';
-
 import * as authService from 'src/services/AuthService';
 
 interface IProps {

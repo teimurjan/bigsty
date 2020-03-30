@@ -1,12 +1,11 @@
 import * as React from 'react';
-
 import { RouteComponentProps } from 'react-router';
 import { Route } from 'react-router-dom';
 
-import { AdminBannersListContainer } from './List/AdminBannersListContainer';
 import { AdminBannersCreateContainer } from './Create/AdminBannersCreateContainer';
 import { AdminBannersDeleteContainer } from './Delete/AdminBannersDeleteContainer';
 import { AdminBannersEditContainer } from './Edit/AdminBannersEditContainer';
+import { AdminBannersListContainer } from './List/AdminBannersListContainer';
 
 export const AdminBanners = ({ match }: RouteComponentProps) => (
   <>

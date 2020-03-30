@@ -1,33 +1,19 @@
 /** @jsx jsx */
-import * as React from 'react';
-
 import { css, jsx } from '@emotion/core';
-
-import { Route, Switch } from 'react-router';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as React from 'react';
+import { useIntl } from 'react-intl';
+import { Route, Switch } from 'react-router';
 
+import { AdminBannersStateProvider } from 'src/state/AdminBannersState';
 import { AdminCategoriesStateProvider } from 'src/state/AdminCategoriesState';
 import { AdminFeatureTypesStateProvider } from 'src/state/AdminFeatureTypesState';
 import { AdminFeatureValuesStateProvider } from 'src/state/AdminFeatureValuesState';
-import { AdminProductTypesStateProvider } from 'src/state/AdminProductTypesState';
+import { AdminOrdersStateProvider } from 'src/state/AdminOrdersState';
 import { AdminProductsStateProvider } from 'src/state/AdminProductsState';
-
-import { AdminCategories } from './Categories/AdminCategories';
-import { AdminFeatureTypes } from './FeatureTypes/AdminFeatureTypes';
-import { AdminFeatureValues } from './FeatureValues/AdminFeatureValues';
-import { AdminProductTypes } from './ProductTypes/AdminProductTypes';
-import { AdminProducts } from './Products/AdminProducts';
-import { AdminBanners } from './Banners/AdminBanners';
-import { AdminOrders } from './Orders/AdminOrders';
-
-import { NewCategoryButton } from './Categories/List/AdminCategoriesListView';
-import { NewFeatureTypeButton } from './FeatureTypes/List/AdminFeatureTypesListView';
-import { NewFeatureValueButton } from './FeatureValues/List/AdminFeatureValuesListView';
-import { NewProductTypeButton } from './ProductTypes/List/AdminProductTypesListView';
-import { NewProductButton } from './Products/List/AdminProductsListView';
-
-import { AdminHeaderContainer } from './Header/AdminHeaderContainer';
+import { AdminProductTypesStateProvider } from 'src/state/AdminProductTypesState';
+import { mediaQueries } from 'src/styles/media';
 import {
   alignItemsFlexStartMixin,
   flexMixin,
@@ -35,14 +21,25 @@ import {
   alignItemsCenterMixin,
   marginAutoMixin,
 } from 'src/styles/mixins';
+
 import { Section } from '../common/Section/Section';
 import { Subtitle } from '../common/Subtitle/Subtitle';
-import { Title } from '../common/Title/Title';
 import { Tag } from '../common/Tag/Tag';
-import { useIntl } from 'react-intl';
-import { mediaQueries } from 'src/styles/media';
-import { AdminBannersStateProvider } from 'src/state/AdminBannersState';
-import { AdminOrdersStateProvider } from 'src/state/AdminOrdersState';
+import { Title } from '../common/Title/Title';
+
+import { AdminBanners } from './Banners/AdminBanners';
+import { AdminCategories } from './Categories/AdminCategories';
+import { NewCategoryButton } from './Categories/List/AdminCategoriesListView';
+import { AdminFeatureTypes } from './FeatureTypes/AdminFeatureTypes';
+import { NewFeatureTypeButton } from './FeatureTypes/List/AdminFeatureTypesListView';
+import { AdminFeatureValues } from './FeatureValues/AdminFeatureValues';
+import { NewFeatureValueButton } from './FeatureValues/List/AdminFeatureValuesListView';
+import { AdminHeaderContainer } from './Header/AdminHeaderContainer';
+import { AdminOrders } from './Orders/AdminOrders';
+import { AdminProducts } from './Products/AdminProducts';
+import { NewProductButton } from './Products/List/AdminProductsListView';
+import { AdminProductTypes } from './ProductTypes/AdminProductTypes';
+import { NewProductTypeButton } from './ProductTypes/List/AdminProductTypesListView';
 
 interface IProps {
   match: { path: string };

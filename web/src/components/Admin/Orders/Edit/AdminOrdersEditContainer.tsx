@@ -1,10 +1,9 @@
 import * as React from 'react';
-
 import { useHistory, useParams } from 'react-router';
 
+import { useDependencies } from 'src/DI/DI';
 import { useAdminOrdersState } from 'src/state/AdminOrdersState';
 
-import { useDependencies } from 'src/DI/DI';
 
 import { AdminOrdersEditPresenter } from './AdminOrdersEditPresenter';
 import { AdminOrdersEditView } from './AdminOrdersEditView';

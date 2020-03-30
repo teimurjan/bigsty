@@ -1,20 +1,16 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
-import { IFeatureValueService } from 'src/services/FeatureValueService';
-
 import * as schemaValidator from 'src/components/SchemaValidator';
-
+import { useDebounce } from 'src/hooks/useDebounce';
+import { useLazy } from 'src/hooks/useLazy';
+import { IFeatureValueService } from 'src/services/FeatureValueService';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { useLazy } from 'src/hooks/useLazy';
-
 import { getFieldName, parseFieldName } from '../../IntlField';
-import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps
   extends AdminFeatureValuesStateContextValue,

@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { IContextValue as AppStateContextValue } from 'src/state/AppState';
 import { ICategoryListResponseItem } from 'src/api/CategoryAPI';
 import { ICategoryService } from 'src/services/CategoryService';
+import { IContextValue as AppStateContextValue } from 'src/state/AppState';
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
 export interface IProps extends AppStateContextValue {

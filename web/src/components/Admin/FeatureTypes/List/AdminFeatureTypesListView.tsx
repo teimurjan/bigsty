@@ -1,15 +1,14 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
+import { fullWidthMixin } from 'src/styles/mixins';
 
 import { IViewProps as IProps } from './AdminFeatureTypesListPresenter';
-import { fullWidthMixin } from 'src/styles/mixins';
 
 export const NewFeatureTypeButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/featureTypes/new" color="is-primary">

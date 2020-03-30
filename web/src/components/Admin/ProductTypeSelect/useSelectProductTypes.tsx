@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
-import { IProductTypeService } from 'src/services/ProductTypeService';
-import { agregateOrderedMapToArray } from 'src/utils/agregate';
 import { extendIntlTextWithLocaleNames } from 'src/helpers/intl';
+import { IProductTypeService } from 'src/services/ProductTypeService';
 import { useIntlState } from 'src/state/IntlState';
+import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
 interface IArgs {
   productTypeService: IProductTypeService;

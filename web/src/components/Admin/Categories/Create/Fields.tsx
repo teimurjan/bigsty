@@ -1,10 +1,8 @@
 import * as React from 'react';
-
 import { Field, FieldRenderProps } from 'react-final-form';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
-
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 

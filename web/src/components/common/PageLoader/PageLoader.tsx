@@ -1,12 +1,12 @@
 /** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-
-import { css, jsx } from '@emotion/core';
 import SyncLoader from 'react-spinners/SyncLoader';
 import Transition from 'react-transition-group/Transition';
-import { useTheme } from 'emotion-theming';
 
+import { useModalScrollLock } from 'src/hooks/useModalScrollLock';
 import {
   alignItemsCenterMixin,
   flexMixin,
@@ -16,7 +16,6 @@ import {
   positionAbsoluteMixin,
 } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
-import { useModalScrollLock } from 'src/hooks/useModalScrollLock';
 import { PAGE_LOADER_ID } from 'src/utils/dom';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {

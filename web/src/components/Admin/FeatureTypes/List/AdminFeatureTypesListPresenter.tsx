@@ -1,8 +1,8 @@
 import * as React from 'react';
 
+import { useDebounce } from 'src/hooks/useDebounce';
 import { IContextValue as AdminFeatureTypesContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps extends AdminFeatureTypesContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;

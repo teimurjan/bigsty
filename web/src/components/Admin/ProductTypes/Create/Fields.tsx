@@ -1,24 +1,22 @@
 import * as React from 'react';
-
 import { Field as FinalFormField, FieldRenderProps } from 'react-final-form';
 import { IntlShape, injectIntl } from 'react-intl';
 
+import { Field } from 'src/components/common/Field/Field';
+import { FileInput } from 'src/components/common/FileInput/FileInput';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
-
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { Label } from 'src/components/common/Label/Label';
+import { getMultipleValuesFromChangeEvent } from 'src/components/common/NativeSelect/NativeSelect';
+import { Tag } from 'src/components/common/Tag/Tag';
+import { WYSIWYG } from 'src/components/common/WYSIWYG/WYSIWYG';
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
+import { arePropsEqual, lengthCompare } from 'src/utils/propEquality';
 
 import { IntlField, IProps as IIntlFieldProps } from '../../IntlField';
-import { getMultipleValuesFromChangeEvent } from 'src/components/common/NativeSelect/NativeSelect';
-import { FileInput } from 'src/components/common/FileInput/FileInput';
-import { Field } from 'src/components/common/Field/Field';
-import { Label } from 'src/components/common/Label/Label';
-import { HelpText } from 'src/components/common/HelpText/HelpText';
-import { arePropsEqual, lengthCompare } from 'src/utils/propEquality';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { Tag } from 'src/components/common/Tag/Tag';
-import { WYSIWYG } from 'src/components/common/WYSIWYG/WYSIWYG';
 
 interface IFeatureTypesSelectProps extends FieldRenderProps<string[]> {
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];

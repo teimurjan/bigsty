@@ -1,13 +1,14 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
 import classNames from 'classnames';
+import * as React from 'react';
 
 import { Hero } from 'src/components/common/Hero/Hero';
 import { HeroBody } from 'src/components/common/HeroBody/HeroBody';
 import { Title } from 'src/components/common/Title/Title';
 import { textCenterMixin } from 'src/styles/mixins';
+
 import { Subtitle } from '../Subtitle/Subtitle';
 
 interface IProps {

@@ -1,9 +1,9 @@
 import * as React from 'react';
-
-import { useParams } from 'react-router';
 import { useIntl } from 'react-intl';
+import { useParams } from 'react-router';
 
 import { useDependencies } from 'src/DI/DI';
+
 import { ProductTypePagePresenter, IProps } from './ProductTypePagePresenter';
 import { ProductTypePageView } from './ProductTypePageView';
 

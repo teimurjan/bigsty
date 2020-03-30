@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { ICategoryListResponseItem } from 'src/api/CategoryAPI';
-import { ISearchService } from 'src/services/SearchService';
 import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
-import { agregateOrderedMapToArray } from 'src/utils/agregate';
 import { useDebounce } from 'src/hooks/useDebounce';
+import { ISearchService } from 'src/services/SearchService';
+import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;

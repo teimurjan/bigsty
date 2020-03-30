@@ -1,17 +1,18 @@
 import * as React from 'react';
-
 import * as yup from 'yup';
 
+import { IProductForCartResponseItem } from 'src/api/ProductAPI';
+import * as schemaValidator from 'src/components/SchemaValidator';
+import { getUserPropertySafe } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useForceUpdate } from 'src/hooks/useForceUpdate';
-import { IProductForCartResponseItem } from 'src/api/ProductAPI';
-import { IProductService } from 'src/services/ProductService';
-import { agregateOrderedMapToArray } from 'src/utils/agregate';
-import { ICartStorage } from 'src/storage/CartStorage';
-import * as schemaValidator from 'src/components/SchemaValidator';
-import { IContextValue as UserStateContextValue } from 'src/state/UserState';
-import { getUserPropertySafe } from 'src/helpers/user';
 import { IOrderService } from 'src/services/OrderService';
+import { IProductService } from 'src/services/ProductService';
+import { IContextValue as UserStateContextValue } from 'src/state/UserState';
+import { ICartStorage } from 'src/storage/CartStorage';
+import { agregateOrderedMapToArray } from 'src/utils/agregate';
+import { PHONE_REGEX } from 'src/utils/phone';
+import { isTrimmed } from 'src/utils/validate';
 
 export interface IProps extends UserStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -41,9 +42,19 @@ export interface IViewProps {
 
 const validator = new schemaValidator.SchemaValidator(
   yup.object().shape({
-    name: yup.string().required('common.errors.field.empty'),
-    phone: yup.string().required('common.errors.field.empty'),
-    address: yup.string().required('common.errors.field.empty'),
+    name: yup
+      .string()
+      .test('isTrimmed', 'common.errors.notTrimmed', isTrimmed)
+      .required('common.errors.field.empty'),
+    phone: yup
+      .string()
+      .required('common.errors.field.empty')
+      .matches(PHONE_REGEX, 'common.errors.invalidPhone'),
+
+    address: yup
+      .string()
+      .test('isTrimmed', 'common.errors.notTrimmed', isTrimmed)
+      .required('common.errors.field.empty'),
   }),
 );
 

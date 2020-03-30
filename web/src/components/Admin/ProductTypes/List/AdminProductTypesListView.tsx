@@ -1,16 +1,15 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
+import { fullWidthMixin } from 'src/styles/mixins';
 
 import { AdminTable, IntlRenderer, ImageRenderer } from '../../AdminTable';
 
 import { IViewProps as IProps } from './AdminProductTypesListPresenter';
-import { fullWidthMixin } from 'src/styles/mixins';
 
 export const NewProductTypeButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/productTypes/new" color="is-primary">

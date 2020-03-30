@@ -1,21 +1,18 @@
-import * as React from 'react';
-
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Global, css } from '@emotion/core';
+import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { useIntl } from 'react-intl';
-
-import { Admin } from 'src/components/Admin/Admin';
-import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
-import { PrivateRoute } from 'src/components/PrivateRoute';
-import { Client } from 'src/components/Client/Client';
-import { ConfirmSignupContainer } from 'src/components/ConfirmSignup/ConfirmSignupContainer';
-
-import { useMedia } from 'src/hooks/useMedia';
-
-import { mediaQueries } from 'src/styles/media';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import logo from 'src/assets/images/logo.png';
+import { Admin } from 'src/components/Admin/Admin';
+import { Client } from 'src/components/Client/Client';
+import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
+import { ConfirmSignupContainer } from 'src/components/ConfirmSignup/ConfirmSignupContainer';
+import { PrivateRoute } from 'src/components/PrivateRoute';
+import { useMedia } from 'src/hooks/useMedia';
+import { mediaQueries } from 'src/styles/media';
+
 
 interface IProps {
   isLoading: boolean;

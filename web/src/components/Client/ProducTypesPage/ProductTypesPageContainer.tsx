@@ -1,10 +1,10 @@
 import * as React from 'react';
-
 import { useParams } from 'react-router';
 
 import { useDependencies } from 'src/DI/DI';
 
 import { ProductTypesListView } from '../ProductType/ProductTypesList/ProductTypesListView';
+
 import { ProductTypesPagePresenter } from './ProductTypesPagePresenter';
 
 export const ProductTypesPageContainer = () => {

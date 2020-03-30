@@ -11,6 +11,7 @@ import { Title } from 'src/components/common/Title/Title';
 import { textCenterMixin } from 'src/styles/mixins';
 
 import { LoginFormContainer } from '../LoginForm/LoginFormContainer';
+
 import { IViewProps as IProps } from './LoginPagePresenter';
 
 export const LoginPageView = ({ intl, isOpen, onClose }: IProps & { intl: IntlShape }) => (

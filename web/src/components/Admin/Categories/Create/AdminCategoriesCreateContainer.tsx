@@ -1,12 +1,11 @@
 import * as React from 'react';
-
-import { useHistory } from 'react-router';
 import { injectIntl } from 'react-intl';
+import { useHistory } from 'react-router';
 
+import { useDependencies } from 'src/DI/DI';
 import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
 import { useIntlState } from 'src/state/IntlState';
 
-import { useDependencies } from 'src/DI/DI';
 
 import { AdminCategoriesCreatePresenter } from './AdminCategoriesCreatePresenter';
 import { AdminCategoriesCreateView } from './AdminCategoriesCreateView';

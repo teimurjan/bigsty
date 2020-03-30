@@ -1,15 +1,12 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
-import { IFeatureTypeService } from 'src/services/FeatureTypeService';
-
 import * as schemaValidator from 'src/components/SchemaValidator';
+import { useLazy } from 'src/hooks/useLazy';
+import { IFeatureTypeService } from 'src/services/FeatureTypeService';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-
-import { useLazy } from 'src/hooks/useLazy';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
 

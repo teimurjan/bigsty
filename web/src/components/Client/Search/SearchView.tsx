@@ -1,22 +1,22 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
+import * as React from 'react';
 import { useIntl } from 'react-intl';
 
-import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { Input } from 'src/components/common/Input/Input';
 
-import { IViewProps as IProps } from './SearchPresenter';
-
-import { useDebounce } from 'src/hooks/useDebounce';
 import { Dropdown } from 'src/components/common/Dropdown/Dropdown';
+import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
 import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
 import { DropdownItemLink } from 'src/components/common/DropdownItemLink/DropdownItemLink';
-import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
+import { Input } from 'src/components/common/Input/Input';
+import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Tag } from 'src/components/common/Tag/Tag';
+import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
+
+import { IViewProps as IProps } from './SearchPresenter';
 
 export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoading, error, onSearchValueChange }) => {
   const intl = useIntl();

@@ -1,30 +1,25 @@
 /** @jsx jsx */
-import * as React from 'react';
-
 import { jsx, css } from '@emotion/core';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import difference from 'lodash/difference';
+import * as React from 'react';
 import { Field as FinalFormField, FieldRenderProps, useFormState } from 'react-final-form';
 import { IntlShape, injectIntl, useIntl } from 'react-intl';
-import difference from 'lodash/difference';
 
-import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
-
-import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
-
-import { FileInput } from 'src/components/common/FileInput/FileInput';
-import { Field } from 'src/components/common/Field/Field';
-import { Label } from 'src/components/common/Label/Label';
-import { HelpText } from 'src/components/common/HelpText/HelpText';
-import { arePropsEqual, lengthCompare } from 'src/utils/propEquality';
-import { FormRadioGroupField } from 'src/components/common/FormRadioGroupField/FormRadioGroupField';
 import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { isAllowedForNumberInput } from 'src/utils/number';
-import { Button } from 'src/components/common/Button/Button';
-
+import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
 import { ProductTypeSelectView } from 'src/components/Admin/ProductTypeSelect/ProductTypeSelectView';
+import { Button } from 'src/components/common/Button/Button';
+import { Field } from 'src/components/common/Field/Field';
+import { FileInput } from 'src/components/common/FileInput/FileInput';
+import { FormRadioGroupField } from 'src/components/common/FormRadioGroupField/FormRadioGroupField';
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { Label } from 'src/components/common/Label/Label';
+import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
+import { isAllowedForNumberInput } from 'src/utils/number';
+import { arePropsEqual, lengthCompare } from 'src/utils/propEquality';
 
 const renderQuantityField = injectIntl(({ input, meta, intl }: FieldRenderProps<string> & { intl: IntlShape }) => {
   const showError = meta.touched && meta.error;

@@ -1,7 +1,7 @@
-import * as React from 'react';
 
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as React from 'react';
 import { useIntl } from 'react-intl';
 
 import { formatMediaURL } from 'src/utils/url';

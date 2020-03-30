@@ -1,7 +1,7 @@
 import { Storage } from 'ttypes/storage';
 
-import { getCurrentTimestamp } from 'src/utils/time';
 import { objectWithout } from 'src/utils/object';
+import { getCurrentTimestamp } from 'src/utils/time';
 
 export interface IStateCacheStorage {
   get<T = object>(key: string): T | null;

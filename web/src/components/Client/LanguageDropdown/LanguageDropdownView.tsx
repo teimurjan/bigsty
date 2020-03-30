@@ -1,9 +1,9 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { Dropdown, ITriggerProps } from 'src/components/common/Dropdown/Dropdown';

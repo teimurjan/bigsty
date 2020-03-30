@@ -1,8 +1,9 @@
 /** @jsx jsx */
+import { css, jsx } from '@emotion/core';
 import * as React from 'react';
 
-import { css, jsx } from '@emotion/core';
 
+import { Title } from 'src/components/common/Title/Title';
 import {
   alignItemsCenterMixin,
   flexMixin,
@@ -11,7 +12,6 @@ import {
   justifyContentCenterMixin,
 } from 'src/styles/mixins';
 
-import { Title } from 'src/components/common/Title/Title';
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;

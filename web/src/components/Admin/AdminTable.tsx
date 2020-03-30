@@ -1,21 +1,20 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
-
 import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
+import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Table } from 'src/components/common/Table/Table';
-
-import { textCenterMixin } from 'src/styles/mixins';
 import { mediaQueries } from 'src/styles/media';
-import { UncontrolledPagination } from '../common/UncontrolledPagination/UncontrolledPagination';
+import { textCenterMixin } from 'src/styles/mixins';
 import { formatMediaURL } from 'src/utils/url';
+
+import { UncontrolledPagination } from '../common/UncontrolledPagination/UncontrolledPagination';
 
 interface IAdminTableRendererRequiredArgs {
   componentKey: string;

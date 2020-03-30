@@ -1,20 +1,16 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
+import { IBannerListRawIntlResponseItem } from 'src/api/BannerAPI';
 import * as schemaValidator from 'src/components/SchemaValidator';
-
+import { useDebounce } from 'src/hooks/useDebounce';
+import { useLazy } from 'src/hooks/useLazy';
+import { IBannerService } from 'src/services/BannerService';
 import { IContextValue as AdminBannersStateContextValue } from 'src/state/AdminBannersState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-import { IBannerListRawIntlResponseItem } from 'src/api/BannerAPI';
-
-import { IBannerService } from 'src/services/BannerService';
-
 import { getFieldName, parseFieldName } from '../../IntlField';
-import { useLazy } from 'src/hooks/useLazy';
-import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps extends AdminBannersStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;

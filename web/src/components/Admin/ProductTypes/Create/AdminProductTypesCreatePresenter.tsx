@@ -1,25 +1,20 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
 import * as schemaValidator from 'src/components/SchemaValidator';
-
+import { useDebounce } from 'src/hooks/useDebounce';
+import { useLazy } from 'src/hooks/useLazy';
 import { IProductTypeService } from 'src/services/ProductTypeService';
-
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as AdminProductTypesStateContextValue } from 'src/state/AdminProductTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-
 import { IStateCacheStorage } from 'src/storage/StateCacheStorage';
-
-import { useLazy } from 'src/hooks/useLazy';
+import { objectWithout } from 'src/utils/object';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
 import { IProps as IModalFormProps } from '../../ModalForm';
-import { objectWithout } from 'src/utils/object';
-import { useDebounce } from 'src/hooks/useDebounce';
 
 export interface IProps
   extends AdminCategoriesStateContextValue,

@@ -1,18 +1,16 @@
 /** @jsx jsx */
-import * as React from 'react';
-
 import { jsx, css } from '@emotion/core';
-
 import classNames from 'classnames';
+import * as React from 'react';
 import { IntlShape, injectIntl } from 'react-intl';
 
+import { IProductTypeListResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
+import { ProductTypeCard } from 'src/components/Client/ProductType/ProductTypeCard/ProductTypeCard';
 import { Column } from 'src/components/common/Column/Column';
 import { Columns } from 'src/components/common/Columns/Columns';
 import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { UncontrolledPagination } from 'src/components/common/UncontrolledPagination/UncontrolledPagination';
-import { ProductTypeCard } from 'src/components/Client/ProductType/ProductTypeCard/ProductTypeCard';
-import { IProductTypeListResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
 
 export interface IProps {
   productTypes: IProductTypeListResponseItem[];

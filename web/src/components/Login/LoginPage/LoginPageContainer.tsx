@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import { useHistory, useRouteMatch } from 'react-router';
+
 import { LoginPagePresenter } from './LoginPagePresenter';
 import { LoginPageView } from './LoginPageView';
 

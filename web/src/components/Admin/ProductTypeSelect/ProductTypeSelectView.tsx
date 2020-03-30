@@ -1,12 +1,10 @@
 import * as React from 'react';
-
+import { FieldRenderProps } from 'react-final-form';
 import { useIntl } from 'react-intl';
 
-import { FieldRenderProps } from 'react-final-form';
-
+import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 
-import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
 
 interface IProps {
   productTypes: IProductTypeListRawIntlMinifiedResponseItem[];

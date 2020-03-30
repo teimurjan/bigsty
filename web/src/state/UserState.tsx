@@ -1,6 +1,6 @@
+import jwtDecode from 'jwt-decode';
 import * as React from 'react';
 
-import jwtDecode from 'jwt-decode';
 
 import { useDependencies } from 'src/DI/DI';
 

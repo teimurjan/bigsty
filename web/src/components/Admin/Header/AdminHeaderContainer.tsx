@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { injectIntl } from 'react-intl';
 
 import { useAppState } from 'src/state/AppState';

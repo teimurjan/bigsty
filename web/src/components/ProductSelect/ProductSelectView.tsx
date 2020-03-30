@@ -1,24 +1,24 @@
 /** @jsx jsx */
-import * as React from 'react';
-
 import { css, jsx } from '@emotion/core';
+import * as React from 'react';
 import { useIntl } from 'react-intl';
 
-import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { Input } from 'src/components/common/Input/Input';
-
-import { IViewProps as IProps } from './ProductSelectPresenter';
-
-import { useDebounce } from 'src/hooks/useDebounce';
 import { Dropdown } from 'src/components/common/Dropdown/Dropdown';
 import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
+import { Input } from 'src/components/common/Input/Input';
+import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
+
 import { Modal } from '../common/Modal/Modal';
 import { ModalBackground } from '../common/ModalBackground/ModalBackground';
-import { ModalContent } from '../common/ModalContent/ModalContent';
 import { ModalCard } from '../common/ModalCard/ModalCard';
+import { ModalContent } from '../common/ModalContent/ModalContent';
+
+import { IViewProps as IProps } from './ProductSelectPresenter';
 import { ProductTypePreview, IProps as IProductTypePreviewProps } from './ProductTypePreview';
+
 
 const dropdownCSS = css`
   width: 300px;

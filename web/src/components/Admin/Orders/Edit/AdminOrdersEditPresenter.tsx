@@ -1,16 +1,13 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
-import * as schemaValidator from 'src/components/SchemaValidator';
-
-import { IOrderService } from 'src/services/OrderService';
-
-import { IContextValue as AdminOrdersStateContextValue } from 'src/state/AdminOrdersState';
-
 import { IOrderListResponseItem } from 'src/api/OrderAPI';
+import * as schemaValidator from 'src/components/SchemaValidator';
 import { useDebounce } from 'src/hooks/useDebounce';
+import { IOrderService } from 'src/services/OrderService';
+import { IContextValue as AdminOrdersStateContextValue } from 'src/state/AdminOrdersState';
+import { PHONE_REGEX } from 'src/utils/phone';
 
 export interface IProps extends AdminOrdersStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -44,7 +41,10 @@ export interface IViewProps {
 const validator = new schemaValidator.SchemaValidator(
   yup.object().shape({
     user_name: yup.string().required('common.errors.field.empty'),
-    user_phone_number: yup.string().required('common.errors.field.empty'),
+    user_phone_number: yup
+      .string()
+      .required('common.errors.field.empty')
+      .matches(PHONE_REGEX, 'common.errors.invalidPhone'),
     user_address: yup.string().required('common.errors.field.empty'),
     status: yup.string().required('common.errors.field.empty'),
     items: yup.array().min(1, 'common.errors.field.atLeast1'),

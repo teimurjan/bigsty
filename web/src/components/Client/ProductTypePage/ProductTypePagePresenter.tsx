@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { IProductTypeDetailResponseItem } from 'src/api/ProductTypeAPI';
-import { IProductTypeService } from 'src/services/ProductTypeService';
-import { IProductService } from 'src/services/ProductService';
 import { IProductForProductTypeResponseItem } from 'src/api/ProductAPI';
+import { IProductTypeDetailResponseItem } from 'src/api/ProductTypeAPI';
+import { IProductService } from 'src/services/ProductService';
+import { IProductTypeService } from 'src/services/ProductTypeService';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;

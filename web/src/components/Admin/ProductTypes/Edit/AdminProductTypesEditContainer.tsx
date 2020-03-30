@@ -1,14 +1,13 @@
 import * as React from 'react';
-
-import { useHistory, useParams } from 'react-router';
 import { injectIntl } from 'react-intl';
+import { useHistory, useParams } from 'react-router';
 
+import { useDependencies } from 'src/DI/DI';
 import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
 import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 import { useIntlState } from 'src/state/IntlState';
 
-import { useDependencies } from 'src/DI/DI';
 
 import { AdminProductTypesEditPresenter } from './AdminProductTypesEditPresenter';
 import { AdminProductTypesEditView } from './AdminProductTypesEditView';

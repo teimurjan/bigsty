@@ -1,7 +1,6 @@
-import * as React from 'react';
-
-import { match } from 'react-router';
 import { History } from 'history';
+import * as React from 'react';
+import { match } from 'react-router';
 
 export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;

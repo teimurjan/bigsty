@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import { IContextValue as AppStateContextValue } from 'src/state/AppState';
-import { IBannerService } from 'src/services/BannerService';
 import { IBannerListResponseItem } from 'src/api/BannerAPI';
-import { agregateOrderedMapToArray } from 'src/utils/agregate';
-import { IProductTypeService } from 'src/services/ProductTypeService';
 import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
+import { IBannerService } from 'src/services/BannerService';
+import { IProductTypeService } from 'src/services/ProductTypeService';
+import { IContextValue as AppStateContextValue } from 'src/state/AppState';
+import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
 export interface IProps extends AppStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;

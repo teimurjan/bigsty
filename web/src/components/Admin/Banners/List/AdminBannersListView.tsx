@@ -1,15 +1,15 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
+import { fullWidthMixin } from 'src/styles/mixins';
 
 import { AdminTable, IntlRenderer } from '../../AdminTable';
+
 import { IViewProps as IProps } from './AdminBannersListPresenter';
-import { fullWidthMixin } from 'src/styles/mixins';
 
 export const NewBannerButton = injectIntl(({ intl }) => (
   <LinkButton to="/admin/banners/new" color="is-primary">

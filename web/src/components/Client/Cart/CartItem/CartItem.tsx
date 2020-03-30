@@ -4,11 +4,12 @@ import { useTheme } from 'emotion-theming';
 
 import { IProductForCartResponseItem } from 'src/api/ProductAPI';
 import { Image } from 'src/components/common/Image/Image';
-import { Title } from 'src/components/common/Title/Title';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
+import { Title } from 'src/components/common/Title/Title';
 import { ITheme } from 'src/themes';
 
 import { PriceCrossedText } from '../../Price/Price';
+
 import { Quantity } from './Quantity';
 
 interface IProps {

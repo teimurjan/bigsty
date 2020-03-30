@@ -1,8 +1,8 @@
 import * as React from 'react';
 
+import { IProps as IDropdownProps } from 'src/components/common/Dropdown/Dropdown';
 import { IIntlService } from 'src/services/IntlService';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-import { IProps as IDropdownProps } from 'src/components/common/Dropdown/Dropdown';
 
 interface IProps extends IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;

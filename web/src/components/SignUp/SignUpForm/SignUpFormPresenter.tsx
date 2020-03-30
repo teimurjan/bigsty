@@ -1,10 +1,8 @@
-import * as React from 'react';
-
-import * as yup from 'yup';
 import { History } from 'history';
+import * as React from 'react';
+import * as yup from 'yup';
 
 import * as schemaValidator from 'src/components/SchemaValidator';
-
 import * as authService from 'src/services/AuthService';
 
 export interface IProps {

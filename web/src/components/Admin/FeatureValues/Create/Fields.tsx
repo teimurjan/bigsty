@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { Field, FieldRenderProps } from 'react-final-form';
 import { IntlShape, injectIntl } from 'react-intl';
 

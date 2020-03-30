@@ -1,9 +1,9 @@
 import * as React from 'react';
-
 import { Field, FieldRenderProps } from 'react-final-form';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { IIntlListResponseItem } from 'src/api/IntlAPI';
+
 import { FormTextField } from '../common/FormTextField/FormTextField';
 import { Tag } from '../common/Tag/Tag';
 

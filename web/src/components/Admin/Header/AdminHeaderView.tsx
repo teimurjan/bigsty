@@ -1,19 +1,19 @@
 /** @jsx jsx */
+import { css, jsx } from '@emotion/core';
 import * as React from 'react';
+import { useIntl, IntlShape } from 'react-intl';
 import { NavLink, Link } from 'react-router-dom';
 
-import { css, jsx } from '@emotion/core';
-import { useIntl, IntlShape } from 'react-intl';
 
-import { Menu } from 'src/components/common/Menu/Menu';
 import { ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
-
+import { Menu } from 'src/components/common/Menu/Menu';
+import { mediaQueries } from 'src/styles/media';
 import { fullWidthMixin } from 'src/styles/mixins';
 
 import { LanguageDropdownContainer as LanguageDropdown } from '../../Client/LanguageDropdown/LanguageDropdownContainer';
 
 import { IViewProps as IProps } from './AdminHeaderPresenter';
-import { mediaQueries } from 'src/styles/media';
+
 
 const LanguageDrodownTrigger = ({ onClick, ...props }: ITriggerProps) => {
   const intl = useIntl();

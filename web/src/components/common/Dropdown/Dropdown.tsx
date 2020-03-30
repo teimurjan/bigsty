@@ -1,9 +1,8 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
-
 import classNames from 'classnames';
+import * as React from 'react';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 import useClickOutside from 'src/hooks/useClickOutside';

@@ -1,20 +1,22 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
-
+import * as React from 'react';
 import { Field as FinalFormField, FieldRenderProps } from 'react-final-form';
 import { useIntl } from 'react-intl';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+
 import { IOrderListResponseItem } from 'src/api/OrderAPI';
-import { Field } from 'src/components/common/Field/Field';
-import { Label } from 'src/components/common/Label/Label';
-import { HelpText } from 'src/components/common/HelpText/HelpText';
-import { ProductSelectContainer } from 'src/components/ProductSelect/ProductSelectContainer';
 import { Quantity } from 'src/components/Client/Cart/CartItem/Quantity';
 import { PriceText } from 'src/components/Client/Price/Price';
-import { calculateDiscountedPrice } from 'src/utils/number';
+import { Field } from 'src/components/common/Field/Field';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
+import { FormPhoneField } from 'src/components/common/FormPhoneField/FormPhoneField';
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { Label } from 'src/components/common/Label/Label';
+import { ProductSelectContainer } from 'src/components/ProductSelect/ProductSelectContainer';
+import { calculateDiscountedPrice } from 'src/utils/number';
+import { parsePhoneNumber } from 'src/utils/phone';
 
 const UserNameField = ({ input, meta }: FieldRenderProps<string>) => {
   const intl = useIntl();
@@ -25,28 +27,6 @@ const UserNameField = ({ input, meta }: FieldRenderProps<string>) => {
     <FormTextField
       labelProps={{
         children: intl.formatMessage({ id: 'AdminOrders.userName' }),
-      }}
-      inputProps={{
-        ...input,
-        isDanger: showError,
-      }}
-      helpTextProps={{
-        children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
-        type: 'is-danger',
-      }}
-    />
-  );
-};
-
-const UserPhoneNumberField = ({ input, meta }: FieldRenderProps<string>) => {
-  const intl = useIntl();
-
-  const showError = meta.touched && meta.error;
-
-  return (
-    <FormTextField
-      labelProps={{
-        children: intl.formatMessage({ id: 'AdminOrders.userPhoneNumber' }),
       }}
       inputProps={{
         ...input,
@@ -228,12 +208,20 @@ const OrderItemsField = ({ input, meta }: FieldRenderProps<IOrderListResponseIte
 };
 
 export const Fields: React.SFC<{}> = () => {
+  const intl = useIntl();
+
   return (
     <React.Fragment>
       <FinalFormField key="user_name" name="user_name" component={UserNameField} />
-      <FinalFormField key="user_phone_number" name="user_phone_number" component={UserPhoneNumberField} />
+      <FinalFormField
+        key="user_phone_number"
+        name="user_phone_number"
+        component={FormPhoneField}
+        parse={parsePhoneNumber}
+        label={intl.formatMessage({ id: 'AdminOrders.userPhoneNumber' })}
+      />
       <FinalFormField key="user_address" name="user_address" component={UserAddressField} />
-      <FinalFormField key="items" name="items" render={props => <OrderItemsField {...props} />} />
+      <FinalFormField key="items" name="items" render={OrderItemsField} />
       <FinalFormField key="status" name="status" component={StatusSelectField} />
     </React.Fragment>
   );

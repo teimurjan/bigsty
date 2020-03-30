@@ -1,28 +1,25 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { css, jsx, ClassNames } from '@emotion/core';
-import uniqBy from 'lodash/uniqBy';
 import { useTheme } from 'emotion-theming';
-import { useIntl } from 'react-intl';
+import uniqBy from 'lodash/uniqBy';
+import * as React from 'react';
 import Helmet from 'react-helmet';
+import { useIntl } from 'react-intl';
 
-import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
-import { Title } from 'src/components/common/Title/Title';
-import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
-import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { Button } from 'src/components/common/Button/Button';
-
-import { formatMediaURL } from 'src/utils/url';
-
+import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
+import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
+import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
+import { Title } from 'src/components/common/Title/Title';
 import { mediaQueries } from 'src/styles/media';
 import { flexMixin } from 'src/styles/mixins';
-
 import { ITheme } from 'src/themes';
+import { formatMediaURL } from 'src/utils/url';
 
-import { ProductTypeImageCarousel } from '../ProductType/ProductTypeImageCarousel/ProductTypeImageCarousel';
 import { PriceCrossedText } from '../Price/Price';
+import { ProductTypeImageCarousel } from '../ProductType/ProductTypeImageCarousel/ProductTypeImageCarousel';
 
 import { IViewProps as IProps } from './ProductTypePagePresenter';
 

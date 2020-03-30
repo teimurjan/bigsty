@@ -1,6 +1,6 @@
+import axios from 'axios';
 import * as React from 'react';
 
-import axios from 'axios';
 
 import { useAppState } from './AppState';
 

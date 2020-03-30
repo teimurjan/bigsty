@@ -1,9 +1,7 @@
 import * as React from 'react';
 
 import { useDependencies } from 'src/DI/DI';
-
 import * as categoryService from 'src/services/CategoryService';
-
 import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
 
 import { DeleteModalContainer } from '../../DeleteModal/DeleteModalContainer';

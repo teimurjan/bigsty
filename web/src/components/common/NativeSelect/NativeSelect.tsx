@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import * as React from 'react';
 
 import { css, jsx } from '@emotion/core';
 import classNames from 'classnames';
+import * as React from 'react';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { HelpText } from 'src/components/common/HelpText/HelpText';

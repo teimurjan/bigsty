@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { useDependencies } from 'src/DI/DI';
-
 import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 
 import { DeleteModalContainer } from '../../DeleteModal/DeleteModalContainer';

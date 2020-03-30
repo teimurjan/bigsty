@@ -189,8 +189,8 @@
   "Cart.order": "Заказать",
   "Cart.nameInput.label": "Имя",
   "Cart.nameInput.placeholder": "Ибраимов Бакыт",
-  "Cart.phoneInput.label": "Телефон",
-  "Cart.phoneInput.placeholder": "+996555xxxxxx",
+  "common.phoneInput.label": "Телефон",
+  "common.phoneInput.placeholder": "+996 (555) xx-xx-xx",
   "Cart.addressInput.label": "Адрес",
   "Cart.addressInput.placeholder": "Советская 127",
   "Cart.empty": "Ваша корзина пуста",
@@ -220,5 +220,7 @@
   "Price.discount": "Скидка {value}%",
   "common.logo": "Логотип",
   "FileInput.alt": "Предварительный просмотр",
-  "common.addedToCart": "Добавлено!"
+  "common.addedToCart": "Добавлено!",
+  "common.errors.invalidPhone": "Неверный номер телефона",
+  "common.errors.notTrimmed": "Пробелы в начале/конце запрещены."
 }

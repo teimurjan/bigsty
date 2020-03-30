@@ -1,9 +1,7 @@
 import * as React from 'react';
 
 import { IProductListResponseItem, IProductListResponseMeta } from 'src/api/ProductAPI';
-
 import { useDependencies } from 'src/DI/DI';
-
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
 const defaultMeta = { count: undefined, pages_count: undefined, page: undefined, limit: undefined };

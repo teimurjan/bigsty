@@ -189,8 +189,8 @@
   "Cart.order": "Order",
   "Cart.nameInput.label": "Full Name",
   "Cart.nameInput.placeholder": "John Johnson",
-  "Cart.phoneInput.label": "Phone",
-  "Cart.phoneInput.placeholder": "+996555xxxxxx",
+  "common.phoneInput.label": "Phone",
+  "common.phoneInput.placeholder": "+996 (555) xx-xx-xx",
   "Cart.addressInput.label": "Address",
   "Cart.addressInput.placeholder": "Sovetskaia 127",
   "Cart.empty": "Your cart is empty",
@@ -220,5 +220,7 @@
   "Price.discount": "Discount {value}%",
   "common.logo": "Logo",
   "FileInput.alt": "Preview image",
-  "common.addedToCart": "Added!"
+  "common.addedToCart": "Added!",
+  "common.errors.invalidPhone": "Invalid phone number",
+  "common.errors.notTrimmed": "Leading/trailing whitespaces not allowed."
 }

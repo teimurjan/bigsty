@@ -1,8 +1,8 @@
 /** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import classNames from 'classnames';
-import { css, jsx } from '@emotion/core';
 
 import { flexMixin } from 'src/styles/mixins';
 

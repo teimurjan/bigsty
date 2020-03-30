@@ -1,19 +1,14 @@
-import * as React from 'react';
-
 import { History } from 'history';
+import * as React from 'react';
 import * as yup from 'yup';
 
-import { IFeatureTypeService } from 'src/services/FeatureTypeService';
-
+import { IFeatureTypeListRawIntlResponseItem } from 'src/api/FeatureTypeAPI';
 import * as schemaValidator from 'src/components/SchemaValidator';
-
+import { useDebounce } from 'src/hooks/useDebounce';
+import { useLazy } from 'src/hooks/useLazy';
+import { IFeatureTypeService } from 'src/services/FeatureTypeService';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
-
-import { IFeatureTypeListRawIntlResponseItem } from 'src/api/FeatureTypeAPI';
-
-import { useLazy } from 'src/hooks/useLazy';
-import { useDebounce } from 'src/hooks/useDebounce';
 
 import { getFieldName, parseFieldName } from '../../IntlField';
 

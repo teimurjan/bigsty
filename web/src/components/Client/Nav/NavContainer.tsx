@@ -1,10 +1,9 @@
 import * as React from 'react';
-
 import { injectIntl } from 'react-intl';
 
+import { useDependencies } from 'src/DI/DI';
 import { useAppState } from 'src/state/AppState';
 
-import { useDependencies } from 'src/DI/DI';
 
 import { NavPresenter } from './NavPresenter';
 import { NavView } from './NavView';

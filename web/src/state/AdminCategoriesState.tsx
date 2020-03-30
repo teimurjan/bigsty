@@ -1,11 +1,8 @@
 import * as React from 'react';
 
 import { ICategoryListRawIntlResponseItem } from 'src/api/CategoryAPI';
-
 import { useDependencies } from 'src/DI/DI';
-
 import { extendIntlTextWithLocaleNames } from 'src/helpers/intl';
-
 import { useIntlState } from 'src/state/IntlState';
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
 

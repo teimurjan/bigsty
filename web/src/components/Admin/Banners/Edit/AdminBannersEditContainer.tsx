@@ -1,11 +1,10 @@
 import * as React from 'react';
-
 import { useHistory, useParams } from 'react-router';
 
+import { useDependencies } from 'src/DI/DI';
 import { useAdminBannersState } from 'src/state/AdminBannersState';
 import { useIntlState } from 'src/state/IntlState';
 
-import { useDependencies } from 'src/DI/DI';
 
 import { AdminBannersEditPresenter } from './AdminBannersEditPresenter';
 import { AdminBannersEditView } from './AdminBannersEditView';

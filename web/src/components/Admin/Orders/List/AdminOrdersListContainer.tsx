@@ -1,9 +1,8 @@
 import * as React from 'react';
-
 import { injectIntl } from 'react-intl';
 
-import { useIntlState } from 'src/state/IntlState';
 import { useAdminOrdersState } from 'src/state/AdminOrdersState';
+import { useIntlState } from 'src/state/IntlState';
 
 import { AdminOrdersListPresenter } from './AdminOrdersListPresenter';
 import { AdminOrdersListView } from './AdminOrdersListView';

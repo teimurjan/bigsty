@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import * as React from 'react';
 
-import classNames from 'classnames';
 
 export interface IProps extends React.HTMLAttributes<HTMLLIElement> {
   children?: React.ReactNode;
@@ -9,8 +9,6 @@ export interface IProps extends React.HTMLAttributes<HTMLLIElement> {
 
 export const PaginationLink = ({ children, className, isCurrent, ...props }: IProps) => (
   <li {...props}>
-    <button className={classNames('pagination-link', { 'is-current': isCurrent })}>
-      {children}
-    </button>
+    <button className={classNames('pagination-link', { 'is-current': isCurrent })}>{children}</button>
   </li>
 );

@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import * as React from 'react';
 
-import classNames from 'classnames';
 
 export const Table = ({ children, className, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
   <table className={classNames('table', className)} {...props}>

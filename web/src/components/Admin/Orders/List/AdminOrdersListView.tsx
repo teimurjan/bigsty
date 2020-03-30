@@ -1,11 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
-
 import { fullWidthMixin } from 'src/styles/mixins';
 
 import { AdminTable } from '../../AdminTable';

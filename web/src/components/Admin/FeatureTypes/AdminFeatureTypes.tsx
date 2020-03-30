@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { Route, RouteComponentProps } from 'react-router';
 
 import { AdminFeatureTypesCreateContainer } from './Create/AdminFeatureTypesCreateContainer';

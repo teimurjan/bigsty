@@ -1,16 +1,15 @@
 /** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
-import { css, jsx } from '@emotion/core';
 
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
-
 import { Image } from 'src/components/common/Image/Image';
-import { flexMixin } from 'src/styles/mixins';
-import { useTheme } from 'emotion-theming';
-import { ITheme } from 'src/themes';
-import { mediaQueries } from 'src/styles/media';
 import { useMedia } from 'src/hooks/useMedia';
+import { mediaQueries } from 'src/styles/media';
+import { flexMixin } from 'src/styles/mixins';
+import { ITheme } from 'src/themes';
 
 const CONTROL_IMAGE_SIZE = '70px';
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { useIntl } from 'react-intl';
 
 import { useDependencies } from 'src/DI/DI';

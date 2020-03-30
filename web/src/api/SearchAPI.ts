@@ -1,6 +1,7 @@
 import { Client } from 'ttypes/http';
 
 import { IHeadersManager } from 'src/manager/HeadersManager';
+
 import { ICategoryListResponseItem } from './CategoryAPI';
 import { IProductTypeListResponseItem } from './ProductTypeAPI';
 

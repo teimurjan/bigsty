@@ -1,9 +1,7 @@
 import * as React from 'react';
 
 import { IOrderListResponseItem } from 'src/api/OrderAPI';
-
 import { useDependencies } from 'src/DI/DI';
-
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
 export interface IContextValue {

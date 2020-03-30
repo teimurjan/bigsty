@@ -1,11 +1,10 @@
 import * as React from 'react';
-
 import { Route, RouteComponentProps } from 'react-router';
 
-import { AdminProductsListContainer } from './List/AdminProductsListContainer';
 import { AdminProductsCreateContainer } from './Create/AdminProductsCreateContainer';
-import { AdminProductsEditContainer } from './Edit/AdminProductsEditContainer';
 import { AdminProductsDeleteContainer } from './Delete/AdminProductsDeleteContainer';
+import { AdminProductsEditContainer } from './Edit/AdminProductsEditContainer';
+import { AdminProductsListContainer } from './List/AdminProductsListContainer';
 
 export const AdminProducts = ({ match }: RouteComponentProps) => (
   <>

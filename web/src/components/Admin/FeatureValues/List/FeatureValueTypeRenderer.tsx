@@ -1,8 +1,8 @@
 import * as React from 'react';
 
+import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
 import { Table } from 'src/components/common/Table/Table';
 
-import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
 
 import { IRenderer } from '../../AdminTable';
 

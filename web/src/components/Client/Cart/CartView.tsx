@@ -1,35 +1,33 @@
 /** @jsx jsx */
-import * as React from 'react';
-
 import { css, jsx, keyframes } from '@emotion/core';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useIntl } from 'react-intl';
-import { Form, Field as FinalFormField, FieldRenderProps } from 'react-final-form';
 import { useTheme } from 'emotion-theming';
+import * as React from 'react';
+import { Form, Field as FinalFormField, FieldRenderProps } from 'react-final-form';
+import { useIntl } from 'react-intl';
 
-import { Modal } from 'src/components/common/Modal/Modal';
 import { Button } from 'src/components/common/Button/Button';
+import { FormPhoneField } from 'src/components/common/FormPhoneField/FormPhoneField';
+import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
+import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { Message } from 'src/components/common/Message/Message';
+import { Modal } from 'src/components/common/Modal/Modal';
 import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
 import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
-import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { Title } from 'src/components/common/Title/Title';
-import { HelpText } from 'src/components/common/HelpText/HelpText';
-import { Message } from 'src/components/common/Message/Message';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
-
+import { Title } from 'src/components/common/Title/Title';
 import { textCenterMixin } from 'src/styles/mixins';
-
 import { ITheme } from 'src/themes';
-
 import { calculateDiscountedPrice } from 'src/utils/number';
+import { parsePhoneNumber } from 'src/utils/phone';
 
 import { PriceText } from '../Price/Price';
 
-import { IViewProps as IProps, IFormValues } from './CartPresenter';
 import { CartItem } from './CartItem/CartItem';
+import { IViewProps as IProps, IFormValues } from './CartPresenter';
 
 const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, addMore, remove, goToNextStep }) => {
   const intl = useIntl();
@@ -105,30 +103,6 @@ const NameField = ({ input, meta }: FieldRenderProps<string>) => {
   );
 };
 
-const PhoneField = ({ input, meta }: FieldRenderProps<string>) => {
-  const intl = useIntl();
-  const showError = meta.touched && meta.error;
-  return (
-    <FormTextField
-      labelProps={{
-        children: intl.formatMessage({ id: 'Cart.phoneInput.label' }),
-      }}
-      inputProps={{
-        ...input,
-        isDanger: showError,
-        placeholder: intl.formatMessage({
-          id: 'Cart.phoneInput.placeholder',
-        }),
-        type: 'text',
-      }}
-      helpTextProps={{
-        children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
-        type: 'is-danger',
-      }}
-    />
-  );
-};
-
 const AddressField = ({ input, meta }: FieldRenderProps<string>) => {
   const intl = useIntl();
   const showError = meta.touched && meta.error;
@@ -164,7 +138,7 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, erro
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <FinalFormField name="name" component={NameField} />
-          <FinalFormField name="phone" component={PhoneField} />
+          <FinalFormField name="phone" component={FormPhoneField} parse={parsePhoneNumber} />
           <FinalFormField name="address" component={AddressField} />
           <Button
             color="is-info"
