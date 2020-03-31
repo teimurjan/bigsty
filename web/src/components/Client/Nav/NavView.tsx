@@ -2,12 +2,11 @@
 
 import { css, jsx } from '@emotion/core';
 import { IntlShape } from 'react-intl';
-import { NavLink } from 'react-router-dom';
 
 import { IViewProps as IProps } from 'src/components/Client/Nav/NavPresenter';
 import { Menu } from 'src/components/common/Menu/Menu';
+import { NavLink } from 'src/components/common/NavLink/NavLink';
 import { mediaQueries } from 'src/styles/media';
-
 
 export const NavView = ({ intl, categories }: IProps & { intl: IntlShape }) => {
   return (
@@ -24,7 +23,7 @@ export const NavView = ({ intl, categories }: IProps & { intl: IntlShape }) => {
     >
       <Menu.List>
         <Menu.Item>
-          <NavLink to="/" exact activeClassName="is-active">
+          <NavLink href="/">
             {intl.formatMessage({ id: 'AdminMenu.home' })}
           </NavLink>
         </Menu.Item>
@@ -33,7 +32,7 @@ export const NavView = ({ intl, categories }: IProps & { intl: IntlShape }) => {
       <Menu.List>
         {categories.map(category => (
           <Menu.Item key={category.id}>
-            <NavLink to={`/categories/${category.id}/products`} activeClassName="is-active">
+            <NavLink href={`/categories/${category.id}/products`}>
               {category.name}
             </NavLink>
           </Menu.Item>

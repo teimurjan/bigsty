@@ -2,9 +2,8 @@ import { Global, css } from '@emotion/core';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { useIntl } from 'react-intl';
-import { BrowserRouter, StaticRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import logo from 'src/assets/images/logo.png';
 import { Admin } from 'src/components/Admin/Admin';
 import { Client } from 'src/components/Client/Client';
 import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
@@ -13,8 +12,7 @@ import { PrivateRoute } from 'src/components/PrivateRoute';
 import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
 import { safeWindow } from 'src/utils/dom';
-
-const Router = process.env.REACT_APP_USE_STATIC_ROUTER ? StaticRouter : BrowserRouter;
+import { formatStaticURL } from 'src/utils/url';
 
 interface IProps {
   isLoading: boolean;
@@ -46,7 +44,7 @@ export const AppView = ({ isLoading }: IProps) => {
         <meta name="keywords" content={intl.formatMessage({ id: 'Meta.keywords' })} />
         {!isCustomOGPage && <meta name="og:title" content={intl.formatMessage({ id: 'Meta.title' })} />}
         {!isCustomOGPage && <meta name="og:description" content={intl.formatMessage({ id: 'Meta.description' })} />}
-        {!isCustomOGPage && <meta name="og:image" content={logo} />}
+        {!isCustomOGPage && <meta name="og:image" content={formatStaticURL('icon/android-chrome-192x192.png')} />}
         {!isCustomOGPage && <meta name="og:type" content="website" />}
         <meta name="og:site_name" content="eye8.kg" />
         <meta name="og:url" content={safeWindow(w => w.location.href, '')} />
@@ -72,16 +70,14 @@ export const AppView = ({ isLoading }: IProps) => {
           }
         `}
       />
-      {React.createElement(
-        Router,
-        {},
+      <BrowserRouter>
         <Switch>
           <PrivateRoute path="/admin" component={Admin} />
           <Route path="/auth/register/confirm" component={ConfirmSignupContainer} />
 
           <Route component={Client} />
-        </Switch>,
-      )}
+        </Switch>
+      </BrowserRouter>
       <PageLoader isActive={isLoading} />
     </>
   );
