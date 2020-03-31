@@ -1,16 +1,25 @@
 import * as React from 'react';
 
+import { safeDocument } from 'src/utils/dom';
+
 export const useModalScrollLock = () => {
-  React.useEffect(() => {
-    const prevOverflow = document.body.style.overflow;
-    const prevMaxHeight = document.body.style.maxHeight;
+  React.useEffect(
+    () =>
+      safeDocument(
+        d => {
+          const prevOverflow = d.body.style.overflow;
+          const prevMaxHeight = d.body.style.maxHeight;
 
-    document.body.style.overflow = 'hidden';
-    document.body.style.maxHeight = '100vh';
+          d.body.style.overflow = 'hidden';
+          d.body.style.maxHeight = '100vh';
 
-    return () => {
-      document.body.style.overflow = prevOverflow;
-      document.body.style.maxHeight = prevMaxHeight;
-    };
-  }, []);
+          return () => {
+            d.body.style.overflow = prevOverflow;
+            d.body.style.maxHeight = prevMaxHeight;
+          };
+        },
+        () => {},
+      ),
+    [],
+  );
 };

@@ -7,7 +7,6 @@ import * as React from 'react';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { ITheme } from 'src/themes';
 
-
 interface IProps {
   className?: string;
   placeholder?: string;
@@ -62,7 +61,6 @@ export const WYSIWYG: React.SFC<IProps> = ({ onChange, onBlur, onFocus, initialV
             placeholder,
           }}
           data={initialValue}
-          onInit={() => document.querySelector('.ck.ck-content')}
           onChange={(_: any, editor: IEditor) => {
             const data = editor.getData();
             onChange && onChange(data);

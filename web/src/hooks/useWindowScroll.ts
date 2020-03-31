@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { safeWindow } from 'src/utils/dom';
+
 export interface State {
   x: number;
   y: number;
@@ -7,25 +9,29 @@ export interface State {
 
 export const useWindowScroll = (): State => {
   const [state, setState] = React.useState<State>({
-    x: window ? window.pageXOffset : 0,
-    y: window ? window.pageYOffset : 0,
+    x: safeWindow(w => w.pageXOffset, 0),
+    y: safeWindow(w => w.pageYOffset, 0),
   });
 
   React.useEffect(() => {
     const handler = () => {
       setState({
-        x: window.pageXOffset,
-        y: window.pageYOffset,
+        x: safeWindow(w => w.pageXOffset, 0),
+        y: safeWindow(w => w.pageYOffset, 0),
       });
     };
 
-    window.addEventListener('scroll', handler, {
-      capture: false,
-      passive: true,
-    });
+    safeWindow(
+      w =>
+        w.addEventListener('scroll', handler, {
+          capture: false,
+          passive: true,
+        }),
+      undefined,
+    );
 
     return () => {
-      window.removeEventListener('scroll', handler);
+      safeWindow(w => w.removeEventListener('scroll', handler), undefined);
     };
   }, []);
 

@@ -1,11 +1,14 @@
-export const getCookie = (name: string) => {
-  if (!document.cookie && document.cookie === '') {
-    const cookies = document.cookie.split(';');
-    const cookie = cookies.find(c => c.substring(0, name.length + 1) === name + '=');
+import { safeDocument } from 'src/utils/dom';
 
-    if (cookie) {
-      return decodeURIComponent(cookie.substring(name.length + 1));
+export const getCookie = (name: string) =>
+  safeDocument(d => {
+    if (!d.cookie && d.cookie === '') {
+      const cookies = d.cookie.split(';');
+      const cookie = cookies.find(c => c.substring(0, name.length + 1) === name + '=');
+
+      if (cookie) {
+        return decodeURIComponent(cookie.substring(name.length + 1));
+      }
     }
-  }
-  return undefined;
-};
+    return undefined;
+  }, undefined);

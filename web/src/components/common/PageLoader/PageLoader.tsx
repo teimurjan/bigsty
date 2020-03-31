@@ -16,7 +16,7 @@ import {
   positionAbsoluteMixin,
 } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
-import { PAGE_LOADER_ID } from 'src/utils/dom';
+import { PAGE_LOADER_ID, safeDocument } from 'src/utils/dom';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   isActive: boolean;
@@ -63,11 +63,14 @@ const Loader = ({ status, timeout, className, color, ...props }: ILoaderProps) =
   );
 };
 
-export const PageLoader = ({ isActive, timeout = 500, ...props }: IProps) => {
-  return ReactDOM.createPortal(
-    <Transition in={isActive} timeout={timeout} unmountOnExit={true}>
-      {status => <Loader timeout={timeout} status={status} {...props} />}
-    </Transition>,
-    document.body,
+export const PageLoader = ({ isActive, timeout = 500, ...props }: IProps) =>
+  safeDocument(
+    d =>
+      ReactDOM.createPortal(
+        <Transition in={isActive} timeout={timeout} unmountOnExit={true}>
+          {status => <Loader timeout={timeout} status={status} {...props} />}
+        </Transition>,
+        d.body,
+      ),
+    null,
   );
-};

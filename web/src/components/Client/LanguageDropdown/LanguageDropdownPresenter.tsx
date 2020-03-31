@@ -3,6 +3,7 @@ import * as React from 'react';
 import { IProps as IDropdownProps } from 'src/components/common/Dropdown/Dropdown';
 import { IIntlService } from 'src/services/IntlService';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
+import { safeWindow } from 'src/utils/dom';
 
 interface IProps extends IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -26,7 +27,7 @@ export const LanguageDropdownPresenter = ({
   const changeLocale = React.useCallback(
     (newLocale: string) => {
       intlService.setLocale(newLocale);
-      window.location.reload();
+      safeWindow(w => w.location.reload(), undefined);
     },
     [intlService],
   );

@@ -1,6 +1,8 @@
 import * as React from 'react';
 
-export const triggerDimensionsCorrect = () => window.dispatchEvent(new Event('resize'));
+import { safeWindow } from 'src/utils/dom';
+
+export const triggerDimensionsCorrect = () => safeWindow(w => w.dispatchEvent(new Event('resize')), undefined);
 
 export const useDimensions = <T extends HTMLElement = HTMLElement>(
   ref: React.RefObject<T>,
@@ -21,8 +23,9 @@ export const useDimensions = <T extends HTMLElement = HTMLElement>(
     if (ref.current) {
       correctDimensions();
 
-      window.addEventListener('resize', correctDimensions);
-      return () => window.removeEventListener('resize', correctDimensions);
+      safeWindow(w => w.addEventListener('resize', correctDimensions), undefined);
+
+      return () => safeWindow(w => w.removeEventListener('resize', correctDimensions), undefined);
     }
 
     return undefined;
