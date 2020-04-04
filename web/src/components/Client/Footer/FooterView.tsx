@@ -15,9 +15,8 @@ export const FooterView = () => {
     <footer
       css={css`
         margin-top: 1rem;
-        padding: 0;
         height: 80px;
-        padding: 15px 0;
+        padding: 15px 0 !important;
         box-sizing: content-box;
 
         @media ${mediaQueries.maxWidth768} {

@@ -43,7 +43,7 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
       className={y !== 0 ? 'has-shadow' : undefined}
       css={css`
         height: 80px;
-        position: fixed;
+        position: fixed !important;
         top: 0;
         left: 0;
         width: 100%;
