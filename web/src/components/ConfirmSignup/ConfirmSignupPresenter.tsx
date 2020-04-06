@@ -1,14 +1,12 @@
-import { History } from 'history';
+import { NextRouter } from 'next/router';
 import * as React from 'react';
 
-
-import { useQuery } from 'src/hooks/useQuery';
 import * as authService from 'src/services/AuthService';
 
 interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: authService.IAuthService;
-  history: History;
+  router: NextRouter;
 }
 
 export interface IViewProps {
@@ -16,8 +14,7 @@ export interface IViewProps {
   error?: string;
 }
 
-export const ConfirmSignupPresenter = ({ View, service, history }: IProps) => {
-  const query = useQuery();
+export const ConfirmSignupPresenter = ({ View, service, router }: IProps) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isLoading, setLoading] = React.useState(true);
 
@@ -26,11 +23,11 @@ export const ConfirmSignupPresenter = ({ View, service, history }: IProps) => {
 
     (async () => {
       try {
-        const token = query.get('token');
+        const token = router.query.token;
 
         if (token) {
-          await service.confirmSignup(token);
-          redirectTimeout = setTimeout(() => history.push('/login'), 5000);
+          await service.confirmSignup(typeof token === 'string' ? token : token[0]);
+          redirectTimeout = setTimeout(() => router.push('/login'), 3000);
         } else {
           setError('ConfirmSignup.invalidToken');
         }

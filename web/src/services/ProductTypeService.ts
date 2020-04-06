@@ -48,7 +48,7 @@ export interface IProductTypeService {
     };
     result: number[];
   }>;
-  getByID(id: number): Promise<productTypeAPI.IProductTypeDetailResponseItem | undefined>;
+  getByID(id: number): Promise<productTypeAPI.IProductTypeDetailResponseItem | null>;
   getAllRawIntl(
     page: number,
   ): Promise<{
@@ -117,7 +117,7 @@ export class ProductTypeService implements IProductTypeService {
       return (await this.API.getByID(id)).data;
     } catch (e) {
       if (e instanceof productTypeAPI.errors.ProductTypeNotFound) {
-        return undefined;
+        return null;
       }
 
       throw e;

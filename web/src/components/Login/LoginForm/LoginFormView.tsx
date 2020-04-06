@@ -1,18 +1,16 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/core';
+import Link from 'next/Link';
 import * as React from 'react';
 import { Field, FieldRenderProps, Form, FormRenderProps } from 'react-final-form';
 import { IntlShape } from 'react-intl';
-import { Link } from 'react-router-dom';
-
 
 import { Button } from 'src/components/common/Button/Button';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { IViewProps as IProps, IFormValues } from 'src/components/Login/LoginForm/LoginFormPresenter';
 import { textCenterMixin } from 'src/styles/mixins';
-
 
 export class LoginFormView extends React.Component<IProps & { intl: IntlShape }> {
   public render() {
@@ -30,8 +28,10 @@ export class LoginFormView extends React.Component<IProps & { intl: IntlShape }>
           <Button className="level-left is-uppercase" color="is-success" loading={submitting} type="submit">
             {intl.formatMessage({ id: 'LoginForm.submitButton.text' })}
           </Button>
-          <Link to="/signup" className="level-right">
-            {intl.formatMessage({ id: 'LoginForm.signUpLink' })}
+          <Link href="/signup">
+            <a href="/signup" className="level-right">
+              {intl.formatMessage({ id: 'LoginForm.signUpLink' })}
+            </a>
           </Link>
         </div>
         <div css={textCenterMixin}>

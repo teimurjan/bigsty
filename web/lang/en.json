@@ -196,6 +196,7 @@
   "Cart.empty": "Your cart is empty",
   "common.upc": "UPC",
   "ConfirmSignup.success": "Confirmation is successful. Redirecting you the login page.",
+  "ConfirmSignup.invalidToken": "The link is whether invalid or expired.",
   "common.loading": "Loading...",
   "Cart.orderReceived": "Thank you for your order. We'll contact you as soon as possible.",
   "Cart.total": "Total",

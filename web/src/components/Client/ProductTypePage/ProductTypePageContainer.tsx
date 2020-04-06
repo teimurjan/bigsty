@@ -1,20 +1,27 @@
+import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
-import { useParams } from 'react-router';
 
-
-import { ProductTypePagePresenter, IProps } from 'src/components/Client/ProductTypePage/ProductTypePagePresenter';
+import {
+  ProductTypePagePresenter,
+  IProps as IPresenterProps,
+} from 'src/components/Client/ProductTypePage/ProductTypePagePresenter';
 import { ProductTypePageView } from 'src/components/Client/ProductTypePage/ProductTypePageView';
 import { useDependencies } from 'src/DI/DI';
 
+interface IProps {
+  initialProps?: IPresenterProps['initialProps'];
+}
+
 let addToCartTimeoutID: NodeJS.Timeout;
-export const ProductTypePageContainer = () => {
+export const ProductTypePageContainer: React.FC<IProps> = ({ initialProps }) => {
   const { dependencies } = useDependencies();
-  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const { id } = router.query;
   const intl = useIntl();
 
   const [showAddedText, setShowAddedText] = React.useState(false);
-  const action: IProps['action'] = React.useCallback(
+  const action: IPresenterProps['action'] = React.useCallback(
     product => {
       dependencies.storages.cart.add(product);
       setShowAddedText(true);
@@ -36,10 +43,11 @@ export const ProductTypePageContainer = () => {
     <ProductTypePagePresenter
       action={showAddedText ? undefined : action}
       actionText={intl.formatMessage({ id: showAddedText ? 'common.addedToCart' : 'common.addToCart' })}
-      id={parseInt(id, 10)}
+      id={parseInt(id as string, 10)}
       productService={dependencies.services.product}
       productTypeService={dependencies.services.productType}
       View={ProductTypePageView}
+      initialProps={initialProps}
     />
   );
 };

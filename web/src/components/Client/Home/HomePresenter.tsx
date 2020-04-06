@@ -11,6 +11,13 @@ export interface IProps extends AppStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   bannerService: IBannerService;
   productTypeService: IProductTypeService;
+  initialProps?: {
+    banners: { [key: string]: IBannerListResponseItem };
+    productTypes: { [key: string]: IProductTypeListResponseItem };
+    bannersOrder: number[];
+    productTypesOrder: number[];
+    error: string | undefined;
+  };
 }
 
 export interface IViewProps {
@@ -19,13 +26,30 @@ export interface IViewProps {
   error?: string;
 }
 
-export const HomePresenter: React.FC<IProps> = ({ View, bannerService, productTypeService, appState }) => {
-  const [banners, setBanners] = React.useState<{ [key: string]: IBannerListResponseItem }>({});
-  const [productTypes, setProductTypes] = React.useState<{ [key: string]: IProductTypeListResponseItem }>({});
-  const [bannersOrder, setBannersOrder] = React.useState<number[]>([]);
-  const [productTypesOrder, setProductTypesOrder] = React.useState<number[]>([]);
-  const [error, setError] = React.useState<string | undefined>(undefined);
+export const HomePresenter: React.FC<IProps> = ({
+  View,
+  bannerService,
+  productTypeService,
+  appState,
+  initialProps,
+}) => {
+  const [banners, setBanners] = React.useState<{ [key: string]: IBannerListResponseItem }>(
+    initialProps ? initialProps.banners : {},
+  );
+  const [productTypes, setProductTypes] = React.useState<{ [key: string]: IProductTypeListResponseItem }>(
+    initialProps ? initialProps.productTypes : {},
+  );
+  const [bannersOrder, setBannersOrder] = React.useState<number[]>(initialProps ? initialProps.bannersOrder : []);
+  const [productTypesOrder, setProductTypesOrder] = React.useState<number[]>(
+    initialProps ? initialProps.productTypesOrder : [],
+  );
+  const [error, setError] = React.useState<string | undefined>(initialProps ? initialProps.error : undefined);
+
   React.useEffect(() => {
+    if (initialProps) {
+      return;
+    }
+
     (async () => {
       try {
         appState.setLoading();

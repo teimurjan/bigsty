@@ -16,6 +16,9 @@ import { NewFeatureValueButton } from 'src/components/Admin/FeatureValues/List/A
 import { AdminHeaderContainer } from 'src/components/Admin/Header/AdminHeaderContainer';
 import { AdminOrders } from 'src/components/Admin/Orders/AdminOrders';
 import { AdminProducts } from 'src/components/Admin/Products/AdminProducts';
+import { NewProductButton } from 'src/components/Admin/Products/List/AdminProductsListView';
+import { AdminProductTypes } from 'src/components/Admin/ProductTypes/AdminProductTypes';
+import { NewProductTypeButton } from 'src/components/Admin/ProductTypes/List/AdminProductTypesListView';
 import { Section } from 'src/components/common/Section/Section';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Tag } from 'src/components/common/Tag/Tag';
@@ -37,9 +40,6 @@ import {
 } from 'src/styles/mixins';
 
 
-import { NewProductButton } from 'src/components/Admin/Products/List/AdminProductsListView';
-import { AdminProductTypes } from 'src/components/Admin/ProductTypes/AdminProductTypes';
-import { NewProductTypeButton } from 'src/components/Admin/ProductTypes/List/AdminProductTypesListView';
 
 interface IProps {
   match: { path: string };

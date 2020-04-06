@@ -1,7 +1,7 @@
 import * as intlAPI from 'src/api/IntlAPI';
 import * as intlStorage from 'src/storage/IntlStorage';
 
-export const DEFAULT_LOCALE = 'ru-RU';
+export const DEFAULT_LOCALE = 'ru';
 
 export interface IIntlService {
   getLocale(): string;

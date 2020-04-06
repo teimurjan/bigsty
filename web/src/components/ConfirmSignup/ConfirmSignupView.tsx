@@ -56,7 +56,7 @@ export const ConfirmSignupView = ({ isLoading, error }: IProps) => {
         `}
       >
         <Container>
-          <Title size={1}>{debouncedContent}</Title>
+          <Title size={2}>{debouncedContent}</Title>
         </Container>
       </HeroBody>
     </Hero>

@@ -23,7 +23,7 @@ export const useAllPrices = (prices: IPriceProps[]) => {
 
   return prices.map(({ price, discount }) => {
     const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
-    if (intl.locale === 'en-US' || !rates.usdToKgs) {
+    if (intl.locale === 'en' || !rates.usdToKgs) {
       return { price: calculatedPrice, currency: 'USD' };
     } else {
       return { price: Math.round(calculatedPrice * rates.usdToKgs), currency: 'KGS' };
@@ -40,7 +40,7 @@ const useFormattedPrice = ({ price, discount }: IPriceProps) => {
   } = useRatesState();
 
   const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
-  if (locale === 'en-US' || !rates.usdToKgs) {
+  if (locale === 'en' || !rates.usdToKgs) {
     return `$${calculatedPrice}`;
   } else {
     return `${Math.round(calculatedPrice * rates.usdToKgs)} сом`;

@@ -7,14 +7,13 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
+import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Table } from 'src/components/common/Table/Table';
 import { UncontrolledPagination } from 'src/components/common/UncontrolledPagination/UncontrolledPagination';
 import { mediaQueries } from 'src/styles/media';
 import { textCenterMixin } from 'src/styles/mixins';
 import { formatMediaURL } from 'src/utils/url';
-
 
 interface IAdminTableRendererRequiredArgs {
   componentKey: string;
@@ -180,7 +179,7 @@ export const AdminTable = <T extends { id: number }>({
                   width: 15%;
                 `}
               >
-                <LinkButton
+                <ReactRouterLinkButton
                   to={`${pathPrefix}/edit/${entity.id}`}
                   css={css`
                     margin-right: 0.5rem;
@@ -193,10 +192,10 @@ export const AdminTable = <T extends { id: number }>({
                   color="is-info"
                 >
                   <FontAwesomeIcon icon={faPencilAlt} />
-                </LinkButton>
-                <LinkButton to={`${pathPrefix}/delete/${entity.id}`} color="is-danger">
+                </ReactRouterLinkButton>
+                <ReactRouterLinkButton to={`${pathPrefix}/delete/${entity.id}`} color="is-danger">
                   <FontAwesomeIcon icon={faTrashAlt} />
-                </LinkButton>
+                </ReactRouterLinkButton>
               </Table.Cell>
             </Table.Row>
           ))}

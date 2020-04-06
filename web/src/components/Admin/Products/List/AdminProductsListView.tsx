@@ -4,17 +4,15 @@ import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable } from 'src/components/Admin/AdminTable';
 import { IViewProps as IProps } from 'src/components/Admin/Products/List/AdminProductsListPresenter';
-import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
+import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
 import { fullWidthMixin } from 'src/styles/mixins';
 
-
-
 export const NewProductButton = injectIntl(({ intl }) => (
-  <LinkButton to="/admin/products/new" color="is-primary">
+  <ReactRouterLinkButton to="/admin/products/new" color="is-primary">
     {intl.formatMessage({ id: 'AdminProducts.notFound.cta' })}
-  </LinkButton>
+  </ReactRouterLinkButton>
 ));
 
 const NoProductsAvialable = injectIntl(({ intl }) => (
@@ -24,9 +22,9 @@ const NoProductsAvialable = injectIntl(({ intl }) => (
       id: 'AdminProducts.notFound.description',
     })}
     CTA={
-      <LinkButton to="/admin/products/new" color="is-primary">
+      <ReactRouterLinkButton to="/admin/products/new" color="is-primary">
         {intl.formatMessage({ id: 'AdminProducts.notFound.cta' })}
-      </LinkButton>
+      </ReactRouterLinkButton>
     }
   />
 ));

@@ -1,11 +1,9 @@
 /** @jsx jsx */
-
 import { css, jsx } from '@emotion/core';
+import Link from 'next/Link';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
 
-import logo from 'src/assets/images/logo.png';
 import { IViewProps as IProps } from 'src/components/Client/Header/HeaderPresenter';
 import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
 import { SearchContainer } from 'src/components/Client/Search/SearchContainer';
@@ -22,8 +20,7 @@ import { NavbarStart } from 'src/components/common/NavbarStart/NavbarStart';
 import { isUserAdmin, isUserAnonymous, isUserNotSetYet } from 'src/helpers/user';
 import { useWindowScroll } from 'src/hooks/useWindowScroll';
 import { mediaQueries } from 'src/styles/media';
-
-
+import { formatStaticURL } from 'src/utils/url';
 
 const buttonsCSS = css`
   margin: 0.25rem 1rem 0 1rem !important;
@@ -46,7 +43,7 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
       className={y !== 0 ? 'has-shadow' : undefined}
       css={css`
         height: 80px;
-        position: fixed;
+        position: fixed !important;
         top: 0;
         left: 0;
         width: 100%;
@@ -54,20 +51,22 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
     >
       <Container>
         <NavbarBrand>
-          <Link className="navbar-item" to="/">
-            <img
-              alt={intl.formatMessage({ id: 'common.logo' })}
-              css={css`
-                max-height: 4.5rem !important;
-                padding-top: 1rem;
+          <Link href="/">
+            <a href="/" className="navbar-item">
+              <img
+                alt={intl.formatMessage({ id: 'common.logo' })}
+                css={css`
+                  max-height: 4.5rem !important;
+                  padding-top: 1rem;
 
-                @media ${mediaQueries.maxWidth768} {
-                  max-height: 3rem !important;
-                  padding-top: 0;
-                }
-              `}
-              src={logo}
-            />
+                  @media ${mediaQueries.maxWidth768} {
+                    max-height: 3rem !important;
+                    padding-top: 0;
+                  }
+                `}
+                src={formatStaticURL('icon/android-chrome-192x192.png')}
+              />
+            </a>
           </Link>
           <NavbarBurger isActive={isOpen} onClick={toggleOpen} />
         </NavbarBrand>
@@ -90,10 +89,10 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
 
                 {isUserAnonymous(user) || isUserNotSetYet(user) ? (
                   <div css={buttonsCSS} className="buttons">
-                    <LinkButton outlined to="/login">
+                    <LinkButton outlined href="/login">
                       {intl.formatMessage({ id: 'Header.logIn' })}
                     </LinkButton>
-                    <LinkButton outlined to="/signup">
+                    <LinkButton outlined href="/signup">
                       {intl.formatMessage({ id: 'Header.signUp' })}
                     </LinkButton>
                   </div>
@@ -103,7 +102,7 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
                       {intl.formatMessage({ id: 'Header.logOut' })}
                     </Button>
                     {isUserAdmin(user) && (
-                      <LinkButton outlined to="/admin">
+                      <LinkButton outlined href="/admin">
                         {intl.formatMessage({ id: 'Header.admin' })}
                       </LinkButton>
                     )}

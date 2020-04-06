@@ -1,7 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import * as React from 'react';
 
-
 import { useDependencies } from 'src/DI/DI';
 
 export type AuthorizedUser = {

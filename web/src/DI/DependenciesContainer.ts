@@ -25,6 +25,7 @@ import * as authStorage from 'src/storage/AuthStorage';
 import * as cartStorage from 'src/storage/CartStorage';
 import * as intlStorage from 'src/storage/IntlStorage';
 import * as stateCacheStorage from 'src/storage/StateCacheStorage';
+import { safeWindow } from 'src/utils/dom';
 import { WatchingValue } from 'src/utils/watching-value';
 
 export interface IAPIsContainer {
@@ -110,10 +111,19 @@ class DependenciesContainer implements IDependenciesContainer {
   }
 }
 
+const stubStorage = {
+  length: 0,
+  clear: () => {},
+  getItem: (key: string): string | null => null,
+  key: (index: number): string | null => null,
+  removeItem: (key: string) => {},
+  setItem: (key: string, value: string) => {},
+};
 export const makeDependenciesContainer = (): IDependenciesContainer => {
+  const localStorage = safeWindow(w => w.localStorage, stubStorage);
   const storagesContainer = {
     auth: new authStorage.AuthStorage(localStorage),
-    intl: new intlStorage.IntlStorage(localStorage),
+    intl: new intlStorage.IntlStorage(),
     stateCache: new stateCacheStorage.StateCacheStorage(localStorage),
     cart: new cartStorage.CartStorage(localStorage),
   };

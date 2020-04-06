@@ -13,8 +13,6 @@ import { Title } from 'src/components/common/Title/Title';
 import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
 
-
-
 const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
   const horizontalRule = banner.text_left_offset
     ? { key: 'left', value: banner.text_left_offset, tranlate: -banner.text_left_offset }
@@ -64,7 +62,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                     margin-top: -100px;
                   `}
                   color="is-primary"
-                  to={banner.link}
+                  href={banner.link}
                 >
                   {banner.link_text}
                 </LinkButton>
@@ -84,10 +82,9 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                       display: block;
                       background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
                       transition: transform 300ms ease-in-out;
-                      transform: scale(0);
+                      transform: scale(1);
                       transform-origin: 50% 50%;
                     `}
-                    onLoad={e => (e.currentTarget.style.transform = 'scale(1)')}
                     src={banner.image}
                   />
                   {button}
@@ -97,7 +94,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                     text-align: center;
                       position: absolute;
                       width: 60%;
-                      color: ${banner.text_color || '#fff'};
+                      color: ${banner.text_color || '#fff'} !important;
                       ${getTextPositioningCSS(banner)}
 
                       @media ${mediaQueries.maxWidth768} {
