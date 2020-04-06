@@ -123,7 +123,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
   const localStorage = safeWindow(w => w.localStorage, stubStorage);
   const storagesContainer = {
     auth: new authStorage.AuthStorage(localStorage),
-    intl: new intlStorage.IntlStorage(localStorage),
+    intl: new intlStorage.IntlStorage(),
     stateCache: new stateCacheStorage.StateCacheStorage(localStorage),
     cart: new cartStorage.CartStorage(localStorage),
   };

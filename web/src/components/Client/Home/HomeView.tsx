@@ -82,10 +82,9 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                       display: block;
                       background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
                       transition: transform 300ms ease-in-out;
-                      transform: scale(0);
+                      transform: scale(1);
                       transform-origin: 50% 50%;
                     `}
-                    onLoad={e => (e.currentTarget.style.transform = 'scale(1)')}
                     src={banner.image}
                   />
                   {button}

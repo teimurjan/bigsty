@@ -1,26 +1,21 @@
-import { Storage } from 'ttypes/storage';
+import Cookies from 'js-cookie';
 
 export interface IIntlStorage {
-  getLocale(): string | null;
+  getLocale(): string | undefined;
   setLocale(locale: string): void;
   clearLocale(): void;
 }
 
 export class IntlStorage implements IIntlStorage {
-  private storage: Storage;
-  constructor(storage: Storage) {
-    this.storage = storage;
-  }
-
   public getLocale() {
-    return this.storage.getItem('locale');
+    return Cookies.get('locale');
   }
 
   public setLocale(locale: string) {
-    this.storage.setItem('locale', locale);
+    Cookies.set('locale', locale);
   }
 
   public clearLocale() {
-    this.storage.removeItem('locale');
+    Cookies.remove('locale');
   }
 }

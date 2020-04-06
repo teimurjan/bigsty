@@ -4,17 +4,15 @@ import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
 import { IViewProps as IProps } from 'src/components/Admin/Categories/List/AdminCategoriesListPresenter';
-import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
+import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
 import { fullWidthMixin } from 'src/styles/mixins';
 
-
-
 export const NewCategoryButton = injectIntl(({ intl }) => (
-  <LinkButton to="/admin/categories/new" color="is-primary">
+  <ReactRouterLinkButton to="/admin/categories/new" color="is-primary">
     {intl.formatMessage({ id: 'AdminCategories.notFound.cta' })}
-  </LinkButton>
+  </ReactRouterLinkButton>
 ));
 
 const NoCategoriesAvialable = injectIntl(({ intl }) => (
@@ -24,9 +22,9 @@ const NoCategoriesAvialable = injectIntl(({ intl }) => (
       id: 'AdminCategories.notFound.description',
     })}
     CTA={
-      <LinkButton to="/admin/categories/new" color="is-primary">
+      <ReactRouterLinkButton to="/admin/categories/new" color="is-primary">
         {intl.formatMessage({ id: 'AdminCategories.notFound.cta' })}
-      </LinkButton>
+      </ReactRouterLinkButton>
     }
   />
 ));

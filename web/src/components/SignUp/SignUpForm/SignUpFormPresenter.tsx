@@ -1,4 +1,3 @@
-import { History } from 'history';
 import * as React from 'react';
 import * as yup from 'yup';
 
@@ -8,7 +7,6 @@ import * as authService from 'src/services/AuthService';
 export interface IProps {
   service: authService.IAuthService;
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
-  history: History;
 }
 
 export interface IFormValues {
@@ -48,7 +46,10 @@ export class SignUpFormPresenter extends React.Component<IProps, IState> {
           .email('SignUpForm.errors.email.format')
           .required('SignUpForm.errors.email.empty'),
         name: yup.string().required('SignUpForm.errors.name.empty'),
-        password: yup.string().matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, 'SignUpForm.errors.password.regex'),
+        password: yup
+          .string()
+          .required('SignUpForm.errors.email.empty')
+          .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, 'SignUpForm.errors.password.regex'),
       }),
     );
   }

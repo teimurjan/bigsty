@@ -3,10 +3,8 @@ import { css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
-
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
 import { Image } from 'src/components/common/Image/Image';
-import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
 import { flexMixin } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
@@ -22,12 +20,6 @@ interface IProps {
 export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImageIndex, setActiveImageIndex }) => {
   const theme = useTheme<ITheme>();
 
-  const imageSize = useMedia(
-    [mediaQueries.minWidth1600, mediaQueries.minWidth2000, mediaQueries.maxWidth768],
-    ['500px', '600px', '80vw'],
-    '30vw',
-  );
-
   return (
     <div
       css={css`
@@ -39,10 +31,23 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
           <CarouselItem key={image}>
             <Image
               css={css`
-                height: ${imageSize};
-                width: ${imageSize};
                 margin: auto;
                 ${flexMixin};
+                height: 30vw;
+                width: 30vw;
+
+                @media ${mediaQueries.minWidth1600} {
+                  width: 500px;
+                  height: 500px;
+                }
+                @media ${mediaQueries.minWidth2000} {
+                  width: 600px;
+                  height: 600px;
+                }
+                @media ${mediaQueries.maxWidth768} {
+                  width: 80vw;
+                  height: 80vw;
+                }
               `}
               imgProps={{ src: image, style: { margin: 'auto' }, alt: image }}
             />
@@ -51,10 +56,20 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
       </Carousel>
       <div
         css={css`
-          width: ${imageSize};
           height: ${CONTROL_IMAGE_SIZE};
           overflow: auto;
           ${flexMixin};
+          width: 30vw;
+
+          @media ${mediaQueries.minWidth1600} {
+            width: 500px;
+          }
+          @media ${mediaQueries.minWidth2000} {
+            width: 600px;
+          }
+          @media ${mediaQueries.maxWidth768} {
+            width: 80vw;
+          }
         `}
       >
         {images.map(image => {

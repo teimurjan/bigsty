@@ -22,7 +22,7 @@ export const Layout: React.FC = ({ children }) => {
       <Container
         css={css`
           @media ${mediaQueries.maxWidth768} {
-            margin: 0 0.5rem;
+            margin: 0 0.5rem !important;
           }
         `}
       >

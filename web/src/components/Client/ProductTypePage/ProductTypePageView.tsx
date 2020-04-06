@@ -3,8 +3,8 @@
 import { css, jsx, ClassNames } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import uniqBy from 'lodash/uniqBy';
+import Head from 'next/head';
 import * as React from 'react';
-import Helmet from 'react-helmet';
 import { useIntl } from 'react-intl';
 
 import { PriceCrossedText } from 'src/components/Client/Price/Price';
@@ -20,8 +20,6 @@ import { mediaQueries } from 'src/styles/media';
 import { flexMixin } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
 import { formatMediaURL } from 'src/utils/url';
-
-
 
 const getAllFeatureValuesGroupedByType = (
   products: IProps['products'],
@@ -46,8 +44,6 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
   const intl = useIntl();
   const theme = useTheme<ITheme>();
   const [activeImageIndex, setActiveImageIndex] = React.useState(0);
-  const [initialValuesSet, setInitialValuesSet] = React.useState(false);
-  const [chosenFeatureValues, setChosenFeatureValues] = React.useState<{ [key: string]: number }>({});
 
   const allImages = products
     .reduce((acc, product) => [...acc, ...product.images], [...(productType ? [productType.image] : [])])
@@ -57,18 +53,12 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
     products.length > 0 ? products[0].feature_values.map(featureValue => featureValue.feature_type) : [];
 
   const allFeatureValuesGroupedByFeatureType = getAllFeatureValuesGroupedByType(products, allFeatureTypes);
-
-  React.useEffect(() => {
-    if (!initialValuesSet && Object.keys(allFeatureValuesGroupedByFeatureType).length > 0) {
-      setInitialValuesSet(true);
-      setChosenFeatureValues(
-        Object.keys(allFeatureValuesGroupedByFeatureType).reduce((acc, featureTypeId) => {
-          const featueValues = allFeatureValuesGroupedByFeatureType[featureTypeId];
-          return { ...acc, [featureTypeId]: featueValues.length > 0 ? featueValues[0].id : undefined };
-        }, {}),
-      );
-    }
-  }, [allFeatureValuesGroupedByFeatureType, initialValuesSet]);
+  const [chosenFeatureValues, setChosenFeatureValues] = React.useState<{ [key: string]: number }>(
+    Object.keys(allFeatureValuesGroupedByFeatureType).reduce((acc, featureTypeId) => {
+      const featueValues = allFeatureValuesGroupedByFeatureType[featureTypeId];
+      return { ...acc, [featureTypeId]: featueValues.length > 0 ? featueValues[0].id : undefined };
+    }, {}),
+  );
 
   const matchingProduct = products.find(product =>
     product.feature_values.every(featureValue => chosenFeatureValues[featureValue.feature_type.id] === featureValue.id),
@@ -113,7 +103,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
 
   return productType ? (
     <div>
-      <Helmet>
+      <Head>
         <title>{productType.name}</title>
         <meta name="description" content={productType.short_description} />
         <meta property="og:title" content={productType.name} />
@@ -122,7 +112,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         {matchingProduct && <meta property="product:price:amount" content={matchingProduct.price.toString()} />}
         {matchingProduct && <meta property="product:price:currency" content="USD" />}
         <meta property="og:image" content={productType.image} />
-      </Helmet>
+      </Head>
       <div
         css={css`
           align-items: flex-start;

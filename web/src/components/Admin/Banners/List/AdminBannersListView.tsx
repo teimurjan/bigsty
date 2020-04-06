@@ -4,7 +4,7 @@ import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
 import { IViewProps as IProps } from 'src/components/Admin/Banners/List/AdminBannersListPresenter';
-import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
+import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
 import { fullWidthMixin } from 'src/styles/mixins';
@@ -12,9 +12,9 @@ import { fullWidthMixin } from 'src/styles/mixins';
 
 
 export const NewBannerButton = injectIntl(({ intl }) => (
-  <LinkButton to="/admin/banners/new" color="is-primary">
+  <ReactRouterLinkButton to="/admin/banners/new" color="is-primary">
     {intl.formatMessage({ id: 'AdminBanners.notFound.cta' })}
-  </LinkButton>
+  </ReactRouterLinkButton>
 ));
 
 const NoBannersAvialable = injectIntl(({ intl }) => (

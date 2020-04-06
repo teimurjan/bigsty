@@ -9,13 +9,18 @@ export interface IProps {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   productTypeService: IProductTypeService;
   productService: IProductService;
-  id: number;
+  id?: number;
   actionText: string;
   action?: (product: IProductForProductTypeResponseItem) => void;
+  initialProps?: {
+    productType: IProductTypeDetailResponseItem | null;
+    products: IProductForProductTypeResponseItem[];
+    error?: string;
+  };
 }
 
 export interface IViewProps {
-  productType?: IProductTypeDetailResponseItem;
+  productType: IProductTypeDetailResponseItem | null;
   products: IProductForProductTypeResponseItem[];
   error: string | undefined;
   isLoading: boolean;
@@ -30,31 +35,40 @@ export const ProductTypePagePresenter: React.FC<IProps> = ({
   id,
   action,
   actionText,
+  initialProps,
 }) => {
-  const [error, setError] = React.useState<string | undefined>(undefined);
-  const [isLoading, setLoading] = React.useState<boolean>(true);
-  const [productType, setProductType] = React.useState<undefined | IProductTypeDetailResponseItem>(undefined);
-  const [products, setProducts] = React.useState<IProductForProductTypeResponseItem[]>([]);
+  const [error, setError] = React.useState<string | undefined>(initialProps ? initialProps.error : undefined);
+  const [isLoading, setLoading] = React.useState<boolean>(initialProps ? false : true);
+  const [productType, setProductType] = React.useState<null | IProductTypeDetailResponseItem>(
+    initialProps ? initialProps.productType : null,
+  );
+  const [products, setProducts] = React.useState<IProductForProductTypeResponseItem[]>(
+    initialProps ? initialProps.products : [],
+  );
 
   React.useEffect(() => {
-    (async () => {
-      try {
-        const productType = await productTypeService.getByID(id);
-        if (productType) {
-          const products = await productService.getForProductType(productType.id);
-          setProductType(productType);
-          setProducts(products);
-        } else {
-          setError('ProductPage.notFound');
+    if (initialProps && !initialProps.productType) {
+      setError('ProductPage.notFound');
+    } else if (id && !initialProps) {
+      (async () => {
+        try {
+          const productType = await productTypeService.getByID(id);
+          if (productType) {
+            const products = await productService.getForProductType(productType.id);
+            setProductType(productType);
+            setProducts(products);
+          } else {
+            setError('ProductPage.notFound');
+          }
+        } catch (e) {
+          setError('errors.common');
+        } finally {
+          setLoading(false);
         }
-      } catch (e) {
-        setError('errors.common');
-      } finally {
-        setLoading(false);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    })();
-  }, [id, productService, productTypeService]);
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <View

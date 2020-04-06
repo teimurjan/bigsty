@@ -1,4 +1,4 @@
-import { History } from 'history';
+import { NextRouter } from 'next/router';
 import * as React from 'react';
 import * as yup from 'yup';
 
@@ -9,7 +9,7 @@ import { IContextValue as UserStateContextValue } from 'src/state/UserState';
 export interface IProps extends UserStateContextValue {
   service: authService.IAuthService;
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
-  history: History;
+  router: NextRouter;
 }
 
 export interface IFormValues {
@@ -58,7 +58,7 @@ export class LoginFormPresenter extends React.Component<IProps, IState> {
   private onSubmit = async (values: { email: string; password: string }) => {
     this.startLoading();
 
-    const { service, history, userState } = this.props;
+    const { service, router, userState } = this.props;
 
     try {
       await service.logIn(values.email, values.password);
@@ -66,7 +66,7 @@ export class LoginFormPresenter extends React.Component<IProps, IState> {
 
       this.stopLoading();
 
-      history.push('/');
+      router.push('/');
     } catch (e) {
       if (e instanceof authService.errors.InvalidCredentialsError) {
         this.setGlobalError('LoginForm.errors.invalidCredentials');

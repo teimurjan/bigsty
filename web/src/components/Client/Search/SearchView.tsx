@@ -4,7 +4,6 @@ import { css, jsx } from '@emotion/core';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
-
 import { IViewProps as IProps } from 'src/components/Client/Search/SearchPresenter';
 import { Dropdown } from 'src/components/common/Dropdown/Dropdown';
 import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
@@ -16,7 +15,6 @@ import { Tag } from 'src/components/common/Tag/Tag';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
-
 
 export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoading, error, onSearchValueChange }) => {
   const intl = useIntl();
@@ -44,7 +42,7 @@ export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoadi
       <React.Fragment>
         {categories.length > 0 &&
           categories.map(category => (
-            <DropdownItemLink key={category.id} to={`/categories/${category.id}/products`}>
+            <DropdownItemLink key={category.id} href={`/categories/${category.id}/products`}>
               {category.name} <Tag color="is-info">{intl.formatMessage({ id: 'common.category' })}</Tag>
             </DropdownItemLink>
           ))}
@@ -57,7 +55,7 @@ export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoadi
                 text-overflow: ellipsis;
               `}
               key={productType.id}
-              to={`/products/${productType.id}`}
+              href={`/products/${productType.id}`}
             >
               <img
                 alt={productType.name}

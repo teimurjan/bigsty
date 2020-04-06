@@ -1,6 +1,5 @@
+import { useRouter } from 'next/router';
 import * as React from 'react';
-import { useHistory } from 'react-router';
-
 
 import { ConfirmSignupPresenter } from 'src/components/ConfirmSignup/ConfirmSignupPresenter';
 import { ConfirmSignupView } from 'src/components/ConfirmSignup/ConfirmSignupView';
@@ -8,7 +7,7 @@ import { useDependencies } from 'src/DI/DI';
 
 export const ConfirmSignupContainer = () => {
   const { dependencies } = useDependencies();
-  const history = useHistory();
+  const router = useRouter();
 
-  return <ConfirmSignupPresenter history={history} View={ConfirmSignupView} service={dependencies.services.auth} />;
+  return <ConfirmSignupPresenter router={router} View={ConfirmSignupView} service={dependencies.services.auth} />;
 };
