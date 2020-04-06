@@ -19,7 +19,7 @@ export const NotFoundView = ({ intl }: { intl: IntlShape }) => (
       <Title className="is-uppercase" size={1}>
         {intl.formatMessage({ id: 'NotFound.title' })}
       </Title>
-      <LinkButton className={classNames('is-medium', 'is-uppercase')} color="is-dark" to="/">
+      <LinkButton className={classNames('is-medium', 'is-uppercase')} color="is-dark" href="/">
         {intl.formatMessage({ id: 'NotFound.goHome.text' })}
       </LinkButton>
     </HeroBody>
