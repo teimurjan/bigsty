@@ -7,4 +7,4 @@ COPY yarn.lock /app/yarn.lock
 RUN set http_proxy= && set https_proxy= && yarn config delete proxy && npm config rm https-proxy && npm config rm proxy
 RUN yarn --network-timeout 1000000
 COPY . /app
-CMD yarn start
+CMD yarn build && yarn start

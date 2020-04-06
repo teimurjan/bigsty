@@ -71,7 +71,8 @@
     "pretty": "prettier --write \"./src/**/*.{ts,tsx,js,jsx,json}\"",
     "lint": "eslint \"./src/**/*.{ts,tsx,js,jsx}\"",
     "dev": "node server.js",
-    "start": "env NODE_ENV=production node server.js"
+    "start": "env NODE_ENV=production node server.js",
+    "build": "next build"
   },
   "eslintConfig": {
     "extends": "react-app",
