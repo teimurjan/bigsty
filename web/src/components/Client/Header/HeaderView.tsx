@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import Link from 'next/Link';
+import Link from 'next/link';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 

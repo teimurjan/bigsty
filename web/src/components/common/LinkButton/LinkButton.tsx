@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import Link, { LinkProps } from 'next/Link';
+import Link, { LinkProps } from 'next/link';
 import * as React from 'react';
 import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from 'react-router-dom';
 

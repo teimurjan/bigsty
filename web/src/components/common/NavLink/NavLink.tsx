@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import Link, { LinkProps } from 'next/Link';
+import Link, { LinkProps } from 'next/link';
 import * as React from 'react';
 
 export interface IProps extends LinkProps {
