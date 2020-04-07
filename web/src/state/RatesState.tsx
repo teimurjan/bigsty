@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as React from 'react';
 
-
 import { useAppState } from 'src/state/AppState';
+import { useDependencies } from 'src/DI/DI';
 
 const nodeValueToFloat = (node: Element) => parseFloat(node.textContent ? node.textContent.replace(',', '.') : '');
 
@@ -45,10 +45,15 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const {
     appState: { setLoading, setIdle },
   } = useAppState();
+  const {
+    dependencies: {
+      storages: { stateCache: stateCacheStorage },
+    },
+  } = useDependencies();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = React.useState<string | undefined>(undefined);
-  const [rates, setRates] = React.useState<IRates>({});
+  const [rates, setRates] = React.useState<IRates>(stateCacheStorage.get('rates') || {});
 
   React.useEffect(() => {
     (async () => {
@@ -66,7 +71,9 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
           const delta = 5;
           const usdToKgsRate = rubToUsdRate / rubToKgsRate + delta;
 
-          setRates({ usdToKgs: usdToKgsRate });
+          const rates_ = { usdToKgs: usdToKgsRate };
+          setRates(rates_);
+          stateCacheStorage.set('rates', rates_);
         }
       } catch (e) {
         setError(e);
