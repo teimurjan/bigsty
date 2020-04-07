@@ -7,7 +7,7 @@ import { safeWindow } from 'src/utils/dom';
 export default () =>
   safeWindow(
     <BrowserRouter>
-      <Admin match={{ path: '/admin' }} />
+      <Admin />
     </BrowserRouter>,
     null,
   );

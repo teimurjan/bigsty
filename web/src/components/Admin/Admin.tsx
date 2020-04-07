@@ -39,12 +39,6 @@ import {
   marginAutoMixin,
 } from 'src/styles/mixins';
 
-
-
-interface IProps {
-  match: { path: string };
-}
-
 const arrowDivider = (
   <FontAwesomeIcon
     css={css`
@@ -160,7 +154,7 @@ const AdminHome = () => {
   );
 };
 
-export const Admin = ({ match }: IProps) => (
+export const Admin = () => (
   <AdminBannersStateProvider>
     <AdminCategoriesStateProvider>
       <AdminFeatureTypesStateProvider>
@@ -196,13 +190,13 @@ export const Admin = ({ match }: IProps) => (
                     `}
                   >
                     <Switch>
-                      <Route path={`${match.path}/categories`} component={AdminCategories} />
-                      <Route path={`${match.path}/featureTypes`} component={AdminFeatureTypes} />
-                      <Route path={`${match.path}/featureValues`} component={AdminFeatureValues} />
-                      <Route path={`${match.path}/productTypes`} component={AdminProductTypes} />
-                      <Route path={`${match.path}/products`} component={AdminProducts} />
-                      <Route path={`${match.path}/banners`} component={AdminBanners} />
-                      <Route path={`${match.path}/orders`} component={AdminOrders} />
+                      <Route path="/admin/categories" component={AdminCategories} />
+                      <Route path="/admin/featureTypes" component={AdminFeatureTypes} />
+                      <Route path="/admin/featureValues" component={AdminFeatureValues} />
+                      <Route path="/admin/productTypes" component={AdminProductTypes} />
+                      <Route path="/admin/products" component={AdminProducts} />
+                      <Route path="/admin/banners" component={AdminBanners} />
+                      <Route path="/admin/orders" component={AdminOrders} />
                       <Route component={AdminHome} />
                     </Switch>
                   </div>

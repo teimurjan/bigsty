@@ -6,6 +6,8 @@ const { parse } = require('url');
 const glob = require('glob');
 const IntlPolyfill = require('intl');
 const next = require('next');
+const cookie = require('cookie');
+const jwtDecode = require('jwt-decode');
 
 Intl.NumberFormat = IntlPolyfill.NumberFormat;
 Intl.DateTimeFormat = IntlPolyfill.DateTimeFormat;
@@ -34,16 +36,32 @@ const getMessages = locale => {
 
 app.prepare().then(() => {
   createServer((req, res) => {
-    const reqLocaleCookieMatch = req.headers.cookie ? req.headers.cookie.match(/locale=(.*)(;|$)/) : null;
-    const locale = reqLocaleCookieMatch && reqLocaleCookieMatch.length > 1 ? reqLocaleCookieMatch[1] : 'ru';
+    const locale = cookie.parse(req.headers.cookie || '').locale || 'ru';
+    const accessToken = cookie.parse(req.headers.cookie || '').access_token;
+    global.__SERVER_CONTEXT = { locale, accessToken };
     req.locale = supportedLanguages.some(l => l === locale) ? locale : 'ru';
     req.localeDataScript = getLocaleDataScript(locale);
     req.messages = getMessages(locale);
 
     const parsedUrl = parse(req.url, true);
     const { pathname, query } = parsedUrl;
+
     if (pathname.startsWith('/admin')) {
-      app.render(req, res, '/admin', query);
+      const redirect = () => {
+        res.writeHead(301, { Location: '/' });
+        res.end();
+      };
+
+      try {
+        const accessTokenDecoded = jwtDecode(accessToken);
+        if ('group' in accessTokenDecoded && accessTokenDecoded.group === 'admin') {
+          app.render(req, res, '/admin', query);
+        } else {
+          redirect();
+        }
+      } catch (e) {
+        redirect();
+      }
     } else {
       handle(req, res, parsedUrl);
     }

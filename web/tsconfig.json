@@ -25,11 +25,11 @@
     ],
     "typeRoots": [
       "node_modules/@types",
-      "ttypes"
+      "ttypes",
     ]
   },
   "include": [
-    "src"
+    "src",
   ],
   "exclude": [
     "node_modules",

@@ -27,6 +27,7 @@ import * as intlStorage from 'src/storage/IntlStorage';
 import * as stateCacheStorage from 'src/storage/StateCacheStorage';
 import { safeWindow } from 'src/utils/dom';
 import { WatchingValue } from 'src/utils/watching-value';
+import { CookieStorage } from 'src/storage/CookieStorage';
 
 export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
@@ -121,9 +122,10 @@ const stubStorage = {
 };
 export const makeDependenciesContainer = (): IDependenciesContainer => {
   const localStorage = safeWindow(w => w.localStorage, stubStorage);
+  const cookieStorage = new CookieStorage();
   const storagesContainer = {
-    auth: new authStorage.AuthStorage(localStorage),
-    intl: new intlStorage.IntlStorage(),
+    auth: new authStorage.AuthStorage(cookieStorage),
+    intl: new intlStorage.IntlStorage(cookieStorage),
     stateCache: new stateCacheStorage.StateCacheStorage(localStorage),
     cart: new cartStorage.CartStorage(localStorage),
   };
