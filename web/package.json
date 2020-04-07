@@ -19,7 +19,7 @@
     "@types/js-cookie": "^2.2.5",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.1",
-    "bulma": "^0.7.2",
+    "bulma": "^0.8.1",
     "classnames": "^2.2.6",
     "cookie": "^0.4.0",
     "css-loader": "0.28.7",
