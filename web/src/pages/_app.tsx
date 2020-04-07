@@ -20,6 +20,8 @@ import { UserStateProvider, useUserState } from 'src/state/UserState';
 import { mediaQueries } from 'src/styles/media';
 import { defaultTheme } from 'src/themes';
 import { formatStaticURL } from 'src/utils/url';
+import { CategoriesStateProvider } from 'src/state/CategoriesState';
+import { Then } from 'ttypes';
 
 const intlCache = createIntlCache();
 
@@ -71,7 +73,8 @@ const CustomNextApp = ({
   pageProps,
   locale,
   messages,
-}: AppProps & { locale: string; messages: Record<string, string> }) => {
+  componentsInitialProps,
+}: AppProps & Then<ReturnType<typeof getInitialProps>>) => {
   const intl = createIntl(
     {
       locale,
@@ -88,12 +91,14 @@ const CustomNextApp = ({
             <IntlStateProvider intl={intl}>
               <RatesStateProvider>
                 <UserStateProvider>
-                  <EntryPoint>
-                    <>
-                      <CustomHead />
-                      <Component {...pageProps} />
-                    </>
-                  </EntryPoint>
+                  <CategoriesStateProvider initialProps={componentsInitialProps.categoriesState}>
+                    <EntryPoint>
+                      <>
+                        <CustomHead />
+                        <Component {...pageProps} />
+                      </>
+                    </EntryPoint>
+                  </CategoriesStateProvider>
                 </UserStateProvider>
               </RatesStateProvider>
             </IntlStateProvider>
@@ -104,17 +109,32 @@ const CustomNextApp = ({
   );
 };
 
-CustomNextApp.getInitialProps = async ({ Component, ctx }: AppContext) => {
-  let pageProps = {};
-
-  if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
+const getComponentsInitialProps = async () => {
+  const {
+    services: { category: categoryService },
+  } = makeDependenciesContainer();
+  try {
+    const { entities, result } = await categoryService.getAll();
+    return { categories: entities.categories, categoriesOrder: result };
+  } catch (e) {
+    return { categories: {}, categoriesOrder: [], error: 'errors.common' };
   }
+};
+
+const getInitialProps = async ({ Component, ctx }: AppContext) => {
+  const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
 
   const { req } = ctx;
   const { locale, messages } = req || (window as any).__NEXT_DATA__.props;
 
-  return { pageProps, locale, messages };
+  return {
+    pageProps,
+    locale,
+    messages,
+    componentsInitialProps: { categoriesState: await getComponentsInitialProps() },
+  };
 };
+
+CustomNextApp.getInitialProps = getInitialProps;
 
 export default CustomNextApp;

@@ -3,14 +3,10 @@ import * as React from 'react';
 
 import { NavPresenter } from 'src/components/Client/Nav/NavPresenter';
 import { NavView } from 'src/components/Client/Nav/NavView';
-import { useDependencies } from 'src/DI/DI';
-import { useAppState } from 'src/state/AppState';
+import { useCategoriesState } from 'src/state/CategoriesState';
 
 export const NavContainer = () => {
-  const { appState } = useAppState();
-  const { dependencies } = useDependencies();
+  const { categoriesState } = useCategoriesState();
 
-  return (
-    <NavPresenter View={withRouter(NavView)} appState={appState} categoryService={dependencies.services.category} />
-  );
+  return <NavPresenter View={withRouter(NavView)} categoriesState={categoriesState} />;
 };
