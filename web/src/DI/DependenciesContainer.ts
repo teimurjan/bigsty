@@ -129,7 +129,7 @@ export const makeDependenciesContainer = (): IDependenciesContainer => {
   };
 
   const headersManager = new HeadersManager(storagesContainer.auth, storagesContainer.intl);
-  const APIClient = axios.create({ baseURL: process.env.REACT_APP_SERVER_URL });
+  const APIClient = axios.create({ baseURL: safeWindow(process.env.CLIENT_API_URL, process.env.SERVER_API_URL) });
 
   const APIsContainer = {
     auth: new authAPI.AuthAPI(APIClient, headersManager),

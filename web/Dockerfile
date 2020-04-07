@@ -7,10 +7,10 @@ COPY yarn.lock /app/yarn.lock
 RUN set http_proxy= && set https_proxy= && yarn config delete proxy && npm config rm https-proxy && npm config rm proxy
 RUN yarn --network-timeout 1000000
 COPY . /app
-RUN env REACT_APP_SERVER_URL=http://backend:8080 yarn build
+RUN env SERVER_API_URL=http://backend:8080 yarn build
 
 FROM node:12.14.0-alpine
 WORKDIR /app
 COPY --from=builder /app .
 EXPOSE 3000
-CMD env REACT_APP_SERVER_URL=http://backend:8080 yarn start
+CMD env SERVER_API_URL=http://backend:8080 yarn start

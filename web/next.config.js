@@ -1,5 +1,6 @@
 module.exports = {
   env: {
-    REACT_APP_SERVER_URL: process.env.REACT_APP_SERVER_URL,
+    SERVER_API_URL: process.env.SERVER_API_URL,
+    CLIENT_API_URL: process.env.CLIENT_API_URL,
   },
 };
