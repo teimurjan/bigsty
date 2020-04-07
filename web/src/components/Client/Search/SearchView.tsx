@@ -42,7 +42,11 @@ export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoadi
       <React.Fragment>
         {categories.length > 0 &&
           categories.map(category => (
-            <DropdownItemLink key={category.id} href={`/categories/${category.id}/products`}>
+            <DropdownItemLink
+              key={category.id}
+              as={`/categories/${category.id}/products`}
+              href="/categories/[id]/products"
+            >
               {category.name} <Tag color="is-info">{intl.formatMessage({ id: 'common.category' })}</Tag>
             </DropdownItemLink>
           ))}
@@ -55,7 +59,8 @@ export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoadi
                 text-overflow: ellipsis;
               `}
               key={productType.id}
-              href={`/products/${productType.id}`}
+              as={`/products/${productType.id}`}
+              href="/products/[id]"
             >
               <img
                 alt={productType.name}

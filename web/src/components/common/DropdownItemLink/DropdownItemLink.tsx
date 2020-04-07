@@ -8,9 +8,9 @@ export interface IProps extends LinkProps {
   className?: string;
 }
 
-export const DropdownItemLink = ({ children, className, href, ...props }: IProps) => (
-  <Link href={href} {...props}>
-    <a href={href as string} className={classNames('dropdown-item', className)}>
+export const DropdownItemLink = ({ children, className, href, as: as_, ...props }: IProps) => (
+  <Link href={href} as={as_} {...props}>
+    <a className={classNames('dropdown-item', className)}>
       {children}
     </a>
   </Link>

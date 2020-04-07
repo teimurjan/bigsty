@@ -33,10 +33,10 @@ export const NavView = ({ categories, router }: IProps & { router: NextRouter })
       <Menu.Label>{intl.formatMessage({ id: 'Nav.categories.title' })}</Menu.Label>
       <Menu.List>
         {categories.map(category => {
-          const href = `/categories/${category.id}/products`;
+          const asPath = `/categories/${category.id}/products`;
           return (
             <Menu.Item key={category.id}>
-              <NavLink active={router.asPath === href} href={href}>
+              <NavLink active={router.asPath === asPath} as={asPath} href="/categories/[id]/products">
                 {category.name}
               </NavLink>
             </Menu.Item>

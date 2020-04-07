@@ -21,11 +21,11 @@ export interface IProps {
 
 export const ProductTypeCard = ({ productType }: IProps) => {
   const intl = useIntl();
-  const href = `/products/${productType.id}`;
+  const asPath = `/products/${productType.id}`;
 
   return (
-    <Link href={href}>
-      <a href={href}>
+    <Link href="/products/[id]" as={asPath}>
+      <a>
         <Card
           css={css`
             height: 100%;

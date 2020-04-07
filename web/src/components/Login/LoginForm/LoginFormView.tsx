@@ -29,7 +29,7 @@ export class LoginFormView extends React.Component<IProps & { intl: IntlShape }>
             {intl.formatMessage({ id: 'LoginForm.submitButton.text' })}
           </Button>
           <Link href="/signup">
-            <a href="/signup" className="level-right">
+            <a className="level-right">
               {intl.formatMessage({ id: 'LoginForm.signUpLink' })}
             </a>
           </Link>
