@@ -18,24 +18,26 @@ export interface IProps {
 }
 
 export const ProductTypesPagePresenter = ({ ListView, categoryId, productTypeService, initialProps }: IProps) => {
-  const [error, setError] = React.useState<string | undefined>(initialProps ? initialProps.error : undefined);
+  const [error, setError] = React.useState<string | undefined>(undefined);
   const [isLoading, setLoading] = React.useState(false);
-  const [productTypes, setProductTypes] = React.useState<{ [key: string]: IProductTypeListResponseItem }>(
-    initialProps ? initialProps.productTypes : {},
-  );
-  const [productTypesMeta, setProductTypesMeta] = React.useState<IProductTypeListResponseMeta>(
-    initialProps
-      ? initialProps.productTypesMeta
-      : {
-          count: 0,
-          pages_count: 0,
-          limit: 0,
-          page: 0,
-        },
-  );
-  const [productTypesOrder, setProductTypesOrder] = React.useState<number[]>(
-    initialProps ? initialProps.productTypesOrder : [],
-  );
+  const [productTypes, setProductTypes] = React.useState<{ [key: string]: IProductTypeListResponseItem }>({});
+  const [productTypesMeta, setProductTypesMeta] = React.useState<IProductTypeListResponseMeta>({
+    count: 0,
+    pages_count: 0,
+    limit: 0,
+    page: 0,
+  });
+  const [productTypesOrder, setProductTypesOrder] = React.useState<number[]>([]);
+
+  // When navigating between categories the initialProps are changing and needed to be set to state
+  React.useEffect(() => {
+    if (initialProps) {
+      setError(initialProps.error);
+      setProductTypes(initialProps.productTypes);
+      setProductTypesMeta(initialProps.productTypesMeta);
+      setProductTypesOrder(initialProps.productTypesOrder);
+    }
+  }, [initialProps]);
 
   React.useEffect(() => {
     if (categoryId && !initialProps) {
