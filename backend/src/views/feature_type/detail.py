@@ -45,7 +45,7 @@ class FeatureTypeDetailView(ValidatableView):
 
     def delete(self, request, feature_type_id):
         try:
-            self._service.delete(feature_type_id)
+            self._service.delete(feature_type_id, user=request.user)
             return {}, OK_CODE
         except self._service.FeatureTypeNotFound:
             return {}, NOT_FOUND_CODE

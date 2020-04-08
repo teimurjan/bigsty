@@ -28,7 +28,7 @@ class FeatureTypeService:
             raise self.FeatureTypeNotFound()
 
     @allow_roles(['admin', 'manager'])
-    def delete(self, id_):
+    def delete(self, id_, *args, **kwargs):
         try:
             return self._repo.delete(id_)
         except self._repo.DoesNotExist:

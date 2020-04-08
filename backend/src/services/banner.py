@@ -55,7 +55,7 @@ class BannerService:
             raise self.BannerNotFound()
 
     @allow_roles(['admin', 'manager'])
-    def delete(self, id_):
+    def delete(self, id_, *args, **kwargs):
         try:
             self._repo.delete(id_)
         except self._repo.DoesNotExist:

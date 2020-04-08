@@ -58,7 +58,7 @@ class ProductDetailView(ValidatableView):
 
     def delete(self, request, product_id):
         try:
-            self._service.delete(product_id)
+            self._service.delete(product_id, user=request.user)
             return {}, OK_CODE
         except self._service.ProductNotFound:
             return {}, NOT_FOUND_CODE

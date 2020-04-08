@@ -47,7 +47,7 @@ class BannerDetailView(ValidatableView):
 
     def delete(self, request, banner_id):
         try:
-            self._service.delete(banner_id)
+            self._service.delete(banner_id, user=request.user)
             return {}, OK_CODE
         except self._service.BannerNotFound:
             return {}, NOT_FOUND_CODE

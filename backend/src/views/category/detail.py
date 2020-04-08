@@ -46,7 +46,7 @@ class CategoryDetailView(ValidatableView):
 
     def delete(self, request, category_id):
         try:
-            self._service.delete(category_id)
+            self._service.delete(category_id, user=request.user)
             return {}, OK_CODE
         except self._service.CategoryNotFound:
             return {}, NOT_FOUND_CODE

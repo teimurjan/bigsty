@@ -57,7 +57,7 @@ class CategoryService:
             raise self.CategoryNotFound()
 
     @allow_roles(['admin', 'manager'])
-    def delete(self, id_):
+    def delete(self, id_, *args, **kwargs):
         try:
             with self._repo.session() as s:
                 if self._repo.has_children(id_, session=s):
