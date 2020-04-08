@@ -32,6 +32,7 @@ interface IRates {
 export interface IContextValue {
   ratesState: {
     rates: IRates;
+    isLoading: boolean;
   };
 }
 
@@ -42,9 +43,7 @@ interface IProviderProps {
 }
 
 export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
-  const {
-    appState: { setLoading, setIdle },
-  } = useAppState();
+  const [isLoading, setLoading] = React.useState(false);
   const {
     dependencies: {
       storages: { stateCache: stateCacheStorage },
@@ -57,7 +56,7 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
 
   React.useEffect(() => {
     (async () => {
-      setLoading();
+      setLoading(true);
       try {
         const res = await axios.get('https://cors-anywhere.herokuapp.com/http://www.cbr.ru/scripts/XML_daily.asp');
 
@@ -78,13 +77,13 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
       } catch (e) {
         setError(e);
       } finally {
-        setIdle();
+        setLoading(false);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <Context.Provider value={{ ratesState: { rates } }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ ratesState: { rates, isLoading } }}>{children}</Context.Provider>;
 };
 
 export const useRatesState = () => React.useContext(Context) as IContextValue;

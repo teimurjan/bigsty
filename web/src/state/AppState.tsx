@@ -17,7 +17,7 @@ interface IProviderProps {
 }
 
 export const AppStateProvider: React.FC<IProviderProps> = ({ children }) => {
-  const [isLoading, setLoading] = React.useState(true);
+  const [isLoading, setLoading] = React.useState(false);
 
   const isLoadingDebounced = useDebounce(isLoading, 1000);
 

@@ -17,9 +17,13 @@ const Context = React.createContext<IContextValue | null>(null);
 interface IProviderProps {
   children: React.ReactNode;
   intl: IntlShape;
+  initialProps?: {
+    availableLocales: IIntlListResponseItem[];
+    error?: string;
+  };
 }
 
-export const IntlStateProvider: React.SFC<IProviderProps> = ({ children, intl }) => {
+export const IntlStateProvider: React.SFC<IProviderProps> = ({ children, intl, initialProps }) => {
   const {
     dependencies: {
       services: { intl: service },
@@ -30,10 +34,12 @@ export const IntlStateProvider: React.SFC<IProviderProps> = ({ children, intl })
     appState: { setLoading, setIdle },
   } = useAppState();
 
-  const [availableLocales, setAvailableLocales] = React.useState<IIntlListResponseItem[]>([]);
+  const [availableLocales, setAvailableLocales] = React.useState<IIntlListResponseItem[]>(
+    initialProps ? initialProps.availableLocales : [],
+  );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = React.useState<string | undefined>(undefined);
-  const [isInitialized, setInitialized] = React.useState(false);
+  const [error, setError] = React.useState<string | undefined>(initialProps ? initialProps.error : undefined);
+  const [isInitialized, setInitialized] = React.useState(!!initialProps);
 
   const fetchAvailableLocales = React.useCallback(async () => {
     setLoading();

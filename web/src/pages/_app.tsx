@@ -13,7 +13,7 @@ import { createIntl, createIntlCache } from 'react-intl';
 import { makeDependenciesContainer } from 'src/DI/DependenciesContainer';
 import { DIProvider } from 'src/DI/DI';
 import { useMedia } from 'src/hooks/useMedia';
-import { AppStateProvider } from 'src/state/AppState';
+import { AppStateProvider, useAppState } from 'src/state/AppState';
 import { IntlStateProvider } from 'src/state/IntlState';
 import { RatesStateProvider } from 'src/state/RatesState';
 import { UserStateProvider, useUserState } from 'src/state/UserState';
@@ -22,6 +22,7 @@ import { defaultTheme } from 'src/themes';
 import { formatStaticURL } from 'src/utils/url';
 import { CategoriesStateProvider } from 'src/state/CategoriesState';
 import { Then } from 'ttypes';
+import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
 
 const intlCache = createIntlCache();
 
@@ -68,6 +69,14 @@ const CustomHead = () => {
   );
 };
 
+const LoadingOverlay = () => {
+  const {
+    appState: { isLoading },
+  } = useAppState();
+
+  return <PageLoader isActive={isLoading} />;
+};
+
 const CustomNextApp = ({
   Component,
   pageProps,
@@ -88,7 +97,13 @@ const CustomNextApp = ({
       <DIProvider value={{ dependencies: makeDependenciesContainer() }}>
         <ThemeProvider theme={defaultTheme}>
           <AppStateProvider>
-            <IntlStateProvider intl={intl}>
+            <IntlStateProvider
+              initialProps={{
+                availableLocales: componentsInitialProps.intlState.availableLocales,
+                error: componentsInitialProps.intlState.error,
+              }}
+              intl={intl}
+            >
               <RatesStateProvider>
                 <UserStateProvider>
                   <CategoriesStateProvider initialProps={componentsInitialProps.categoriesState}>
@@ -96,6 +111,7 @@ const CustomNextApp = ({
                       <>
                         <CustomHead />
                         <Component {...pageProps} />
+                        <LoadingOverlay />
                       </>
                     </EntryPoint>
                   </CategoriesStateProvider>
@@ -111,13 +127,20 @@ const CustomNextApp = ({
 
 const getComponentsInitialProps = async () => {
   const {
-    services: { category: categoryService },
+    services: { category: categoryService, intl: intlService },
   } = makeDependenciesContainer();
   try {
     const { entities, result } = await categoryService.getAll();
-    return { categories: entities.categories, categoriesOrder: result };
+    const availableLocales = await intlService.getAvailableLocales();
+    return {
+      categoriesState: { categories: entities.categories, categoriesOrder: result },
+      intlState: { availableLocales },
+    };
   } catch (e) {
-    return { categories: {}, categoriesOrder: [], error: 'errors.common' };
+    return {
+      categoriesState: { categories: {}, categoriesOrder: [], error: 'errors.common' },
+      intlState: { availableLocales: [], error: 'errors.common' },
+    };
   }
 };
 
@@ -131,7 +154,7 @@ const getInitialProps = async ({ Component, ctx }: AppContext) => {
     pageProps,
     locale,
     messages,
-    componentsInitialProps: { categoriesState: await getComponentsInitialProps() },
+    componentsInitialProps: await getComponentsInitialProps(),
   };
 };
 
