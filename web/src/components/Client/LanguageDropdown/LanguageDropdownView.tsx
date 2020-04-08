@@ -37,6 +37,11 @@ const DefaultDropdownTrigger = ({ onClick, ...props }: ITriggerProps) => {
   );
 };
 
+const nameOfLocale = {
+  en: 'English',
+  ru: 'Русский'
+}
+
 export const LanguageDropdownView = ({
   locales,
   changeLocale,
@@ -51,7 +56,7 @@ export const LanguageDropdownView = ({
       };
       return (
         <DropdownItem key={locale} className={locale === currentLocale ? 'is-active' : undefined} onClick={onClick}>
-          {locale}
+          {nameOfLocale[locale] || locale}
         </DropdownItem>
       );
     })}
