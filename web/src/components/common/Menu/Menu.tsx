@@ -1,6 +1,7 @@
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
 import classNames from 'classnames';
 import * as React from 'react';
-
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -25,11 +26,43 @@ Menu.Label = ({ children, className, ...props }: IMenuLabelProps) => (
 export interface IMenuListProps extends React.HTMLAttributes<HTMLUListElement> {
   className?: string;
   children?: React.ReactNode | HTMLCollection;
+  collapsed?: boolean;
 }
 
-Menu.List = ({ children, className }: IMenuListProps) => (
-  <ul className={classNames('menu-list', className)}>{children}</ul>
-);
+let heightAutoTimeoutID: NodeJS.Timeout;
+let height0TimeoutID: NodeJS.Timeout;
+
+Menu.List = ({ children, className, collapsed }: IMenuListProps) => {
+  const ref = React.useRef<HTMLUListElement>(null);
+  const [height, setHeight] = React.useState<number | undefined | 'auto'>(collapsed ? 0 : ref.current?.scrollHeight);
+
+  React.useEffect(() => {
+    if (!collapsed) {
+      setHeight(ref.current?.scrollHeight);
+      heightAutoTimeoutID = setTimeout(() => setHeight('auto'), 300);
+    } else {
+      setHeight(ref.current?.scrollHeight);
+      height0TimeoutID = setTimeout(() => setHeight(0), 0);
+    }
+  }, [collapsed, ref]);
+
+  React.useEffect(() => () => [heightAutoTimeoutID, height0TimeoutID].forEach(clearTimeout), []);
+
+  return (
+    <ul
+      ref={ref}
+      style={{ height }}
+      css={css`
+        margin: 0 !important;
+        transition: height 300ms ease-in-out;
+        overflow: hidden;
+      `}
+      className={classNames('menu-list', className)}
+    >
+      {children}
+    </ul>
+  );
+};
 
 export interface IMenuItemProps extends React.HTMLAttributes<HTMLLIElement> {
   className?: string;

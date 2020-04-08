@@ -51,26 +51,29 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
             css={css`
               transition: max-height 1000ms;
               max-height: ${status === 'entering' || status === 'entered' ? '1000px' : '1px'};
+              text-align: center;
             `}
             activeIndex={activeBannerIndex}
             fullWidth
           >
             {banners.map(banner => {
-              const button = banner.link ? (
-                <LinkButton
-                  css={css`
-                    margin-top: -100px;
-                  `}
-                  color="is-primary"
-                  href={banner.link}
-                >
-                  {banner.link_text}
-                </LinkButton>
-              ) : null;
+              const button =
+                banner.link && banner.link_text ? (
+                  <LinkButton
+                    css={css`
+                      margin-top: -80px;
+                    `}
+                    color="is-primary"
+                    href={banner.link}
+                  >
+                    {banner.link_text}
+                  </LinkButton>
+                ) : null;
 
               return (
                 <CarouselItem
                   key={banner.id}
+                  asPath={banner.link_text ? undefined : banner.link}
                   css={css`
                     width: 100%;
                   `}

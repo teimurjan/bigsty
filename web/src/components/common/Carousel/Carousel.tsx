@@ -3,26 +3,41 @@ import { css, jsx } from '@emotion/core';
 import classNames from 'classnames';
 import * as React from 'react';
 
-
 import { flexMixin } from 'src/styles/mixins';
+import Link from 'next/link';
+import { getPageHref } from 'src/helpers/link';
 
 interface ICarouselItemProps {
   className?: string;
   children: React.ReactNode;
+  asPath?: string | null;
 }
 
-export const CarouselItem = React.forwardRef<HTMLDivElement, ICarouselItemProps>(({ children, className }, ref) => (
-  <div
-    className={classNames(className, 'carousel-item')}
-    ref={ref}
-    css={css`
-      flex: 0 0 100%;
-      position: relative;
-    `}
-  >
-    {children}
-  </div>
-));
+export const CarouselItem = React.forwardRef<HTMLDivElement, ICarouselItemProps>(
+  ({ children, className, asPath }, ref) => {
+    const item = (
+      <div
+        className={classNames(className, 'carousel-item')}
+        ref={ref}
+        css={css`
+          flex: 0 0 100%;
+          position: relative;
+          cursor: ${asPath ? 'pointer' : 'auto'};
+        `}
+      >
+        {children}
+      </div>
+    );
+
+    return asPath ? (
+      <Link as={asPath} href={getPageHref(asPath)}>
+        {item}
+      </Link>
+    ) : (
+      item
+    );
+  },
+);
 
 interface IProps {
   activeIndex: number;

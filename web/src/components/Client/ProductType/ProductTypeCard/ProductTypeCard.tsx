@@ -57,7 +57,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
           <Button
             css={css`
               width: 100%;
-              border-radius: unset;
+              border-radius: unset !important;
               margin-top: auto;
             `}
             color="is-info"
