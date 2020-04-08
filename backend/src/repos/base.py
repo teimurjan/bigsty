@@ -70,17 +70,12 @@ class IntlRepo(Repo):
             owner[owner_field_name].append(text)
 
     def _update_intl_texts(self, texts, owner, owner_field_name, IntlTextModel):
-        for text in owner[owner_field_name]:
-            new_text = texts[str(text.language_id)]
-            if text.value != new_text:
-                text.value = new_text
-
-            # Remove updated name
-            del texts[str(text.language_id)]
-
-        # Create new names which the model hasn't got
+        new_texts = []
         for language_id, value in texts.items():
             text = IntlTextModel()
             text.value = value
             text.language_id = int(language_id)
-            owner[owner_field_name].append(text)
+            new_texts.append(text)
+
+        setattr(owner, owner_field_name, new_texts)
+        
