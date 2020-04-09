@@ -2,6 +2,7 @@ from sqlalchemy.orm.query import aliased
 
 from src.models import Category, CategoryName, FeatureType
 from src.repos.base import IntlRepo, with_session
+from src.utils.slug import generate_slug
 
 
 class CategoryRepo(IntlRepo):
@@ -13,7 +14,8 @@ class CategoryRepo(IntlRepo):
         category = Category()
         category.parent_category_id = parent_category_id
 
-        self._add_intl_texts(names, category, 'names', CategoryName)
+        self._set_intl_texts(names, category, 'names', CategoryName)
+        category.slug = self.get_unique_slug(category, session=session)
 
         session.add(category)
 
@@ -26,7 +28,8 @@ class CategoryRepo(IntlRepo):
         category = self.get_by_id(id_, session=session)
         category.parent_category_id = parent_category_id
 
-        self._update_intl_texts(names, category, 'names', CategoryName)
+        self._set_intl_texts(names, category, 'names', CategoryName)
+        category.slug = self.get_unique_slug(category, session=session)
 
         session.flush()
 
@@ -50,6 +53,23 @@ class CategoryRepo(IntlRepo):
     @with_session
     def has_children(self, id_, session):
         return session.query(Category).filter(Category.parent_category_id == id_).count() > 0
+
+    @with_session
+    def is_slug_used(self, slug, session):
+        return session.query(Category).filter(Category.slug == slug).count() > 0
+
+    @with_session
+    def get_by_slug(self, slug, session):
+        return session.query(Category).filter(Category.slug == slug).first()
+
+    @with_session
+    def get_unique_slug(self, category, session):
+        slug = generate_slug(category)
+        if self.is_slug_used(slug, session=session):
+            slug = generate_slug(category, with_hash=True)
+
+        return slug
+
 
     class DoesNotExist(Exception):
         pass

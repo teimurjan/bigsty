@@ -7,12 +7,14 @@ class CategorySerializer(IntlSerializer):
         self._id = category.id
         self._names = category.names
         self._parent_category_id = category.parent_category_id
+        self._slug = category.slug
 
     def serialize(self):
         return self._filter_with_only_fields({
             'id': self._id,
             'name': self._serialize_name(),
-            'parent_category_id': self._parent_category_id
+            'parent_category_id': self._parent_category_id,
+            'slug': self._slug
         })
 
     def _serialize_name(self):

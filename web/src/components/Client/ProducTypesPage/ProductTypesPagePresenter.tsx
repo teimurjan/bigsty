@@ -8,7 +8,7 @@ import { agregateOrderedMapToArray } from 'src/utils/agregate';
 export interface IProps {
   ListView: React.ComponentClass<IListViewProps> | React.SFC<IListViewProps>;
   productTypeService: IProductTypeService;
-  categoryId?: number;
+  categoryIdOrSlug?: number | string;
   initialProps?: {
     productTypes: { [key: string]: IProductTypeListResponseItem };
     productTypesMeta: IProductTypeListResponseMeta;
@@ -17,7 +17,7 @@ export interface IProps {
   };
 }
 
-export const ProductTypesPagePresenter = ({ ListView, categoryId, productTypeService, initialProps }: IProps) => {
+export const ProductTypesPagePresenter = ({ ListView, categoryIdOrSlug, productTypeService, initialProps }: IProps) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isLoading, setLoading] = React.useState(false);
   const [productTypes, setProductTypes] = React.useState<{ [key: string]: IProductTypeListResponseItem }>({});
@@ -40,12 +40,12 @@ export const ProductTypesPagePresenter = ({ ListView, categoryId, productTypeSer
   }, [initialProps]);
 
   React.useEffect(() => {
-    if (categoryId && !initialProps) {
+    if (categoryIdOrSlug && !initialProps) {
       (async () => {
         setLoading(true);
         try {
-          const { entities, result, meta } = await productTypeService.getForCategory(categoryId, 1);
-          setProductTypes(entities.productTypes);
+          const { entities, result, meta } = await productTypeService.getForCategory(categoryIdOrSlug, 1);
+          setProductTypes(entities.productTypes || {});
           setProductTypesMeta(meta);
           setProductTypesOrder(result);
         } catch (e) {
@@ -56,7 +56,7 @@ export const ProductTypesPagePresenter = ({ ListView, categoryId, productTypeSer
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId]);
+  }, [categoryIdOrSlug]);
 
   return (
     <ListView

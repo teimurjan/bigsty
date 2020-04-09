@@ -90,7 +90,7 @@ const renderCategoryMenuList = ({
   return (
     <Menu.List collapsed={collapsed}>
       {parentCategories.map(parentCategory => {
-        const asPath = `/categories/${parentCategory.id}/products`;
+        const asPath = `/categories/${parentCategory.slug}/products`;
         return (
           <CategoryMenuItem
             key={parentCategory.id}

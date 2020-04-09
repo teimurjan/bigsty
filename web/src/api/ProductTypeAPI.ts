@@ -113,7 +113,7 @@ export interface IProductTypeCreatePayload {
 export type IProductTypeEditPayload = IProductTypeCreatePayload;
 
 export interface IProductTypeAPI {
-  getForCategory(categoryId: number, page: number): Promise<IProductTypeListResponseData>;
+  getForCategory(categoryIdOrSlug: number | string, page: number): Promise<IProductTypeListResponseData>;
   getAll(page: number): Promise<IProductTypeListResponseData>;
   getNewest(): Promise<IProductTypeNewestResponseData>;
   getByID(id: number): Promise<IProductTypeDetailResponseItemData>;
@@ -150,10 +150,10 @@ export class ProductTypeAPI implements IProductTypeAPI {
     this.headersManager = headersManager;
   }
 
-  public async getForCategory(categoryId: number, page: number) {
+  public async getForCategory(categoryIdOrSlug: number | string, page: number) {
     try {
       const response = await this.client.get<IProductTypeListResponseData>(
-        `/api/categories/${categoryId}/product_types${buildQueryString({ page })}`,
+        `/api/categories/${categoryIdOrSlug}/product_types${buildQueryString({ page })}`,
         {
           headers: this.headersManager.getHeaders(),
         },

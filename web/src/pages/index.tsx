@@ -3,7 +3,8 @@ import { Then } from 'ttypes';
 
 import { HomeContainer } from 'src/components/Client/Home/HomeContainer';
 import { Layout } from 'src/components/Client/Layout';
-import { makeDependenciesContainer } from 'src/DI/DependenciesContainer';
+import { dependenciesFactory } from 'src/DI/DependenciesContainer';
+import { GetServerSideProps } from 'next';
 
 const Index = ({
   banners,
@@ -19,8 +20,8 @@ const Index = ({
   );
 };
 
-export async function getServerSideProps() {
-  const dependencies = makeDependenciesContainer();
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const dependencies = dependenciesFactory({ req, res });
 
   try {
     const {
@@ -39,6 +40,6 @@ export async function getServerSideProps() {
       props: { error: 'errors.common', banners: {}, productTypes: {}, bannersOrder: [], productTypesOrder: [] },
     };
   }
-}
+};
 
 export default Index;

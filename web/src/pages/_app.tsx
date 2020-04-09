@@ -10,7 +10,7 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { createIntl, createIntlCache } from 'react-intl';
 
-import { makeDependenciesContainer } from 'src/DI/DependenciesContainer';
+import { dependenciesFactory, IDependenciesFactoryArgs } from 'src/DI/DependenciesContainer';
 import { DIProvider } from 'src/DI/DI';
 import { useMedia } from 'src/hooks/useMedia';
 import { AppStateProvider, useAppState } from 'src/state/AppState';
@@ -94,7 +94,7 @@ const CustomNextApp = ({
 
   return (
     <CacheProvider value={cache}>
-      <DIProvider value={{ dependencies: makeDependenciesContainer() }}>
+      <DIProvider value={{ dependencies: dependenciesFactory() }}>
         <ThemeProvider theme={defaultTheme}>
           <AppStateProvider>
             <IntlStateProvider
@@ -125,10 +125,10 @@ const CustomNextApp = ({
   );
 };
 
-const getComponentsInitialProps = async () => {
+const getComponentsInitialProps = async (args: IDependenciesFactoryArgs) => {
   const {
     services: { category: categoryService, intl: intlService },
-  } = makeDependenciesContainer();
+  } = dependenciesFactory(args);
   try {
     const { entities, result } = await categoryService.getAll();
     const availableLocales = await intlService.getAvailableLocales();
@@ -147,14 +147,14 @@ const getComponentsInitialProps = async () => {
 const getInitialProps = async ({ Component, ctx }: AppContext) => {
   const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
 
-  const { req } = ctx;
+  const { req, res } = ctx;
   const { locale, messages } = req || (window as any).__NEXT_DATA__.props;
 
   return {
     pageProps,
     locale,
     messages,
-    componentsInitialProps: await getComponentsInitialProps(),
+    componentsInitialProps: await getComponentsInitialProps({ req, res }),
   };
 };
 

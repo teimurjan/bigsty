@@ -7,6 +7,7 @@ export interface ICategoryListResponseItem {
   id: number;
   name: string;
   parent_category_id: number | null;
+  slug: string;
 }
 
 export interface ICategoryListRawIntlResponseItem {
@@ -15,6 +16,7 @@ export interface ICategoryListRawIntlResponseItem {
     [key: string]: string;
   };
   parent_category_id: number | null;
+  slug: string;
 }
 
 export interface ICategoryListResponseData {

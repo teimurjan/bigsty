@@ -77,6 +77,7 @@ from src.views.banner.detail import BannerDetailView
 from src.views.banner.list import BannerListView
 from src.views.category.detail import CategoryDetailView
 from src.views.category.list import CategoryListView
+from src.views.category.slug import CategorySlugView
 from src.views.confirm_registration import ConfirmRegistrationView
 from src.views.feature_type.detail import FeatureTypeDetailView
 from src.views.feature_type.list import FeatureTypeListView
@@ -252,7 +253,18 @@ class App:
             methods=['GET', 'PUT', 'DELETE']
         )
         self.flask_app.add_url_rule(
-            '/api/categories/<int:category_id>/product_types',
+            '/api/categories/<path:slug>',
+            view_func=AbstractView.as_view(
+                'category_slug',
+                concrete_view=CategorySlugView(
+                    self.__category_service, CategorySerializer
+                ),
+                middlewares=middlewares
+            ),
+            methods=['GET']
+        )
+        self.flask_app.add_url_rule(
+            '/api/categories/<path:category_slug>/product_types',
             view_func=AbstractView.as_view(
                 'category_product_types',
                 concrete_view=ProductTypeByCategoryView(

@@ -23,6 +23,13 @@ class CategoryService:
         except self._repo.DoesNotExist:
             raise self.CategoryNotFound()
 
+    def get_one_by_slug(self, slug):
+        category = self._repo.get_by_slug(slug)
+        if category is None:
+            raise self.CategoryNotFound()
+
+        return category
+
     @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
         with self._repo.session() as s:

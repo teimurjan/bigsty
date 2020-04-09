@@ -28,6 +28,8 @@ import * as stateCacheStorage from 'src/storage/StateCacheStorage';
 import { safeWindow } from 'src/utils/dom';
 import { WatchingValue } from 'src/utils/watching-value';
 import { CookieStorage } from 'src/storage/CookieStorage';
+import { IncomingMessage, ServerResponse } from 'http';
+import { ServerCookieStorage } from 'src/storage/ServerCookieStorage';
 
 export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
@@ -112,6 +114,11 @@ class DependenciesContainer implements IDependenciesContainer {
   }
 }
 
+export interface IDependenciesFactoryArgs {
+  req?: IncomingMessage;
+  res?: ServerResponse;
+}
+
 const stubStorage = {
   length: 0,
   clear: () => {},
@@ -120,9 +127,9 @@ const stubStorage = {
   removeItem: (key: string) => {},
   setItem: (key: string, value: string) => {},
 };
-export const makeDependenciesContainer = (): IDependenciesContainer => {
+export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {}): IDependenciesContainer => {
   const localStorage = safeWindow(w => w.localStorage, stubStorage);
-  const cookieStorage = new CookieStorage();
+  const cookieStorage = req && res ? new ServerCookieStorage(req, res) : new CookieStorage();
   const storagesContainer = {
     auth: new authStorage.AuthStorage(cookieStorage),
     intl: new intlStorage.IntlStorage(cookieStorage),

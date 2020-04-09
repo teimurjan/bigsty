@@ -15,7 +15,7 @@
   {%- endfor -%}
   {%- for category in categories %}
   <url>
-    <loc>{{ base_url }}/categories/{{ category.id }}/products</loc>
+    <loc>{{ base_url }}/categories/{{ category.slug }}/products</loc>
     <lastmod>{{ category.updated_on.strftime('%Y-%m-%d') }}</lastmod>
     <changefreq>daily</changefreq>
   </url>

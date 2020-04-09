@@ -3,7 +3,8 @@ import { Then } from 'ttypes';
 
 import { Layout } from 'src/components/Client/Layout';
 import { ProductTypePageContainer } from 'src/components/Client/ProductTypePage/ProductTypePageContainer';
-import { makeDependenciesContainer } from 'src/DI/DependenciesContainer';
+import { dependenciesFactory } from 'src/DI/DependenciesContainer';
+import { GetServerSideProps } from 'next';
 
 export default ({ productType, products, error }: Then<ReturnType<typeof getServerSideProps>>['props']) => (
   <Layout>
@@ -11,11 +12,11 @@ export default ({ productType, products, error }: Then<ReturnType<typeof getServ
   </Layout>
 );
 
-export async function getServerSideProps({ params }: { params: { id: string } }) {
-  const dependencies = makeDependenciesContainer();
+export const getServerSideProps: GetServerSideProps = async ({ params = {}, req, res }) => {
+  const dependencies = dependenciesFactory({ req, res });
 
   try {
-    const productType = await dependencies.services.productType.getByID(parseInt(params.id, 10));
+    const productType = await dependencies.services.productType.getByID(parseInt(params.id as string, 10));
     const products = productType ? await dependencies.services.product.getForProductType(productType.id) : [];
 
     return {
@@ -33,4 +34,4 @@ export async function getServerSideProps({ params }: { params: { id: string } })
       },
     };
   }
-}
+};

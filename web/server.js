@@ -37,8 +37,6 @@ const getMessages = locale => {
 app.prepare().then(() => {
   createServer((req, res) => {
     const locale = cookie.parse(req.headers.cookie || '').locale || 'ru';
-    const accessToken = cookie.parse(req.headers.cookie || '').access_token;
-    global.__SERVER_CONTEXT = { locale, accessToken };
     req.locale = supportedLanguages.some(l => l === locale) ? locale : 'ru';
     req.localeDataScript = getLocaleDataScript(locale);
     req.messages = getMessages(locale);
@@ -53,6 +51,7 @@ app.prepare().then(() => {
       };
 
       try {
+        const accessToken = cookie.parse(req.headers.cookie || '').access_token;
         const accessTokenDecoded = jwtDecode(accessToken);
         if ('group' in accessTokenDecoded && accessTokenDecoded.group === 'admin') {
           app.render(req, res, '/admin', query);

@@ -11,10 +11,10 @@ class ProductTypeByCategoryView(PaginatableView):
         self._service = service
         self._serializer_cls = serializer_cls
 
-    def get(self, request, category_id):
+    def get(self, request, category_slug):
         pagination_data = self._get_pagination_data(request)
         product_types = self._service.get_all_categorized(
-            category_id,
+            category_slug,
             offset=pagination_data['offset'],
             limit=pagination_data['limit']
         )

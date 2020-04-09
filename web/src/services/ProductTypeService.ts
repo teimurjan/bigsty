@@ -19,11 +19,11 @@ export const errors = {
 
 export interface IProductTypeService {
   getForCategory(
-    categoryId: number,
+    categoryIdOrSlug: number | string,
     page: number,
   ): Promise<{
     entities: {
-      productTypes: {
+      productTypes?: {
         [key: string]: productTypeAPI.IProductTypeListResponseItem;
       };
     };
@@ -86,8 +86,11 @@ export class ProductTypeService implements IProductTypeService {
     this.API = API;
   }
 
-  public getForCategory: IProductTypeService['getForCategory'] = async (categoryId: number, page: number) => {
-    const productTypes = await this.API.getForCategory(categoryId, page);
+  public getForCategory: IProductTypeService['getForCategory'] = async (
+    categoryIdOrSlug: number | string,
+    page: number,
+  ) => {
+    const productTypes = await this.API.getForCategory(categoryIdOrSlug, page);
     return {
       ...normalize(productTypes.data, [new schema.Entity('productTypes')]),
       meta: productTypes.meta,

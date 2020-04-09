@@ -62,14 +62,7 @@ class Repo(Generic[T]):
 
 
 class IntlRepo(Repo):
-    def _add_intl_texts(self, texts, owner, owner_field_name,  IntlTextModel):
-        for language_id, value in texts.items():
-            text = IntlTextModel()
-            text.value = value
-            text.language_id = int(language_id)
-            owner[owner_field_name].append(text)
-
-    def _update_intl_texts(self, texts, owner, owner_field_name, IntlTextModel):
+    def _set_intl_texts(self, texts, owner, owner_field_name, IntlTextModel):
         new_texts = []
         for language_id, value in texts.items():
             text = IntlTextModel()

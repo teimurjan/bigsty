@@ -24,10 +24,10 @@ class ProductTypeRepo(IntlRepo):
     ):
         product_type = ProductType()
 
-        self._add_intl_texts(names, product_type, 'names', ProductTypeName)
-        self._add_intl_texts(descriptions, product_type,
+        self._set_intl_texts(names, product_type, 'names', ProductTypeName)
+        self._set_intl_texts(descriptions, product_type,
                              'descriptions', ProductTypeDescription)
-        self._add_intl_texts(short_descriptions, product_type,
+        self._set_intl_texts(short_descriptions, product_type,
                              'short_descriptions', ProductTypeShortDescription)
 
         for feature_type in feature_types:
@@ -59,10 +59,10 @@ class ProductTypeRepo(IntlRepo):
     ):
         product_type = self.get_by_id(id_, session=session)
 
-        self._update_intl_texts(names, product_type, 'names', ProductTypeName)
-        self._update_intl_texts(
+        self._set_intl_texts(names, product_type, 'names', ProductTypeName)
+        self._set_intl_texts(
             descriptions, product_type, 'descriptions', ProductTypeDescription)
-        self._update_intl_texts(short_descriptions, product_type,
+        self._set_intl_texts(short_descriptions, product_type,
                                 'short_descriptions', ProductTypeShortDescription)
 
         product_type.feature_types = feature_types
