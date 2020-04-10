@@ -10,7 +10,7 @@ class FeatureTypeRepo(IntlRepo):
     def add_feature_type(self, names, session):
         feature_type = FeatureType()
 
-        self._set_intl_texts(names, feature_type, 'names', FeatureTypeName)
+        self._set_intl_texts(names, feature_type, 'names', FeatureTypeName, session=session)
 
         session.add(feature_type)
 
@@ -24,7 +24,7 @@ class FeatureTypeRepo(IntlRepo):
     def update_feature_type(self, id_, names, session):
         feature_type = self.get_by_id(id_, session=session)
 
-        self._set_intl_texts(names, feature_type, 'names', FeatureTypeName)
+        self._set_intl_texts(names, feature_type, 'names', FeatureTypeName, session=session)
 
         return feature_type
 

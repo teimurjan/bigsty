@@ -14,7 +14,7 @@ class CategoryRepo(IntlRepo):
         category = Category()
         category.parent_category_id = parent_category_id
 
-        self._set_intl_texts(names, category, 'names', CategoryName)
+        self._set_intl_texts(names, category, 'names', CategoryName, session=session)
         category.slug = self.get_unique_slug(category, session=session)
 
         session.add(category)

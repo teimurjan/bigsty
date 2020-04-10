@@ -1,7 +1,9 @@
-from typing import TypeVar, Generic
+from contextlib import contextmanager
+from typing import Generic, TypeVar
 
 from sqlalchemy.orm import sessionmaker
-from contextlib import contextmanager
+
+from src.models.intl import Language
 
 T = TypeVar('T')
 
@@ -62,13 +64,14 @@ class Repo(Generic[T]):
 
 
 class IntlRepo(Repo):
-    def _set_intl_texts(self, texts, owner, owner_field_name, IntlTextModel):
+    @with_session
+    def _set_intl_texts(self, texts, owner, owner_field_name, IntlTextModel, session):
         new_texts = []
         for language_id, value in texts.items():
             text = IntlTextModel()
             text.value = value
-            text.language_id = int(language_id)
+            language = session.query(Language).get(int(language_id))
+            text.language = language
             new_texts.append(text)
 
         setattr(owner, owner_field_name, new_texts)
-        
