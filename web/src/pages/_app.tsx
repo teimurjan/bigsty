@@ -19,7 +19,7 @@ import { RatesStateProvider } from 'src/state/RatesState';
 import { UserStateProvider, useUserState } from 'src/state/UserState';
 import { mediaQueries } from 'src/styles/media';
 import { defaultTheme } from 'src/themes';
-import { formatStaticURL } from 'src/utils/url';
+import { withPublicURL } from 'src/utils/url';
 import { CategoriesStateProvider } from 'src/state/CategoriesState';
 import { Then } from 'ttypes';
 import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
@@ -51,20 +51,25 @@ const CustomHead = () => {
 
   return (
     <Head>
-      <link rel="apple-touch-icon" sizes="180x180" href={formatStaticURL(`${iconFolder}/apple-touch-icon.png`)} />
-      <link rel="icon" type="image/png" sizes="32x32" href={formatStaticURL(`${iconFolder}/favicon-32x32.png`)} />
-      <link rel="icon" type="image/png" sizes="16x16" href={formatStaticURL(`${iconFolder}/favicon-16x16.png`)} />
-      <link rel="shortcut icon" href={formatStaticURL(`${iconFolder}/favicon.ico`)} />
-      <link rel="manifest" href={formatStaticURL(manifestName)} />
+      <link rel="apple-touch-icon" sizes="180x180" href={withPublicURL(`${iconFolder}/apple-touch-icon.png`)} />
+      <link rel="icon" type="image/png" sizes="32x32" href={withPublicURL(`${iconFolder}/favicon-32x32.png`)} />
+      <link rel="icon" type="image/png" sizes="16x16" href={withPublicURL(`${iconFolder}/favicon-16x16.png`)} />
+      <link rel="shortcut icon" href={withPublicURL(`${iconFolder}/favicon.ico`)} />
+      <link rel="manifest" href={withPublicURL(manifestName)} />
       <title>{intl.formatMessage({ id: 'Meta.title' })}</title>
       <meta name="description" content={intl.formatMessage({ id: 'Meta.description' })} />
       <meta name="keywords" content={intl.formatMessage({ id: 'Meta.keywords' })} />
-      <meta name="og:site_name" content="eye8.kg" />
-      <meta name="og:url" content={router.asPath} />
+      <meta name="og:site_name" content="Eye8" />
+      <meta name="og:url" content={withPublicURL(router.asPath)} />
       <meta name="og:title" content={intl.formatMessage({ id: 'Meta.title' })} />
       <meta name="og:description" content={intl.formatMessage({ id: 'Meta.description' })} />
-      <meta name="og:image" content={formatStaticURL('icon/android-chrome-192x192.png')} />
+      <meta name="og:image" content={withPublicURL('img/preview.jpg')} />
       <meta name="og:type" content="website" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content={withPublicURL(router.asPath)} />
+      <meta name="twitter:title" content={intl.formatMessage({ id: 'Meta.title' })} />
+      <meta name="twitter:description" content={intl.formatMessage({ id: 'Meta.description' })} />
+      <meta name="twitter:image:src" content={withPublicURL('img/preview.jpg')} />
     </Head>
   );
 };

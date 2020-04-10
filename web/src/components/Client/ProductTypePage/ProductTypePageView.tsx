@@ -19,7 +19,7 @@ import { Title } from 'src/components/common/Title/Title';
 import { mediaQueries } from 'src/styles/media';
 import { flexMixin } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
-import { formatMediaURL } from 'src/utils/url';
+import { formatMediaURL, withPublicURL } from 'src/utils/url';
 
 const getAllFeatureValuesGroupedByType = (
   products: IProps['products'],
@@ -112,6 +112,9 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         {matchingProduct && <meta property="product:price:amount" content={matchingProduct.price.toString()} />}
         {matchingProduct && <meta property="product:price:currency" content="USD" />}
         <meta property="og:image" content={productType.image} />
+        <meta name="twitter:title" content={productType.name} />
+        <meta name="twitter:description" content={productType.short_description} />
+        <meta name="twitter:image:src" content={productType.name} />
       </Head>
       <div
         css={css`

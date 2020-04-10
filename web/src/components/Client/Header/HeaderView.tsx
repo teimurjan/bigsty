@@ -20,7 +20,7 @@ import { NavbarStart } from 'src/components/common/NavbarStart/NavbarStart';
 import { isUserAdmin, isUserAnonymous, isUserNotSetYet } from 'src/helpers/user';
 import { useWindowScroll } from 'src/hooks/useWindowScroll';
 import { mediaQueries } from 'src/styles/media';
-import { formatStaticURL } from 'src/utils/url';
+import { withPublicURL } from 'src/utils/url';
 
 const buttonsCSS = css`
   margin: 0.25rem 1rem 0 1rem !important;
@@ -64,7 +64,7 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
                     padding-top: 0;
                   }
                 `}
-                src={formatStaticURL('icon/android-chrome-192x192.png')}
+                src={withPublicURL('icon/android-chrome-192x192.png')}
               />
             </a>
           </Link>
