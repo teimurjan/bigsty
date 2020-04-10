@@ -114,7 +114,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         <meta property="og:image" content={productType.image} />
         <meta name="twitter:title" content={productType.name} />
         <meta name="twitter:description" content={productType.short_description} />
-        <meta name="twitter:image:src" content={productType.name} />
+        <meta name="twitter:image:src" content={productType.image} />
       </Head>
       <div
         css={css`
