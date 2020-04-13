@@ -14,6 +14,7 @@ type FromSide = 'top' | 'left' | 'bottom' | 'right';
 const cssOfSide = {
   top: {
     permanent: css`
+      width: 100%;
       top: 0;
       left: 0;
     `,
@@ -28,6 +29,7 @@ const cssOfSide = {
   },
   left: {
     permanent: css`
+      height: 100%;
       top: 0;
       left: 0;
     `,
@@ -42,6 +44,7 @@ const cssOfSide = {
   },
   bottom: {
     permanent: css`
+      width: 100%;
       bottom: 0;
       left: 0;
     `,
@@ -56,6 +59,7 @@ const cssOfSide = {
   },
   right: {
     permanent: css`
+      height: 100%;
       top: 0;
       right: 0;
     `,
@@ -77,7 +81,6 @@ const getSlidingCSS = (from: FromSide) => {
     height: 100%;
 
     & > .drawer-content {
-      height: 100%;
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15), 0 8px 8px 0 rgba(0, 0, 0, 0.05);
       transition: transform 300ms ease-in-out, opacity 175ms ease-in-out;
       position: absolute;

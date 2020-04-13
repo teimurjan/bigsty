@@ -59,7 +59,7 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
             }
           `}
         >
-          {intl.formatMessage({ id: 'common.Menu' })}{' '}
+          {intl.formatMessage({ id: 'common.menu' })}{' '}
           <IconLink
             css={css`
               transition: transform 300ms;
