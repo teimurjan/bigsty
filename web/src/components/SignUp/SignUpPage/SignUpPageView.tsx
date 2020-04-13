@@ -4,7 +4,6 @@ import { useIntl } from 'react-intl';
 
 import { Title } from 'src/components/common/Title/Title';
 import { SignUpFormContainer } from 'src/components/SignUp/SignUpForm/SignUpFormContainer';
-import { textCenterMixin } from 'src/styles/mixins';
 
 export const SignUpPageView = () => {
   const intl = useIntl();
@@ -20,7 +19,7 @@ export const SignUpPageView = () => {
         padding: 10px;
       `}
     >
-      <Title css={textCenterMixin} size={3}>
+      <Title css={css`text-align: center;`} size={3}>
         {intl.formatMessage({ id: 'SignUpPage.title' })}
       </Title>
       <SignUpFormContainer />

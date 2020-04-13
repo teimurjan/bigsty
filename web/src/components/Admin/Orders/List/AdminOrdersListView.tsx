@@ -1,14 +1,11 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { jsx, css } from '@emotion/core';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable } from 'src/components/Admin/AdminTable';
 import { IViewProps as IProps } from 'src/components/Admin/Orders/List/AdminOrdersListPresenter';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
-import { fullWidthMixin } from 'src/styles/mixins';
-
-
 
 const NoOrdersAvialable = injectIntl(({ intl }) => (
   <NoDataAvailable title={intl.formatMessage({ id: 'AdminOrders.notFound.title' })} />
@@ -19,7 +16,11 @@ const renderNoData = () => <NoOrdersAvialable />;
 type Order = IProps['orders'][0];
 
 export const AdminOrdersListView = ({ orders, intl, isLoading, isDataLoaded }: IProps & { intl: IntlShape }) => (
-  <Section css={fullWidthMixin}>
+  <Section
+    css={css`
+      width: 100%;
+    `}
+  >
     <AdminTable<Order>
       hideSubheader={true}
       pathPrefix="/admin/orders"

@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { jsx, css } from '@emotion/core';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
@@ -7,7 +7,6 @@ import { IViewProps as IProps } from 'src/components/Admin/FeatureTypes/List/Adm
 import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
-import { fullWidthMixin } from 'src/styles/mixins';
 
 export const NewFeatureTypeButton = injectIntl(({ intl }) => (
   <ReactRouterLinkButton to="/admin/featureTypes/new" color="is-primary">
@@ -36,7 +35,11 @@ export const AdminFeatureTypesListView = ({
   isLoading,
   isDataLoaded,
 }: IProps & { intl: IntlShape }) => (
-  <Section css={fullWidthMixin}>
+  <Section
+    css={css`
+      width: 100%;
+    `}
+  >
     <AdminTable<FeatureType>
       pathPrefix="/admin/featureTypes"
       isLoading={isLoading}

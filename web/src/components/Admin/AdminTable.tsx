@@ -12,7 +12,6 @@ import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Table } from 'src/components/common/Table/Table';
 import { UncontrolledPagination } from 'src/components/common/UncontrolledPagination/UncontrolledPagination';
 import { mediaQueries } from 'src/styles/media';
-import { textCenterMixin } from 'src/styles/mixins';
 import { formatMediaURL } from 'src/utils/url';
 
 interface IAdminTableRendererRequiredArgs {
@@ -175,7 +174,7 @@ export const AdminTable = <T extends { id: number }>({
               <Table.Cell
                 key={`table-cell-${entity.id}`}
                 css={css`
-                  ${textCenterMixin};
+                  text-align: center;
                   width: 15%;
                 `}
               >

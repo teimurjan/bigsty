@@ -1,6 +1,5 @@
 /** @jsx jsx */
-
-import { jsx } from '@emotion/core';
+import { jsx, css } from '@emotion/core';
 import Link from 'next/link';
 import * as React from 'react';
 import { Field, FieldRenderProps, Form, FormRenderProps } from 'react-final-form';
@@ -10,7 +9,6 @@ import { Button } from 'src/components/common/Button/Button';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { IViewProps as IProps, IFormValues } from 'src/components/Login/LoginForm/LoginFormPresenter';
-import { textCenterMixin } from 'src/styles/mixins';
 
 export class LoginFormView extends React.Component<IProps & { intl: IntlShape }> {
   public render() {
@@ -29,12 +27,14 @@ export class LoginFormView extends React.Component<IProps & { intl: IntlShape }>
             {intl.formatMessage({ id: 'LoginForm.submitButton.text' })}
           </Button>
           <Link href="/signup">
-            <a className="level-right">
-              {intl.formatMessage({ id: 'LoginForm.signUpLink' })}
-            </a>
+            <a className="level-right">{intl.formatMessage({ id: 'LoginForm.signUpLink' })}</a>
           </Link>
         </div>
-        <div css={textCenterMixin}>
+        <div
+          css={css`
+            text-align: center;
+          `}
+        >
           {globalError && <HelpText type="is-danger">{intl.formatMessage({ id: globalError })}</HelpText>}
         </div>
       </form>

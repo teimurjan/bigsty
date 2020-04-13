@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Form, FormRenderProps, useFormState } from 'react-final-form';
 import { useIntl } from 'react-intl';
 
-
 import { Button } from 'src/components/common/Button/Button';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
@@ -16,9 +15,7 @@ import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
-import { textCenterMixin } from 'src/styles/mixins';
 import { arePropsEqual } from 'src/utils/propEquality';
-
 
 export interface IProps<T> {
   isOpen: boolean;
@@ -53,7 +50,11 @@ const MemoizedForm = React.memo(
     return (
       <form id={id} onSubmit={handleSubmit}>
         {fields}
-        <div css={textCenterMixin}>
+        <div
+          css={css`
+            text-align: center;
+          `}
+        >
           {globalError && <HelpText type="is-danger">{intl.formatMessage({ id: globalError })}</HelpText>}
         </div>
       </form>

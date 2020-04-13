@@ -8,7 +8,6 @@ import { Hero } from 'src/components/common/Hero/Hero';
 import { HeroBody } from 'src/components/common/HeroBody/HeroBody';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Title } from 'src/components/common/Title/Title';
-import { textCenterMixin } from 'src/styles/mixins';
 
 
 interface IProps {
@@ -21,7 +20,7 @@ export const NoDataAvailable = ({ title, description, CTA }: IProps) => (
   <Hero className={classNames('is-large')}>
     <HeroBody
       css={css`
-        ${textCenterMixin};
+        text-align: center;
       `}
     >
       {title && (

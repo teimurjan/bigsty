@@ -31,13 +31,6 @@ import { AdminOrdersStateProvider } from 'src/state/AdminOrdersState';
 import { AdminProductsStateProvider } from 'src/state/AdminProductsState';
 import { AdminProductTypesStateProvider } from 'src/state/AdminProductTypesState';
 import { mediaQueries } from 'src/styles/media';
-import {
-  alignItemsFlexStartMixin,
-  flexMixin,
-  flexDirectionColumnMixin,
-  alignItemsCenterMixin,
-  marginAutoMixin,
-} from 'src/styles/mixins';
 
 const arrowDivider = (
   <FontAwesomeIcon
@@ -59,9 +52,9 @@ interface IStepProps {
 const Step = ({ button_, subtitle }: IStepProps) => (
   <div
     css={css`
-      ${flexMixin};
-      ${flexDirectionColumnMixin};
-      ${alignItemsCenterMixin};
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px 0;
     `}
   >
@@ -88,7 +81,7 @@ const AdminHome = () => {
           text-align: center;
           width: 1000px;
           max-width: 100%;
-          ${marginAutoMixin};
+          margin: auto;
         `}
       >
         <Title size={1}>{intl.formatMessage({ id: 'AdminHome.title' })}</Title>
@@ -164,8 +157,8 @@ export const Admin = () => (
               <AdminOrdersStateProvider>
                 <div
                   css={css`
-                    ${alignItemsFlexStartMixin};
-                    ${flexMixin};
+                    align-items: flex-start;
+                    display: flex;
                   `}
                 >
                   <div

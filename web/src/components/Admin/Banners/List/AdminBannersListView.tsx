@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { jsx, css } from '@emotion/core';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
@@ -7,9 +7,6 @@ import { IViewProps as IProps } from 'src/components/Admin/Banners/List/AdminBan
 import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
-import { fullWidthMixin } from 'src/styles/mixins';
-
-
 
 export const NewBannerButton = injectIntl(({ intl }) => (
   <ReactRouterLinkButton to="/admin/banners/new" color="is-primary">
@@ -38,7 +35,11 @@ export const AdminBannersListView = ({
   isLoading,
   isDataLoaded,
 }: IProps & { intl: IntlShape }) => (
-  <Section css={fullWidthMixin}>
+  <Section
+    css={css`
+      width: 100%;
+    `}
+  >
     <AdminTable<Banner>
       pathPrefix="/admin/banners"
       isLoading={isLoading}

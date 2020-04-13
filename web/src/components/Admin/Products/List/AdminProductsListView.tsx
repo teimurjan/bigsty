@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { jsx, css } from '@emotion/core';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { AdminTable } from 'src/components/Admin/AdminTable';
@@ -7,7 +7,6 @@ import { IViewProps as IProps } from 'src/components/Admin/Products/List/AdminPr
 import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
 import { Section } from 'src/components/common/Section/Section';
-import { fullWidthMixin } from 'src/styles/mixins';
 
 export const NewProductButton = injectIntl(({ intl }) => (
   <ReactRouterLinkButton to="/admin/products/new" color="is-primary">
@@ -41,7 +40,11 @@ export const AdminProductsListView = ({
   meta,
   onPageChange,
 }: IProps & { intl: IntlShape }) => (
-  <Section css={fullWidthMixin}>
+  <Section
+    css={css`
+      width: 100%;
+    `}
+  >
     <AdminTable<Product>
       hideSubheader={true}
       pathPrefix="/admin/products"
