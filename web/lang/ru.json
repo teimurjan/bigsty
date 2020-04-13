@@ -223,5 +223,6 @@
   "FileInput.alt": "Предварительный просмотр",
   "common.addedToCart": "Добавлено!",
   "common.errors.invalidPhone": "Неверный номер телефона",
-  "common.errors.notTrimmed": "Пробелы в начале/конце запрещены."
+  "common.errors.notTrimmed": "Пробелы в начале/конце запрещены.",
+  "common.menu": "Меню"
 }

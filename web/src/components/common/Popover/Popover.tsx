@@ -5,7 +5,7 @@ import { useTheme } from 'emotion-theming';
 import Link from 'next/link';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { usePopper } from 'react-popper';
+import { usePopper, PopperProps } from 'react-popper';
 import { CSSTransition } from 'react-transition-group';
 
 import { useBoolean } from 'src/hooks/useBoolean';
@@ -67,6 +67,8 @@ interface IProps<T> {
   hasArrow?: boolean;
   children?: React.ReactNode | RenderChildren;
   forceClose?: boolean;
+  preventOverflow?: boolean;
+  placement?: PopperProps['placement'];
 }
 
 export const Popover = <T extends HTMLElement>({
@@ -74,7 +76,9 @@ export const Popover = <T extends HTMLElement>({
   renderTrigger,
   hasArrow = false,
   children,
-  forceClose,
+  forceClose = false,
+  preventOverflow = true,
+  placement = 'bottom-start',
 }: IProps<T>) => {
   const popoverRoot = safeDocument(d => d.getElementById('popoverRoot'), null);
 
@@ -91,10 +95,13 @@ export const Popover = <T extends HTMLElement>({
     if (hasArrow) {
       modifiers_.push({ name: 'arrow', options: { element: arrowRef } });
     }
+    if (preventOverflow) {
+      modifiers_.push({ name: 'preventOverflow', enabled: true, options: { escapeWithReference: true } });
+    }
     return modifiers_;
-  }, [hasArrow, arrowRef]);
+  }, [hasArrow, arrowRef, preventOverflow]);
 
-  const { styles, attributes } = usePopper(triggerRef.current, popperRef, { modifiers });
+  const popper = usePopper(triggerRef.current, popperRef, { modifiers, placement });
 
   const trigger = React.useMemo(() => {
     if (renderTrigger) {
@@ -121,8 +128,8 @@ export const Popover = <T extends HTMLElement>({
                   margin-top: 10px;
                 `}
                 ref={setPopperRef}
-                style={styles.popper}
-                {...attributes.popper}
+                style={popper.styles.popper}
+                {...popper.attributes.popper}
               >
                 <div
                   css={css`
@@ -132,7 +139,7 @@ export const Popover = <T extends HTMLElement>({
                   `}
                 >
                   {typeof children === 'function' ? children({ open, close, isOpen, toggle }) : children}
-                  {hasArrow && <div ref={arrowRef} style={styles.arrow} />}
+                  {hasArrow && <div ref={arrowRef} style={popper.styles.arrow} />}
                 </div>
               </div>
             </CSSTransition>,

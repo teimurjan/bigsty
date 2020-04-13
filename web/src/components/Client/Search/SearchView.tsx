@@ -16,6 +16,7 @@ import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Popover } from 'src/components/common/Popover/Popover';
 import { Tag } from 'src/components/common/Tag/Tag';
 import { UnderlinedInput } from 'src/components/common/UnderlinedInput/UnderlinedInput';
+import { useBoolean } from 'src/hooks/useBoolean';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
 import { ITheme } from 'src/themes';
@@ -45,6 +46,7 @@ export const SearchView: React.FC<IProps> = ({
   open,
   close,
 }) => {
+  const { value: drawerOpened, setPositive: setDrawerOpened, setNegative: setDrawerClosed } = useBoolean();
   const theme = useTheme<ITheme>();
   const intl = useIntl();
   const [searchValue, setSearchValue] = React.useState('');
@@ -114,7 +116,14 @@ export const SearchView: React.FC<IProps> = ({
   return (
     <>
       <IconLink icon={faSearch} onClick={open} />
-      <Drawer isOpen={isOpen} close={close} fromSide="top">
+      <Drawer
+        isOpen={isOpen}
+        close={close}
+        fromSide="top"
+        onEnter={setDrawerClosed}
+        onEntered={setDrawerOpened}
+        onExit={setDrawerClosed}
+      >
         <div
           css={css`
             width: 100%;
@@ -123,11 +132,10 @@ export const SearchView: React.FC<IProps> = ({
             align-items: center;
             justify-content: center;
             background: ${theme.white};
-            box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15), 0 8px 8px 0 rgba(0, 0, 0, 0.05);
           `}
         >
           <Popover<HTMLInputElement>
-            forceClose={searchValue === ''}
+            forceClose={searchValue === '' || !drawerOpened}
             renderTrigger={({ ref, open }) => (
               <UnderlinedInput
                 autoFocus

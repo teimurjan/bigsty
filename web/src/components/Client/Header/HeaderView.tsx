@@ -1,5 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
+import { faArrowLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import { useTheme } from 'emotion-theming';
 import Link from 'next/link';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
@@ -8,23 +10,21 @@ import { IViewProps as IProps } from 'src/components/Client/Header/HeaderPresent
 import { SearchContainer } from 'src/components/Client/Search/SearchContainer';
 import { UserDropdownContainer as UserDropdown } from 'src/components/Client/UserDropdown/UserDropdownContainer';
 import { Container } from 'src/components/common/Container/Container';
+import { Drawer } from 'src/components/common/Drawer/Drawer';
+import { IconLink } from 'src/components/common/IconLink/IconLink';
 import { Navbar } from 'src/components/common/Navbar/Navbar';
-import { NavbarBrand } from 'src/components/common/NavbarBrand/NavbarBrand';
 import { NavbarBurger } from 'src/components/common/NavbarBurger/NavbarBurger';
-import { NavbarEnd } from 'src/components/common/NavbarEnd/NavbarEnd';
-import { NavbarItem } from 'src/components/common/NavbarItem/NavbarItem';
-import { NavbarMenu } from 'src/components/common/NavbarMenu/NavbarMenu';
-import { NavbarStart } from 'src/components/common/NavbarStart/NavbarStart';
+import { useBoolean } from 'src/hooks/useBoolean';
 import { useWindowScroll } from 'src/hooks/useWindowScroll';
 import { mediaQueries } from 'src/styles/media';
+import { ITheme } from 'src/themes';
 import { withPublicURL } from 'src/utils/url';
 
 export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
   const intl = useIntl();
+  const theme = useTheme<ITheme>();
 
-  const [isOpen, setOpen] = React.useState(false);
-
-  const toggleOpen = () => setOpen(!isOpen);
+  const { value: isOpen, setPositive: open, setNegative: close } = useBoolean();
 
   const { y } = useWindowScroll();
 
@@ -39,12 +39,47 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
         width: 100%;
 
         @media ${mediaQueries.maxWidth768} {
-          height: 50px;
+          height: 120px;
           margin-bottom: 5px;
         }
       `}
     >
       <Container>
+        <button
+          onClick={open}
+          css={css`
+            padding: 10px 15px 10px 10px !important;
+            outline: none;
+            font-size: 14px;
+            font-weight: bold;
+            display: none;
+
+            @media ${mediaQueries.maxWidth768} {
+              display: inline-block;
+            }
+          `}
+        >
+          {intl.formatMessage({ id: 'common.Menu' })}{' '}
+          <IconLink
+            css={css`
+              transition: transform 300ms;
+              transform: rotateZ(${isOpen ? 180 : 0}deg);
+            `}
+            icon={faCaretRight}
+          />
+        </button>
+        <Drawer isOpen={isOpen} fromSide="left" close={close} backdrop>
+          <div
+            css={css`
+              background: ${theme.white};
+              padding: 20px 10px 0 10px;
+              width: 70vw;
+              height: 100%;
+            `}
+          >
+            {nav}
+          </div>
+        </Drawer>
         <div
           css={css`
             display: flex;

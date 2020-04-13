@@ -2,11 +2,15 @@ import * as React from 'react';
 
 import { safeDocument } from 'src/utils/dom';
 
-export const useModalScrollLock = () => {
+export const useModalScrollLock = (...conditions: boolean[]) => {
   React.useEffect(
     () =>
       safeDocument(
         d => {
+          if (conditions.some(c => !c)) {
+            return;
+          }
+
           const prevOverflow = d.body.style.overflow;
           const prevMaxHeight = d.body.style.maxHeight;
 
@@ -20,6 +24,6 @@ export const useModalScrollLock = () => {
         },
         () => {},
       ),
-    [],
+    [conditions],
   );
 };

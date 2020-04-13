@@ -223,5 +223,6 @@
   "FileInput.alt": "Preview image",
   "common.addedToCart": "Added!",
   "common.errors.invalidPhone": "Invalid phone number",
-  "common.errors.notTrimmed": "Leading/trailing whitespaces not allowed."
+  "common.errors.notTrimmed": "Leading/trailing whitespaces not allowed.",
+  "common.menu": "Menu"
 }
