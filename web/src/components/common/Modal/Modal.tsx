@@ -59,7 +59,7 @@ export const Modal = ({ children, className, isOpen, ...props }: IProps) => {
 
   return modalRoot
     ? ReactDOM.createPortal(
-        <CSSTransition in={isOpen} timeout={300} classNames="fading" unmountOnExit>
+        <CSSTransition in={isOpen} timeout={300} classNames="fading" unmountOnExit mountOnEnter appear  >
           <div css={fadingCSS} className={classNames('modal', 'is-active', className)} {...props}>
             {children}
           </div>

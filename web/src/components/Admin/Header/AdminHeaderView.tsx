@@ -6,37 +6,37 @@ import { NavLink, Link } from 'react-router-dom';
 
 import { IViewProps as IProps } from 'src/components/Admin/Header/AdminHeaderPresenter';
 import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
-import { ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
 import { Menu } from 'src/components/common/Menu/Menu';
+import { TriggerProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
 import { mediaQueries } from 'src/styles/media';
 
-const LanguageDrodownTrigger = ({ onClick, ...props }: ITriggerProps) => {
+const LanguageDrodownTrigger = React.forwardRef<any, PopoverTriggerProps>((props, ref) => {
   const intl = useIntl();
 
   const modifiedOnClick = React.useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
 
-      if (onClick) {
-        onClick(e);
+      if ('onClick' in props) {
+        props.onClick(e);
       }
     },
-    [onClick],
+    [props],
   );
 
   return (
     <Link
+      ref={ref}
       css={css`
         width: 100%;
       `}
       to="#"
       onClick={modifiedOnClick}
-      {...props}
     >
       {intl.formatMessage({ id: 'AdminMenu.changeLangaugeLinkText' })}
     </Link>
   );
-};
+});
 
 export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlShape }) => {
   return (

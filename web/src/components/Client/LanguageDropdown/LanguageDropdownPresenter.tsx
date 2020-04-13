@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { IProps as IDropdownProps } from 'src/components/common/Dropdown/Dropdown';
+import { TriggerProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
 import { IIntlService } from 'src/services/IntlService';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { safeWindow } from 'src/utils/dom';
@@ -14,7 +14,7 @@ export interface IViewProps {
   locales: string[];
   changeLocale: IIntlService['setLocale'];
   currentLocale: string;
-  TriggerComponent?: IDropdownProps['TriggerComponent'];
+  TriggerComponent?: React.ComponentType<PopoverTriggerProps>;
   className?: string;
 }
 
