@@ -9,7 +9,6 @@ import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Cl
 import { ITriggerProps } from 'src/components/common/Dropdown/Dropdown';
 import { Menu } from 'src/components/common/Menu/Menu';
 import { mediaQueries } from 'src/styles/media';
-import { fullWidthMixin } from 'src/styles/mixins';
 
 const LanguageDrodownTrigger = ({ onClick, ...props }: ITriggerProps) => {
   const intl = useIntl();
@@ -26,7 +25,14 @@ const LanguageDrodownTrigger = ({ onClick, ...props }: ITriggerProps) => {
   );
 
   return (
-    <Link css={fullWidthMixin} to="#" onClick={modifiedOnClick} {...props}>
+    <Link
+      css={css`
+        width: 100%;
+      `}
+      to="#"
+      onClick={modifiedOnClick}
+      {...props}
+    >
       {intl.formatMessage({ id: 'AdminMenu.changeLangaugeLinkText' })}
     </Link>
   );
@@ -97,7 +103,12 @@ export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlSh
       <Menu.Label>{intl.formatMessage({ id: 'AdminMenu.actionsLabel' })}</Menu.Label>
       <Menu.List>
         <Menu.Item>
-          <LanguageDropdown css={fullWidthMixin} TriggerComponent={LanguageDrodownTrigger} />
+          <LanguageDropdown
+            css={css`
+              width: 100%;
+            `}
+            TriggerComponent={LanguageDrodownTrigger}
+          />
         </Menu.Item>
         <Menu.Item>
           <Link to="#" onClick={onLogOutClick}>

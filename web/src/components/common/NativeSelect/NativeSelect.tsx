@@ -6,7 +6,6 @@ import * as React from 'react';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { HelpText } from 'src/components/common/HelpText/HelpText';
-import { alignItemsCenterMixin, flexMixin } from 'src/styles/mixins';
 
 export interface IProps<T = boolean> {
   children: Array<React.ReactElement<typeof Option>>;
@@ -31,8 +30,8 @@ export const NativeSelect = injectIntl(
   }: IProps & { intl: IntlShape }) => (
     <div
       css={css`
-        ${flexMixin};
-        ${alignItemsCenterMixin};
+        display: flex;
+        align-items: center;
       `}
     >
       <div

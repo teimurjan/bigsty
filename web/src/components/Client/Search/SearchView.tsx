@@ -1,22 +1,51 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
 import { IViewProps as IProps } from 'src/components/Client/Search/SearchPresenter';
-import { Dropdown } from 'src/components/common/Dropdown/Dropdown';
+import { Drawer } from 'src/components/common/Drawer/Drawer';
 import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
 import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
 import { DropdownItemLink } from 'src/components/common/DropdownItemLink/DropdownItemLink';
-import { Input } from 'src/components/common/Input/Input';
+import { IconLink } from 'src/components/common/IconLink/IconLink';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { Popover } from 'src/components/common/Popover/Popover';
 import { Tag } from 'src/components/common/Tag/Tag';
+import { UnderlinedInput } from 'src/components/common/UnderlinedInput/UnderlinedInput';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
+import { ITheme } from 'src/themes';
 import { formatMediaURL } from 'src/utils/url';
 
-export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoading, error, onSearchValueChange }) => {
+const inputCSS = css`
+  width: 300px !important;
+  max-width: 100%;
+
+  @media ${mediaQueries.maxWidth768} {
+    width: 90vw !important;
+  }
+`;
+
+const contentCSS = css`
+  ${inputCSS};
+  padding: 5px;
+`;
+
+export const SearchView: React.FC<IProps> = ({
+  categories,
+  productTypes,
+  isLoading,
+  error,
+  onSearchValueChange,
+  isOpen,
+  open,
+  close,
+}) => {
+  const theme = useTheme<ITheme>();
   const intl = useIntl();
   const [searchValue, setSearchValue] = React.useState('');
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(
@@ -82,30 +111,39 @@ export const SearchView: React.FC<IProps> = ({ categories, productTypes, isLoadi
     );
   }, [categories, error, intl, isLoading, productTypes]);
 
-  const dropdownCSS = css`
-    width: 300px;
-    max-width: 100%;
-
-    @media ${mediaQueries.maxWidth768} {
-      width: 100%;
-    }
-  `;
-
   return (
-    <Dropdown
-      css={dropdownCSS}
-      menuClassName={`css-${dropdownCSS.name}`}
-      trigger={({ open }) => (
-        <Input
-          css={dropdownCSS}
-          onFocus={open}
-          placeholder={`${intl.formatMessage({ id: 'Search.searchFor' })} 🔎`}
-          onChange={onSearchChange}
-          value={searchValue}
-        />
-      )}
-    >
-      {entity}
-    </Dropdown>
+    <>
+      <IconLink icon={faSearch} onClick={open} />
+      <Drawer isOpen={isOpen} close={close} fromSide="top">
+        <div
+          css={css`
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: ${theme.white};
+            box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15), 0 8px 8px 0 rgba(0, 0, 0, 0.05);
+          `}
+        >
+          <Popover<HTMLInputElement>
+            forceClose={searchValue === ''}
+            renderTrigger={({ ref, open }) => (
+              <UnderlinedInput
+                autoFocus
+                css={inputCSS}
+                ref={ref}
+                onFocus={open}
+                placeholder={intl.formatMessage({ id: 'Search.searchFor' })}
+                onChange={onSearchChange}
+                value={searchValue}
+              />
+            )}
+          >
+            <Popover.Content css={contentCSS}>{entity}</Popover.Content>
+          </Popover>
+        </div>
+      </Drawer>
+    </>
   );
 };

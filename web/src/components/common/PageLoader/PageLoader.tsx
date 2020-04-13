@@ -7,14 +7,6 @@ import SyncLoader from 'react-spinners/SyncLoader';
 import Transition from 'react-transition-group/Transition';
 
 import { useModalScrollLock } from 'src/hooks/useModalScrollLock';
-import {
-  alignItemsCenterMixin,
-  flexMixin,
-  fullHeightMixin,
-  fullWidthMixin,
-  justifyContentCenterMixin,
-  positionAbsoluteMixin,
-} from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
 import { PAGE_LOADER_ID, safeDocument } from 'src/utils/dom';
 
@@ -32,12 +24,12 @@ interface ILoaderProps extends React.HTMLAttributes<HTMLDivElement> {
 const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
   transition: opacity ${timeout}ms ease-in-out;
   opacity: ${shouldShow ? 1 : 0.01};
-  ${alignItemsCenterMixin};
-  ${flexMixin};
-  ${justifyContentCenterMixin};
-  ${positionAbsoluteMixin};
-  ${fullWidthMixin};
-  ${fullHeightMixin};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100vh;
   background: rgba(200, 200, 200, 0.3);
   backdrop-filter: blur(5px);
   top: 0;
@@ -45,7 +37,7 @@ const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
 
   > div {
     border-width: 5px;
-    border-color: ${theme.light} ${theme.light} transparent ${theme.light};
+    border-color: ${theme.whiteTer} ${theme.whiteTer} transparent ${theme.whiteTer};
     z-index: 778;
   }
 `;

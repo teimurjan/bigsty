@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { css, jsx, keyframes } from '@emotion/core';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Form, Field as FinalFormField, FieldRenderProps } from 'react-final-form';
@@ -14,6 +13,7 @@ import { Button } from 'src/components/common/Button/Button';
 import { FormPhoneField } from 'src/components/common/FormPhoneField/FormPhoneField';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { IconLink } from 'src/components/common/IconLink/IconLink';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Message } from 'src/components/common/Message/Message';
 import { Modal } from 'src/components/common/Modal/Modal';
@@ -22,12 +22,9 @@ import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Title } from 'src/components/common/Title/Title';
-import { textCenterMixin } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { parsePhoneNumber } from 'src/utils/phone';
-
-
 
 const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, addMore, remove, goToNextStep }) => {
   const intl = useIntl();
@@ -152,7 +149,11 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, erro
           >
             {intl.formatMessage({ id: 'Cart.order' })}
           </Button>
-          <div css={textCenterMixin}>
+          <div
+            css={css`
+              text-align: center;
+            `}
+          >
             {error && <HelpText type="is-danger">{intl.formatMessage({ id: error })}</HelpText>}
           </div>
         </form>
@@ -186,44 +187,37 @@ export const CartView: React.FC<IProps> = props => {
   const theme = useTheme<ITheme>();
   return (
     <React.Fragment>
-      <Button
-        onClick={open}
+      <div
         css={css`
-          border: none !important;
+          position: relative;
+          &:hover {
+            color: ${theme.dark};
+          }
         `}
       >
-        <span
-          css={css`
-            position: relative;
-            &:hover {
-              color: ${theme.dark};
-            }
-          `}
-          className="icon"
-        >
-          {cartItemsCount > 0 && (
-            <span
-              key={cartItemsCount}
-              css={css`
-                animation: ${bounce} 1s ease;
-                position: absolute;
-                width: 16px;
-                height: 16px;
-                font-weight: bold;
-                font-size: 10px;
-                top: -10px;
-                right: -10px;
-                background: ${theme.info};
-                color: white;
-                border-radius: 50%;
-              `}
-            >
-              {cartItemsCount}
-            </span>
-          )}
-          <FontAwesomeIcon size="lg" icon={faShoppingCart} />
-        </span>
-      </Button>
+        {cartItemsCount > 0 && (
+          <span
+            key={cartItemsCount}
+            css={css`
+              animation: ${bounce} 1s ease;
+              position: absolute;
+              width: 16px;
+              height: 16px;
+              text-align: center;
+              font-weight: bold;
+              font-size: 10px;
+              top: -10px;
+              right: -10px;
+              background: ${theme.info};
+              color: white;
+              border-radius: 50%;
+            `}
+          >
+            {cartItemsCount}
+          </span>
+        )}
+        <IconLink onClick={open} icon={faShoppingCart} />
+      </div>
       <Modal isOpen={isOpen}>
         <ModalBackground onClick={close} />
         <ModalClose className="is-large" onClick={close} />

@@ -27,7 +27,7 @@ export const FormPhoneField = ({ input, meta, label }: FieldRenderProps<string> 
       }}
       renderInput={() => (
         <InputMask disabled={false} mask="+\9\96 (999) 99-99-99" {...inputProps}>
-          {(props: React.HTMLProps<HTMLInputElement>) => <Input disabled={false} {...props} />}
+          {(props: React.HTMLAttributes<HTMLInputElement>) => <Input disabled={false} {...props} />}
         </InputMask>
       )}
       helpTextProps={{

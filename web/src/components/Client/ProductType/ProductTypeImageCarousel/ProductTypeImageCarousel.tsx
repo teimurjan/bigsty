@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
 import { Image } from 'src/components/common/Image/Image';
 import { mediaQueries } from 'src/styles/media';
-import { flexMixin } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
 
 const CONTROL_IMAGE_SIZE = '70px';
@@ -32,7 +31,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
             <Image
               css={css`
                 margin: auto;
-                ${flexMixin};
+                display: flex;
                 height: 30vw;
                 width: 30vw;
 
@@ -58,7 +57,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
         css={css`
           height: ${CONTROL_IMAGE_SIZE};
           overflow: auto;
-          ${flexMixin};
+          display: flex;
           width: 30vw;
 
           @media ${mediaQueries.minWidth1600} {
@@ -87,7 +86,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
                 width: ${CONTROL_IMAGE_SIZE};
                 border: ${isActive ? `3px solid ${theme.info}` : 'unset'};
                 margin-right: 10px;
-                ${flexMixin};
+                display: flex;
               `}
               imgProps={{ src: image, style: { margin: 'auto' }, alt: image }}
             />

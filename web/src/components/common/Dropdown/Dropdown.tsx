@@ -1,9 +1,11 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import classNames from 'classnames';
 import * as React from 'react';
 
+import { IconLink } from 'src/components/common/IconLink/IconLink';
 import { useBoolean } from 'src/hooks/useBoolean';
 import useClickOutside from 'src/hooks/useClickOutside';
 
@@ -15,6 +17,7 @@ type RenderChildren = (props: {
 }) => React.ReactNode;
 
 export type ITriggerProps = {
+  className?: string;
   onClick: React.MouseEventHandler;
 };
 
@@ -23,6 +26,7 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   TriggerComponent?: React.ComponentClass<ITriggerProps> | React.StatelessComponent<ITriggerProps>;
   trigger?: React.ReactNode | RenderChildren;
   menuClassName?: string;
+  align?: 'left' | 'right';
 }
 
 export const Dropdown = ({
@@ -31,6 +35,7 @@ export const Dropdown = ({
   menuClassName,
   TriggerComponent,
   trigger: triggerProp,
+  align = 'left',
   ...props
 }: IProps) => {
   const { value: isOpen, toggle, setNegative: close, setPositive: open } = useBoolean();
@@ -52,7 +57,7 @@ export const Dropdown = ({
   }, [TriggerComponent, close, isOpen, open, toggle, triggerProp]);
 
   return (
-    <div className={classNames('dropdown', className, { 'is-active': isOpen })} {...props}>
+    <div className={classNames('dropdown', className, { 'is-active': isOpen }, `is-${align}`)} {...props}>
       <div
         ref={triggerRef}
         css={css`
@@ -70,3 +75,20 @@ export const Dropdown = ({
     </div>
   );
 };
+
+const IconTrigger = ({ onClick, icon, className }: ITriggerProps & { icon: IconProp }) => {
+  const modifiedOnClick = React.useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+
+      if (onClick) {
+        onClick(e);
+      }
+    },
+    [onClick],
+  );
+
+  return <IconLink onClick={modifiedOnClick} icon={icon} className={className} />;
+};
+
+Dropdown.IconTrigger = IconTrigger;

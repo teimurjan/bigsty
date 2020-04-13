@@ -17,9 +17,8 @@ import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Title } from 'src/components/common/Title/Title';
 import { mediaQueries } from 'src/styles/media';
-import { flexMixin } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
-import { formatMediaURL, withPublicURL } from 'src/utils/url';
+import { formatMediaURL } from 'src/utils/url';
 
 const getAllFeatureValuesGroupedByType = (
   products: IProps['products'],
@@ -120,7 +119,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         css={css`
           align-items: flex-start;
           margin-bottom: 1.5rem;
-          ${flexMixin};
+          display: flex;
 
           @media ${mediaQueries.maxWidth768} {
             flex-direction: column;
@@ -129,7 +128,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
       >
         <div
           css={css`
-            ${flexMixin};
+            display: flex;
             justify-content: flex-start;
             width: 50%;
 
@@ -146,7 +145,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         </div>
         <div
           css={css`
-            ${flexMixin};
+            display: flex;
             align-items: flex-start;
             padding-left: 1.5rem;
             flex-direction: column;

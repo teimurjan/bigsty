@@ -5,7 +5,6 @@ import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-import { alignItemsCenterMixin, flexMixin, fullWidthMixin, justifyContentCenterMixin } from 'src/styles/mixins';
 import { ITheme } from 'src/themes';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -18,10 +17,10 @@ export const LoaderLayout = ({ color, ...props }: IProps) => {
   return (
     <div
       css={css`
-        ${alignItemsCenterMixin};
-        ${flexMixin};
-        ${justifyContentCenterMixin};
-        ${fullWidthMixin};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
       `}
       {...props}
     >

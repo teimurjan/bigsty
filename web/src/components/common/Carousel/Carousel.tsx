@@ -1,10 +1,9 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import classNames from 'classnames';
+import Link from 'next/link';
 import * as React from 'react';
 
-import { flexMixin } from 'src/styles/mixins';
-import Link from 'next/link';
 import { getPageHref } from 'src/helpers/link';
 
 interface ICarouselItemProps {
@@ -62,7 +61,7 @@ export const Carousel: React.FC<IProps> = ({ className, children, activeIndex, f
     >
       <div
         css={css`
-          ${flexMixin};
+          display: flex;
           width: ${width};
           transform: translateX(-${activeIndex * 100}%);
           transition: transform 500ms ease-in-out;

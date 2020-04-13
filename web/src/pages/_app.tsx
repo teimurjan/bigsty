@@ -9,20 +9,20 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { createIntl, createIntlCache } from 'react-intl';
+import { Then } from 'ttypes';
 
+import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
 import { dependenciesFactory, IDependenciesFactoryArgs } from 'src/DI/DependenciesContainer';
 import { DIProvider } from 'src/DI/DI';
 import { useMedia } from 'src/hooks/useMedia';
 import { AppStateProvider, useAppState } from 'src/state/AppState';
+import { CategoriesStateProvider } from 'src/state/CategoriesState';
 import { IntlStateProvider } from 'src/state/IntlState';
 import { RatesStateProvider } from 'src/state/RatesState';
 import { UserStateProvider, useUserState } from 'src/state/UserState';
 import { mediaQueries } from 'src/styles/media';
 import { defaultTheme } from 'src/themes';
 import { withPublicURL } from 'src/utils/url';
-import { CategoriesStateProvider } from 'src/state/CategoriesState';
-import { Then } from 'ttypes';
-import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
 
 const intlCache = createIntlCache();
 

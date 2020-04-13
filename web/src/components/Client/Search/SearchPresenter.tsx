@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { ICategoryListResponseItem } from 'src/api/CategoryAPI';
 import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
-import { useDebounce } from 'src/hooks/useDebounce';
+import { useBoolean } from 'src/hooks/useBoolean';
 import { ISearchService } from 'src/services/SearchService';
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
@@ -17,9 +17,13 @@ export interface IViewProps {
   error: string | undefined;
   isLoading: boolean;
   onSearchValueChange: (value: string) => Promise<void>;
+  isOpen: boolean;
+  close: () => void;
+  open: () => void;
 }
 
 export const SearchPresenter = ({ service, View }: IProps) => {
+  const { value: isOpen, setPositive: open, setNegative: close } = useBoolean();
   const [data, setData] = React.useState<{
     categories: { [id: string]: ICategoryListResponseItem };
     productTypes: { [id: string]: IProductTypeListResponseItem };
@@ -28,14 +32,13 @@ export const SearchPresenter = ({ service, View }: IProps) => {
     categories: [],
     productTypes: [],
   });
-  const [isLoading, setLoading] = React.useState(true);
+  const [isLoading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
-
-  const isLoadingDebounced = useDebounce(isLoading, 1000);
 
   const onSearchValueChange = React.useCallback(
     async (value: string) => {
       setError(undefined);
+      setLoading(true);
       try {
         if (value.length === 0) {
           setData({ categories: {}, productTypes: {} });
@@ -56,7 +59,10 @@ export const SearchPresenter = ({ service, View }: IProps) => {
 
   return (
     <View
-      isLoading={isLoadingDebounced}
+      isOpen={isOpen}
+      open={open}
+      close={close}
+      isLoading={isLoading}
       categories={agregateOrderedMapToArray(data.categories, order.categories)}
       productTypes={agregateOrderedMapToArray(data.productTypes, order.productTypes)}
       onSearchValueChange={onSearchValueChange}

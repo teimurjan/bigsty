@@ -9,7 +9,6 @@ import { NavContainer } from 'src/components/Client/Nav/NavContainer';
 import { Container } from 'src/components/common/Container/Container';
 import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
-import { flexMixin } from 'src/styles/mixins';
 
 export const Layout: React.FC = ({ children }) => {
   const isMobile = useMedia([mediaQueries.maxWidth768], [true], false);
@@ -30,7 +29,7 @@ export const Layout: React.FC = ({ children }) => {
           css={css`
             padding-top: 100px;
             min-height: calc(100vh - 130px);
-            ${flexMixin};
+            display: flex;
           `}
         >
           {!isMobile && nav}
