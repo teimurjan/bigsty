@@ -1,21 +1,21 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
 import { ITheme } from 'src/themes';
-
 
 interface IProps {
   href?: string;
   onClick?: React.MouseEventHandler;
   icon: IconProp;
   className?: string;
+  size?: FontAwesomeIconProps['size'];
 }
 
-export const IconLink = ({ onClick, icon, className, href = '#' }: IProps) => {
+export const IconLink = ({ onClick, icon, className, href = '#', size = 'lg' }: IProps) => {
   const theme = useTheme<ITheme>();
 
   return (
@@ -32,7 +32,7 @@ export const IconLink = ({ onClick, icon, className, href = '#' }: IProps) => {
       className={className}
       onClick={onClick}
     >
-      <FontAwesomeIcon size="lg" icon={icon} />
+      <FontAwesomeIcon size={size} icon={icon} />
     </a>
   );
 };

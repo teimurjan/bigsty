@@ -39,7 +39,7 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
         width: 100%;
 
         @media ${mediaQueries.maxWidth768} {
-          height: 120px;
+          height: 90px;
           margin-bottom: 5px;
         }
       `}
@@ -48,11 +48,14 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
         <button
           onClick={open}
           css={css`
-            padding: 10px 15px 10px 10px !important;
+            padding: 0px 15px 10px 10px !important;
             outline: none;
             font-size: 14px;
             font-weight: bold;
             display: none;
+            border: none;
+            background: transparent;
+            text-decoration: underline;
 
             @media ${mediaQueries.maxWidth768} {
               display: inline-block;
@@ -61,9 +64,12 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
         >
           {intl.formatMessage({ id: 'common.menu' })}{' '}
           <IconLink
+            size="sm"
             css={css`
-              transition: transform 300ms;
+              display: inline-block;
+              transition: transform 300ms ease-in-out;
               transform: rotateZ(${isOpen ? 180 : 0}deg);
+              transition-delay: 0.3s;
             `}
             icon={faCaretRight}
           />
