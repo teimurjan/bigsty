@@ -1,12 +1,15 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
 
 import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
+import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
 import useClickOutside from 'src/hooks/useClickOutside';
 import { useModalScrollLock } from 'src/hooks/useModalScrollLock';
+import { ITheme } from 'src/themes';
 import { safeDocument } from 'src/utils/dom';
 
 type FromSide = 'top' | 'left' | 'bottom' | 'right';
@@ -90,7 +93,14 @@ const getSlidingCSS = (from: FromSide) => {
     }
 
     & > .modal-background {
+      opacity: 0;
       z-index: 98;
+      transition: opacity 175ms ease-in-out;
+    }
+
+    & > .modal-close {
+      opacity: 0;
+      z-index: 100;
       transition: opacity 175ms ease-in-out;
     }
 
@@ -123,6 +133,21 @@ const getSlidingCSS = (from: FromSide) => {
     &.sliding-exit-done > .modal-background {
       opacity: 0;
     }
+
+    &.sliding-enter > .modal-close {
+      opacity: 0;
+    }
+    &.sliding-enter-active > .modal-close,
+    &.sliding-enter-done > .modal-close {
+      opacity: 1;
+    }
+    &.sliding-exit > .modal-close {
+      opacity: 1;
+    }
+    &.sliding-exit-active > .modal-close,
+    &.sliding-exit-done > .modal-close {
+      opacity: 0;
+    }
   `;
 };
 
@@ -136,6 +161,8 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   onEntered?: () => void;
   onExit?: () => void;
   onExited?: () => void;
+  lockScroll?: boolean;
+  showClose?: boolean;
 }
 
 export const Drawer = ({
@@ -149,9 +176,12 @@ export const Drawer = ({
   onExit,
   onExited,
   backdrop,
+  lockScroll = true,
+  showClose = true,
   ...props
 }: IProps) => {
-  useModalScrollLock(isOpen);
+  const theme = useTheme<ITheme>();
+  useModalScrollLock(isOpen, lockScroll);
 
   const ref = React.useRef<HTMLDivElement>(null);
   useClickOutside([ref], () => {
@@ -179,6 +209,23 @@ export const Drawer = ({
             <div className="drawer-content" ref={ref} {...props}>
               {children}
             </div>
+            {showClose && (
+              <ModalClose
+                css={css`
+                  &::after,
+                  &::before {
+                    background: ${fromSide === 'top' || fromSide === 'right' ? theme.grey : theme.white};
+                  }
+                  &:hover {
+                    &::after,
+                    &::before {
+                      background: ${theme.white};
+                    }
+                  }
+                `}
+                onClick={close}
+              />
+            )}
             {backdrop && <ModalBackground></ModalBackground>}
           </div>
         </CSSTransition>,

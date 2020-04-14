@@ -123,6 +123,7 @@ export const SearchView: React.FC<IProps> = ({
         onEnter={setDrawerClosed}
         onEntered={setDrawerOpened}
         onExit={setDrawerClosed}
+        lockScroll={false}
       >
         <div
           css={css`

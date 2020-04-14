@@ -46,13 +46,30 @@ export const ProductTypeCard = ({ productType }: IProps) => {
           </CardImage>
           <CardContent
             css={css`
+              display: flex;
+              flex-direction: column;
+
               @media ${mediaQueries.maxWidth768} {
                 padding: 0.5rem;
               }
             `}
           >
-            <Subtitle size={5}>{productType.name}</Subtitle>
-            <Title size={5}>{productType.products && <PriceRangeText range={productType.products} />}</Title>
+            <Subtitle
+              css={css`
+                margin-bottom: 0.5rem !important;
+              `}
+              size={5}
+            >
+              {productType.name}
+            </Subtitle>
+            <Title
+              css={css`
+                margin-top: auto !important;
+              `}
+              size={5}
+            >
+              {productType.products && <PriceRangeText range={productType.products} />}
+            </Title>
           </CardContent>
           <Button
             css={css`

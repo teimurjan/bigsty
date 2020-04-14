@@ -5,7 +5,9 @@ import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontaw
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
+import { usePreventedDefault } from 'src/hooks/usePreventedDefault';
 import { ITheme } from 'src/themes';
+import { preventDefault } from 'src/utils/dom';
 
 interface IProps {
   href?: string;
@@ -15,12 +17,13 @@ interface IProps {
   size?: FontAwesomeIconProps['size'];
 }
 
-export const IconLink = ({ onClick, icon, className, href = '#', size = 'lg' }: IProps) => {
+export const IconLink = ({ onClick, icon, className, href, size = 'lg' }: IProps) => {
   const theme = useTheme<ITheme>();
+  const preventedOnClick = usePreventedDefault(onClick);
 
   return (
     <a
-      href={href}
+      href={href || '#'}
       css={css`
         padding: 7px;
         color: ${theme.dark};
@@ -30,7 +33,7 @@ export const IconLink = ({ onClick, icon, className, href = '#', size = 'lg' }: 
         }
       `}
       className={className}
-      onClick={onClick}
+      onClick={href ? onClick : preventedOnClick}
     >
       <FontAwesomeIcon size={size} icon={icon} />
     </a>
