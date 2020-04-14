@@ -76,6 +76,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                   asPath={banner.link_text ? undefined : banner.link}
                   css={css`
                     width: 100%;
+                    min-height: 200px;
                   `}
                 >
                   <img

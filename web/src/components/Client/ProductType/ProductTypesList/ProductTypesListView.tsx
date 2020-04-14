@@ -44,7 +44,7 @@ export const ProductTypesListView = injectIntl(
             `}
             className="is-mobile"
           >
-            {productTypes.map(productType => (
+            {[...productTypes, ...productTypes, ...productTypes].map(productType => (
               <Column
                 key={productType.id}
                 className={classNames('is-half-mobile', 'is-one-third-desktop', 'is-one-quarter-widescreen')}
