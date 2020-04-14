@@ -70,6 +70,14 @@ export const ProductTypePagePresenter: React.FC<IProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+    // When searching on product type page initialProps are changing and needed to be set to state
+    React.useEffect(() => {
+      if (initialProps) {
+        setError(initialProps.error);
+        setProductType(initialProps.productType);
+      }
+    }, [initialProps]);
+
   return (
     <View
       actionText={actionText}
