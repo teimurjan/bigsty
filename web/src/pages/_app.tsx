@@ -19,10 +19,10 @@ import { IntlStateProvider } from 'src/state/IntlState';
 import { RatesStateProvider } from 'src/state/RatesState';
 import { UserStateProvider, useUserState } from 'src/state/UserState';
 import { mediaQueries } from 'src/styles/media';
+import { defaultTheme } from 'src/themes';
 import { withPublicURL } from 'src/utils/url';
 
 import 'bulma/css/bulma.css';
-import { defaultTheme } from 'src/themes';
 
 const intlCache = createIntlCache();
 
