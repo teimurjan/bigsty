@@ -10,7 +10,6 @@ import { ICategoryService } from 'src/services/CategoryService';
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-
 export interface IProps extends AdminCategoriesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: ICategoryService;

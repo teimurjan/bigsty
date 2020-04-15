@@ -8,7 +8,6 @@ import { useDependencies } from 'src/DI/DI';
 import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
 import { useAdminProductsState } from 'src/state/AdminProductsState';
 
-
 export const AdminProductsCreateContainer = () => {
   const history = useHistory();
 

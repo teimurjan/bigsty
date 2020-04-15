@@ -12,7 +12,6 @@ import { IProductTypeService } from 'src/services/ProductTypeService';
 import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
 import { IContextValue as AdminProductsStateContextValue } from 'src/state/AdminProductsState';
 
-
 export interface IProps extends AdminFeatureValuesStateContextValue, AdminProductsStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   productService: IProductService;

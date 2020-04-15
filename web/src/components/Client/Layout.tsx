@@ -3,7 +3,6 @@ import { css, jsx } from '@emotion/core';
 import * as React from 'react';
 
 import { CartContainer } from 'src/components/Client/Cart/CartContainer';
-import { FooterView } from 'src/components/Client/Footer/FooterView';
 import { HeaderContainer } from 'src/components/Client/Header/HeaderContainer';
 import { NavContainer } from 'src/components/Client/Nav/NavContainer';
 import { Container } from 'src/components/common/Container/Container';
@@ -28,6 +27,7 @@ export const Layout: React.FC = ({ children }) => {
         <div
           css={css`
             padding-top: 100px;
+            padding-bottom: 40px;
             min-height: calc(100vh - 130px);
             display: flex;
           `}
@@ -42,7 +42,6 @@ export const Layout: React.FC = ({ children }) => {
           </div>
         </div>
       </Container>
-      <FooterView />
     </React.Fragment>
   );
 };

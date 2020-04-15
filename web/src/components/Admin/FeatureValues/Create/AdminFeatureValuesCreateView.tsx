@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
-
 import { IViewProps as IProps } from 'src/components/Admin/FeatureValues/Create/AdminFeatureValuesCreatePresenter';
 import { Fields } from 'src/components/Admin/FeatureValues/Create/Fields';
 import { ModalForm } from 'src/components/Admin/ModalForm';

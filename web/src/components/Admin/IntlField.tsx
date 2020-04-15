@@ -47,7 +47,7 @@ const renderIntlField = ({
       labelProps={{
         children: (
           <>
-            {label} <Tag color="is-info">{locale.name}</Tag>
+            {label} <Tag color="is-primary">{locale.name}</Tag>
           </>
         ),
       }}

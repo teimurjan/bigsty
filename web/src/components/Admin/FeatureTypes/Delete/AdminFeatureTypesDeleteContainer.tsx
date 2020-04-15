@@ -4,7 +4,6 @@ import { DeleteModalContainer } from 'src/components/Admin/DeleteModal/DeleteMod
 import { useDependencies } from 'src/DI/DI';
 import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 
-
 export const AdminFeatureTypesDeleteContainer = () => {
   const { dependencies } = useDependencies();
   const {

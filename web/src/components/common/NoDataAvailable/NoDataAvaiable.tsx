@@ -9,7 +9,6 @@ import { HeroBody } from 'src/components/common/HeroBody/HeroBody';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Title } from 'src/components/common/Title/Title';
 
-
 interface IProps {
   title?: string | undefined;
   description?: string | undefined;

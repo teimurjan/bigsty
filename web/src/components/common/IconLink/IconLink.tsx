@@ -6,8 +6,6 @@ import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
 import { usePreventedDefault } from 'src/hooks/usePreventedDefault';
-import { ITheme } from 'src/themes';
-import { preventDefault } from 'src/utils/dom';
 
 interface IProps {
   href?: string;
@@ -18,7 +16,7 @@ interface IProps {
 }
 
 export const IconLink = ({ onClick, icon, className, href, size = 'lg' }: IProps) => {
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
   const preventedOnClick = usePreventedDefault(onClick);
 
   return (
@@ -26,10 +24,10 @@ export const IconLink = ({ onClick, icon, className, href, size = 'lg' }: IProps
       href={href || '#'}
       css={css`
         padding: 7px;
-        color: ${theme.dark};
+        color: ${theme.dark} !important;
 
         &:hover {
-          background-color: ${theme.whiteTer};
+          background-color: ${theme.light};
         }
       `}
       className={className}

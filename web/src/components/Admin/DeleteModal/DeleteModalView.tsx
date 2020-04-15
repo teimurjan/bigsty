@@ -9,7 +9,6 @@ import { ModalBackground } from 'src/components/common/ModalBackground/ModalBack
 import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 
-
 export const DeleteModalView = ({
   isOpen,
   onClose,

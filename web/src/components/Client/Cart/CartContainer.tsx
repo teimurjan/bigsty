@@ -5,7 +5,6 @@ import { CartView } from 'src/components/Client/Cart/CartView';
 import { useDependencies } from 'src/DI/DI';
 import { useUserState } from 'src/state/UserState';
 
-
 export const CartContainer = () => {
   const {
     dependencies: {

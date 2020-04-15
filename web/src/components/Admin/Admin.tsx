@@ -39,7 +39,6 @@ const arrowDivider = (
       font-size: 20px;
       margin: 10px auto 10px auto;
     `}
-    className="has-text-dark"
     icon={faArrowDown}
   />
 );

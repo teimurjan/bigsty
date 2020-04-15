@@ -7,7 +7,6 @@ import { FormNativeSelectField } from 'src/components/common/FormNativeSelectFie
 import { IContextValue as AdminCategoriesStateContextValue } from 'src/state/AdminCategoriesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-
 interface IParentCategorySelectProps extends FieldRenderProps<string> {
   categories: AdminCategoriesStateContextValue['adminCategoriesState']['categories'];
 }

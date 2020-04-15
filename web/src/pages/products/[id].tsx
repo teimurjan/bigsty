@@ -1,10 +1,9 @@
+import { GetServerSideProps } from 'next';
 import * as React from 'react';
-import { Then } from 'ttypes';
 
 import { Layout } from 'src/components/Client/Layout';
 import { ProductTypePageContainer } from 'src/components/Client/ProductTypePage/ProductTypePageContainer';
 import { dependenciesFactory } from 'src/DI/DependenciesContainer';
-import { GetServerSideProps } from 'next';
 
 export default ({ productType, products, error }: Then<ReturnType<typeof getServerSideProps>>['props']) => (
   <Layout>

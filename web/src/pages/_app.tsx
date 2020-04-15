@@ -1,5 +1,3 @@
-import 'bulma/css/bulma.css';
-
 import { CacheProvider } from '@emotion/core';
 import { cache } from 'emotion';
 import { ThemeProvider } from 'emotion-theming';
@@ -9,9 +7,9 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { createIntl, createIntlCache } from 'react-intl';
-import { Then } from 'ttypes';
 
 import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
+import { PageProgressBar } from 'src/components/PageProgressBar/PageProgressBar';
 import { dependenciesFactory, IDependenciesFactoryArgs } from 'src/DI/DependenciesContainer';
 import { DIProvider } from 'src/DI/DI';
 import { useMedia } from 'src/hooks/useMedia';
@@ -21,8 +19,10 @@ import { IntlStateProvider } from 'src/state/IntlState';
 import { RatesStateProvider } from 'src/state/RatesState';
 import { UserStateProvider, useUserState } from 'src/state/UserState';
 import { mediaQueries } from 'src/styles/media';
-import { defaultTheme } from 'src/themes';
 import { withPublicURL } from 'src/utils/url';
+
+import 'bulma/css/bulma.css';
+import { defaultTheme } from 'src/themes';
 
 const intlCache = createIntlCache();
 
@@ -115,6 +115,7 @@ const CustomNextApp = ({
                     <EntryPoint>
                       <>
                         <CustomHead />
+                        <PageProgressBar />
                         <Component {...pageProps} />
                         <LoadingOverlay />
                       </>

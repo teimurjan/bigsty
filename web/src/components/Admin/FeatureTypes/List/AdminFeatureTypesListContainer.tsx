@@ -6,7 +6,6 @@ import { AdminFeatureTypesListView } from 'src/components/Admin/FeatureTypes/Lis
 import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 import { useIntlState } from 'src/state/IntlState';
 
-
 export const AdminFeatureTypesListContainer = () => {
   const { adminFeatureTypesState } = useAdminFeatureTypesState();
   const { intlState } = useIntlState();

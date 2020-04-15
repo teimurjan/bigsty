@@ -5,7 +5,6 @@ import { useDependencies } from 'src/DI/DI';
 import * as productTypeService from 'src/services/ProductTypeService';
 import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 
-
 const getErrorMessageID = (e: Error) => {
   if (e instanceof productTypeService.errors.ProductTypeHasProducts) {
     return 'errors.productTypeDeletion.hasProducts';

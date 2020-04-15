@@ -1,10 +1,9 @@
+import { GetServerSideProps } from 'next';
 import * as React from 'react';
-import { Then } from 'ttypes';
 
 import { Layout } from 'src/components/Client/Layout';
 import { ProductTypesPageContainer } from 'src/components/Client/ProducTypesPage/ProductTypesPageContainer';
 import { dependenciesFactory } from 'src/DI/DependenciesContainer';
-import { GetServerSideProps } from 'next';
 import { paramToIDOrSlug } from 'src/utils/params';
 
 export default ({

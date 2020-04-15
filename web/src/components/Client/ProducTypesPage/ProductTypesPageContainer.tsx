@@ -16,7 +16,7 @@ interface IProps {
 export const ProductTypesPageContainer = ({ initialProps }: IProps) => {
   const { dependencies } = useDependencies();
   const router = useRouter();
-  
+
   return (
     <ProductTypesPagePresenter
       categoryIdOrSlug={paramToIDOrSlug(router.query.id as string)}

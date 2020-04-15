@@ -4,7 +4,6 @@ import { DeleteModalContainer } from 'src/components/Admin/DeleteModal/DeleteMod
 import { useDependencies } from 'src/DI/DI';
 import { useAdminBannersState } from 'src/state/AdminBannersState';
 
-
 export const AdminBannersDeleteContainer = () => {
   const { dependencies } = useDependencies();
   const {

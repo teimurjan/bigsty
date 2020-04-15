@@ -22,7 +22,6 @@ import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Title } from 'src/components/common/Title/Title';
-import { ITheme } from 'src/themes';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { parsePhoneNumber } from 'src/utils/phone';
 
@@ -61,7 +60,7 @@ const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, add
         {intl.formatMessage({ id: 'Cart.total' })}: <PriceText price={totalPrice} />
       </Subtitle>
       <Button
-        color="is-info"
+        color="is-primary"
         css={css`
           display: block;
           width: 100%;
@@ -138,7 +137,7 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, erro
           <FinalFormField name="phone" component={FormPhoneField} parse={parsePhoneNumber} />
           <FinalFormField name="address" component={AddressField} />
           <Button
-            color="is-info"
+            color="is-primary"
             type="submit"
             css={css`
               display: block;
@@ -184,7 +183,7 @@ const bounce = keyframes`
 
 export const CartView: React.FC<IProps> = props => {
   const { isOpen, open, close, step, cartItemsCount } = props;
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
   return (
     <React.Fragment>
       <div
@@ -208,7 +207,7 @@ export const CartView: React.FC<IProps> = props => {
               font-size: 10px;
               top: -10px;
               right: -10px;
-              background: ${theme.info};
+              background: ${theme.primary};
               color: white;
               border-radius: 50%;
             `}
@@ -225,8 +224,8 @@ export const CartView: React.FC<IProps> = props => {
         <ModalContent
           css={css`
             padding: 1rem 2rem;
+            background: ${theme.light};
           `}
-          className="has-background-light"
         >
           {step === 0 && <FirstStep {...props} />}
           {step === 1 && <SecondStep {...props} />}

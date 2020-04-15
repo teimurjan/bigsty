@@ -188,7 +188,7 @@ export const AdminTable = <T extends { id: number }>({
                       margin-bottom: 0.25rem;
                     }
                   `}
-                  color="is-info"
+                  color="is-primary"
                 >
                   <FontAwesomeIcon icon={faPencilAlt} />
                 </ReactRouterLinkButton>

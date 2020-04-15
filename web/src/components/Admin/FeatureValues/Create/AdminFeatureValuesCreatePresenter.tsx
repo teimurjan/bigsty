@@ -11,7 +11,6 @@ import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/A
 import { IContextValue as AdminFeatureValuesStateContextValue } from 'src/state/AdminFeatureValuesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-
 export interface IProps
   extends AdminFeatureValuesStateContextValue,
     AdminFeatureTypesStateContextValue,

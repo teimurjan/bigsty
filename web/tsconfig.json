@@ -25,11 +25,12 @@
     ],
     "typeRoots": [
       "node_modules/@types",
-      "ttypes",
+      "ttypes"
     ]
   },
   "include": [
     "src",
+    "global.d.ts"
   ],
   "exclude": [
     "node_modules",

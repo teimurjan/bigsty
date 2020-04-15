@@ -5,7 +5,6 @@ import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
 import { useBoolean } from 'src/hooks/useBoolean';
-import { ITheme } from 'src/themes';
 
 export interface IProps {
   hasError?: boolean;
@@ -24,7 +23,7 @@ const HORIZONTAL_PADDING_PX = 2.5;
 
 export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
   ({ className, hasError, placeholder, onFocus, autoFocus, ...props }, ref) => {
-    const theme = useTheme<ITheme>();
+    const theme = useTheme<CSSTheme>();
     const { value: isFocused, setNegative: blur, setPositive: focus } = useBoolean();
 
     const onFocus_: IProps['onFocus'] = React.useCallback(
@@ -44,7 +43,7 @@ export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
 
           &::after {
             content: '';
-            background: linear-gradient(to right, ${theme.info} 50%, transparent 50%);
+            background: linear-gradient(to right, ${theme.primary} 50%, transparent 50%);
             transition: transform 500ms;
             transform: translateX(${isFocused ? 0 : -50}%);
             position: absolute;

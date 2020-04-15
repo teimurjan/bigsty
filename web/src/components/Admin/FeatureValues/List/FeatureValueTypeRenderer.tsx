@@ -4,8 +4,6 @@ import { IFeatureValueListRawIntlResponseItem } from 'src/api/FeatureValueAPI';
 import { IRenderer } from 'src/components/Admin/AdminTable';
 import { Table } from 'src/components/common/Table/Table';
 
-
-
 type BaseRenderer = IRenderer<IFeatureValueListRawIntlResponseItem>;
 
 export class FeatureValueTypeRenderer implements BaseRenderer {

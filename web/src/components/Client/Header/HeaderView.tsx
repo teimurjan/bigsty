@@ -1,9 +1,8 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import { faArrowLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from 'emotion-theming';
 import Link from 'next/link';
-import * as React from 'react';
 import { useIntl } from 'react-intl';
 
 import { IViewProps as IProps } from 'src/components/Client/Header/HeaderPresenter';
@@ -13,16 +12,14 @@ import { Container } from 'src/components/common/Container/Container';
 import { Drawer } from 'src/components/common/Drawer/Drawer';
 import { IconLink } from 'src/components/common/IconLink/IconLink';
 import { Navbar } from 'src/components/common/Navbar/Navbar';
-import { NavbarBurger } from 'src/components/common/NavbarBurger/NavbarBurger';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useWindowScroll } from 'src/hooks/useWindowScroll';
 import { mediaQueries } from 'src/styles/media';
-import { ITheme } from 'src/themes';
 import { withPublicURL } from 'src/utils/url';
 
 export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
   const intl = useIntl();
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
 
   const { value: isOpen, setPositive: open, setNegative: close } = useBoolean();
 
@@ -39,7 +36,7 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
         width: 100%;
 
         @media ${mediaQueries.maxWidth768} {
-          height: 90px;
+          height: 100px;
           margin-bottom: 5px;
         }
       `}
@@ -94,12 +91,18 @@ export const HeaderView = ({ user, onLogOutClick, nav, cart }: IProps) => {
           `}
         >
           <Link href="/">
-            <a href="/" className="navbar-item">
+            <a
+              css={css`
+                background: transparent !important;
+              `}
+              href="/"
+              className="navbar-item"
+            >
               <img
                 alt={intl.formatMessage({ id: 'common.logo' })}
                 css={css`
-                  max-height: 4.5rem !important;
-                  padding-top: 1rem;
+                  max-height: 3.5rem !important;
+                  padding-top: 10px;
 
                   @media ${mediaQueries.maxWidth768} {
                     max-height: 2.5rem !important;

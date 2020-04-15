@@ -77,6 +77,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                   css={css`
                     width: 100%;
                     min-height: 200px;
+                    overflow: hidden;
                   `}
                 >
                   <img

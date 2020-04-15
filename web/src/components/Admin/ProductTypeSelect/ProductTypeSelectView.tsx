@@ -5,7 +5,6 @@ import { useIntl } from 'react-intl';
 import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 
-
 interface IProps {
   productTypes: IProductTypeListRawIntlMinifiedResponseItem[];
 }

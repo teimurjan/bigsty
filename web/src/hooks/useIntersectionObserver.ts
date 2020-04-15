@@ -10,7 +10,7 @@ export const useIntersectionObserver = (ref: React.RefObject<HTMLElement>, optio
     if (refCurrent) {
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-          setIntersecting(entry.isIntersecting)
+          setIntersecting(entry.isIntersecting);
           if (entry.isIntersecting) {
             setHasIntersected(true);
           }

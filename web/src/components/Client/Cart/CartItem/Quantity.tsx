@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 import { useIntl } from 'react-intl';
 
 import { Button } from 'src/components/common/Button/Button';
@@ -14,6 +15,7 @@ interface IProps {
 
 export const Quantity = ({ count, allowedCount, onAddClick, onRemoveClick }: IProps) => {
   const intl = useIntl();
+  const theme = useTheme<CSSTheme>();
 
   return (
     <div
@@ -26,7 +28,11 @@ export const Quantity = ({ count, allowedCount, onAddClick, onRemoveClick }: IPr
       <div>
         {intl.formatMessage({ id: 'common.quantity' })}: {count}
         {count > allowedCount && (
-          <small className="has-text-danger">
+          <small
+            css={css`
+              color: ${theme.danger};
+            `}
+          >
             <br />
             {intl.formatMessage({ id: 'Cart.onlySomeAvailable' }, { quantity: allowedCount })}
           </small>

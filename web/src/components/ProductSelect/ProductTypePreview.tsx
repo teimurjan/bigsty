@@ -8,7 +8,6 @@ import {
 import { ProductTypePageView } from 'src/components/Client/ProductTypePage/ProductTypePageView';
 import { useDependencies } from 'src/DI/DI';
 
-
 export interface IProps {
   id: number;
   action: IPresenterProps['action'];

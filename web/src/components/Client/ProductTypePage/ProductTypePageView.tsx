@@ -17,7 +17,6 @@ import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Title } from 'src/components/common/Title/Title';
 import { mediaQueries } from 'src/styles/media';
-import { ITheme } from 'src/themes';
 import { formatMediaURL } from 'src/utils/url';
 
 const getAllFeatureValuesGroupedByType = (
@@ -41,7 +40,7 @@ const getAllFeatureValuesGroupedByType = (
 
 export const ProductTypePageView = ({ productType, products, error, isLoading, action, actionText }: IProps) => {
   const intl = useIntl();
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
   const [activeImageIndex, setActiveImageIndex] = React.useState(0);
 
   const allImages = products
@@ -190,17 +189,22 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             {matchingProduct && matchingProduct.quantity > 0 ? (
               <Subtitle
                 css={css`
+                  color: ${theme.dark};
                   del {
                     color: ${theme.danger};
                   }
                 `}
-                className="has-text-dark"
                 size={3}
               >
                 <PriceCrossedText price={matchingProduct.price} discount={matchingProduct.discount} />
               </Subtitle>
             ) : (
-              <Subtitle className="has-text-grey-light" size={3}>
+              <Subtitle
+                css={css`
+                  color: ${theme.greyLight};
+                `}
+                size={3}
+              >
                 {intl.formatMessage({ id: 'ProductPage.notInStock' })}
               </Subtitle>
             )}
@@ -213,7 +217,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
                 margin-top: 1.5rem;
                 text-transform: uppercase;
               `}
-              color="is-info"
+              color="is-primary"
             >
               {actionText}
             </Button>

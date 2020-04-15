@@ -15,7 +15,6 @@ import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { IStateCacheStorage } from 'src/storage/StateCacheStorage';
 import { objectWithout } from 'src/utils/object';
 
-
 export interface IProps
   extends AdminCategoriesStateContextValue,
     AdminFeatureTypesStateContextValue,

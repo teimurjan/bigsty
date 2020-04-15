@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
 
-
 export interface IProps extends React.HTMLAttributes<HTMLAnchorElement> {
   children?: React.ReactNode;
 }

@@ -7,7 +7,6 @@ import { LoginFormView } from 'src/components/Login/LoginForm/LoginFormView';
 import { useDependencies } from 'src/DI/DI';
 import { useUserState } from 'src/state/UserState';
 
-
 export const LoginFormContainer = () => {
   const router = useRouter();
 

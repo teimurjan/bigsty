@@ -11,7 +11,6 @@ import { IFeatureTypeService } from 'src/services/FeatureTypeService';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-
 export interface IProps extends AdminFeatureTypesStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: IFeatureTypeService;

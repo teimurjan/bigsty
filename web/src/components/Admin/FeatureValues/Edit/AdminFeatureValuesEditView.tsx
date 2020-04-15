@@ -5,7 +5,6 @@ import { Fields } from 'src/components/Admin/FeatureValues/Create/Fields';
 import { IViewProps as IProps } from 'src/components/Admin/FeatureValues/Edit/AdminFeatureValuesEditPresenter';
 import { ModalForm } from 'src/components/Admin/ModalForm';
 
-
 export const AdminFeatureValuesEditView = ({
   isOpen,
   edit,

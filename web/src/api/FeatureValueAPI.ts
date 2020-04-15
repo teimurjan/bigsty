@@ -4,7 +4,6 @@ import { IFeatureTypeListRawIntlResponseItem, IFeatureTypeListResponseItem } fro
 import { IHeadersManager } from 'src/manager/HeadersManager';
 import { buildQueryString } from 'src/utils/queryString';
 
-
 export interface IFeatureValueListResponseItem {
   id: number;
   name: string;

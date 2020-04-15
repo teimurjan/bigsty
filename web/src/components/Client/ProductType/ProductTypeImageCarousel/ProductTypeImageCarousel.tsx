@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
 import { Image } from 'src/components/common/Image/Image';
 import { mediaQueries } from 'src/styles/media';
-import { ITheme } from 'src/themes';
 
 const CONTROL_IMAGE_SIZE = '70px';
 
@@ -17,7 +16,7 @@ interface IProps {
 }
 
 export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImageIndex, setActiveImageIndex }) => {
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
 
   return (
     <div
@@ -84,7 +83,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
                 cursor: pointer;
                 height: ${CONTROL_IMAGE_SIZE};
                 width: ${CONTROL_IMAGE_SIZE};
-                border: ${isActive ? `3px solid ${theme.info}` : 'unset'};
+                border: ${isActive ? `3px solid ${theme.primary}` : 'unset'};
                 margin-right: 10px;
                 display: flex;
               `}

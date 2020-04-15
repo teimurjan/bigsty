@@ -5,7 +5,6 @@ import { HeaderView } from 'src/components/Client/Header/HeaderView';
 import { useAppState } from 'src/state/AppState';
 import { useUserState } from 'src/state/UserState';
 
-
 export const HeaderContainer = (props: Pick<IViewProps, 'nav' | 'cart'>) => {
   const { appState } = useAppState();
   const { userState } = useUserState();

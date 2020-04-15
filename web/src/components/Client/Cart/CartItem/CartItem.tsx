@@ -8,9 +8,6 @@ import { PriceCrossedText } from 'src/components/Client/Price/Price';
 import { Image } from 'src/components/common/Image/Image';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Title } from 'src/components/common/Title/Title';
-import { ITheme } from 'src/themes';
-
-
 
 interface IProps {
   product: IProductForCartResponseItem;
@@ -20,7 +17,7 @@ interface IProps {
 }
 
 export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) => {
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
 
   return (
     <div
@@ -60,12 +57,13 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) 
         >
           <Subtitle
             css={css`
+              color: ${theme.dark};
+
               del {
                 color: ${theme.danger};
               }
             `}
             size={3}
-            className="has-text-dark"
           >
             <PriceCrossedText price={product.price} discount={product.discount} />
           </Subtitle>

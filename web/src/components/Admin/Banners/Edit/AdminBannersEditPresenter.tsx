@@ -11,7 +11,6 @@ import { IBannerService } from 'src/services/BannerService';
 import { IContextValue as AdminBannersStateContextValue } from 'src/state/AdminBannersState';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 
-
 export interface IProps extends AdminBannersStateContextValue, IntlStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   service: IBannerService;

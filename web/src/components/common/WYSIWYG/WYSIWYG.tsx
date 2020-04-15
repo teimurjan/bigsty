@@ -1,11 +1,9 @@
 /** @jsx jsx */
-
 import { Global, css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { ITheme } from 'src/themes';
 
 interface IProps {
   className?: string;
@@ -29,7 +27,7 @@ const CKEditorLazy = React.lazy(async () => {
 });
 
 export const WYSIWYG: React.SFC<IProps> = ({ onChange, onBlur, onFocus, initialValue, placeholder, hasError }) => {
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
 
   return (
     <div className="content">

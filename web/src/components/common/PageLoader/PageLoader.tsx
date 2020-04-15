@@ -7,7 +7,6 @@ import SyncLoader from 'react-spinners/SyncLoader';
 import Transition from 'react-transition-group/Transition';
 
 import { useModalScrollLock } from 'src/hooks/useModalScrollLock';
-import { ITheme } from 'src/themes';
 import { PAGE_LOADER_ID, safeDocument } from 'src/utils/dom';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -21,7 +20,7 @@ interface ILoaderProps extends React.HTMLAttributes<HTMLDivElement> {
   color?: string;
 }
 
-const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
+const getCSS = (timeout: number, shouldShow: boolean) => (theme: CSSTheme) => css`
   transition: opacity ${timeout}ms ease-in-out;
   opacity: ${shouldShow ? 1 : 0.01};
   display: flex;
@@ -37,20 +36,20 @@ const getCSS = (timeout: number, shouldShow: boolean) => (theme: ITheme) => css`
 
   > div {
     border-width: 5px;
-    border-color: ${theme.whiteTer} ${theme.whiteTer} transparent ${theme.whiteTer};
+    border-color: ${theme.light} ${theme.light} transparent ${theme.light};
     z-index: 778;
   }
 `;
 
 const Loader = ({ status, timeout, className, color, ...props }: ILoaderProps) => {
   useModalScrollLock();
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
 
   const shouldShow = status === 'entering' || status === 'entered';
 
   return (
     <div id={PAGE_LOADER_ID} css={getCSS(timeout, shouldShow)} className={className} {...props}>
-      <SyncLoader color={color || theme.info} sizeUnit="px" size={20} loading={true} />
+      <SyncLoader color={color || theme.primary} sizeUnit="px" size={20} loading={true} />
     </div>
   );
 };

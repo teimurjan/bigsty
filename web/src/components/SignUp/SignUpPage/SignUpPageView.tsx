@@ -19,7 +19,12 @@ export const SignUpPageView = () => {
         padding: 10px;
       `}
     >
-      <Title css={css`text-align: center;`} size={3}>
+      <Title
+        css={css`
+          text-align: center;
+        `}
+        size={3}
+      >
         {intl.formatMessage({ id: 'SignUpPage.title' })}
       </Title>
       <SignUpFormContainer />

@@ -17,7 +17,6 @@ import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/A
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { arePropsEqual, lengthCompare } from 'src/utils/propEquality';
 
-
 interface IFeatureTypesSelectProps extends FieldRenderProps<string[]> {
   featureTypes: AdminFeatureTypesStateContextValue['adminFeatureTypesState']['featureTypes'];
 }
@@ -141,7 +140,7 @@ const renderDescriptionField: IIntlFieldProps['render'] = ({ input, meta, label,
       labelProps={{
         children: (
           <>
-            {label} <Tag color="is-info">{locale.name}</Tag>
+            {label} <Tag color="is-primary">{locale.name}</Tag>
           </>
         ),
       }}

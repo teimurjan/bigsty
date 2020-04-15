@@ -19,7 +19,6 @@ import { UnderlinedInput } from 'src/components/common/UnderlinedInput/Underline
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
-import { ITheme } from 'src/themes';
 import { formatMediaURL } from 'src/utils/url';
 
 const inputCSS = css`
@@ -47,7 +46,7 @@ export const SearchView: React.FC<IProps> = ({
   close,
 }) => {
   const { value: drawerOpened, setPositive: setDrawerOpened, setNegative: setDrawerClosed } = useBoolean();
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
   const intl = useIntl();
   const [searchValue, setSearchValue] = React.useState('');
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(
@@ -78,7 +77,7 @@ export const SearchView: React.FC<IProps> = ({
               as={`/categories/${category.slug}/products`}
               href="/categories/[id]/products"
             >
-              {category.name} <Tag color="is-info">{intl.formatMessage({ id: 'common.category' })}</Tag>
+              {category.name} <Tag color="is-primary">{intl.formatMessage({ id: 'common.category' })}</Tag>
             </DropdownItemLink>
           ))}
         {productTypes.length > 0 && categories.length > 0 && <DropdownDivider />}
@@ -124,6 +123,7 @@ export const SearchView: React.FC<IProps> = ({
         onEntered={setDrawerOpened}
         onExit={setDrawerClosed}
         lockScroll={false}
+        fixed={true}
       >
         <div
           css={css`

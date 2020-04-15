@@ -10,8 +10,6 @@ export interface IProps extends LinkProps {
 
 export const DropdownItemLink = ({ children, className, href, as: as_, ...props }: IProps) => (
   <Link href={href} as={as_} {...props}>
-    <a className={classNames('dropdown-item', className)}>
-      {children}
-    </a>
+    <a className={classNames('dropdown-item', className)}>{children}</a>
   </Link>
 );

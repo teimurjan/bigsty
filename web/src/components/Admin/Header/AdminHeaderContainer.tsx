@@ -6,7 +6,6 @@ import { AdminHeaderView } from 'src/components/Admin/Header/AdminHeaderView';
 import { useAppState } from 'src/state/AppState';
 import { useUserState } from 'src/state/UserState';
 
-
 export const AdminHeaderContainer = () => {
   const { appState } = useAppState();
   const { userState } = useUserState();

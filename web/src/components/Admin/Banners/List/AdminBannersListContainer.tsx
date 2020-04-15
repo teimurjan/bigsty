@@ -6,7 +6,6 @@ import { AdminBannersListView } from 'src/components/Admin/Banners/List/AdminBan
 import { useAdminBannersState } from 'src/state/AdminBannersState';
 import { useIntlState } from 'src/state/IntlState';
 
-
 export const AdminBannersListContainer = () => {
   const { intlState } = useIntlState();
   const { adminBannersState } = useAdminBannersState();

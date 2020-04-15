@@ -6,7 +6,6 @@ import { AdminProductTypesListView } from 'src/components/Admin/ProductTypes/Lis
 import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 import { useIntlState } from 'src/state/IntlState';
 
-
 export const AdminProductTypesListContainer = () => {
   const { intlState } = useIntlState();
   const { adminProductTypesState } = useAdminProductTypesState();

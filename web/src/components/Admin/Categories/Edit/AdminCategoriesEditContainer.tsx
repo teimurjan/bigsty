@@ -8,8 +8,6 @@ import { useDependencies } from 'src/DI/DI';
 import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
 import { useIntlState } from 'src/state/IntlState';
 
-
-
 export const AdminCategoriesEditContainer = () => {
   const history = useHistory();
   const params = useParams<{ id: string }>();

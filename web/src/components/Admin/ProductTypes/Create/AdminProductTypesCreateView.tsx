@@ -10,7 +10,6 @@ import {
 } from 'src/components/Admin/ProductTypes/Create/AdminProductTypesCreatePresenter';
 import { Fields } from 'src/components/Admin/ProductTypes/Create/Fields';
 
-
 export const AdminProductTypesCreateView = ({
   isOpen,
   create,

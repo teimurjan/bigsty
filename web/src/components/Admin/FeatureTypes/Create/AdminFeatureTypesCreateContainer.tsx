@@ -8,8 +8,6 @@ import { useDependencies } from 'src/DI/DI';
 import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 import { useIntlState } from 'src/state/IntlState';
 
-
-
 export const AdminFeatureTypesCreateContainer = () => {
   const history = useHistory();
 

@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
 
-
 export type IProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const ModalCard = ({ children, className, ...props }: IProps) => (

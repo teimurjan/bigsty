@@ -12,12 +12,13 @@ import { ModalBackground } from 'src/components/common/ModalBackground/ModalBack
 import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
 import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 import { IViewProps as IProps } from 'src/components/ProductSelect/ProductSelectPresenter';
-import { ProductTypePreview, IProps as IProductTypePreviewProps } from 'src/components/ProductSelect/ProductTypePreview';
+import {
+  ProductTypePreview,
+  IProps as IProductTypePreviewProps,
+} from 'src/components/ProductSelect/ProductTypePreview';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
-
-
 
 const dropdownCSS = css`
   width: 300px;

@@ -10,8 +10,6 @@ import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 import { useIntlState } from 'src/state/IntlState';
 
-
-
 export const AdminProductTypesCreateContainer = () => {
   const history = useHistory();
 

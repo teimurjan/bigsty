@@ -6,8 +6,6 @@ import { AdminOrdersEditView } from 'src/components/Admin/Orders/Edit/AdminOrder
 import { useDependencies } from 'src/DI/DI';
 import { useAdminOrdersState } from 'src/state/AdminOrdersState';
 
-
-
 export const AdminOrdersEditContainer = () => {
   const history = useHistory();
   const params = useParams<{ id: string }>();

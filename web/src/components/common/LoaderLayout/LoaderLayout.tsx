@@ -5,14 +5,12 @@ import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-import { ITheme } from 'src/themes';
-
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   color?: string;
 }
 
 export const LoaderLayout = ({ color, ...props }: IProps) => {
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
 
   return (
     <div
@@ -24,7 +22,7 @@ export const LoaderLayout = ({ color, ...props }: IProps) => {
       `}
       {...props}
     >
-      <ClipLoader color={color || theme.info} sizeUnit="rem" size={3} loading={true} />
+      <ClipLoader color={color || theme.primary} sizeUnit="rem" size={3} loading={true} />
     </div>
   );
 };

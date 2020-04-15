@@ -6,7 +6,6 @@ import { AdminCategoriesListView } from 'src/components/Admin/Categories/List/Ad
 import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
 import { useIntlState } from 'src/state/IntlState';
 
-
 export const AdminCategoriesListContainer = () => {
   const { intlState } = useIntlState();
   const { adminCategoriesState } = useAdminCategoriesState();

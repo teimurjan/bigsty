@@ -4,7 +4,11 @@ import { Control, IProps as ControlProps } from 'src/components/common/Control/C
 import { Field, IProps as FieldProps } from 'src/components/common/Field/Field';
 import { HelpText, IProps as HelpTextProps } from 'src/components/common/HelpText/HelpText';
 import { IProps as LabelProps, Label } from 'src/components/common/Label/Label';
-import { IProps as NativeSelectProps, NativeSelect, NativeSelectOption } from 'src/components/common/NativeSelect/NativeSelect';
+import {
+  IProps as NativeSelectProps,
+  NativeSelect,
+  NativeSelectOption,
+} from 'src/components/common/NativeSelect/NativeSelect';
 
 interface IProps {
   controlProps?: ControlProps;

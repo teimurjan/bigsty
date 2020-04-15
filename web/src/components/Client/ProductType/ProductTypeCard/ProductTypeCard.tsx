@@ -74,7 +74,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
             css={css`
               display: flex;
               flex-direction: column;
-              height: 100%;
+              flex: 1;
 
               @media ${mediaQueries.maxWidth768} {
                 padding: 0.5rem;
@@ -104,7 +104,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
               border-radius: unset !important;
               margin-top: auto;
             `}
-            color="is-info"
+            color="is-primary"
           >
             {intl.formatMessage({ id: 'common.buy' })}
           </Button>

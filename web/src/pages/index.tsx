@@ -1,10 +1,9 @@
+import { GetServerSideProps } from 'next';
 import * as React from 'react';
-import { Then } from 'ttypes';
 
 import { HomeContainer } from 'src/components/Client/Home/HomeContainer';
 import { Layout } from 'src/components/Client/Layout';
 import { dependenciesFactory } from 'src/DI/DependenciesContainer';
-import { GetServerSideProps } from 'next';
 
 const Index = ({
   banners,

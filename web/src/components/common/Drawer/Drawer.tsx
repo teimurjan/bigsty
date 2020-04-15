@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
+import classNames from 'classnames';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -9,7 +10,6 @@ import { ModalBackground } from 'src/components/common/ModalBackground/ModalBack
 import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
 import useClickOutside from 'src/hooks/useClickOutside';
 import { useModalScrollLock } from 'src/hooks/useModalScrollLock';
-import { ITheme } from 'src/themes';
 import { safeDocument } from 'src/utils/dom';
 
 type FromSide = 'top' | 'left' | 'bottom' | 'right';
@@ -90,6 +90,10 @@ const getSlidingCSS = (from: FromSide) => {
       z-index: 99;
       ${permanent};
       ${initial}
+
+      &.fixed {
+        position: fixed;
+      }
     }
 
     & > .modal-background {
@@ -162,6 +166,7 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   onExit?: () => void;
   onExited?: () => void;
   lockScroll?: boolean;
+  fixed?: boolean;
   showClose?: boolean;
 }
 
@@ -178,9 +183,10 @@ export const Drawer = ({
   backdrop,
   lockScroll = true,
   showClose = true,
+  fixed,
   ...props
 }: IProps) => {
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
   useModalScrollLock(isOpen, lockScroll);
 
   const ref = React.useRef<HTMLDivElement>(null);
@@ -206,7 +212,7 @@ export const Drawer = ({
           onExited={onExited}
         >
           <div css={slidingCSS}>
-            <div className="drawer-content" ref={ref} {...props}>
+            <div className={classNames('drawer-content', { fixed })} ref={ref} {...props}>
               {children}
             </div>
             {showClose && (
@@ -214,7 +220,7 @@ export const Drawer = ({
                 css={css`
                   &::after,
                   &::before {
-                    background: ${fromSide === 'top' || fromSide === 'right' ? theme.grey : theme.white};
+                    background: ${fromSide === 'top' || fromSide === 'right' ? theme.greyLight : theme.white};
                   }
                   &:hover {
                     &::after,

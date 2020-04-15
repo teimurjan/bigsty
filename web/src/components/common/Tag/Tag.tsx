@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
 
-
 export interface IProps extends React.HTMLAttributes<HTMLSpanElement> {
   children?: React.ReactNode;
   color: 'is-primary' | 'is-link' | 'is-info' | 'is-success' | 'is-warning' | 'is-danger' | 'is-dark' | 'is-light';

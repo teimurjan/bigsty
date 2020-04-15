@@ -8,8 +8,6 @@ import { useDependencies } from 'src/DI/DI';
 import { useAdminBannersState } from 'src/state/AdminBannersState';
 import { useIntlState } from 'src/state/IntlState';
 
-
-
 export const AdminBannersCreateContainer = () => {
   const history = useHistory();
 

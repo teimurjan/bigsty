@@ -10,7 +10,6 @@ import { CSSTransition } from 'react-transition-group';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 import useClickOutside from 'src/hooks/useClickOutside';
-import { ITheme } from 'src/themes';
 import { safeDocument } from 'src/utils/dom';
 
 export const poppingCSS = css`
@@ -155,7 +154,7 @@ interface IPopoverContentProps {
 }
 
 const PopoverContent: React.FC<IPopoverContentProps> = ({ children, className }) => {
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
 
   return (
     <div
@@ -181,7 +180,7 @@ interface IPopoverLinkProps {
 }
 
 const PopoverLink: React.FC<IPopoverLinkProps> = ({ children, href, asPath, onClick, active }) => {
-  const theme = useTheme<ITheme>();
+  const theme = useTheme<CSSTheme>();
 
   const modifiedOnClick = React.useCallback(
     e => {
@@ -206,7 +205,7 @@ const PopoverLink: React.FC<IPopoverLinkProps> = ({ children, href, asPath, onCl
         display: inline-block;
 
         &.active {
-          color: ${theme.info};
+          color: ${theme.primary};
           font-weight: bold;
         }
 

@@ -6,7 +6,6 @@ import { AdminOrdersListView } from 'src/components/Admin/Orders/List/AdminOrder
 import { useAdminOrdersState } from 'src/state/AdminOrdersState';
 import { useIntlState } from 'src/state/IntlState';
 
-
 export const AdminOrdersListContainer = () => {
   const { intlState } = useIntlState();
   const { adminOrdersState } = useAdminOrdersState();

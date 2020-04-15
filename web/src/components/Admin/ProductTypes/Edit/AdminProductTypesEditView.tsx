@@ -10,9 +10,6 @@ import {
 import { Fields } from 'src/components/Admin/ProductTypes/Create/Fields';
 import { IViewProps as IProps } from 'src/components/Admin/ProductTypes/Edit/AdminProductTypesEditPresenter';
 
-
-
-
 export const AdminProductTypesEditView = ({
   isOpen,
   edit,

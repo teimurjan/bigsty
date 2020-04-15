@@ -9,8 +9,6 @@ import { useAdminFeatureTypesState } from 'src/state/AdminFeatureTypesState';
 import { useAdminFeatureValuesState } from 'src/state/AdminFeatureValuesState';
 import { useIntlState } from 'src/state/IntlState';
 
-
-
 export const AdminFeatureValuesCreateContainer = () => {
   const history = useHistory();
 
