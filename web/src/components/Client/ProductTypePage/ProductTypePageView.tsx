@@ -134,7 +134,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             css={css`
               display: flex;
               justify-content: flex-start;
-              width: 35vw;
+              width: 40vw;
 
               @media ${mediaQueries.maxWidth768} {
                 width: 100%;
@@ -151,9 +151,9 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             css={css`
               display: flex;
               align-items: flex-start;
-              padding-left: 30px;
+              padding-left: 50px;
               flex-direction: column;
-              width: calc(100% - 35vw);
+              width: calc(100% - 40vw);
 
               @media ${mediaQueries.maxWidth768} {
                 padding-left: 0;

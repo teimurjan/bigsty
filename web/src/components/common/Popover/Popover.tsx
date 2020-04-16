@@ -8,10 +8,9 @@ import { CSSTransition } from 'react-transition-group';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 import useClickOutside from 'src/hooks/useClickOutside';
-import { useMedia } from 'src/hooks/useMedia';
+import { useIsTouch } from 'src/hooks/useIsTouch';
 import useMouseOutside from 'src/hooks/useMouseOutside';
-import { mediaQueries } from 'src/styles/media';
-import { safeDocument } from 'src/utils/dom';
+import { safeDocument, safeWindow } from 'src/utils/dom';
 
 export const poppingCSS = css`
   opacity: 0;
@@ -94,7 +93,8 @@ export const Popover = <T extends HTMLElement>({
   const [popperRef, setPopperRef] = React.useState<HTMLDivElement | null>(null);
   const arrowRef = React.useRef<HTMLDivElement>(null);
 
-  const shouldOpenOnHover = useMedia([mediaQueries.maxWidth768], [false], openOnHover);
+  const isTouch = useIsTouch();
+  const shouldOpenOnHover = openOnHover && !isTouch;
   useClickOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close);
   useMouseOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close, shouldOpenOnHover && isOpen);
 
