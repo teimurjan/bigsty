@@ -18,12 +18,12 @@ class FeatureValueListView(ValidatableView, PaginatableView):
         feature_values = []
 
         if pagination_data:
-            feature_values = self._service.get_all(
+            feature_values, count = self._service.get_all(
                 offset=pagination_data['offset'],
                 limit=pagination_data['limit']
             )
             meta = self._get_meta(
-                feature_values,
+                count,
                 pagination_data['page'],
                 pagination_data['limit']
             )

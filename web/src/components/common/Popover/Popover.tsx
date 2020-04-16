@@ -10,7 +10,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import useClickOutside from 'src/hooks/useClickOutside';
 import { useIsTouch } from 'src/hooks/useIsTouch';
 import useMouseOutside from 'src/hooks/useMouseOutside';
-import { safeDocument, safeWindow } from 'src/utils/dom';
+import { safeDocument } from 'src/utils/dom';
 
 export const poppingCSS = css`
   opacity: 0;

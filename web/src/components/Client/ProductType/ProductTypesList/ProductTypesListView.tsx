@@ -5,21 +5,22 @@ import { useIntl } from 'react-intl';
 
 import { IProductTypeListResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
 import { ProductTypeCard } from 'src/components/Client/ProductType/ProductTypeCard/ProductTypeCard';
+import { Pagination } from 'src/components/common-v2/Pagination/Pagination';
 import { Column } from 'src/components/common/Column/Column';
 import { Columns } from 'src/components/common/Columns/Columns';
 import { Container } from 'src/components/common/Container/Container';
 import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { UncontrolledPagination } from 'src/components/common/UncontrolledPagination/UncontrolledPagination';
 
 export interface IProps {
   productTypes: IProductTypeListResponseItem[];
   meta?: IProductTypeListResponseMeta;
   error?: string;
   isLoading: boolean;
+  onPageChange?: (page: number) => void;
 }
 
-export const ProductTypesListView = ({ isLoading, error, productTypes, meta }: IProps) => {
+export const ProductTypesListView = ({ isLoading, error, productTypes, meta, onPageChange }: IProps) => {
   const intl = useIntl();
 
   if (isLoading) {
@@ -49,7 +50,9 @@ export const ProductTypesListView = ({ isLoading, error, productTypes, meta }: I
           </Column>
         ))}
       </Columns>
-      {meta && meta.pages_count > 1 && <UncontrolledPagination length={meta.pages_count} />}
+      {meta && meta.pages_count > 1 && (
+        <Pagination length={meta.pages_count} page={meta.page} onChange={onPageChange} />
+      )}
     </Container>
   );
 };

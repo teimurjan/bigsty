@@ -46,7 +46,7 @@ class FeatureValueService:
             raise self.FeatureTypeInvalid()
 
     def get_all(self, offset=None, limit=None):
-        return self._repo.get_all(offset=offset, limit=limit)
+        return self._repo.get_all(offset=offset, limit=limit), self._repo.count_all()
 
     def get_one(self, id_):
         try:

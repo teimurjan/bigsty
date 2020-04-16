@@ -99,7 +99,7 @@ class ProductTypeService:
             raise self.FeatureTypesInvalid()
 
     def get_all(self, offset=None, limit=None):
-        return self._repo.get_all(offset=offset, limit=limit)
+        return self._repo.get_all(offset=offset, limit=limit), self._repo.count_all()
 
     def get_newest(self, count):
         return self._repo.get_newest(limit=count, join_products=True)
@@ -110,9 +110,9 @@ class ProductTypeService:
             children_categories = self._category_repo.get_children(
                 category.id, session=s)
             categories_ids = [category.id for category in children_categories]
-            product_types = self._repo.get_for_categories(
+            product_types, count = self._repo.get_for_categories(
                 [category.id, *categories_ids], offset, limit, join_products=True, session=s)
-            return product_types
+            return product_types, count
 
     def get_one(self, id_):
         try:

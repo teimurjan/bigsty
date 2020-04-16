@@ -19,6 +19,7 @@ export const ProductTypesPageContainer = ({ initialProps }: IProps) => {
 
   return (
     <ProductTypesPagePresenter
+      router={router}
       categoryIdOrSlug={paramToIDOrSlug(router.query.id as string)}
       productTypeService={dependencies.services.productType}
       ListView={ProductTypesListView}

@@ -12,6 +12,7 @@ export interface IProps {
   loading?: boolean;
   disabled?: boolean;
   circled?: boolean;
+  active?: boolean;
   type?: 'submit' | 'reset' | 'button';
   className?: string;
   children: React.ReactNode;
@@ -27,6 +28,7 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
       inverted = false,
       loading = false,
       circled = false,
+      active = false,
       type = 'button',
       size,
       onClick,
@@ -54,7 +56,8 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             border: 1px solid ${theme.buttonDefaultBorderColor};
             background: ${theme.buttonDefaultBackgroundColor};
 
-            &:hover {
+            &:hover,
+            &.active {
               color: ${theme.buttonDefaultHoverColor};
               background: ${theme.buttonDefaultBackgroundHoverColor};
             }
@@ -65,7 +68,8 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             border: 1px solid ${theme.buttonLightBorderColor};
             background: ${theme.buttonLightBackgroundColor};
 
-            &:hover {
+            &:hover,
+            &.active {
               color: ${theme.buttonLightHoverColor};
               background: ${theme.buttonLightBackgroundHoverColor};
             }
@@ -76,7 +80,8 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             border: 1px solid ${theme.buttonDarkBorderColor};
             background: ${theme.buttonDarkBackgroundColor};
 
-            &:hover {
+            &:hover,
+            &.active {
               color: ${theme.buttonDarkHoverColor};
               background: ${theme.buttonDarkBackgroundHoverColor};
             }
@@ -106,6 +111,7 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
           loading,
           inverted,
           circled,
+          active,
         })}
         type={type}
       >

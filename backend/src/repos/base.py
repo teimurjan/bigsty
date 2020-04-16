@@ -48,6 +48,10 @@ class Repo(Generic[T]):
     @with_session
     def get_all(self, offset = None, limit = None, session=None):
         return session.query(self.__Model).order_by(self.__Model.id).offset(offset).limit(limit).all()
+   
+    @with_session
+    def count_all(self, session=None):
+        return session.query(self.__Model).count()
     
     @with_session
     def filter_by_ids(self, ids, session):

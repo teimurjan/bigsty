@@ -40,9 +40,9 @@ const useFormattedPrice = ({ price, discount }: IPriceProps) => {
 
   const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
   if (locale === 'en' || !rates.usdToKgs) {
-    return `$${calculatedPrice}`;
+    return <>${calculatedPrice}</>;
   } else {
-    return `${Math.round(calculatedPrice * rates.usdToKgs)} сом`;
+    return <>{Math.round(calculatedPrice * rates.usdToKgs)} <u>с</u></>;
   }
 };
 
@@ -63,7 +63,13 @@ export const usePriceRangeText = ({ range }: IPriceRangeTextProps) => {
 
   const price = React.useMemo(
     () =>
-      calculatedRange.length > 1 ? `${lowestFormattedPrice} - ${biggestFormattedPrice}` : `${biggestFormattedPrice}`,
+      calculatedRange.length > 1 ? (
+        <>
+          {lowestFormattedPrice} - {biggestFormattedPrice}
+        </>
+      ) : (
+        <>{biggestFormattedPrice}</>
+      ),
     [lowestFormattedPrice, biggestFormattedPrice, calculatedRange],
   );
 

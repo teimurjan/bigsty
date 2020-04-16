@@ -220,7 +220,7 @@ export class ProductTypeAPI implements IProductTypeAPI {
   public async getAllRawIntl(page: number) {
     try {
       const response = await this.client.get<IProductTypeListRawIntlResponseData>(
-        `/api/product_types${buildQueryString({ page, raw_intl: 1 })}`,
+        `/api/product_types${buildQueryString({ page, raw_intl: 1, limit: 10 })}`,
         {
           headers: this.headersManager.getHeaders(),
         },

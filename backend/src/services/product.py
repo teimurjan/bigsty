@@ -99,7 +99,7 @@ class ProductService:
             raise self.ProductTypeInvalid()
 
     def get_all(self, offset=None, limit=None):
-        return self._repo.get_all(offset=offset, limit=limit)
+        return self._repo.get_all(offset=offset, limit=limit), self._repo.count_all()
 
     def get_by_ids(self, ids):
         return self._repo.filter_by_ids(ids)

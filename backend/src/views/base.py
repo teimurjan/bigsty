@@ -15,10 +15,10 @@ class ValidatableView:
 
 
 class PaginatableView:
-    def _get_meta(self, items, page, limit):
-        pages_count = math.ceil(len(items) / limit)
+    def _get_meta(self, count, page, limit):
+        pages_count = math.ceil(count / limit)
         return {
-            'count': len(items),
+            'count': count,
             'pages_count': pages_count,
             'page': page,
             'limit': limit,

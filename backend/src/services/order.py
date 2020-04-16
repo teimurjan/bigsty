@@ -94,7 +94,7 @@ class OrderService:
 
     @allow_roles(['admin', 'manager'])
     def get_all(self, offset=None, limit=None, user=None):
-        return self._repo.get_all(offset=offset, limit=limit)
+        return self._repo.get_all(offset=offset, limit=limit), self._repo.count_all()
 
     def get_for_user(self, user_id, user=None):
         if user and user.id == user_id:

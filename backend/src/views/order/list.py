@@ -21,13 +21,13 @@ class OrderListView(ValidatableView, PaginatableView):
         orders = []
 
         if pagination_data:
-            orders = self._service.get_all(
+            orders, count = self._service.get_all(
                 offset=pagination_data['offset'],
                 limit=pagination_data['limit'],
                 user=request.user
             )
             meta = self._get_meta(
-                orders,
+                count,
                 pagination_data['page'],
                 pagination_data['limit']
             )

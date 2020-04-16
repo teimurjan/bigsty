@@ -17,13 +17,13 @@ export default ({
   </Layout>
 );
 
-export const getServerSideProps: GetServerSideProps = async ({ params = {}, req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params = {}, req, res, query: { page = '1' } }) => {
   const dependencies = dependenciesFactory({ req, res });
-
+  
   try {
     const { entities, meta, result } = await dependencies.services.productType.getForCategory(
       paramToIDOrSlug(params.id as string),
-      1,
+      parseInt(page as string, 10),
     );
 
     return {

@@ -19,12 +19,12 @@ class ProductListView(ValidatableView, PaginatableView):
         products = []
 
         if pagination_data:
-            products = self._service.get_all(
+            products, count = self._service.get_all(
                 offset=pagination_data['offset'],
                 limit=pagination_data['limit']
             )
             meta = self._get_meta(
-                products,
+                count,
                 pagination_data['page'],
                 pagination_data['limit']
             )

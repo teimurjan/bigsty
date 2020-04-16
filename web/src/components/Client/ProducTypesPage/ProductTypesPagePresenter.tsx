@@ -1,3 +1,4 @@
+import { NextRouter } from 'next/router';
 import * as React from 'react';
 
 import { IProductTypeListResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
@@ -9,6 +10,7 @@ export interface IProps {
   ListView: React.ComponentClass<IListViewProps> | React.SFC<IListViewProps>;
   productTypeService: IProductTypeService;
   categoryIdOrSlug?: number | string;
+  router: NextRouter;
   initialProps?: {
     productTypes: { [key: string]: IProductTypeListResponseItem };
     productTypesMeta: IProductTypeListResponseMeta;
@@ -17,7 +19,13 @@ export interface IProps {
   };
 }
 
-export const ProductTypesPagePresenter = ({ ListView, categoryIdOrSlug, productTypeService, initialProps }: IProps) => {
+export const ProductTypesPagePresenter = ({
+  ListView,
+  categoryIdOrSlug,
+  productTypeService,
+  initialProps,
+  router,
+}: IProps) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [isLoading, setLoading] = React.useState(false);
   const [productTypes, setProductTypes] = React.useState<{ [key: string]: IProductTypeListResponseItem }>({});
@@ -28,6 +36,32 @@ export const ProductTypesPagePresenter = ({ ListView, categoryIdOrSlug, productT
     page: 0,
   });
   const [productTypesOrder, setProductTypesOrder] = React.useState<number[]>([]);
+
+  const loadProductTypes = React.useCallback(
+    async (page: number = 1) => {
+      setLoading(true);
+      try {
+        const { entities, result, meta } = await productTypeService.getForCategory(categoryIdOrSlug!, page);
+        setProductTypes(entities.productTypes || {});
+        setProductTypesMeta(meta);
+        setProductTypesOrder(result);
+      } catch (e) {
+        setError('errors.common');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [categoryIdOrSlug, productTypeService],
+  );
+
+  const onPageChange = React.useCallback(
+    (page: number) => {
+      const url = `${router.asPath.split('?')[0]}?page=${page}`
+      router.push(router.pathname, url, { shallow: true });
+      loadProductTypes(page);
+    },
+    [router, loadProductTypes],
+  );
 
   // When navigating between categories the initialProps are changing and needed to be set to state
   React.useEffect(() => {
@@ -41,19 +75,7 @@ export const ProductTypesPagePresenter = ({ ListView, categoryIdOrSlug, productT
 
   React.useEffect(() => {
     if (categoryIdOrSlug && !initialProps) {
-      (async () => {
-        setLoading(true);
-        try {
-          const { entities, result, meta } = await productTypeService.getForCategory(categoryIdOrSlug, 1);
-          setProductTypes(entities.productTypes || {});
-          setProductTypesMeta(meta);
-          setProductTypesOrder(result);
-        } catch (e) {
-          setError('errors.common');
-        } finally {
-          setLoading(false);
-        }
-      })();
+      loadProductTypes(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryIdOrSlug]);
@@ -64,6 +86,7 @@ export const ProductTypesPagePresenter = ({ ListView, categoryIdOrSlug, productT
       meta={productTypesMeta}
       isLoading={isLoading}
       error={error}
+      onPageChange={onPageChange}
     />
   );
 };

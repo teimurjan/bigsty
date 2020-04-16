@@ -24,7 +24,8 @@ class ProductTypeRepo(IntlRepo):
     ):
         product_type = ProductType()
 
-        self._set_intl_texts(names, product_type, 'names', ProductTypeName, session=session)
+        self._set_intl_texts(names, product_type, 'names',
+                             ProductTypeName, session=session)
         self._set_intl_texts(descriptions, product_type,
                              'descriptions', ProductTypeDescription, session=session)
         self._set_intl_texts(short_descriptions, product_type,
@@ -59,11 +60,12 @@ class ProductTypeRepo(IntlRepo):
     ):
         product_type = self.get_by_id(id_, session=session)
 
-        self._set_intl_texts(names, product_type, 'names', ProductTypeName, session=session)
+        self._set_intl_texts(names, product_type, 'names',
+                             ProductTypeName, session=session)
         self._set_intl_texts(
             descriptions, product_type, 'descriptions', ProductTypeDescription, session=session)
         self._set_intl_texts(short_descriptions, product_type,
-                                'short_descriptions', ProductTypeShortDescription, session=session)
+                             'short_descriptions', ProductTypeShortDescription, session=session)
 
         product_type.feature_types = feature_types
 
@@ -78,16 +80,14 @@ class ProductTypeRepo(IntlRepo):
 
     @with_session
     def get_for_categories(self, category_ids, offset, limit, join_products, session):
-        return (
+        base_query = (
             session
             .query(ProductType)
             .options(joinedload(ProductType.products) if join_products else None)
             .filter(ProductType.category_id.in_(category_ids))
             .order_by(ProductType.id)
-            .offset(offset)
-            .limit(limit)
-            .all()
         )
+        return base_query.offset(offset).limit(limit).all(), base_query.count()
 
     @with_session
     def get_newest(self, limit, join_products, session):
