@@ -21,7 +21,15 @@ const fontSizes = {
   6: 16,
 };
 
-const toMobileSize = (size: number) => size * 0.66;
+const mobileFontSizes = {
+  1: 36,
+  2: 30,
+  3: 26,
+  4: 22,
+  5: 18,
+  6: 16,
+};
+
 
 export const Title = ({ children, size, className }: IProps) => {
   const theme = useTheme<CSSThemeV2>();
@@ -48,7 +56,7 @@ export const Title = ({ children, size, className }: IProps) => {
                       font-size: ${fontSize}px;
 
                       @media ${mediaQueries.maxWidth768} {
-                        font-size: ${toMobileSize(fontSize)}px;
+                        font-size: ${mobileFontSizes[size]}px;
                       }
                     }
                   `;

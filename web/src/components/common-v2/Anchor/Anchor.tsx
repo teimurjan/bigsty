@@ -18,10 +18,28 @@ interface IProps {
   rel?: string;
   target?: string;
   plain?: boolean;
+  noMobileHover?: boolean;
 }
 
 export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
-  ({ className, children, href, asPath, onClick, onMouseEnter, active, thin, rel, target, plain, secondary}, ref) => {
+  (
+    {
+      className,
+      children,
+      href,
+      asPath,
+      onClick,
+      onMouseEnter,
+      active,
+      thin,
+      rel,
+      target,
+      plain,
+      secondary,
+      noMobileHover,
+    },
+    ref,
+  ) => {
     const theme = useTheme<CSSThemeV2>();
 
     const modifiedOnClick = React.useCallback(
@@ -34,15 +52,15 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
       },
       [href, onClick],
     );
-      
-      const hoverColor = secondary ? theme.anchorSecondaryColor : theme.anchorColor;
 
-    const anchor = (  
+    const hoverColor = secondary ? theme.anchorSecondaryColor : theme.anchorColor;
+
+    const anchor = (
       <a
         ref={ref}
         rel={rel}
         target={target}
-        className={classNames(className, { active, thin })}
+        className={classNames(className, { active, thin, noMobileHover })}
         href={href || '#'}
         onClick={modifiedOnClick}
         onMouseEnter={onMouseEnter}
@@ -68,7 +86,7 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
             transition: transform 200ms;
           }
 
-          .anchor:hover > &::before,
+          .anchor:hover > &:not(.noMobileHover)::before,
           &.active::before {
             transform: translateX(0);
           }

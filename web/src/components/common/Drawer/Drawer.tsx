@@ -232,7 +232,16 @@ export const Drawer = ({
                 onClick={close}
               />
             )}
-            {backdrop && <ModalBackground></ModalBackground>}
+            {backdrop && (
+              <ModalBackground
+                className={classNames({ fixed })}
+                css={css`
+                  &.fixed {
+                    position: fixed;
+                  }
+                `}
+              ></ModalBackground>
+            )}
           </div>
         </CSSTransition>,
         drawerRoot,

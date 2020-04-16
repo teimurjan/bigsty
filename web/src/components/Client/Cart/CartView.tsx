@@ -198,7 +198,7 @@ export const CartView: React.FC<IProps> = props => {
             {cartItemsCount}
           </span>
         )}
-        <Anchor onClick={open}>
+        <Anchor onClick={open} noMobileHover>
           <WithIcon icon={faShoppingCart} hideTextOnMobile>
             {intl.formatMessage({ id: 'common.cart' })}
           </WithIcon>
@@ -214,8 +214,11 @@ export const CartView: React.FC<IProps> = props => {
         fromSide="right"
         isOpen={isOpen}
         close={close}
+        lockScroll={false}
         backdrop
+        fixed
       >
+        {step === 0 && <FirstStep {...props} />}
         {step === 1 && <SecondStep {...props} />}
         {step === 2 && <ThirdStep {...props} />}
       </Drawer>

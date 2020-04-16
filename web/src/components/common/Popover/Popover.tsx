@@ -8,7 +8,9 @@ import { CSSTransition } from 'react-transition-group';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 import useClickOutside from 'src/hooks/useClickOutside';
+import { useMedia } from 'src/hooks/useMedia';
 import useMouseOutside from 'src/hooks/useMouseOutside';
+import { mediaQueries } from 'src/styles/media';
 import { safeDocument } from 'src/utils/dom';
 
 export const poppingCSS = css`
@@ -92,8 +94,9 @@ export const Popover = <T extends HTMLElement>({
   const [popperRef, setPopperRef] = React.useState<HTMLDivElement | null>(null);
   const arrowRef = React.useRef<HTMLDivElement>(null);
 
+  const shouldOpenOnHover = useMedia([mediaQueries.maxWidth768], [false], openOnHover);
   useClickOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close);
-  useMouseOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close, openOnHover && isOpen);
+  useMouseOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close, shouldOpenOnHover && isOpen);
 
   const modifiers = React.useMemo(() => {
     const modifiers_ = [];
@@ -117,7 +120,7 @@ export const Popover = <T extends HTMLElement>({
     }
 
     if (TriggerComponent) {
-      return openOnHover
+      return shouldOpenOnHover
         ? React.createElement(TriggerComponent as TriggerHoverComponent<T>, {
             ref: triggerRef,
             onMouseEnter: open,
@@ -126,7 +129,7 @@ export const Popover = <T extends HTMLElement>({
     }
 
     return null;
-  }, [renderTrigger, TriggerComponent, open, close, isOpen, toggle, openOnHover]);
+  }, [renderTrigger, TriggerComponent, open, close, isOpen, toggle, shouldOpenOnHover]);
 
   return (
     <>

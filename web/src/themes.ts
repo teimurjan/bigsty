@@ -32,7 +32,7 @@ export const defaultTheme: CSSTheme & CSSThemeV2 = {
   backgroundSecondaryColor: '#f0ebe3',
   textColor: '#1e1e1c',
   textFadedColor: '#d3d3d3',
-  textSecondaryColor: '##818181',
+  textSecondaryColor: '#505050',
   primaryColor: '#26D93B',
   textOnPrimaryColor: '#fff',
   dangerColor: '#f86203'

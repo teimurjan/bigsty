@@ -12,7 +12,7 @@ import { isUserAuthorized, isUserAdmin } from 'src/helpers/user';
 const Trigger = React.forwardRef<HTMLAnchorElement, PopoverTriggerProps>((props, ref) => {
   const intl = useIntl();
   return (
-    <Anchor ref={ref} {...props}>
+    <Anchor ref={ref} noMobileHover {...props}>
       <WithIcon icon={faUser} hideTextOnMobile>
         {intl.formatMessage({ id: 'common.account' })}
       </WithIcon>

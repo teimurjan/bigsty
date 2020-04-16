@@ -163,7 +163,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
           >
             <Title
               css={css`
-                margin-bottom: 15px;
+                margin: 15px 0;
               `}
               size={3}
             >
