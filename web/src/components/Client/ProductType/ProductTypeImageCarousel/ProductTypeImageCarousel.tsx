@@ -31,12 +31,12 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
               css={css`
                 margin: auto;
                 display: flex;
-                height: 40vw;
-                width: 40vw;
+                height: 35vw;
+                width: 35vw;
 
                 @media ${mediaQueries.maxWidth768} {
-                  width: 90vw;
-                  height: 90vw;
+                  width: 100%;
+                  height: 100%;
                 }
               `}
               imgProps={{ src: image, style: { margin: 'auto' }, alt: image }}
@@ -49,11 +49,11 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
           height: ${CONTROL_IMAGE_SIZE};
           overflow: auto;
           display: flex;
-          width: 40vw;
+          width: 35vw;
           margin: auto;
 
           @media ${mediaQueries.maxWidth768} {
-            width: 90vw;
+            width: 100%;
           }
         `}
       >

@@ -75,7 +75,9 @@ export const HeaderView = () => {
                   box-shadow: none;
                 `}
               >
-                <NavContainer />
+                <Container>
+                  <NavContainer />
+                </Container>
               </Popover.Content>
             </Popover>
           </Navbar.Section>

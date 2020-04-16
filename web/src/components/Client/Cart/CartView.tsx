@@ -188,11 +188,10 @@ export const CartView: React.FC<IProps> = props => {
               text-align: center;
               font-weight: bold;
               font-size: 10px;
-              top: -10px;
-              right: -10px;
-              color: ${theme.textColor};
+              top: -7.5px;
+              right: -12.5px;
+              color: ${theme.textOnPrimaryColor};
               background: ${theme.primaryColor};
-              color: white;
               border-radius: 50%;
             `}
           >
@@ -217,7 +216,6 @@ export const CartView: React.FC<IProps> = props => {
         close={close}
         backdrop
       >
-        {step === 0 && <FirstStep {...props} />}
         {step === 1 && <SecondStep {...props} />}
         {step === 2 && <ThirdStep {...props} />}
       </Drawer>

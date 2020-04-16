@@ -57,7 +57,7 @@ const Section = ({ className, children }: ISectionProps) => (
       }
 
       @media ${mediaQueries.maxWidth768} {
-        margin-right: 20px;
+        margin-right: 10px;
 
         & > * {
           margin-left: 7.5px;

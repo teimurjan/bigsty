@@ -100,12 +100,12 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
     }));
 
   return productType ? (
-    <Container>
-      <div
-        css={css`
-          margin-top: 20px;
-        `}
-      >
+    <div
+      css={css`
+        margin-top: 20px;
+      `}
+    >
+      <Container>
         <Head>
           <title>{productType.name}</title>
           <meta name="description" content={productType.short_description} />
@@ -134,7 +134,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             css={css`
               display: flex;
               justify-content: flex-start;
-              width: 50%;
+              width: 35vw;
 
               @media ${mediaQueries.maxWidth768} {
                 width: 100%;
@@ -151,9 +151,9 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             css={css`
               display: flex;
               align-items: flex-start;
-              padding-left: 1.5rem;
+              padding-left: 30px;
               flex-direction: column;
-              width: 50%;
+              width: calc(100% - 35vw);
 
               @media ${mediaQueries.maxWidth768} {
                 padding-left: 0;
@@ -208,7 +208,6 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             </div>
             <Subtitle
               css={css`
-                border-bottom: 1px solid ${theme.borderColor};
                 padding-bottom: 15px;
                 width: 100%;
               `}
@@ -229,14 +228,19 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             )}
           </div>
         </div>
-        <div
-          css={css`
-            background-color: ${theme.backgroundSecondaryColor};
-          `}
-          className="content"
-          dangerouslySetInnerHTML={{ __html: productType.description }}
-        ></div>
+      </Container>
+      <div
+        css={css`
+          background-color: ${theme.backgroundSecondaryColor};
+          padding: 30px 0;
+          border-top: 1px solid ${theme.borderColor};
+          border-bottom: 1px solid ${theme.borderColor};
+        `}
+      >
+        <Container>
+          <div className="content" dangerouslySetInnerHTML={{ __html: productType.description }} />
+        </Container>
       </div>
-    </Container>
+    </div>
   ) : null;
 };

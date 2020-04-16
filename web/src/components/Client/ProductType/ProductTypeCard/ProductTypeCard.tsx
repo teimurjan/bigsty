@@ -12,6 +12,7 @@ import { Subtitle } from 'src/components/common-v2/Subtitle/Subtitle';
 import { Title } from 'src/components/common-v2/Title/Title';
 import { Image } from 'src/components/common/Image/Image';
 import { useIntersectionObserver } from 'src/hooks/useIntersectionObserver';
+import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
 
 export interface IProps {
@@ -83,6 +84,9 @@ export const ProductTypeCard = ({ productType }: IProps) => {
           <Subtitle
             css={css`
               margin-bottom: 20px;
+              @media ${mediaQueries.maxWidth768} {
+                margin-bottom: 10px;
+              }
             `}
             size={6}
           >
@@ -101,13 +105,42 @@ export const ProductTypeCard = ({ productType }: IProps) => {
               justify-content: space-between;
               align-items: center;
               padding: 0 15px;
+
+              @media ${mediaQueries.maxWidth768} {
+                flex-direction: column;
+              }
             `}
           >
-            {intl.formatMessage({ id: 'common.buy' })}
+            <span>{intl.formatMessage({ id: 'common.buy' })}</span>
             {price && (
               <>
-                <span>|</span>
-                {price}
+                <span
+                  css={css`
+                    &::after {
+                      content: '|';
+                    }
+
+                    @media ${mediaQueries.maxWidth768} {
+                      &::after {
+                        content: '';
+                        margin: 5px 0 2.5px 0;
+                        height: 1px;
+                        background: ${theme.borderColor};
+                        width: 80px;
+                        display: block;
+                      }
+                    }
+                  `}
+                ></span>
+                <span
+                  css={css`
+                    @media ${mediaQueries.maxWidth768} {
+                      font-size: 12px;
+                    }
+                  `}
+                >
+                  {price}
+                </span>
               </>
             )}
           </span>

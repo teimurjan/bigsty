@@ -80,8 +80,8 @@ const cssOfSide = {
 const getSlidingCSS = (from: FromSide) => {
   const { permanent, initial, final } = cssOfSide[from];
   return css`
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 
     & > .drawer-content {
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15), 0 8px 8px 0 rgba(0, 0, 0, 0.05);
