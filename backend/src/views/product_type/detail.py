@@ -1,12 +1,14 @@
-from src.views.base import ValidatableView
+from src.constants.status_codes import (NOT_FOUND_CODE, OK_CODE,
+                                        UNPROCESSABLE_ENTITY_CODE)
 from src.errors import InvalidEntityFormat
-from src.constants.status_codes import NOT_FOUND_CODE, OK_CODE, UNPROCESSABLE_ENTITY_CODE
-from src.utils.json import parse_json_from_form_data
+from src.serializers.product_type import ProductTypeSerializer
 from src.services.product_type import ProductTypeService
+from src.utils.json import parse_json_from_form_data
+from src.views.base import ValidatableView
 
 
 class ProductTypeDetailView(ValidatableView):
-    def __init__(self, validator, service: ProductTypeService, serializer_cls):
+    def __init__(self, validator, service: ProductTypeService, serializer_cls: ProductTypeSerializer):
         super().__init__(validator)
         self._service = service
         self._serializer_cls = serializer_cls
@@ -21,6 +23,7 @@ class ProductTypeDetailView(ValidatableView):
                 self
                 ._serializer_cls(product_type)
                 .in_language(None if should_get_raw_intl_field else request.language)
+                .with_serialized_category()
                 .serialize()
             )
             return {'data': serialized_product_type}, OK_CODE
