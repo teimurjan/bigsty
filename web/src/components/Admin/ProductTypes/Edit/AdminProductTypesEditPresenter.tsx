@@ -2,7 +2,7 @@ import { History } from 'history';
 import * as React from 'react';
 import * as yup from 'yup';
 
-import { IProductTypeListRawIntlResponseItem } from 'src/api/ProductTypeAPI';
+import { IProductTypeDetailRawIntlResponseItem } from 'src/api/ProductTypeAPI';
 import { getFieldName, parseFieldName } from 'src/components/Admin/IntlField';
 import {
   PRODUCT_TYPE_NAME_FIELD_KEY,
@@ -65,7 +65,7 @@ export const AdminProductTypesEditPresenter: React.FC<IProps> = ({
   productTypeId,
 }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
-  const [productType, setProductType] = React.useState<IProductTypeListRawIntlResponseItem | undefined>(undefined);
+  const [productType, setProductType] = React.useState<IProductTypeDetailRawIntlResponseItem | undefined>(undefined);
   const [isUpdating, setUpdating] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const [preloadingError, setPreloadingError] = React.useState<string | undefined>(undefined);
@@ -163,7 +163,7 @@ export const AdminProductTypesEditPresenter: React.FC<IProps> = ({
 
       try {
         const productType = await service.edit(productTypeId, formattedValues);
-        setProductTypeToState(productType);
+        setProductTypeToState({ ...productType, category: productType.category.id });
         setUpdating(false);
         close();
       } catch (e) {
@@ -186,7 +186,7 @@ export const AdminProductTypesEditPresenter: React.FC<IProps> = ({
           }),
           {},
         ),
-        category_id: productType.category,
+        category_id: productType.category.id,
         feature_types: productType.feature_types,
         image: productType.image,
       };

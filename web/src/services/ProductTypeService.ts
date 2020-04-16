@@ -71,13 +71,13 @@ export interface IProductTypeService {
   delete(id: number): Promise<void>;
   create(
     payload: productTypeAPI.IProductTypeCreatePayload,
-  ): Promise<productTypeAPI.IProductTypeListRawIntlResponseItem>;
+  ): Promise<productTypeAPI.IProductTypeDetailRawIntlResponseItem>;
   edit(
     id: number,
     payload: productTypeAPI.IProductTypeEditPayload,
-  ): Promise<productTypeAPI.IProductTypeListRawIntlResponseItem>;
+  ): Promise<productTypeAPI.IProductTypeDetailRawIntlResponseItem>;
   exists(id: number): Promise<boolean>;
-  getOneRawIntl(id: number): Promise<productTypeAPI.IProductTypeListRawIntlResponseItem | undefined>;
+  getOneRawIntl(id: number): Promise<productTypeAPI.IProductTypeDetailRawIntlResponseItem | undefined>;
 }
 
 export class ProductTypeService implements IProductTypeService {

@@ -4,10 +4,10 @@ import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
-import { Image } from 'src/components/common/Image/Image';
 import { mediaQueries } from 'src/styles/media';
 
-const CONTROL_IMAGE_SIZE = '70px';
+const CONTROL_IMAGE_SIZE = '8vw';
+const CONTROL_IMAGE_MOBILE_SIZE = '25vw';
 
 interface IProps {
   images: string[];
@@ -27,7 +27,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
       <Carousel activeIndex={activeImageIndex}>
         {images.map(image => (
           <CarouselItem key={image}>
-            <Image
+            <img
               css={css`
                 margin: auto;
                 display: flex;
@@ -39,7 +39,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
                   height: 100%;
                 }
               `}
-              imgProps={{ src: image, style: { margin: 'auto' }, alt: image }}
+              {...{ src: image, alt: image }}
             />
           </CarouselItem>
         ))}
@@ -53,6 +53,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
           margin: auto;
 
           @media ${mediaQueries.maxWidth768} {
+            height: ${CONTROL_IMAGE_MOBILE_SIZE};
             width: 100%;
           }
         `}
@@ -63,7 +64,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
           const onImageClick = () => setActiveImageIndex(currentImageIndex);
 
           return (
-            <Image
+            <img
               key={image}
               onClick={onImageClick}
               css={css`
@@ -71,10 +72,14 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
                 height: ${CONTROL_IMAGE_SIZE};
                 width: ${CONTROL_IMAGE_SIZE};
                 border: ${isActive ? `5px solid ${theme.primaryColor}` : 'unset'};
-                margin-right: 10px;
                 display: flex;
+
+                @media ${mediaQueries.maxWidth768} {
+                  height: ${CONTROL_IMAGE_MOBILE_SIZE};
+                  width: ${CONTROL_IMAGE_MOBILE_SIZE};
+                }
               `}
-              imgProps={{ src: image, style: { margin: 'auto' }, alt: image }}
+              {...{ src: image, alt: image }}
             />
           );
         })}

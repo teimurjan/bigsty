@@ -229,5 +229,6 @@
   "common.account": "Аккаунт",
   "common.search": "Поиск",
   "common.more": "Больше",
-  "common.less": "Меньше"
+  "common.less": "Меньше",
+  "ProductTypePage.findMoreForCategory": "Еще в категории {value}."
 }

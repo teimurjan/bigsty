@@ -115,7 +115,7 @@ export const SearchView: React.FC<IProps> = ({
 
   return (
     <>
-      <Anchor onClick={open} noMobileHover>
+      <Anchor onClick={open} noHoverOnTouch>
         <WithIcon icon={faSearch} hideTextOnMobile>
           {intl.formatMessage({ id: 'common.search' })}
         </WithIcon>

@@ -198,7 +198,7 @@ export const CartView: React.FC<IProps> = props => {
             {cartItemsCount}
           </span>
         )}
-        <Anchor onClick={open} noMobileHover>
+        <Anchor onClick={open} noHoverOnTouch>
           <WithIcon icon={faShoppingCart} hideTextOnMobile>
             {intl.formatMessage({ id: 'common.cart' })}
           </WithIcon>

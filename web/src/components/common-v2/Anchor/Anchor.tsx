@@ -5,6 +5,8 @@ import { useTheme } from 'emotion-theming';
 import Link from 'next/link';
 import * as React from 'react';
 
+import { useIsTouch } from 'src/hooks/useIsTouch';
+
 interface IProps {
   className?: string;
   secondary?: boolean;
@@ -18,7 +20,7 @@ interface IProps {
   rel?: string;
   target?: string;
   plain?: boolean;
-  noMobileHover?: boolean;
+  noHoverOnTouch?: boolean;
 }
 
 export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
@@ -36,7 +38,7 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
       target,
       plain,
       secondary,
-      noMobileHover,
+      noHoverOnTouch,
     },
     ref,
   ) => {
@@ -53,6 +55,8 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
       [href, onClick],
     );
 
+    const isTouch = useIsTouch();
+
     const hoverColor = secondary ? theme.anchorSecondaryColor : theme.anchorColor;
 
     const anchor = (
@@ -60,7 +64,7 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
         ref={ref}
         rel={rel}
         target={target}
-        className={classNames(className, { active, thin, noMobileHover })}
+        className={classNames(className, { active, thin })}
         href={href || '#'}
         onClick={modifiedOnClick}
         onMouseEnter={onMouseEnter}
@@ -86,9 +90,9 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
             transition: transform 200ms;
           }
 
-          .anchor:hover > &:not(.noMobileHover)::before,
+          .anchor:hover > &::before,
           &.active::before {
-            transform: translateX(0);
+            transform: ${noHoverOnTouch && isTouch ? undefined : 'translateX(0)'};
           }
 
           &.thin {

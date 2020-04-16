@@ -40,7 +40,7 @@ export interface IProductTypeDetailResponseItem {
   description: string;
   short_description: string;
   image: string;
-  category: number;
+  category: { id: number, name: string, slug: string };
   feature_types: number[];
   products?: Array<{
     discount: number;
@@ -77,9 +77,18 @@ export interface IProductTypeNewestResponseData {
 }
 
 // DETAIL RAW INTL
+export interface IProductTypeDetailRawIntlResponseItem {
+  id: number;
+  name: { [key: string]: string };
+  description: { [key: string]: string };
+  short_description: { [key: string]: string };
+  image: string;
+  category: { id: number };
+  feature_types: number[];
+}
+
 export interface IProductTypeRawIntlResponseData {
-  data: IProductTypeListRawIntlResponseItem;
-  meta: IProductTypeListResponseMeta;
+  data: IProductTypeDetailRawIntlResponseItem;
 }
 
 // LIST RAW INTL MINIFIED

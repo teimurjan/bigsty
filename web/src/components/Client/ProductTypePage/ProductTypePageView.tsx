@@ -9,6 +9,7 @@ import { useIntl } from 'react-intl';
 import { PriceCrossedText } from 'src/components/Client/Price/Price';
 import { ProductTypeImageCarousel } from 'src/components/Client/ProductType/ProductTypeImageCarousel/ProductTypeImageCarousel';
 import { IViewProps as IProps } from 'src/components/Client/ProductTypePage/ProductTypePagePresenter';
+import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
 import { Button } from 'src/components/common-v2/Button/Button';
 import { Subtitle } from 'src/components/common-v2/Subtitle/Subtitle';
 import { Title } from 'src/components/common-v2/Title/Title';
@@ -121,7 +122,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         </Head>
         <div
           css={css`
-            align-items: flex-start;
+            align-items: center;
             margin-bottom: 1.5rem;
             display: flex;
 
@@ -150,25 +151,39 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
           <div
             css={css`
               display: flex;
-              align-items: flex-start;
-              padding-left: 50px;
+              padding: 0 0 7.5vw 50px;
               flex-direction: column;
               width: calc(100% - 40vw);
 
               @media ${mediaQueries.maxWidth768} {
-                padding-left: 0;
+                padding: 25px 0 0 0;
                 width: 100%;
               }
             `}
           >
-            <Title
+            <div
               css={css`
-                margin: 15px 0;
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 15px;
               `}
-              size={3}
             >
-              {productType.name}
-            </Title>
+              <Title
+                css={css`
+                  flex: 0 0 70%;
+                `}
+                size={2}
+              >
+                {productType.name}
+              </Title>
+              {matchingProduct && matchingProduct.quantity > 0 ? (
+                <Subtitle size={3}>
+                  <PriceCrossedText price={matchingProduct.price} discount={matchingProduct.discount} />
+                </Subtitle>
+              ) : (
+                <Subtitle size={3}>{intl.formatMessage({ id: 'ProductPage.notInStock' })}</Subtitle>
+              )}
+            </div>
             {allFeatureTypes.map(featureType => (
               <ClassNames key={featureType.id}>
                 {({ css: css_ }) => (
@@ -186,29 +201,8 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
                 )}
               </ClassNames>
             ))}
-            <div
-              css={css`
-                margin-bottom: 1.5rem;
-              `}
-            >
-              {matchingProduct && matchingProduct.quantity > 0 ? (
-                <Subtitle
-                  css={css`
-                    del {
-                      color: ${theme.dangerColor};
-                    }
-                  `}
-                  size={4}
-                >
-                  <PriceCrossedText price={matchingProduct.price} discount={matchingProduct.discount} />
-                </Subtitle>
-              ) : (
-                <Subtitle size={3}>{intl.formatMessage({ id: 'ProductPage.notInStock' })}</Subtitle>
-              )}
-            </div>
             <Subtitle
               css={css`
-                padding-bottom: 15px;
                 width: 100%;
               `}
               size={6}
@@ -226,6 +220,19 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
                 {actionText}
               </Button>
             )}
+            <Anchor
+              css={css`
+                padding-top: 15px;
+                margin-top: 15px;
+                border-top: 1px solid ${theme.borderColor};
+              `}
+              secondary
+              href="/categories/[id]/products"
+              asPath={`/categories/${productType.category.slug}/products`}
+            >
+              >{' '}
+              {intl.formatMessage({ id: 'ProductTypePage.findMoreForCategory' }, { value: productType.category.name })}
+            </Anchor>
           </div>
         </div>
       </Container>

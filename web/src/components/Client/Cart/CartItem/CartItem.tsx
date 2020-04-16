@@ -57,14 +57,7 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) 
             text-align: right;
           `}
         >
-          <Title
-            css={css`
-              del {
-                color: ${theme.dangerColor};
-              }
-            `}
-            size={6}
-          >
+          <Title size={6}>
             <PriceCrossedText price={product.price} discount={product.discount} />
           </Title>
         </div>
