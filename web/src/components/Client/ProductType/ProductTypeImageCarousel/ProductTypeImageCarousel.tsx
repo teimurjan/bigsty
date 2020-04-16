@@ -16,7 +16,7 @@ interface IProps {
 }
 
 export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImageIndex, setActiveImageIndex }) => {
-  const theme = useTheme<CSSTheme>();
+  const theme = useTheme<CSSThemeV2>();
 
   return (
     <div
@@ -31,20 +31,12 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
               css={css`
                 margin: auto;
                 display: flex;
-                height: 30vw;
-                width: 30vw;
+                height: 40vw;
+                width: 40vw;
 
-                @media ${mediaQueries.minWidth1600} {
-                  width: 500px;
-                  height: 500px;
-                }
-                @media ${mediaQueries.minWidth2000} {
-                  width: 600px;
-                  height: 600px;
-                }
                 @media ${mediaQueries.maxWidth768} {
-                  width: 80vw;
-                  height: 80vw;
+                  width: 90vw;
+                  height: 90vw;
                 }
               `}
               imgProps={{ src: image, style: { margin: 'auto' }, alt: image }}
@@ -57,16 +49,11 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
           height: ${CONTROL_IMAGE_SIZE};
           overflow: auto;
           display: flex;
-          width: 30vw;
+          width: 40vw;
+          margin: auto;
 
-          @media ${mediaQueries.minWidth1600} {
-            width: 500px;
-          }
-          @media ${mediaQueries.minWidth2000} {
-            width: 600px;
-          }
           @media ${mediaQueries.maxWidth768} {
-            width: 80vw;
+            width: 90vw;
           }
         `}
       >
@@ -83,7 +70,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
                 cursor: pointer;
                 height: ${CONTROL_IMAGE_SIZE};
                 width: ${CONTROL_IMAGE_SIZE};
-                border: ${isActive ? `3px solid ${theme.primary}` : 'unset'};
+                border: ${isActive ? `5px solid ${theme.primaryColor}` : 'unset'};
                 margin-right: 10px;
                 display: flex;
               `}

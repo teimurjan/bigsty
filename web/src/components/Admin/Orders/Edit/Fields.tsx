@@ -187,6 +187,9 @@ const OrderItemsField = ({ input, meta }: FieldRenderProps<IOrderListResponseIte
           ))
         : null}
       <ProductSelectContainer
+        css={css`
+          margin: 10px 0;
+        `}
         placeholder={intl.formatMessage({ id: 'AdminOrders.newProduct.placeholder' })}
         onChange={product => {
           addOrderItem({

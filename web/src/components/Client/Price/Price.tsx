@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Tag } from 'src/components/common/Tag/Tag';
 import { useIntlState } from 'src/state/IntlState';
 import { useRatesState } from 'src/state/RatesState';
 import { calculateDiscountedPrice } from 'src/utils/number';
@@ -47,33 +46,44 @@ const useFormattedPrice = ({ price, discount }: IPriceProps) => {
   }
 };
 
-export const PriceRangeText = ({ range }: IPriceRangeTextProps) => {
-  const intl = useIntl();
-
+const usePriceRange = ({ range }: IPriceRangeTextProps) => {
   const calculatedRange = range.map(price => calculateDiscountedPrice(price.price, price.discount || 0));
   const discounts = range.map(price => price.discount || 0).filter(discount => discount !== 0);
 
   const biggestFormattedPrice = useFormattedPrice({ price: Math.max(...calculatedRange), discount: 0 });
   const lowestFormattedPrice = useFormattedPrice({ price: Math.min(...calculatedRange), discount: 0 });
 
+  return { calculatedRange, discounts, biggestFormattedPrice, lowestFormattedPrice };
+};
+
+export const usePriceRangeText = ({ range }: IPriceRangeTextProps) => {
+  const intl = useIntl();
+
+  const { calculatedRange, discounts, biggestFormattedPrice, lowestFormattedPrice } = usePriceRange({ range });
+
+  const price = React.useMemo(
+    () =>
+      calculatedRange.length > 1 ? `${lowestFormattedPrice} - ${biggestFormattedPrice}` : `${biggestFormattedPrice}`,
+    [lowestFormattedPrice, biggestFormattedPrice, calculatedRange],
+  );
+
+  const discount = React.useMemo(() => {
+    if (range.length === 1 && discounts.length === 1) {
+      return intl.formatMessage({ id: 'Price.discount' }, { value: Math.max(...discounts) });
+    }
+    if (range.length > 1 && discounts.length > 1) {
+      return intl.formatMessage({ id: 'Price.discountUpTo' }, { value: Math.max(...discounts) });
+    }
+  }, [range, intl, discounts]);
+
   if (calculatedRange.length === 0) {
-    return <>{intl.formatMessage({ id: 'common.notSpecified' })}</>;
+    return { price: intl.formatMessage({ id: 'common.notSpecified' }) };
   }
 
-  return (
-    <>
-      {calculatedRange.length > 1 ? `${lowestFormattedPrice} - ${biggestFormattedPrice}` : `${biggestFormattedPrice}`}
-      <br />
-      {range.length === 1 && discounts.length === 1 && (
-        <Tag color="is-warning">{intl.formatMessage({ id: 'Price.discount' }, { value: Math.max(...discounts) })}</Tag>
-      )}
-      {range.length > 1 && discounts.length > 1 && (
-        <Tag color="is-warning">
-          {intl.formatMessage({ id: 'Price.discountUpTo' }, { value: Math.max(...discounts) })}
-        </Tag>
-      )}
-    </>
-  );
+  return {
+    price,
+    discount,
+  };
 };
 
 export const PriceCrossedText = ({ price, discount }: IPriceProps) => {

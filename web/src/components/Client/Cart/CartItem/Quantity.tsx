@@ -1,9 +1,12 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTheme } from 'emotion-theming';
 import { useIntl } from 'react-intl';
 
-import { Button } from 'src/components/common/Button/Button';
+import { Button } from 'src/components/common-v2/Button/Button';
+import { Title } from 'src/components/common-v2/Title/Title';
 import { preventDefault } from 'src/utils/dom';
 
 interface IProps {
@@ -15,33 +18,44 @@ interface IProps {
 
 export const Quantity = ({ count, allowedCount, onAddClick, onRemoveClick }: IProps) => {
   const intl = useIntl();
-  const theme = useTheme<CSSTheme>();
+  const theme = useTheme<CSSThemeV2>();
 
   return (
     <div
       css={css`
         padding-top: 1rem;
-        display: flex;
-        justify-content: space-between;
       `}
     >
-      <div>
-        {intl.formatMessage({ id: 'common.quantity' })}: {count}
-        {count > allowedCount && (
-          <small
-            css={css`
-              color: ${theme.danger};
-            `}
-          >
-            <br />
-            {intl.formatMessage({ id: 'Cart.onlySomeAvailable' }, { quantity: allowedCount })}
-          </small>
-        )}
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+        `}
+      >
+        <Button circled size="mini" onClick={preventDefault(onRemoveClick)}>
+          <FontAwesomeIcon icon={faMinus} />
+        </Button>
+        <Title
+          size={6}
+          css={css`
+            margin: 0 15px;
+          `}
+        >
+          {count}
+        </Title>
+        <Button circled size="mini" onClick={preventDefault(onAddClick)}>
+          <FontAwesomeIcon icon={faPlus} />
+        </Button>
       </div>
-      <div>
-        <Button onClick={preventDefault(onRemoveClick)}>{intl.formatMessage({ id: 'common.remove' })}</Button>
-        <Button onClick={preventDefault(onAddClick)}>{intl.formatMessage({ id: 'common.add' })}</Button>
-      </div>
+      {count > allowedCount && (
+        <small
+          css={css`
+            color: ${theme.dangerColor};
+          `}
+        >
+          {intl.formatMessage({ id: 'Cart.onlySomeAvailable' }, { quantity: allowedCount })}
+        </small>
+      )}
     </div>
   );
 };

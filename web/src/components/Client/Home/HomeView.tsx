@@ -7,10 +7,10 @@ import { Transition } from 'react-transition-group';
 
 import { IViewProps as IProps } from 'src/components/Client/Home/HomePresenter';
 import { ProductTypesListView } from 'src/components/Client/ProductType/ProductTypesList/ProductTypesListView';
+import { LinkButton } from 'src/components/common-v2/Button/Button';
+import { Title } from 'src/components/common-v2/Title/Title';
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
-import { LinkButton } from 'src/components/common/LinkButton/LinkButton';
-import { Title } from 'src/components/common/Title/Title';
-import { useMedia } from 'src/hooks/useMedia';
+import { Container } from 'src/components/common/Container/Container';
 import { mediaQueries } from 'src/styles/media';
 
 const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
@@ -30,8 +30,6 @@ const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
 export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
   const intl = useIntl();
   const [activeBannerIndex, setActiveBannerIndex] = React.useState(0);
-
-  const titleSize = useMedia<2 | 1>([mediaQueries.maxWidth768], [2], 1);
 
   React.useEffect(() => {
     const intervalID = setInterval(() => {
@@ -59,13 +57,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
             {banners.map(banner => {
               const button =
                 banner.link && banner.link_text ? (
-                  <LinkButton
-                    css={css`
-                      margin-top: -80px;
-                    `}
-                    color="is-primary"
-                    href={banner.link}
-                  >
+                  <LinkButton color="light" href={banner.link}>
                     {banner.link_text}
                   </LinkButton>
                 ) : null;
@@ -73,7 +65,6 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
               return (
                 <CarouselItem
                   key={banner.id}
-                  asPath={banner.link_text ? undefined : banner.link}
                   css={css`
                     width: 100%;
                     min-height: 200px;
@@ -92,23 +83,24 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                     `}
                     src={banner.image}
                   />
-                  {button}
                   <Title
-                    className="is-spaced"
                     css={css`
-                    text-align: center;
+                      text-align: left;
                       position: absolute;
                       width: 60%;
                       color: ${banner.text_color || '#fff'} !important;
+                      font-weight: 500;
                       ${getTextPositioningCSS(banner)}
 
                       @media ${mediaQueries.maxWidth768} {
                         width: 90%;
                       }
                     `}
-                    size={titleSize}
+                    size={1}
                   >
                     {banner.text}
+                    <br />
+                    {button}
                   </Title>
                 </CarouselItem>
               );
@@ -117,14 +109,17 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
         )}
       </Transition>
 
-      <Title
-        css={css`
-          margin-top: 1rem;
-        `}
-        size={3}
-      >
-        {intl.formatMessage({ id: 'common.newest' })}
-      </Title>
+      <Container>
+        <Title
+          css={css`
+            margin-top: 1rem;
+          `}
+          size={3}
+        >
+          {intl.formatMessage({ id: 'common.newest' })}
+        </Title>
+      </Container>
+
       <ProductTypesListView productTypes={productTypes} isLoading={false} />
     </div>
   );

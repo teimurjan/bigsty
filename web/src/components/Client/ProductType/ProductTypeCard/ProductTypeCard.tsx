@@ -1,20 +1,17 @@
 /** @jsx jsx */
 import { css, jsx, keyframes } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 import Link from 'next/link';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
 import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
-import { PriceRangeText } from 'src/components/Client/Price/Price';
-import { Button } from 'src/components/common/Button/Button';
-import { Card } from 'src/components/common/Card/Card';
-import { CardContent } from 'src/components/common/CardContent/CardContent';
-import { CardImage } from 'src/components/common/CardImage/CardImage';
+import { usePriceRangeText } from 'src/components/Client/Price/Price';
+import { Button } from 'src/components/common-v2/Button/Button';
+import { Subtitle } from 'src/components/common-v2/Subtitle/Subtitle';
+import { Title } from 'src/components/common-v2/Title/Title';
 import { Image } from 'src/components/common/Image/Image';
-import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
-import { Title } from 'src/components/common/Title/Title';
 import { useIntersectionObserver } from 'src/hooks/useIntersectionObserver';
-import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
 
 export interface IProps {
@@ -33,82 +30,109 @@ const fadeIn = keyframes`
 `;
 
 const intersectionObserverOptions = {
-  threshold: 0.5,
+  threshold: 0.3,
 };
 
 export const ProductTypeCard = ({ productType }: IProps) => {
+  const theme = useTheme<CSSThemeV2>();
   const intl = useIntl();
   const asPath = `/products/${productType.id}`;
   const ref = React.useRef<HTMLAnchorElement>(null);
   const { hasIntersected } = useIntersectionObserver(ref, intersectionObserverOptions);
+  const { price, discount } = usePriceRangeText({ range: productType.products || [] });
 
   return (
     <Link href="/products/[id]" as={asPath}>
-      <a ref={ref}>
-        <Card
+      <a
+        ref={ref}
+        css={css`
+          color: unset;
+          position: relative;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          animation: ${hasIntersected
+            ? css`
+                ${fadeIn} 400ms cubic-bezier(0.61, 1, 0.88, 1);
+              `
+            : undefined};
+          animation-fill-mode: forwards;
+          opacity: 0;
+        `}
+      >
+        <Image
+          className="image is-square"
+          imgProps={{ src: formatMediaURL(productType.image), alt: productType.name }}
+        />
+        <div
           css={css`
-            height: 100%;
             display: flex;
             flex-direction: column;
-            transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            animation: ${hasIntersected
-              ? css`
-                  ${fadeIn} 400ms cubic-bezier(0.61, 1, 0.88, 1);
-                `
-              : undefined};
-            animation-fill-mode: forwards;
-            opacity: 0;
-
-            &:hover {
-              box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-            }
+            flex: 1;
+            padding: 0 5px;
           `}
         >
-          <CardImage>
-            <Image
-              className="image is-square"
-              imgProps={{ src: formatMediaURL(productType.image), alt: productType.name }}
-            />
-          </CardImage>
-          <CardContent
+          <Title
+            css={css`
+              margin-top: 10px;
+            `}
+            size={6}
+          >
+            {productType.name}
+          </Title>
+          <Subtitle
+            css={css`
+              margin-bottom: 20px;
+            `}
+            size={6}
+          >
+            {productType.short_description}
+          </Subtitle>
+        </div>
+        <Button
+          css={css`
+            width: 100%;
+            margin-top: auto;
+          `}
+        >
+          <span
             css={css`
               display: flex;
-              flex-direction: column;
-              flex: 1;
-
-              @media ${mediaQueries.maxWidth768} {
-                padding: 0.5rem;
-              }
+              justify-content: space-between;
+              align-items: center;
+              padding: 0 15px;
             `}
-          >
-            <Subtitle
-              css={css`
-                margin-bottom: 0.5rem !important;
-              `}
-              size={5}
-            >
-              {productType.name}
-            </Subtitle>
-            <Title
-              css={css`
-                margin-top: auto !important;
-              `}
-              size={5}
-            >
-              {productType.products && <PriceRangeText range={productType.products} />}
-            </Title>
-          </CardContent>
-          <Button
-            css={css`
-              width: 100%;
-              border-radius: unset !important;
-              margin-top: auto;
-            `}
-            color="is-primary"
           >
             {intl.formatMessage({ id: 'common.buy' })}
-          </Button>
-        </Card>
+            {price && (
+              <>
+                <span>|</span>
+                {price}
+              </>
+            )}
+          </span>
+        </Button>
+        {discount && (
+          <div
+            css={css`
+              padding: 2.5px 5px;
+              background-color: ${theme.primaryColor};
+              color: ${theme.textOnPrimaryColor};
+              position: absolute;
+              top: 10px;
+              right: 10px;
+              font-weight: bold;
+            `}
+          >
+            <small
+              css={css`
+                font-size: 12px;
+              `}
+            >
+              {discount}
+            </small>
+          </div>
+        )}
       </a>
     </Link>
   );

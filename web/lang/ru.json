@@ -224,5 +224,10 @@
   "common.addedToCart": "Добавлено!",
   "common.errors.invalidPhone": "Неверный номер телефона",
   "common.errors.notTrimmed": "Пробелы в начале/конце запрещены.",
-  "common.menu": "Меню"
+  "common.menu": "Меню",
+  "common.cart": "Корзина",
+  "common.account": "Аккаунт",
+  "common.search": "Поиск",
+  "common.more": "Больше",
+  "common.less": "Меньше"
 }

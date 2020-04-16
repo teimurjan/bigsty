@@ -1,8 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import classNames from 'classnames';
 import { useTheme } from 'emotion-theming';
-import Link from 'next/link';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { usePopper, PopperProps } from 'react-popper';
@@ -10,6 +8,7 @@ import { CSSTransition } from 'react-transition-group';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 import useClickOutside from 'src/hooks/useClickOutside';
+import useMouseOutside from 'src/hooks/useMouseOutside';
 import { safeDocument } from 'src/utils/dom';
 
 export const poppingCSS = css`
@@ -51,23 +50,26 @@ export type RenderTrigger<T> = (props: {
   ref: React.RefObject<T>;
 }) => React.ReactNode;
 
-export type TriggerProps =
-  | {
-      onClick: React.MouseEventHandler;
-    }
-  | {
-      onMouseEnter: React.MouseEventHandler;
-      onMouseLeave: React.MouseEventHandler;
-    };
+export type TriggerClickProps = {
+  onClick: React.MouseEventHandler;
+};
+export type TriggerHoverProps = {
+  onMouseEnter: React.MouseEventHandler;
+};
+type TriggerClickComponent<T> = React.ComponentType<TriggerClickProps & React.RefAttributes<T>>;
+type TriggerHoverComponent<T> = React.ComponentType<TriggerHoverProps & React.RefAttributes<T>>;
 
 interface IProps<T> {
-  TriggerComponent?: React.ComponentType<TriggerProps & React.RefAttributes<T>>;
+  TriggerComponent?: TriggerClickComponent<T> | TriggerHoverComponent<T>;
   renderTrigger?: RenderTrigger<T>;
   hasArrow?: boolean;
   children?: React.ReactNode | RenderChildren;
   forceClose?: boolean;
   preventOverflow?: boolean;
+  openOnHover?: boolean;
   placement?: PopperProps['placement'];
+  offset?: number[];
+  refsToInclude?: React.RefObject<HTMLElement>[];
 }
 
 export const Popover = <T extends HTMLElement>({
@@ -78,6 +80,9 @@ export const Popover = <T extends HTMLElement>({
   forceClose = false,
   preventOverflow = true,
   placement = 'bottom-start',
+  openOnHover = false,
+  refsToInclude = [],
+  offset,
 }: IProps<T>) => {
   const popoverRoot = safeDocument(d => d.getElementById('popoverRoot'), null);
 
@@ -87,7 +92,8 @@ export const Popover = <T extends HTMLElement>({
   const [popperRef, setPopperRef] = React.useState<HTMLDivElement | null>(null);
   const arrowRef = React.useRef<HTMLDivElement>(null);
 
-  useClickOutside([{ current: popperRef }, triggerRef], close);
+  useClickOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close);
+  useMouseOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close, openOnHover && isOpen);
 
   const modifiers = React.useMemo(() => {
     const modifiers_ = [];
@@ -97,8 +103,11 @@ export const Popover = <T extends HTMLElement>({
     if (preventOverflow) {
       modifiers_.push({ name: 'preventOverflow', enabled: true, options: { escapeWithReference: true } });
     }
+    if (offset) {
+      modifiers_.push({ name: 'offset', enabled: true, options: { offset } });
+    }
     return modifiers_;
-  }, [hasArrow, arrowRef, preventOverflow]);
+  }, [hasArrow, arrowRef, preventOverflow, offset]);
 
   const popper = usePopper(triggerRef.current, popperRef, { modifiers, placement });
 
@@ -108,11 +117,16 @@ export const Popover = <T extends HTMLElement>({
     }
 
     if (TriggerComponent) {
-      return <TriggerComponent ref={triggerRef} onClick={open} />;
+      return openOnHover
+        ? React.createElement(TriggerComponent as TriggerHoverComponent<T>, {
+            ref: triggerRef,
+            onMouseEnter: open,
+          })
+        : React.createElement(TriggerComponent as TriggerClickComponent<T>, { ref: triggerRef, onClick: open });
     }
 
     return null;
-  }, [renderTrigger, TriggerComponent, open, close, isOpen, toggle]);
+  }, [renderTrigger, TriggerComponent, open, close, isOpen, toggle, openOnHover]);
 
   return (
     <>
@@ -171,82 +185,3 @@ const PopoverContent: React.FC<IPopoverContentProps> = ({ children, className })
 };
 
 Popover.Content = PopoverContent;
-
-interface IPopoverLinkProps {
-  href?: string;
-  asPath?: string;
-  onClick?: React.MouseEventHandler;
-  active?: boolean;
-}
-
-const PopoverLink: React.FC<IPopoverLinkProps> = ({ children, href, asPath, onClick, active }) => {
-  const theme = useTheme<CSSTheme>();
-
-  const modifiedOnClick = React.useCallback(
-    e => {
-      if (!href) {
-        e.preventDefault();
-      }
-
-      onClick && onClick(e);
-    },
-    [href, onClick],
-  );
-
-  const anchor = (
-    <a
-      className={classNames({ active })}
-      href={href || '#'}
-      onClick={modifiedOnClick}
-      css={css`
-        color: ${theme.dark};
-        transition: color 300ms;
-        position: relative;
-        display: inline-block;
-
-        &.active {
-          color: ${theme.primary};
-          font-weight: bold;
-        }
-
-        .popover-link > &::before {
-          content: '';
-          position: absolute;
-          bottom: -2.5px;
-          width: 100%;
-          height: 2px;
-          transform: translateX(-100%);
-          background: ${theme.dark};
-          transition: transform 200ms;
-        }
-
-        .popover-link:hover > &::before {
-          transform: translateX(0);
-        }
-      `}
-    >
-      {children}
-    </a>
-  );
-
-  return (
-    <div
-      className="popover-link"
-      css={css`
-        overflow: hidden;
-        cursor: pointer;
-        padding: 5px 0;
-      `}
-    >
-      {href ? (
-        <Link href={href} as={asPath}>
-          {anchor}
-        </Link>
-      ) : (
-        anchor
-      )}
-    </div>
-  );
-};
-
-Popover.Link = PopoverLink;

@@ -11,6 +11,7 @@ export interface IProps {
   searchService: ISearchService;
   onChange: (product: IProductForProductTypeResponseItem) => void;
   placeholder?: string;
+  className?: string;
 }
 
 export interface IViewProps {
@@ -22,9 +23,10 @@ export interface IViewProps {
   selectedProductType?: IProductTypeListResponseItem;
   onChange: IProps['onChange'];
   placeholder?: string;
+  className?: string;
 }
 
-export const ProductSelectPresenter = ({ searchService, onChange, View, placeholder }: IProps) => {
+export const ProductSelectPresenter = ({ searchService, onChange, View, placeholder, className }: IProps) => {
   const [productTypes, setProductTypes] = React.useState<{ [id: string]: IProductTypeListResponseItem }>({});
   const [selectedProductType, setSelectedProductType] = React.useState<IProductTypeListResponseItem | undefined>(
     undefined,
@@ -62,6 +64,7 @@ export const ProductSelectPresenter = ({ searchService, onChange, View, placehol
 
   return (
     <View
+      className={className}
       isLoading={isLoadingDebounced}
       productTypes={agregateOrderedMapToArray(productTypes, order)}
       onSearchValueChange={onSearchValueChange}

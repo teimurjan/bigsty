@@ -5,9 +5,9 @@ import { useTheme } from 'emotion-theming';
 import { IProductForCartResponseItem } from 'src/api/ProductAPI';
 import { Quantity } from 'src/components/Client/Cart/CartItem/Quantity';
 import { PriceCrossedText } from 'src/components/Client/Price/Price';
+import { Subtitle } from 'src/components/common-v2/Subtitle/Subtitle';
+import { Title } from 'src/components/common-v2/Title/Title';
 import { Image } from 'src/components/common/Image/Image';
-import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
-import { Title } from 'src/components/common/Title/Title';
 
 interface IProps {
   product: IProductForCartResponseItem;
@@ -17,12 +17,14 @@ interface IProps {
 }
 
 export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) => {
-  const theme = useTheme<CSSTheme>();
+  const theme = useTheme<CSSThemeV2>();
 
   return (
     <div
       css={css`
-        padding: 2rem 0;
+        padding: 10px 0;
+        margin: 10px 0;
+        border-bottom: 1px solid ${theme.borderColor};
       `}
     >
       <div
@@ -32,8 +34,8 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) 
       >
         <Image
           css={css`
-            height: 100px;
-            flex: 0 0 100px;
+            height: 50px;
+            flex: 0 0 50px;
           `}
           imgProps={{
             src: product.images[0] || product.product_type.image,
@@ -46,8 +48,8 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) 
             padding-left: 2rem;
           `}
         >
-          <Title size={4}>{product.product_type.name}</Title>
-          <Subtitle size={5}>{product.feature_values.map(featureValue => featureValue.name).join(', ')}</Subtitle>
+          <Title size={6}>{product.product_type.name}</Title>
+          <Subtitle size={6}>{product.feature_values.map(featureValue => featureValue.name).join(', ')}</Subtitle>
         </div>
         <div
           css={css`
@@ -55,18 +57,16 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) 
             text-align: right;
           `}
         >
-          <Subtitle
+          <Title
             css={css`
-              color: ${theme.dark};
-
               del {
-                color: ${theme.danger};
+                color: ${theme.dangerColor};
               }
             `}
-            size={3}
+            size={6}
           >
             <PriceCrossedText price={product.price} discount={product.discount} />
-          </Subtitle>
+          </Title>
         </div>
       </div>
       <Quantity count={count} allowedCount={product.quantity} onAddClick={onAddClick} onRemoveClick={onRemoveClick} />

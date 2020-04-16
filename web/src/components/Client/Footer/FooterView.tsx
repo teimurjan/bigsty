@@ -1,10 +1,10 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
-import { faPhoneAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useIntl } from 'react-intl';
 
+import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
+import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
 import { Container } from 'src/components/common/Container/Container';
 import { mediaQueries } from 'src/styles/media';
 
@@ -15,7 +15,6 @@ export const FooterView = () => {
     <footer
       css={css`
         margin-top: 1rem;
-        height: 80px;
         padding: 15px 0 !important;
         box-sizing: content-box;
 
@@ -23,31 +22,33 @@ export const FooterView = () => {
           padding: 15px 10px;
         }
       `}
-      className="footer"
     >
       <Container>
         <div
           css={css`
             display: flex;
             justify-content: space-between;
+            align-items: center;
           `}
         >
-          <a href="https://www.instagram.com/eye8_collection/" rel="noopener noreferrer" target="_blank">
-            <FontAwesomeIcon size="lg" icon={faInstagram} /> Instagram
-          </a>
+          <div
+            css={css`
+              text-align: center;
+              font-weight: bold;
+            `}
+          >
+            {intl.formatMessage({ id: 'Footer.copy' }, { year: new Date().getFullYear() })}
+          </div>
 
-          <a href="tel:+996550010726">
-            <FontAwesomeIcon size="lg" icon={faPhoneAlt} /> +996 550 01 07 26
-          </a>
-        </div>
-
-        <div
-          css={css`
-            text-align: center;
-            margin-top: 1.5rem;
-          `}
-        >
-          {intl.formatMessage({ id: 'Footer.copy' }, { year: new Date().getFullYear() })}
+          <div
+            css={css`
+              display: flex;
+            `}
+          >
+            <Anchor plain href="https://www.instagram.com/eye8_collection/" rel="noopener noreferrer" target="_blank">
+              <WithIcon icon={faInstagram}>Instagram</WithIcon>
+            </Anchor>
+          </div>
         </div>
       </Container>
     </footer>

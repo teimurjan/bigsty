@@ -23,7 +23,7 @@ const HORIZONTAL_PADDING_PX = 2.5;
 
 export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
   ({ className, hasError, placeholder, onFocus, autoFocus, ...props }, ref) => {
-    const theme = useTheme<CSSTheme>();
+    const theme = useTheme<CSSThemeV2>();
     const { value: isFocused, setNegative: blur, setPositive: focus } = useBoolean();
 
     const onFocus_: IProps['onFocus'] = React.useCallback(
@@ -43,13 +43,13 @@ export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
 
           &::after {
             content: '';
-            background: linear-gradient(to right, ${theme.primary} 50%, transparent 50%);
+            background: linear-gradient(to right, ${theme.primaryColor} 50%, black 50%);
             transition: transform 500ms;
             transform: translateX(${isFocused ? 0 : -50}%);
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 2px;
+            height: 1px;
             width: 200%;
           }
         `}
@@ -61,6 +61,8 @@ export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
             padding: ${VERTICAL_PADDING_PX + 10}px ${HORIZONTAL_PADDING_PX}px ${VERTICAL_PADDING_PX}px
               ${HORIZONTAL_PADDING_PX}px;
             font-size: 16px;
+            background: transparent;
+            width: 100%;
 
             &:focus {
               outline: none;
@@ -81,12 +83,11 @@ export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
             transition: all 400ms;
             font-size: ${isFocused ? 10 : 16}px;
             transform: translateY(${isFocused ? -22 : 0}px);
-            color: ${isFocused ? theme.dark : theme.greyLight};
+            color: ${isFocused ? theme.textColor : theme.textFadedColor};
 
             input:not([value='']) ~ & {
-              font-size: 10px;
-              transform: translateY(-22px);
-              color: ${theme.dark};
+              transform: translateY(-22px), scale(0.66);
+              color: ${theme.textColor};
             }
           `}
         >

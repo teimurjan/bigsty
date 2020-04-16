@@ -224,5 +224,10 @@
   "common.addedToCart": "Added!",
   "common.errors.invalidPhone": "Invalid phone number",
   "common.errors.notTrimmed": "Leading/trailing whitespaces not allowed.",
-  "common.menu": "Menu"
+  "common.menu": "Menu",
+  "common.cart": "Cart",
+  "common.account": "Account",
+  "common.search": "Search",
+  "common.more": "More",
+  "common.less": "Less"
 }

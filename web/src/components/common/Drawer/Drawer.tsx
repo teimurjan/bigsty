@@ -22,7 +22,7 @@ const cssOfSide = {
       left: 0;
     `,
     initial: css`
-      opacity: 0;
+      opacity: 0.5;
       transform: translateY(-100%);
     `,
     final: css`
@@ -37,7 +37,7 @@ const cssOfSide = {
       left: 0;
     `,
     initial: css`
-      opacity: 0;
+      opacity: 0.5;
       transform: translateX(-100%);
     `,
     final: css`
@@ -52,7 +52,7 @@ const cssOfSide = {
       left: 0;
     `,
     initial: css`
-      opacity: 0;
+      opacity: 0.5;
       transform: translateY(100%);
     `,
     final: css`
@@ -67,7 +67,7 @@ const cssOfSide = {
       right: 0;
     `,
     initial: css`
-      opacity: 0;
+      opacity: 0.5;
       transform: translateX(100%);
     `,
     final: css`
@@ -212,7 +212,7 @@ export const Drawer = ({
           onExited={onExited}
         >
           <div css={slidingCSS}>
-            <div className={classNames('drawer-content', { fixed })} ref={ref} {...props}>
+            <div className={classNames(className, 'drawer-content', { fixed })} ref={ref} {...props}>
               {children}
             </div>
             {showClose && (

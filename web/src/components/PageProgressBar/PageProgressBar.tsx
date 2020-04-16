@@ -6,7 +6,7 @@ import { useTheme } from 'emotion-theming';
 import { useRouteChangeStatus, Status } from 'src/hooks/useRouteChangeStatus';
 
 export const PageProgressBar = () => {
-  const theme = useTheme<CSSTheme>();
+  const theme = useTheme<CSSThemeV2>();
   const status = useRouteChangeStatus();
   return (
     <NProgress isAnimating={status === Status.Loading}>
@@ -20,7 +20,7 @@ export const PageProgressBar = () => {
         >
           <div
             css={css`
-              background: ${theme.primary};
+              background: ${theme.primaryColor};
               position: fixed;
               top: 0;
               left: 0;

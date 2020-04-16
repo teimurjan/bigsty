@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NextRouter } from 'next/router';
+import * as React from 'react';
 import { useIntl } from 'react-intl';
 
 import { IViewProps as IProps } from 'src/components/Client/Nav/NavPresenter';
-import { Menu } from 'src/components/common/Menu/Menu';
-import { NavLink } from 'src/components/common/NavLink/NavLink';
+import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
+import { Button } from 'src/components/common-v2/Button/Button';
+import { Menu } from 'src/components/common-v2/Menu/Menu';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { mediaQueries } from 'src/styles/media';
 
@@ -17,51 +17,58 @@ interface ICategoryMenuItemProps {
   renderChildren: (renderProps: { collapsed: boolean }) => React.ReactNode;
   defaultCollpsed?: boolean;
   name: string;
+  className?: string;
 }
 
 const CategoryMenuItem = ({
-  active,
+  className,
   asPath,
   renderChildren,
   name,
   defaultCollpsed = false,
 }: ICategoryMenuItemProps) => {
   const { value: collapsed, toggle } = useBoolean(defaultCollpsed);
+  const intl = useIntl();
+
+  const onToggleClick: React.MouseEventHandler = React.useCallback(
+    e => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggle();
+    },
+    [toggle],
+  );
 
   const children = renderChildren({ collapsed });
 
   return (
-    <Menu.Item>
-      <NavLink
+    <Menu.Item className={className}>
+      <Anchor
         css={css`
           display: flex !important;
           align-items: center;
           justify-content: space-between;
           padding-right: 0.25rem !important;
+          width: 100%;
         `}
-        active={active}
-        as={asPath}
+        asPath={asPath}
         href="/categories/[id]/products"
+        secondary
       >
         {name}
         {children && (
-          <FontAwesomeIcon
-            onClick={e => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggle();
-            }}
+          <Button
+            onClick={onToggleClick}
             css={css`
-              padding: 5px;
-              box-sizing: content-box;
-              transform: ${collapsed ? 'rotateZ(180deg)' : undefined};
-              transition: transform 300ms ease-in-out;
+              vertical-align: middle;
+              margin-left: 10px;
             `}
-            icon={faCaretDown}
-            size="sm"
-          />
+            size="mini"
+          >
+            {collapsed ? intl.formatMessage({ id: 'common.more' }) : intl.formatMessage({ id: 'common.less' })}
+          </Button>
         )}
-      </NavLink>
+      </Anchor>
       {children}
     </Menu.Item>
   );
@@ -88,11 +95,17 @@ const renderCategoryMenuList = ({
   }
 
   return (
-    <Menu.List collapsed={collapsed}>
-      {parentCategories.map(parentCategory => {
+    <Menu.List collapsed={collapsed} direction="row">
+      {parentCategories.map((parentCategory, i) => {
         const asPath = `/categories/${parentCategory.slug}/products`;
         return (
           <CategoryMenuItem
+            css={css`
+              margin-right: ${i !== parentCategories.length - 1 ? '20px' : undefined};
+              @media ${mediaQueries.maxWidth768} {
+                margin-right: 0;
+              }
+            `}
             key={parentCategory.id}
             active={router.asPath === asPath}
             asPath={asPath}
@@ -115,12 +128,9 @@ const renderCategoryMenuList = ({
 };
 
 export const NavView = ({ categories, router }: IProps & { router: NextRouter }) => {
-  const intl = useIntl();
-
   return (
     <Menu
       css={css`
-        width: 250px;
         padding: 0 1.5rem;
 
         @media ${mediaQueries.maxWidth768} {
@@ -129,14 +139,6 @@ export const NavView = ({ categories, router }: IProps & { router: NextRouter })
         }
       `}
     >
-      <Menu.List>
-        <Menu.Item>
-          <NavLink active={router.asPath === '/'} href="/">
-            {intl.formatMessage({ id: 'AdminMenu.home' })}
-          </NavLink>
-        </Menu.Item>
-      </Menu.List>
-      <Menu.Label>{intl.formatMessage({ id: 'Nav.categories.title' })}</Menu.Label>
       {renderCategoryMenuList({ categories, router })}
     </Menu>
   );

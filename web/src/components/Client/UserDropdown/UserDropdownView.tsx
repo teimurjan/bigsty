@@ -4,15 +4,21 @@ import { useIntl } from 'react-intl';
 
 import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
 import { IViewProps as IProps } from 'src/components/Client/UserDropdown/UserDropdownPresenter';
-import { IconLink } from 'src/components/common/IconLink/IconLink';
-import { Popover, TriggerProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
+import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
+import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
+import { Popover, TriggerHoverProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
 import { isUserAuthorized, isUserAdmin } from 'src/helpers/user';
 
-const Trigger = React.forwardRef<HTMLDivElement, PopoverTriggerProps>((props, ref) => (
-  <div ref={ref} {...props}>
-    <IconLink icon={faUser} />
-  </div>
-));
+const Trigger = React.forwardRef<HTMLAnchorElement, PopoverTriggerProps>((props, ref) => {
+  const intl = useIntl();
+  return (
+    <Anchor ref={ref} {...props}>
+      <WithIcon icon={faUser} hideTextOnMobile>
+        {intl.formatMessage({ id: 'common.account' })}
+      </WithIcon>
+    </Anchor>
+  );
+});
 
 export const UserDropdownView = ({ user, onLogoutClick }: IProps) => {
   const intl = useIntl();
@@ -21,37 +27,37 @@ export const UserDropdownView = ({ user, onLogoutClick }: IProps) => {
 
   if (isUserAdmin(user)) {
     items.push(
-      <Popover.Link key="adminPanel" href="/admin">
+      <Anchor key="adminPanel" href="/admin" thin>
         {intl.formatMessage({ id: 'Header.admin' })}
-      </Popover.Link>,
+      </Anchor>,
     );
   }
 
   if (isUserAuthorized(user)) {
     items.push(
-      <Popover.Link key="logOut" onClick={onLogoutClick}>
+      <Anchor key="logOut" onClick={onLogoutClick} thin>
         {intl.formatMessage({ id: 'Header.logOut' })}
-      </Popover.Link>,
+      </Anchor>,
     );
   } else {
     items.push(
-      <Popover.Link key="logIn" href="/login">
+      <Anchor key="logIn" href="/login" thin>
         {intl.formatMessage({ id: 'Header.logIn' })}
-      </Popover.Link>,
-      <Popover.Link key="signUp" href="/signup">
+      </Anchor>,
+      <Anchor key="signUp" href="/signup" thin>
         {intl.formatMessage({ id: 'Header.signUp' })}
-      </Popover.Link>,
+      </Anchor>,
     );
   }
 
   items.push(
-    <Popover.Link key="language">
+    <Anchor key="language" thin>
       <LanguageDropdown />
-    </Popover.Link>,
+    </Anchor>,
   );
 
   return (
-    <Popover TriggerComponent={Trigger}>
+    <Popover TriggerComponent={Trigger} openOnHover>
       <Popover.Content>{items}</Popover.Content>
     </Popover>
   );

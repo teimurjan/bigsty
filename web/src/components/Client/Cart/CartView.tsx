@@ -9,21 +9,24 @@ import { useIntl } from 'react-intl';
 import { CartItem } from 'src/components/Client/Cart/CartItem/CartItem';
 import { IViewProps as IProps, IFormValues } from 'src/components/Client/Cart/CartPresenter';
 import { PriceText } from 'src/components/Client/Price/Price';
-import { Button } from 'src/components/common/Button/Button';
+import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
+import { Button } from 'src/components/common-v2/Button/Button';
+import { Title } from 'src/components/common-v2/Title/Title';
+import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
+import { Drawer } from 'src/components/common/Drawer/Drawer';
 import { FormPhoneField } from 'src/components/common/FormPhoneField/FormPhoneField';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
-import { IconLink } from 'src/components/common/IconLink/IconLink';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Message } from 'src/components/common/Message/Message';
-import { Modal } from 'src/components/common/Modal/Modal';
-import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
-import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
-import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
-import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
-import { Title } from 'src/components/common/Title/Title';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { parsePhoneNumber } from 'src/utils/phone';
+
+const buttonCSS = css`
+  display: block;
+  margin: 10px auto;
+  width: 100%;
+`;
 
 const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, addMore, remove, goToNextStep }) => {
   const intl = useIntl();
@@ -56,19 +59,10 @@ const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, add
           />
         ))}
       </div>
-      <Subtitle size={4}>
+      <Title size={5}>
         {intl.formatMessage({ id: 'Cart.total' })}: <PriceText price={totalPrice} />
-      </Subtitle>
-      <Button
-        color="is-primary"
-        css={css`
-          display: block;
-          width: 100%;
-          text-transform: uppercase;
-        `}
-        disabled={isAnyProductCountNotAllowed}
-        onClick={goToNextStep}
-      >
+      </Title>
+      <Button color="dark" css={buttonCSS} disabled={isAnyProductCountNotAllowed} onClick={goToNextStep}>
         {intl.formatMessage({ id: 'Cart.order' })}
       </Button>
     </React.Fragment>
@@ -136,16 +130,7 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, erro
           <FinalFormField name="name" component={NameField} />
           <FinalFormField name="phone" component={FormPhoneField} parse={parsePhoneNumber} />
           <FinalFormField name="address" component={AddressField} />
-          <Button
-            color="is-primary"
-            type="submit"
-            css={css`
-              display: block;
-              width: 100%;
-              text-transform: uppercase;
-            `}
-            loading={submitting}
-          >
+          <Button color="dark" type="submit" css={buttonCSS} loading={submitting}>
             {intl.formatMessage({ id: 'Cart.order' })}
           </Button>
           <div
@@ -182,16 +167,14 @@ const bounce = keyframes`
 `;
 
 export const CartView: React.FC<IProps> = props => {
+  const intl = useIntl();
   const { isOpen, open, close, step, cartItemsCount } = props;
-  const theme = useTheme<CSSTheme>();
+  const theme = useTheme<CSSThemeV2>();
   return (
     <React.Fragment>
       <div
         css={css`
           position: relative;
-          &:hover {
-            color: ${theme.dark};
-          }
         `}
       >
         {cartItemsCount > 0 && (
@@ -207,7 +190,8 @@ export const CartView: React.FC<IProps> = props => {
               font-size: 10px;
               top: -10px;
               right: -10px;
-              background: ${theme.primary};
+              color: ${theme.textColor};
+              background: ${theme.primaryColor};
               color: white;
               border-radius: 50%;
             `}
@@ -215,23 +199,28 @@ export const CartView: React.FC<IProps> = props => {
             {cartItemsCount}
           </span>
         )}
-        <IconLink onClick={open} icon={faShoppingCart} />
+        <Anchor onClick={open}>
+          <WithIcon icon={faShoppingCart} hideTextOnMobile>
+            {intl.formatMessage({ id: 'common.cart' })}
+          </WithIcon>
+        </Anchor>
       </div>
-      <Modal isOpen={isOpen}>
-        <ModalBackground onClick={close} />
-        <ModalClose className="is-large" onClick={close} />
-
-        <ModalContent
-          css={css`
-            padding: 1rem 2rem;
-            background: ${theme.light};
-          `}
-        >
-          {step === 0 && <FirstStep {...props} />}
-          {step === 1 && <SecondStep {...props} />}
-          {step === 2 && <ThirdStep {...props} />}
-        </ModalContent>
-      </Modal>
+      <Drawer
+        css={css`
+          padding: 1rem 2rem;
+          background: ${theme.backgroundSecondaryColor};
+          width: 500px;
+          max-width: 100%;
+        `}
+        fromSide="right"
+        isOpen={isOpen}
+        close={close}
+        backdrop
+      >
+        {step === 0 && <FirstStep {...props} />}
+        {step === 1 && <SecondStep {...props} />}
+        {step === 2 && <ThirdStep {...props} />}
+      </Drawer>
     </React.Fragment>
   );
 };

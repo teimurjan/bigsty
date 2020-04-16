@@ -4,7 +4,8 @@ import * as React from 'react';
 import { IntlShape, useIntl } from 'react-intl';
 
 import { IViewProps as IProps } from 'src/components/Client/LanguageDropdown/LanguageDropdownPresenter';
-import { Popover, TriggerProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
+import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
+import { Popover, TriggerClickProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
 
 const nameOfLocale = {
   en: 'English',
@@ -40,9 +41,9 @@ export const LanguageDropdownView = ({
           await changeLocale(locale);
         };
         return (
-          <Popover.Link key={locale} active={locale === currentLocale} onClick={onClick}>
+          <Anchor key={locale} active={locale === currentLocale} onClick={onClick}>
             {nameOfLocale[locale] || locale}
-          </Popover.Link>
+          </Anchor>
         );
       })}
     </Popover.Content>

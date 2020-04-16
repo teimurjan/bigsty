@@ -7,11 +7,12 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 
 import { IViewProps as IProps } from 'src/components/Client/Search/SearchPresenter';
+import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
+import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
 import { Drawer } from 'src/components/common/Drawer/Drawer';
 import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
 import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
 import { DropdownItemLink } from 'src/components/common/DropdownItemLink/DropdownItemLink';
-import { IconLink } from 'src/components/common/IconLink/IconLink';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Popover } from 'src/components/common/Popover/Popover';
 import { Tag } from 'src/components/common/Tag/Tag';
@@ -46,7 +47,7 @@ export const SearchView: React.FC<IProps> = ({
   close,
 }) => {
   const { value: drawerOpened, setPositive: setDrawerOpened, setNegative: setDrawerClosed } = useBoolean();
-  const theme = useTheme<CSSTheme>();
+  const theme = useTheme<CSSThemeV2>();
   const intl = useIntl();
   const [searchValue, setSearchValue] = React.useState('');
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(
@@ -114,7 +115,11 @@ export const SearchView: React.FC<IProps> = ({
 
   return (
     <>
-      <IconLink icon={faSearch} onClick={open} />
+      <Anchor onClick={open}>
+        <WithIcon icon={faSearch} hideTextOnMobile>
+          {intl.formatMessage({ id: 'common.search' })}
+        </WithIcon>
+      </Anchor>
       <Drawer
         isOpen={isOpen}
         close={close}
@@ -132,7 +137,7 @@ export const SearchView: React.FC<IProps> = ({
             display: flex;
             align-items: center;
             justify-content: center;
-            background: ${theme.white};
+            background: ${theme.backgroundPrimaryColor};
           `}
         >
           <Popover<HTMLInputElement>

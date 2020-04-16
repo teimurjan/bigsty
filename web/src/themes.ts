@@ -1,4 +1,4 @@
-export const defaultTheme: CSSTheme = {
+export const defaultTheme: CSSTheme & CSSThemeV2 = {
   danger: 'hsl(348, 100%, 61%)',
   dark: 'hsl(0, 0%, 21%)',
   info: 'hsl(204, 86%,  53%)',
@@ -8,4 +8,32 @@ export const defaultTheme: CSSTheme = {
   white: '#fff',
   greyLight: 'hsl(0, 0%, 71%)',
   light: 'hsl(0, 0%, 96%)',
+  // V2
+  headerBackgroundColor: '#fff',
+  borderColor: '#1e1e1c',
+  buttonLightColor: '#1e1e1c',
+  buttonLightBorderColor: '#fff',
+  buttonLightHoverColor: '#fff',
+  buttonLightBackgroundColor: '#fff',
+  buttonLightBackgroundHoverColor: 'transparent',
+  buttonDefaultColor: '#1e1e1c',
+  buttonDefaultBorderColor: '#1e1e1c',
+  buttonDefaultHoverColor: '#fff',
+  buttonDefaultBackgroundColor: '#fff',
+  buttonDefaultBackgroundHoverColor: '#1e1e1c',
+  buttonDarkColor: '#fff',
+  buttonDarkBorderColor: '#1e1e1c',
+  buttonDarkHoverColor: '#1e1e1c',
+  buttonDarkBackgroundColor: '#1e1e1c',
+  buttonDarkBackgroundHoverColor: '#fff',
+  anchorColor: '#1e1e1c',
+  anchorSecondaryColor: '#26D93B',
+  backgroundPrimaryColor: '#fff',
+  backgroundSecondaryColor: '#f0ebe3',
+  textColor: '#1e1e1c',
+  textFadedColor: '#d3d3d3',
+  textSecondaryColor: '##818181',
+  primaryColor: '#26D93B',
+  textOnPrimaryColor: '#fff',
+  dangerColor: '#f86203'
 };
