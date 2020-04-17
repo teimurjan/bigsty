@@ -1,6 +1,7 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Transition } from 'react-transition-group';
@@ -29,6 +30,7 @@ const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
 
 export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
   const intl = useIntl();
+  const theme = useTheme<CSSThemeV2>();
   const [activeBannerIndex, setActiveBannerIndex] = React.useState(0);
 
   React.useEffect(() => {
@@ -74,7 +76,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                   <img
                     alt={banner.text}
                     css={css`
-                      margin: auto;
+                      width: 100%;
                       display: block;
                       background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
                       transition: transform 300ms ease-in-out;
@@ -83,25 +85,32 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                     `}
                     src={banner.image}
                   />
-                  <Title
+                  <div
                     css={css`
                       text-align: left;
                       position: absolute;
-                      width: 60%;
-                      color: ${banner.text_color || '#fff'} !important;
-                      font-weight: 500;
+                      max-width: 60%;
                       ${getTextPositioningCSS(banner)}
 
                       @media ${mediaQueries.maxWidth768} {
-                        width: 90%;
+                        max-width: 90%;
                       }
                     `}
-                    size={1}
                   >
-                    {banner.text}
-                    <br />
+                    {banner.text && (
+                      <Title
+                        css={css`
+                          color: ${banner.text_color || '#fff'} !important;
+                          font-weight: 500;
+                          text-shadow: 0 1px 0 black;
+                        `}
+                        size={1}
+                      >
+                        {banner.text}
+                      </Title>
+                    )}
                     {button}
-                  </Title>
+                  </div>
                 </CarouselItem>
               );
             })}

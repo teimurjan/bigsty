@@ -74,7 +74,7 @@ export const AdminBannersEditPresenter: React.FC<IProps> = ({
           intlState.availableLocales.reduce(
             (acc, locale) => ({
               ...acc,
-              [getFieldName(BANNER_TEXT_FIELD_KEY, locale)]: yup.string().required('common.errors.field.empty'),
+              [getFieldName(BANNER_TEXT_FIELD_KEY, locale)]: yup.string(),
               [getFieldName(BANNER_LINK_TEXT_FIELD_KEY, locale)]: yup.string(),
             }),
             {
