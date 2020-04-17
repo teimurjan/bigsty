@@ -16,6 +16,7 @@ export interface IViewProps {
   currentLocale: string;
   TriggerComponent?: React.ComponentType<PopoverTriggerProps>;
   className?: string;
+  openOnHover?: boolean;
 }
 
 export const LanguageDropdownPresenter = ({

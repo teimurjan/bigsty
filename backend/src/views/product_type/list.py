@@ -33,10 +33,10 @@ class ProductTypeListView(ValidatableView, PaginatableView):
                 pagination_data['limit']
             )
         else:
-            product_types = self._service.get_all()
+            product_types, _ = self._service.get_all()
 
         should_get_raw_intl_field = request.args.get('raw_intl') == '1'
-
+        
         serialized_product_types = [
             self
             ._serializer_cls(product_type)

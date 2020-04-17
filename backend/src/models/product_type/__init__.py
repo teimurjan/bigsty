@@ -38,6 +38,7 @@ class ProductType(BaseModel):
         nullable=False
     )
     category = orm.relationship("Category", lazy='joined')
+    slug = Column(String(255), nullable=False, unique=True)
 
     def __getitem__(self, key):
         if key == 'names':

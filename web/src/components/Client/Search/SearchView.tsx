@@ -90,8 +90,8 @@ export const SearchView: React.FC<IProps> = ({
                 text-overflow: ellipsis;
               `}
               key={productType.id}
-              as={`/products/${productType.id}`}
-              href="/products/[id]"
+              as={`/products/${productType.slug}`}
+              href="/products/[slug]"
             >
               <img
                 alt={productType.name}

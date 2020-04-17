@@ -18,6 +18,7 @@ class ProductTypeSerializer(IntlSerializer):
         self._category = product_type.category
         self._feature_types = product_type.feature_types
         self._products = None
+        self._slug = product_type.slug
 
     def serialize(self):
         return self._filter_with_only_fields({
@@ -29,6 +30,7 @@ class ProductTypeSerializer(IntlSerializer):
             'category': self._serialize_category(),
             'feature_types': self._serialize_feature_types(),
             'products': self._products,
+            'slug': self._slug
         })
 
     def _serialize_name(self):

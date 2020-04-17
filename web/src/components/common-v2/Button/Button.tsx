@@ -5,6 +5,8 @@ import { useTheme } from 'emotion-theming';
 import Link, { LinkProps } from 'next/link';
 import * as React from 'react';
 
+import { mediaQueries } from 'src/styles/media';
+
 export interface IProps {
   color?: 'light' | 'default' | 'dark';
   size?: 'default' | 'mini';
@@ -50,6 +52,13 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
           cursor: pointer;
           font-weight: 500;
           outline: none;
+
+
+          @media ${mediaQueries.maxWidth768} {
+            width: 160px;
+            height: 36px;
+            font-size: 14px;
+          }
 
           &.default {
             color: ${theme.buttonDefaultColor};

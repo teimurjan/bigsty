@@ -37,13 +37,13 @@ const intersectionObserverOptions = {
 export const ProductTypeCard = ({ productType }: IProps) => {
   const theme = useTheme<CSSThemeV2>();
   const intl = useIntl();
-  const asPath = `/products/${productType.id}`;
+  const asPath = `/products/${productType.slug}`;
   const ref = React.useRef<HTMLAnchorElement>(null);
   const { hasIntersected } = useIntersectionObserver(ref, intersectionObserverOptions);
   const { price, discount } = usePriceRangeText({ range: productType.products || [] });
 
   return (
-    <Link href="/products/[id]" as={asPath}>
+    <Link href="/products/[slug]" as={asPath} passHref>
       <a
         ref={ref}
         css={css`
@@ -95,8 +95,12 @@ export const ProductTypeCard = ({ productType }: IProps) => {
         </div>
         <Button
           css={css`
-            width: 100%;
+            width: 100% !important;
             margin-top: auto;
+
+            @media ${mediaQueries.maxWidth768} {
+              flex: 1;
+            }
           `}
         >
           <span

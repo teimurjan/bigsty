@@ -226,7 +226,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
                 margin-top: 15px;
                 border-top: 1px solid ${theme.borderColor};
               `}
-              secondary
+              primary
               href="/categories/[id]/products"
               asPath={`/categories/${productType.category.slug}/products`}
             >

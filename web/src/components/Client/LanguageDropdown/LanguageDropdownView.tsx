@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import * as React from 'react';
-import { IntlShape, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { IViewProps as IProps } from 'src/components/Client/LanguageDropdown/LanguageDropdownPresenter';
 import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
@@ -28,24 +28,19 @@ const Trigger = React.forwardRef<HTMLDivElement, PopoverTriggerProps>((props, re
   );
 });
 
-export const LanguageDropdownView = ({
-  locales,
-  changeLocale,
-  currentLocale,
-  TriggerComponent = Trigger,
-}: IProps & { intl: IntlShape }) => (
-  <Popover TriggerComponent={TriggerComponent}>
-    <Popover.Content>
-      {locales.map(locale => {
-        const onClick = async () => {
-          await changeLocale(locale);
-        };
-        return (
-          <Anchor key={locale} active={locale === currentLocale} onClick={onClick}>
-            {nameOfLocale[locale] || locale}
-          </Anchor>
-        );
-      })}
-    </Popover.Content>
-  </Popover>
+export const LanguageDropdownView = React.forwardRef<HTMLDivElement, IProps>(
+  ({ locales, changeLocale, currentLocale, TriggerComponent = Trigger, openOnHover }, ref) => (
+    <Popover<HTMLDivElement> TriggerComponent={TriggerComponent} openOnHover={openOnHover}>
+      <Popover.Content ref={ref}>
+        {locales.map(locale => {
+          const onClick = () => changeLocale(locale);
+          return (
+            <Anchor key={locale} active={locale === currentLocale} onClick={onClick} thin>
+              {nameOfLocale[locale] || locale}
+            </Anchor>
+          );
+        })}
+      </Popover.Content>
+    </Popover>
+  ),
 );

@@ -53,7 +53,7 @@ const CategoryMenuItem = ({
         `}
         asPath={asPath}
         href="/categories/[id]/products"
-        secondary
+        primary
       >
         {name}
         {children && (

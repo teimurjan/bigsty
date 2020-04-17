@@ -18,6 +18,7 @@ export interface IProductTypeListResponseItem {
   short_description: string;
   image: string;
   category: number;
+  slug: string;
   feature_types: number[];
   products?: Array<{
     discount: number;
@@ -41,6 +42,7 @@ export interface IProductTypeDetailResponseItem {
   short_description: string;
   image: string;
   category: { id: number, name: string, slug: string };
+  slug: string;
   feature_types: number[];
   products?: Array<{
     discount: number;
@@ -64,6 +66,7 @@ export interface IProductTypeListRawIntlResponseItem {
   image: string;
   category: number;
   feature_types: number[];
+  slug: string;
 }
 
 export interface IProductTypeListRawIntlResponseData {
@@ -85,6 +88,7 @@ export interface IProductTypeDetailRawIntlResponseItem {
   image: string;
   category: { id: number };
   feature_types: number[];
+  slug: string;
 }
 
 export interface IProductTypeRawIntlResponseData {
@@ -126,6 +130,7 @@ export interface IProductTypeAPI {
   getAll(page: number): Promise<IProductTypeListResponseData>;
   getNewest(): Promise<IProductTypeNewestResponseData>;
   getByID(id: number): Promise<IProductTypeDetailResponseItemData>;
+  getBySlug(slug: string): Promise<IProductTypeDetailResponseItemData>;
   getAllRawIntlMinified(): Promise<IProductTypeListRawIntlMinifiedResponseData>;
   getAllRawIntl(page: number): Promise<IProductTypeListRawIntlResponseData>;
   delete(id: number): Promise<{}>;
@@ -201,6 +206,20 @@ export class ProductTypeAPI implements IProductTypeAPI {
   public async getByID(id: number) {
     try {
       const response = await this.client.get<IProductTypeDetailResponseItemData>(`/api/product_types/${id}`, {
+        headers: this.headersManager.getHeaders(),
+      });
+      return response.data;
+    } catch (e) {
+      if (e.response.status === 404) {
+        throw new errors.ProductTypeNotFound();
+      }
+      throw e;
+    }
+  }
+
+  public async getBySlug(slug: string) {
+    try {
+      const response = await this.client.get<IProductTypeDetailResponseItemData>(`/api/product_types/${slug}`, {
         headers: this.headersManager.getHeaders(),
       });
       return response.data;

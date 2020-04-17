@@ -1,9 +1,10 @@
 from sqlalchemy.orm import joinedload
 
-from src.storage.base import Storage
-from src.models import (ProductType, ProductTypeDescription,
-                        ProductTypeName, ProductTypeShortDescription)
+from src.models import (ProductType, ProductTypeDescription, ProductTypeName,
+                        ProductTypeShortDescription)
 from src.repos.base import IntlRepo, with_session
+from src.storage.base import Storage
+from src.utils.slug import generate_slug
 
 
 class ProductTypeRepo(IntlRepo):
@@ -35,7 +36,7 @@ class ProductTypeRepo(IntlRepo):
             product_type.feature_types.append(feature_type)
 
         product_type.category_id = category.id
-
+        product_type.slug = self.get_unique_slug(product_type, session=session)
         product_type.image = self.__file_storage.save_file(image)
 
         session.add(product_type)
@@ -68,7 +69,7 @@ class ProductTypeRepo(IntlRepo):
                              'short_descriptions', ProductTypeShortDescription, session=session)
 
         product_type.feature_types = feature_types
-
+        product_type.slug = self.get_unique_slug(product_type, session=session)
         product_type.category = category
 
         if image is not None:
@@ -104,5 +105,20 @@ class ProductTypeRepo(IntlRepo):
     def has_with_category(self, id_, session):
         return session.query(ProductType).filter(ProductType.category_id == id_).count() > 0
 
+    @with_session
+    def is_slug_used(self, slug, session):
+        return session.query(ProductType).filter(ProductType.slug == slug).count() > 0
+
+    @with_session
+    def get_by_slug(self, slug, session):
+        return session.query(ProductType).filter(ProductType.slug == slug).first()
+
+    @with_session
+    def get_unique_slug(self, product_type, session):
+        slug = generate_slug(product_type)
+        if self.is_slug_used(slug, session=session):
+            slug = generate_slug(product_type, with_hash=True)
+
+        return slug
     class DoesNotExist(Exception):
         pass

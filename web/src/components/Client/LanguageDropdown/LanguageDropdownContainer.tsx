@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
 
 import {
   LanguageDropdownPresenter,
@@ -9,16 +8,19 @@ import { LanguageDropdownView } from 'src/components/Client/LanguageDropdown/Lan
 import { useDependencies } from 'src/DI/DI';
 import { useIntlState } from 'src/state/IntlState';
 
-export const LanguageDropdownContainer = (viewProps: Pick<IViewProps, 'TriggerComponent' | 'className'>) => {
+export const LanguageDropdownContainer = React.forwardRef<
+  HTMLDivElement,
+  Pick<IViewProps, 'TriggerComponent' | 'className' | 'openOnHover'>
+>((viewProps, ref) => {
   const { dependencies } = useDependencies();
   const { intlState } = useIntlState();
 
   return (
     <LanguageDropdownPresenter
-      View={injectIntl(LanguageDropdownView)}
+      View={props => <LanguageDropdownView ref={ref} {...props} />}
       intlService={dependencies.services.intl}
       intlState={intlState}
       {...viewProps}
     />
   );
-};
+});

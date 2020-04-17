@@ -83,7 +83,7 @@ export const Popover = <T extends HTMLElement>({
   placement = 'bottom-start',
   openOnHover = false,
   refsToInclude = [],
-  offset,
+  offset = [0, 10],
 }: IProps<T>) => {
   const popoverRoot = safeDocument(d => d.getElementById('popoverRoot'), null);
 
@@ -141,7 +141,6 @@ export const Popover = <T extends HTMLElement>({
               <div
                 css={css`
                   z-index: 100;
-                  margin-top: 10px;
                 `}
                 ref={setPopperRef}
                 style={popper.styles.popper}
@@ -168,13 +167,15 @@ export const Popover = <T extends HTMLElement>({
 
 interface IPopoverContentProps {
   className?: string;
+  children?: React.ReactNode;
 }
 
-const PopoverContent: React.FC<IPopoverContentProps> = ({ children, className }) => {
+const PopoverContent = React.forwardRef<HTMLDivElement, IPopoverContentProps>(({ children, className }, ref) => {
   const theme = useTheme<CSSTheme>();
 
   return (
     <div
+      ref={ref}
       className={className}
       css={css`
         background: ${theme.white};
@@ -185,6 +186,6 @@ const PopoverContent: React.FC<IPopoverContentProps> = ({ children, className })
       {children}
     </div>
   );
-};
+});
 
 Popover.Content = PopoverContent;

@@ -22,6 +22,7 @@ const Trigger = React.forwardRef<HTMLAnchorElement, PopoverTriggerProps>((props,
 
 export const UserDropdownView = ({ user, onLogoutClick }: IProps) => {
   const intl = useIntl();
+  const languageDropdownRef = React.useRef<HTMLDivElement>(null);
 
   const items = [];
 
@@ -52,12 +53,12 @@ export const UserDropdownView = ({ user, onLogoutClick }: IProps) => {
 
   items.push(
     <Anchor key="language" thin>
-      <LanguageDropdown />
+      <LanguageDropdown ref={languageDropdownRef} openOnHover />
     </Anchor>,
   );
 
   return (
-    <Popover TriggerComponent={Trigger} openOnHover>
+    <Popover refsToInclude={[languageDropdownRef]} TriggerComponent={Trigger} openOnHover>
       <Popover.Content>{items}</Popover.Content>
     </Popover>
   );

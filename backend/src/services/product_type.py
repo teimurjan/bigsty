@@ -120,6 +120,13 @@ class ProductTypeService:
         except self._repo.DoesNotExist:
             raise self.ProductTypeNotFound()
 
+    def get_one_by_slug(self, slug):
+        product_type = self._repo.get_by_slug(slug)
+        if product_type is None:
+            raise self.ProductTypeNotFound()
+
+        return product_type
+
     @allow_roles(['admin', 'manager'])
     def delete(self, id_, *args, **kwargs):
         try:

@@ -8,7 +8,7 @@
   </url>
   {%- for product_type in product_types %}
   <url>
-    <loc>{{ base_url }}/products/{{ product_type.id }}</loc>
+    <loc>{{ base_url }}/products/{{ product_type.slug }}</loc>
     <lastmod>{{ product_type.updated_on.strftime('%Y-%m-%d') }}</lastmod>
     <changefreq>daily</changefreq>
   </url>

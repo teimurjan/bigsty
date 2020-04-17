@@ -9,7 +9,7 @@ import { useIsTouch } from 'src/hooks/useIsTouch';
 
 interface IProps {
   className?: string;
-  secondary?: boolean;
+  primary?: boolean;
   href?: string;
   asPath?: string;
   onClick?: React.MouseEventHandler;
@@ -37,7 +37,7 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
       rel,
       target,
       plain,
-      secondary,
+      primary,
       noHoverOnTouch,
     },
     ref,
@@ -57,7 +57,7 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
 
     const isTouch = useIsTouch();
 
-    const hoverColor = secondary ? theme.anchorSecondaryColor : theme.anchorColor;
+    const hoverColor = primary ? theme.primaryColor : theme.anchorColor;
 
     const anchor = (
       <a

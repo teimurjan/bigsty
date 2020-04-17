@@ -81,12 +81,13 @@ export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
             bottom: ${VERTICAL_PADDING_PX}px;
             pointer-events: none;
             transition: all 400ms;
-            font-size: ${isFocused ? 10 : 16}px;
-            transform: translateY(${isFocused ? -22 : 0}px);
+            font-size: 16px;
+            transform: translateY(${isFocused ? -20 : 0}px) scale(${isFocused ? 0.55 : 1});
+            transform-origin: 0 50%;
             color: ${isFocused ? theme.textColor : theme.textFadedColor};
 
             input:not([value='']) ~ & {
-              transform: translateY(-22px), scale(0.66);
+              transform: translateY(-20px) scale(0.55);
               color: ${theme.textColor};
             }
           `}

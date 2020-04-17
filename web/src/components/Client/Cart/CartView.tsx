@@ -25,7 +25,7 @@ import { parsePhoneNumber } from 'src/utils/phone';
 const buttonCSS = css`
   display: block;
   margin: 10px auto;
-  width: 100%;
+  width: 100% !important;
 `;
 
 const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, addMore, remove, goToNextStep }) => {

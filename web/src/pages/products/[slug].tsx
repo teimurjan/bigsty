@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params = {}, req,
   const dependencies = dependenciesFactory({ req, res });
 
   try {
-    const productType = await dependencies.services.productType.getByID(parseInt(params.id as string, 10));
+    const productType = await dependencies.services.productType.getBySlug(params.slug as string);
     const products = productType ? await dependencies.services.product.getForProductType(productType.id) : [];
 
     return {

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import * as React from 'react';
 
-import { useAppState } from 'src/state/AppState';
 import { useDependencies } from 'src/DI/DI';
 
 const nodeValueToFloat = (node: Element) => parseFloat(node.textContent ? node.textContent.replace(',', '.') : '');
