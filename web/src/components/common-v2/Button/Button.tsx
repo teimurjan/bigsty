@@ -56,7 +56,6 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
 
           @media ${mediaQueries.maxWidth768} {
             width: 160px;
-            height: 36px;
             font-size: 14px;
           }
 
@@ -81,8 +80,6 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             &.active {
               color: ${theme.buttonLightHoverColor};
               background: ${theme.buttonLightBackgroundHoverColor};
-              backdrop-filter: blur(30px);
-              -webkit-backdrop-filter: blur(30px);
             }
           }
 

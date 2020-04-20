@@ -99,7 +99,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
             margin-top: auto;
 
             @media ${mediaQueries.maxWidth768} {
-              flex: 1;
+              height: 48px;
             }
           `}
         >

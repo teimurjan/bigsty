@@ -15,7 +15,7 @@ export const defaultTheme: CSSTheme & CSSThemeV2 = {
   buttonLightBorderColor: '#fff',
   buttonLightHoverColor: '#fff',
   buttonLightBackgroundColor: '#fff',
-  buttonLightBackgroundHoverColor: 'transparent',
+  buttonLightBackgroundHoverColor: 'rgba(0, 0, 0, 0.05);',
   buttonDefaultColor: '#1e1e1c',
   buttonDefaultBorderColor: '#1e1e1c',
   buttonDefaultHoverColor: '#fff',
