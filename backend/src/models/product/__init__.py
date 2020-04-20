@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, orm
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy import Column, String, Integer, ForeignKey, orm, func
 from src.models.base import BaseModel
 
 
@@ -24,3 +25,14 @@ class Product(BaseModel):
     )
     sku = Column(String, nullable=True)
     upc = Column(String, nullable=True, unique=True)
+
+    @hybrid_property
+    def calculated_price(self):
+        return round(self.price * ((100 - self.discount) * 0.01))
+
+    @calculated_price.expression
+    def calculated_price(cls):
+        print(cls.price * ((100 - cls.discount) * 0.01))
+        print(cls.price * ((100 - cls.discount) * 0.01))
+        print(cls.price * ((100 - cls.discount) * 0.01))
+        return cls.price * ((100 - cls.discount) * 0.01)

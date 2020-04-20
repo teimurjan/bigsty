@@ -8,6 +8,7 @@ from src.repos.feature_type import FeatureTypeRepo
 from src.repos.product import ProductRepo
 from src.repos.product_type import ProductTypeRepo
 from src.services.decorators import allow_roles
+from src.utils.sorting import ProductTypeSortingType
 
 
 class ProductTypeService:
@@ -99,19 +100,27 @@ class ProductTypeService:
             raise self.FeatureTypesInvalid()
 
     def get_all(self, offset=None, limit=None):
-        return self._repo.get_all(offset=offset, limit=limit), self._repo.count_all()
+        return self._repo.get_all(offset=offset, limit=limit)
 
     def get_newest(self, count):
-        return self._repo.get_newest(limit=count, join_products=True)
+        product_types, count = self._repo.get_all(limit=count, join_products=True, sorting_type=ProductTypeSortingType.NEWLY_ADDED)
+        return product_types
 
-    def get_all_categorized(self, category_slug, offset, limit):
+    def get_all_by_category(self, category_slug: str, sorting_type: ProductTypeSortingType, offset: int, limit: int):
         with self._repo.session() as s:
-            category = self._category_repo.get_by_slug(category_slug, session=s)
+            category = self._category_repo.get_by_slug(
+                category_slug, session=s)
             children_categories = self._category_repo.get_children(
                 category.id, session=s)
             categories_ids = [category.id for category in children_categories]
-            product_types, count = self._repo.get_for_categories(
-                [category.id, *categories_ids], offset, limit, join_products=True, session=s)
+            product_types, count = self._repo.get_all(
+                categories_ids,
+                sorting_type,
+                offset,
+                limit,
+                join_products=True,
+                session=s
+            )
             return product_types, count
 
     def get_one(self, id_):

@@ -1,9 +1,23 @@
-from src.views.base import ValidatableView, PaginatableView
+from werkzeug import Request
+
 from src.constants.status_codes import OK_CODE
 from src.errors import InvalidEntityFormat
-from src.utils.json import parse_json_from_form_data
-from src.utils.number import parse_int
 from src.services.product_type import ProductTypeService
+from src.utils.json import parse_json_from_form_data
+from src.utils.sorting import ProductTypeSortingType
+from src.views.base import PaginatableView, ValidatableView
+
+
+def get_sorting_type_from_request(request: Request) -> ProductTypeSortingType:
+    sort_by = request.args.get('sort_by')
+    if sort_by == 'price_asc':
+        return ProductTypeSortingType.PRICE_ASCENDING
+    if sort_by == 'price_desc':
+        return ProductTypeSortingType.PRICE_DESCENDING
+    if sort_by == 'recent':
+        return ProductTypeSortingType.NEWLY_ADDED
+
+    return ProductTypeSortingType.DEFAULT
 
 
 class ProductTypeListView(ValidatableView, PaginatableView):
@@ -36,7 +50,7 @@ class ProductTypeListView(ValidatableView, PaginatableView):
             product_types, _ = self._service.get_all()
 
         should_get_raw_intl_field = request.args.get('raw_intl') == '1'
-        
+
         serialized_product_types = [
             self
             ._serializer_cls(product_type)

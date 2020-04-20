@@ -1,7 +1,8 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, orm
-from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
+from sqlalchemy.sql.expression import select
 
 from src.models.base import BaseModel
+from src.models.product import Product
 
 
 class ProductType(BaseModel):

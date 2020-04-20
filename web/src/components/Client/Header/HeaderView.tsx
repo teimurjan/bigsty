@@ -66,7 +66,7 @@ export const HeaderView = () => {
               margin-left: 10px;
             `}
           >
-            <Popover TriggerComponent={Trigger} offset={[0, 14]} openOnHover>
+            <Popover TriggerComponent={Trigger} offset={[0, 24]} openOnHover>
               <Popover.Content
                 css={css`
                   width: 100vw;

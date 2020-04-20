@@ -1,9 +1,10 @@
-from src.errors import InvalidEntityFormat
 from src.constants.status_codes import OK_CODE
-from src.views.base import PaginatableView
-from src.services.product_type import ProductTypeService
+from src.errors import InvalidEntityFormat
 from src.serializers.product_type import ProductTypeSerializer
+from src.services.product_type import ProductTypeService
 from src.utils.number import parse_int
+from src.views.base import PaginatableView
+from src.views.product_type.list import get_sorting_type_from_request
 
 
 class ProductTypeByCategoryView(PaginatableView):
@@ -13,8 +14,10 @@ class ProductTypeByCategoryView(PaginatableView):
 
     def get(self, request, category_slug):
         pagination_data = self._get_pagination_data(request)
-        product_types, count = self._service.get_all_categorized(
+        sorting_type = get_sorting_type_from_request(request)
+        product_types, count = self._service.get_all_by_category(
             category_slug,
+            sorting_type,
             offset=pagination_data['offset'],
             limit=pagination_data['limit']
         )

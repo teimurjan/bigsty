@@ -30,5 +30,4 @@ class PaginatableView:
             limit = parse_int(request.args.get('limit', 20))
             offset = limit * (page - 1)
             return {'page': page, 'offset': offset, 'limit': limit}
-        
         return None

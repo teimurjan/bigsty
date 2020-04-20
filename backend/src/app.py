@@ -172,7 +172,8 @@ class App:
         for category in self.__category_repo.get_all():
             self.__category_service.set_to_search_index(category)
 
-        for product_type in self.__product_type_repo.get_all():
+        product_types, _ = self.__product_type_repo.get_all()
+        for product_type in product_types:
             self.__product_type_service.set_to_search_index(product_type)
 
     def __init_api_routes(self):
@@ -476,7 +477,7 @@ class App:
         @self.cache.cached(timeout=60*60*24)
         def handle_sitemap_request():
             categories = self.__category_repo.get_all()
-            product_types = self.__product_type_repo.get_all()
+            product_types, _ = self.__product_type_repo.get_all()
             xml = render_template('sitemap.xml',
                                   categories=categories,
                                   product_types=product_types,

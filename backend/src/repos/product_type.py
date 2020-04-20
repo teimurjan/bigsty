@@ -1,10 +1,14 @@
-from sqlalchemy.orm import joinedload
+from typing import List
+
+from sqlalchemy import desc, orm, asc
 
 from src.models import (ProductType, ProductTypeDescription, ProductTypeName,
                         ProductTypeShortDescription)
+from src.models.product import Product
 from src.repos.base import IntlRepo, with_session
 from src.storage.base import Storage
 from src.utils.slug import generate_slug
+from src.utils.sorting import ProductTypeSortingType
 
 
 class ProductTypeRepo(IntlRepo):
@@ -80,26 +84,38 @@ class ProductTypeRepo(IntlRepo):
         return product_type
 
     @with_session
-    def get_for_categories(self, category_ids, offset, limit, join_products, session):
-        base_query = (
-            session
-            .query(ProductType)
-            .options(joinedload(ProductType.products) if join_products else None)
-            .filter(ProductType.category_id.in_(category_ids))
-            .order_by(ProductType.id)
-        )
-        return base_query.offset(offset).limit(limit).all(), base_query.count()
+    def get_all(
+        self,
+        category_ids: List[int] = None,
+        sorting_type: ProductTypeSortingType = ProductTypeSortingType.DEFAULT,
+        offset: int = None,
+        limit: int = None,
+        join_products: bool = False,
+        session=None,
+    ):
+        q = session.query(ProductType)
+        
+        count = q.count()
 
-    @with_session
-    def get_newest(self, limit, join_products, session):
-        return (
-            session
-            .query(ProductType)
-            .options(joinedload(ProductType.products) if join_products else None)
-            .order_by(ProductType.id.desc())
-            .limit(limit)
-            .all()
-        )
+        if category_ids is not None:
+            q = q.filter(ProductType.category_id.in_(category_ids))
+        
+        if join_products:
+            q = q.options(orm.joinedload(ProductType.products)).join(Product)
+
+        q = q.order_by(self._get_order_by_from_sorting_type(sorting_type))
+
+        return q.offset(offset).limit(limit).all(), count
+
+    def _get_order_by_from_sorting_type(self, sorting_type: ProductTypeSortingType):
+        if sorting_type == ProductTypeSortingType.PRICE_ASCENDING:
+            return asc(Product.calculated_price)
+        if sorting_type == ProductTypeSortingType.PRICE_DESCENDING:
+            return desc(Product.calculated_price)
+        if sorting_type == ProductTypeSortingType.NEWLY_ADDED:
+            return ProductType.id.desc()
+
+        return ProductType.id
 
     @with_session
     def has_with_category(self, id_, session):
@@ -120,5 +136,6 @@ class ProductTypeRepo(IntlRepo):
             slug = generate_slug(product_type, with_hash=True)
 
         return slug
+
     class DoesNotExist(Exception):
         pass
