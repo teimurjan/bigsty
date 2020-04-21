@@ -49,7 +49,7 @@
     "react-router-dom": "5.1.2",
     "react-spinners": "^0.5.1",
     "react-transition-group": "^2.5.2",
-    "yup": "^0.26.6"
+    "yup": "^0.28.4"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.7",
