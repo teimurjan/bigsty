@@ -28,7 +28,7 @@ class FeatureValueListView(ValidatableView, PaginatableView):
                 pagination_data['limit']
             )
         else:
-            feature_values = self._service.get_all()
+            feature_values, _ = self._service.get_all()
 
         should_get_raw_intl_field = request.args.get('raw_intl') == '1'
 

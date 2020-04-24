@@ -32,7 +32,7 @@ class OrderListView(ValidatableView, PaginatableView):
                 pagination_data['limit']
             )
         else:
-            orders = self._service.get_all(user=request.user)
+            orders, _ = self._service.get_all(user=request.user)
 
         serialized_products = [
             self

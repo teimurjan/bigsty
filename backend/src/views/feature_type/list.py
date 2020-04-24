@@ -28,7 +28,7 @@ class FeatureTypeListView(ValidatableView, PaginatableView):
                 pagination_data['limit']
             )
         else:
-            feature_types = self._service.get_all()
+            feature_types, _ = self._service.get_all()
 
         should_get_raw_intl_field = request.args.get('raw_intl') == '1'
         serialized_feature_types = [

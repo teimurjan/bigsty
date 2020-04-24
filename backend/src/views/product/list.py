@@ -29,7 +29,7 @@ class ProductListView(ValidatableView, PaginatableView):
                 pagination_data['limit']
             )
         else:
-            products = self._service.get_all()
+            products, _ = self._service.get_all()
 
         serialized_products = [
             self
