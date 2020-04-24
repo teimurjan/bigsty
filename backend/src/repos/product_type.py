@@ -31,6 +31,7 @@ class ProductTypeRepo(IntlRepo):
 
         self._set_intl_texts(names, product_type, 'names',
                              ProductTypeName, session=session)
+        product_type.slug = self.get_unique_slug(product_type, session=session)
         self._set_intl_texts(descriptions, product_type,
                              'descriptions', ProductTypeDescription, session=session)
         self._set_intl_texts(short_descriptions, product_type,
@@ -40,7 +41,6 @@ class ProductTypeRepo(IntlRepo):
             product_type.feature_types.append(feature_type)
 
         product_type.category_id = category.id
-        product_type.slug = self.get_unique_slug(product_type, session=session)
         product_type.image = self.__file_storage.save_file(image)
 
         session.add(product_type)
