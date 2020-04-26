@@ -28,7 +28,7 @@ class CategoryRepo(IntlRepo):
         category = self.get_by_id(id_, session=session)
         category.parent_category_id = parent_category_id
 
-        self._set_intl_texts(names, category, 'names', CategoryName)
+        self._set_intl_texts(names, category, 'names', CategoryName, session=session)
         category.slug = self.get_unique_slug(category, session=session)
 
         session.flush()

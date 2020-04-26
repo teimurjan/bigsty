@@ -27,13 +27,10 @@ class CategoryDetailView(ValidatableView):
         try:
             data = request.get_json()
             self._validate(data)
-            category = \
-                self._service.update(category_id, data, user=request.user)
-            should_get_raw_intl_field = request.args.get('raw_intl') == '1'
+            category = self._service.update(category_id, data, user=request.user)
             serialized_category = (
                 self
                 ._serializer_cls(category)
-                .in_language(None if should_get_raw_intl_field else request.language)
                 .serialize()
             )
             return {'data': serialized_category}, OK_CODE

@@ -32,11 +32,9 @@ class FeatureTypeDetailView(ValidatableView):
                 data,
                 user=request.user
             )
-            should_get_raw_intl_field = request.args.get('raw_intl') == '1'
             serialized_feature_type = (
                 self
                 ._serializer_cls(feature_type)
-                .in_language(None if should_get_raw_intl_field else request.language)
                 .serialize()
             )
             return {'data': serialized_feature_type}, OK_CODE

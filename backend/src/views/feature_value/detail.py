@@ -28,8 +28,7 @@ class FeatureValueDetailView(ValidatableView):
         try:
             data = request.get_json()
             self._validate(data)
-            feature_value = \
-                self._service.update(feature_value_id, data, user=request.user)
+            feature_value = self._service.update(feature_value_id, data, user=request.user)
             serialized_feature_value = (
                 self
                 ._serializer_cls(feature_value)

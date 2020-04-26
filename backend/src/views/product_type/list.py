@@ -72,7 +72,6 @@ class ProductTypeListView(ValidatableView, PaginatableView):
             serialized_product_type = (
                 self
                 ._serializer_cls(product_type)
-                .in_language(request.language)
                 .with_serialized_feature_types()
                 .serialize()
             )
