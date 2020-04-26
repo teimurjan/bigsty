@@ -10,7 +10,7 @@ interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const LoaderLayout = ({ color, ...props }: IProps) => {
-  const theme = useTheme<CSSTheme>();
+  const theme = useTheme<CSSThemeV2>();
 
   return (
     <div
@@ -22,7 +22,7 @@ export const LoaderLayout = ({ color, ...props }: IProps) => {
       `}
       {...props}
     >
-      <ClipLoader color={color || theme.primary} sizeUnit="rem" size={3} loading={true} />
+      <ClipLoader color={color || theme.primaryColor} sizeUnit="rem" size={3} loading={true} />
     </div>
   );
 };

@@ -11,6 +11,7 @@ import { Columns } from 'src/components/common/Columns/Columns';
 import { Container } from 'src/components/common/Container/Container';
 import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { mediaQueries } from 'src/styles/media';
 
 export interface IProps {
   productTypes: IProductTypeListResponseItem[];
@@ -18,14 +19,11 @@ export interface IProps {
   error?: string;
   isLoading: boolean;
   onPageChange?: (page: number) => void;
+  filter?: React.ReactNode;
 }
 
-export const ProductTypesListView = ({ isLoading, error, productTypes, meta, onPageChange }: IProps) => {
+export const ProductTypesListView = ({ filter, isLoading, error, productTypes, meta, onPageChange }: IProps) => {
   const intl = useIntl();
-
-  if (isLoading) {
-    return <LoaderLayout />;
-  }
 
   if (error) {
     return <ErrorLayout>{intl.formatMessage({ id: error })}</ErrorLayout>;
@@ -33,26 +31,47 @@ export const ProductTypesListView = ({ isLoading, error, productTypes, meta, onP
 
   return (
     <Container>
-      <Columns
+      <div
         css={css`
-          flex-wrap: wrap;
-          border-radius: 40px;
-          margin-top: 10px !important;
+          display: flex;
+
+          @media ${mediaQueries.maxWidth768} {
+            flex-direction: column;
+          }
         `}
-        className="is-mobile"
       >
-        {productTypes.map(productType => (
-          <Column
-            key={productType.id}
-            className={classNames('is-half-mobile', 'is-one-quarter-desktop', 'is-one-fifths-widescreen')}
-          >
-            <ProductTypeCard productType={productType} />
-          </Column>
-        ))}
-      </Columns>
-      {meta && meta.pages_count > 1 && (
-        <Pagination length={meta.pages_count} page={meta.page} onChange={onPageChange} />
-      )}
+        {filter}
+        {isLoading ? (
+          <LoaderLayout />
+        ) : (
+          <>
+            <Columns
+              css={css`
+                flex-wrap: wrap;
+                border-radius: 40px;
+                margin-top: 10px !important;
+              `}
+              className="is-mobile"
+            >
+              {productTypes.map(productType => (
+                <Column
+                  key={productType.id}
+                  className={
+                    filter
+                      ? classNames('is-half-mobile', 'is-one-third-desktop', 'is-one-quarter-widescreen')
+                      : classNames('is-half-mobile', 'is-one-quarter-desktop', 'is-one-fifths-widescreen')
+                  }
+                >
+                  <ProductTypeCard productType={productType} />
+                </Column>
+              ))}
+            </Columns>
+            {meta && meta.pages_count > 1 && (
+              <Pagination length={meta.pages_count} page={meta.page} onChange={onPageChange} />
+            )}
+          </>
+        )}
+      </div>
     </Container>
   );
 };

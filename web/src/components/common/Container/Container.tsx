@@ -11,6 +11,7 @@ export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Container = ({ children, className, ...props }: IProps) => (
   <div
     css={css`
+      box-sizing: border-box;
       padding: 0 25px;
       width: 100%;
 

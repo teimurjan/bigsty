@@ -21,6 +21,7 @@ export interface IProductTypeService {
   getForCategory(
     categoryIdOrSlug: number | string,
     page: number,
+    sortBy?: productTypeAPI.ProductTypeSortingType,
   ): Promise<{
     entities: {
       productTypes?: {
@@ -90,8 +91,9 @@ export class ProductTypeService implements IProductTypeService {
   public getForCategory: IProductTypeService['getForCategory'] = async (
     categoryIdOrSlug: number | string,
     page: number,
+    sortBy?: productTypeAPI.ProductTypeSortingType,
   ) => {
-    const productTypes = await this.API.getForCategory(categoryIdOrSlug, page);
+    const productTypes = await this.API.getForCategory(categoryIdOrSlug, page, sortBy);
     return {
       ...normalize(productTypes.data, [new schema.Entity('productTypes')]),
       meta: productTypes.meta,

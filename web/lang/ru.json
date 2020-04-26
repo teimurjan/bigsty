@@ -230,5 +230,10 @@
   "common.search": "Поиск",
   "common.more": "Больше",
   "common.less": "Меньше",
-  "ProductTypePage.findMoreForCategory": "Еще в категории {value}"
+  "ProductTypePage.findMoreForCategory": "Еще в категории {value}",
+  "common.filter": "Фильтры",
+  "common.sortBy": "Сортировка",
+  "filter.newlyAdded": "Недавно добавленные",
+  "filter.priceAscending": "Сначала дешевые",
+  "filter.priceDescending": "Сначала дорогие"
 }

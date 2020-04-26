@@ -95,17 +95,15 @@ class ProductTypeRepo(IntlRepo):
     ):
         q = session.query(ProductType)
         
-        count = q.count()
-
         if category_ids is not None:
             q = q.filter(ProductType.category_id.in_(category_ids))
         
         if join_products:
-            q = q.options(orm.joinedload(ProductType.products)).join(Product)
+            q = q.options(orm.joinedload(ProductType.products)).outerjoin(ProductType.products)
 
         q = q.order_by(self._get_order_by_from_sorting_type(sorting_type))
 
-        return q.offset(offset).limit(limit).all(), count
+        return q.offset(offset).limit(limit).all(), q.count()
 
     def _get_order_by_from_sorting_type(self, sorting_type: ProductTypeSortingType):
         if sorting_type == ProductTypeSortingType.PRICE_ASCENDING:

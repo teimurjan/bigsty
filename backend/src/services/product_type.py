@@ -106,7 +106,7 @@ class ProductTypeService:
         product_types, count = self._repo.get_all(limit=count, join_products=True, sorting_type=ProductTypeSortingType.NEWLY_ADDED)
         return product_types
 
-    def get_all_by_category(self, category_slug: str, sorting_type: ProductTypeSortingType, offset: int, limit: int):
+    def get_all_by_category(self, category_slug: str, sorting_type: ProductTypeSortingType, offset: int = None, limit: int = None):
         with self._repo.session() as s:
             category = self._category_repo.get_by_slug(
                 category_slug, session=s)

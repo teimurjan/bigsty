@@ -41,7 +41,7 @@ export interface IProductTypeDetailResponseItem {
   description: string;
   short_description: string;
   image: string;
-  category: { id: number, name: string, slug: string };
+  category: { id: number; name: string; slug: string };
   slug: string;
   feature_types: number[];
   products?: Array<{
@@ -125,8 +125,36 @@ export interface IProductTypeCreatePayload {
 
 export type IProductTypeEditPayload = IProductTypeCreatePayload;
 
+export enum ProductTypeSortingType {
+  PRICE_ASCENDING,
+  PRICE_DESCENDING,
+  RECENT,
+}
+
+export enum ProductTypeSortingQueryValue {
+  PRICE_ASCENDING = 'price_asc',
+  PRICE_DESCENDING = 'price_desc',
+  RECENT = 'recent',
+}
+
+export const queryValueOfSortingType = {
+  [ProductTypeSortingType.RECENT]: ProductTypeSortingQueryValue.RECENT,
+  [ProductTypeSortingType.PRICE_ASCENDING]: ProductTypeSortingQueryValue.PRICE_ASCENDING,
+  [ProductTypeSortingType.PRICE_DESCENDING]: ProductTypeSortingQueryValue.PRICE_DESCENDING,
+};
+
+export const sortingTypeOfQueryValue = {
+  [ProductTypeSortingQueryValue.RECENT]: ProductTypeSortingType.RECENT,
+  [ProductTypeSortingQueryValue.PRICE_ASCENDING]: ProductTypeSortingType.PRICE_ASCENDING,
+  [ProductTypeSortingQueryValue.PRICE_DESCENDING]: ProductTypeSortingType.PRICE_DESCENDING,
+};
+
 export interface IProductTypeAPI {
-  getForCategory(categoryIdOrSlug: number | string, page: number): Promise<IProductTypeListResponseData>;
+  getForCategory(
+    categoryIdOrSlug: number | string,
+    page: number,
+    sortBy?: ProductTypeSortingType,
+  ): Promise<IProductTypeListResponseData>;
   getAll(page: number): Promise<IProductTypeListResponseData>;
   getNewest(): Promise<IProductTypeNewestResponseData>;
   getByID(id: number): Promise<IProductTypeDetailResponseItemData>;
@@ -164,10 +192,17 @@ export class ProductTypeAPI implements IProductTypeAPI {
     this.headersManager = headersManager;
   }
 
-  public async getForCategory(categoryIdOrSlug: number | string, page: number) {
+  public async getForCategory(
+    categoryIdOrSlug: number | string,
+    page: number,
+    sortBy: ProductTypeSortingType = ProductTypeSortingType.RECENT,
+  ) {
     try {
       const response = await this.client.get<IProductTypeListResponseData>(
-        `/api/categories/${categoryIdOrSlug}/product_types${buildQueryString({ page })}`,
+        `/api/categories/${categoryIdOrSlug}/product_types${buildQueryString({
+          page,
+          sort_by: queryValueOfSortingType[sortBy],
+        })}`,
         {
           headers: this.headersManager.getHeaders(),
         },
