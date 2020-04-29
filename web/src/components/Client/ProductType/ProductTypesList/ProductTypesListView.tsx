@@ -47,6 +47,7 @@ export const ProductTypesListView = ({ filter, isLoading, error, productTypes, m
           <>
             <Columns
               css={css`
+                width: 100%;
                 flex-wrap: wrap;
                 border-radius: 40px;
                 margin-top: 10px !important;
