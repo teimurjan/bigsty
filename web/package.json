@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^17.0.0",
@@ -14,12 +14,14 @@
     "@fortawesome/free-solid-svg-icons": "5.12.1",
     "@fortawesome/react-fontawesome": "0.1.9",
     "@popperjs/core": "^2.2.2",
+    "@sentry/browser": "^5.15.5",
     "@tanem/react-nprogress": "^3.0.22",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/cookie": "^0.3.3",
     "@types/js-cookie": "^2.2.5",
+    "@zeit/next-source-maps": "^0.0.3",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.1",
     "bulma": "^0.7.2",

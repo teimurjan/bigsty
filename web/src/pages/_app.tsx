@@ -1,4 +1,5 @@
 import { CacheProvider } from '@emotion/core';
+import * as Sentry from '@sentry/browser';
 import { cache } from 'emotion';
 import { ThemeProvider } from 'emotion-theming';
 import { AppProps, AppContext } from 'next/app';
@@ -21,6 +22,7 @@ import { RatesStateProvider } from 'src/state/RatesState';
 import { UserStateProvider, useUserState } from 'src/state/UserState';
 import { mediaQueries } from 'src/styles/media';
 import { defaultTheme } from 'src/themes';
+import { safeWindow } from 'src/utils/dom';
 import { withPublicURL } from 'src/utils/url';
 
 import 'bulma/css/bulma.css';
@@ -83,6 +85,26 @@ const LoadingOverlay = () => {
   return <PageLoader isActive={isLoading} />;
 };
 
+safeWindow(Sentry.init({ dsn: process.env.SENTRY_DSN }), undefined);
+
+class SentryErrorBoundary extends React.Component {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    Sentry.withScope(scope => {
+      Object.keys(errorInfo).forEach(key => {
+        scope.setExtra(key, errorInfo[key]);
+      });
+
+      Sentry.captureException(error);
+    });
+
+    super.componentDidCatch && super.componentDidCatch(error, errorInfo);
+  }
+
+  render() {
+    return this.props.children;
+  }
+}
+
 const CustomNextApp = ({
   Component,
   pageProps,
@@ -99,39 +121,41 @@ const CustomNextApp = ({
   );
 
   return (
-    <CacheProvider value={cache}>
-      <DIProvider value={{ dependencies: dependenciesFactory() }}>
-        <>
-          <ThemeProvider theme={defaultTheme}>
-            <AppStateProvider>
-              <IntlStateProvider
-                initialProps={{
-                  availableLocales: componentsInitialProps.intlState.availableLocales,
-                  error: componentsInitialProps.intlState.error,
-                }}
-                intl={intl}
-              >
-                <RatesStateProvider>
-                  <UserStateProvider>
-                    <CategoriesStateProvider initialProps={componentsInitialProps.categoriesState}>
-                      <EntryPoint>
-                        <>
-                          <CustomHead />
-                          <PageProgressBar />
-                          <Component {...pageProps} />
-                          <LoadingOverlay />
-                        </>
-                      </EntryPoint>
-                    </CategoriesStateProvider>
-                  </UserStateProvider>
-                </RatesStateProvider>
-              </IntlStateProvider>
-            </AppStateProvider>
-          </ThemeProvider>
-          <CacheBuster />
-        </>
-      </DIProvider>
-    </CacheProvider>
+    <SentryErrorBoundary>
+      <CacheProvider value={cache}>
+        <DIProvider value={{ dependencies: dependenciesFactory() }}>
+          <>
+            <ThemeProvider theme={defaultTheme}>
+              <AppStateProvider>
+                <IntlStateProvider
+                  initialProps={{
+                    availableLocales: componentsInitialProps.intlState.availableLocales,
+                    error: componentsInitialProps.intlState.error,
+                  }}
+                  intl={intl}
+                >
+                  <RatesStateProvider>
+                    <UserStateProvider>
+                      <CategoriesStateProvider initialProps={componentsInitialProps.categoriesState}>
+                        <EntryPoint>
+                          <>
+                            <CustomHead />
+                            <PageProgressBar />
+                            <Component {...pageProps} />
+                            <LoadingOverlay />
+                          </>
+                        </EntryPoint>
+                      </CategoriesStateProvider>
+                    </UserStateProvider>
+                  </RatesStateProvider>
+                </IntlStateProvider>
+              </AppStateProvider>
+            </ThemeProvider>
+            <CacheBuster />
+          </>
+        </DIProvider>
+      </CacheProvider>
+    </SentryErrorBoundary>
   );
 };
 
