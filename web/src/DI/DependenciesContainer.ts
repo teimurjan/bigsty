@@ -1,3 +1,5 @@
+import { IncomingMessage, ServerResponse } from 'http';
+
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios';
 
 import * as authAPI from 'src/api/AuthAPI';
@@ -23,13 +25,13 @@ import * as productTypeService from 'src/services/ProductTypeService';
 import * as searchService from 'src/services/SearchService';
 import * as authStorage from 'src/storage/AuthStorage';
 import * as cartStorage from 'src/storage/CartStorage';
+import { CookieStorage } from 'src/storage/CookieStorage';
 import * as intlStorage from 'src/storage/IntlStorage';
+import { ServerCookieStorage } from 'src/storage/ServerCookieStorage';
 import * as stateCacheStorage from 'src/storage/StateCacheStorage';
+import * as versionStorage from 'src/storage/VersionStorage';
 import { safeWindow } from 'src/utils/dom';
 import { WatchingValue } from 'src/utils/watching-value';
-import { CookieStorage } from 'src/storage/CookieStorage';
-import { IncomingMessage, ServerResponse } from 'http';
-import { ServerCookieStorage } from 'src/storage/ServerCookieStorage';
 
 export interface IAPIsContainer {
   auth: authAPI.IAuthAPI;
@@ -62,6 +64,7 @@ export interface IStoragesContainer {
   intl: intlStorage.IIntlStorage;
   stateCache: stateCacheStorage.IStateCacheStorage;
   cart: cartStorage.ICartStorage;
+  version: versionStorage.IVersionStorage;
 }
 
 export interface IDependenciesContainer {
@@ -135,6 +138,7 @@ export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {})
     intl: new intlStorage.IntlStorage(cookieStorage),
     stateCache: new stateCacheStorage.StateCacheStorage(localStorage),
     cart: new cartStorage.CartStorage(localStorage),
+    version: new versionStorage.VersionStorage(localStorage),
   };
 
   const headersManager = new HeadersManager(storagesContainer.auth, storagesContainer.intl);

@@ -1,6 +1,7 @@
-import { Storage } from 'ttypes/storage';
-import cookie from 'cookie';
 import { IncomingMessage, ServerResponse } from 'http';
+
+import cookie from 'cookie';
+import { Storage } from 'ttypes/storage';
 
 export class ServerCookieStorage implements Storage {
   private incomingCookies: { [key: string]: string };

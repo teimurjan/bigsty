@@ -8,6 +8,7 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { createIntl, createIntlCache } from 'react-intl';
 
+import { CacheBuster } from 'src/components/CacheBuster';
 import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
 import { PageProgressBar } from 'src/components/PageProgressBar/PageProgressBar';
 import { dependenciesFactory, IDependenciesFactoryArgs } from 'src/DI/DependenciesContainer';
@@ -100,32 +101,35 @@ const CustomNextApp = ({
   return (
     <CacheProvider value={cache}>
       <DIProvider value={{ dependencies: dependenciesFactory() }}>
-        <ThemeProvider theme={defaultTheme}>
-          <AppStateProvider>
-            <IntlStateProvider
-              initialProps={{
-                availableLocales: componentsInitialProps.intlState.availableLocales,
-                error: componentsInitialProps.intlState.error,
-              }}
-              intl={intl}
-            >
-              <RatesStateProvider>
-                <UserStateProvider>
-                  <CategoriesStateProvider initialProps={componentsInitialProps.categoriesState}>
-                    <EntryPoint>
-                      <>
-                        <CustomHead />
-                        <PageProgressBar />
-                        <Component {...pageProps} />
-                        <LoadingOverlay />
-                      </>
-                    </EntryPoint>
-                  </CategoriesStateProvider>
-                </UserStateProvider>
-              </RatesStateProvider>
-            </IntlStateProvider>
-          </AppStateProvider>
-        </ThemeProvider>
+        <>
+          <ThemeProvider theme={defaultTheme}>
+            <AppStateProvider>
+              <IntlStateProvider
+                initialProps={{
+                  availableLocales: componentsInitialProps.intlState.availableLocales,
+                  error: componentsInitialProps.intlState.error,
+                }}
+                intl={intl}
+              >
+                <RatesStateProvider>
+                  <UserStateProvider>
+                    <CategoriesStateProvider initialProps={componentsInitialProps.categoriesState}>
+                      <EntryPoint>
+                        <>
+                          <CustomHead />
+                          <PageProgressBar />
+                          <Component {...pageProps} />
+                          <LoadingOverlay />
+                        </>
+                      </EntryPoint>
+                    </CategoriesStateProvider>
+                  </UserStateProvider>
+                </RatesStateProvider>
+              </IntlStateProvider>
+            </AppStateProvider>
+          </ThemeProvider>
+          <CacheBuster />
+        </>
       </DIProvider>
     </CacheProvider>
   );
