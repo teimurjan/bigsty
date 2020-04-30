@@ -53,9 +53,9 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
           font-weight: 500;
           outline: none;
 
-
           @media ${mediaQueries.maxWidth768} {
             width: 160px;
+            height: 36px;
             font-size: 14px;
           }
 
@@ -137,10 +137,19 @@ export const LinkButton: React.FC<LinkProps & IProps> = ({
   disabled,
   type,
   children,
+  size,
   ...linkProps
 }) => (
   <Link {...linkProps}>
-    <Button color={color} className={className} inverted={inverted} loading={loading} disabled={disabled} type={type}>
+    <Button
+      color={color}
+      className={className}
+      inverted={inverted}
+      loading={loading}
+      disabled={disabled}
+      type={type}
+      size={size}
+    >
       {children}
     </Button>
   </Link>

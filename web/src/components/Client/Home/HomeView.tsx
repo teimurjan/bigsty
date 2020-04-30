@@ -1,7 +1,6 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
-import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Transition } from 'react-transition-group';
@@ -12,6 +11,7 @@ import { LinkButton } from 'src/components/common-v2/Button/Button';
 import { Title } from 'src/components/common-v2/Title/Title';
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
 import { Container } from 'src/components/common/Container/Container';
+import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
 
 const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
@@ -30,7 +30,7 @@ const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
 
 export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
   const intl = useIntl();
-  const theme = useTheme<CSSThemeV2>();
+  const isMobile = useMedia([mediaQueries.maxWidth768], [true], false);
   const [activeBannerIndex, setActiveBannerIndex] = React.useState(0);
 
   React.useEffect(() => {
@@ -69,7 +69,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                   key={banner.id}
                   css={css`
                     width: 100%;
-                    min-height: 200px;
+                    min-height: 150px;
                     overflow: hidden;
                   `}
                 >
@@ -104,7 +104,7 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                           font-weight: 500;
                           text-shadow: 0 1px 0 black;
                         `}
-                        size={1}
+                        size={isMobile ? 3 : 1}
                       >
                         {banner.text}
                       </Title>
