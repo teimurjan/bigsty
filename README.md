@@ -1,11 +1,11 @@
 # About
-BIGSTY - is an open-source API providing much functionality for online stores.
+[Eye8](https://eye8.kg) - is a modern sunglasses online store built with [ReactJS](https://reactjs.org/) and [Flask](https://flask.palletsprojects.com/en/1.1.x/). As the search engine [Elasticsearch](https://www.elastic.co/) is used.
 
 # Dependencies
-Install [Docker](https://docs.docker.com/engine/installation/)
+The application is completely dockerized so you'll need to install [Docker](https://docs.docker.com/engine/installation/).
 
 # Local Development
-Create /backend/.env.development with the [following content](/backend/.env.example) and run:
+Create docker-compose.development.yml based on [the example file](/docker-compose.development.example.yml) and run:
 ```sh
 docker-compose -f docker-compose.development.yml up -d    
 ```
