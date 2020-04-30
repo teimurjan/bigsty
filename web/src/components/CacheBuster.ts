@@ -12,13 +12,15 @@ export const CacheBuster = () => {
   } = useDependencies();
 
   React.useEffect(() => {
-    const currentVersion = versionStorage.getVersion();
-    const newVersion = pkgJSON.version;
+    safeWindow(w => {
+      const currentVersion = versionStorage.getVersion();
+      const newVersion = pkgJSON.version;
 
-    if (currentVersion !== newVersion) {
-      versionStorage.setVersion(newVersion);
-      safeWindow(w => w.location.reload(true), undefined);
-    }
+      if (currentVersion !== newVersion) {
+        versionStorage.setVersion(newVersion);
+        w.location.reload(true);
+      }
+    }, undefined);
   }, [versionStorage]);
 
   return null;

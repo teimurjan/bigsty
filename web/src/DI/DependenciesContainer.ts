@@ -26,6 +26,7 @@ import * as searchService from 'src/services/SearchService';
 import * as authStorage from 'src/storage/AuthStorage';
 import * as cartStorage from 'src/storage/CartStorage';
 import { CookieStorage } from 'src/storage/CookieStorage';
+import { InMemoryStorage } from 'src/storage/InMemoryStorage';
 import * as intlStorage from 'src/storage/IntlStorage';
 import { ServerCookieStorage } from 'src/storage/ServerCookieStorage';
 import * as stateCacheStorage from 'src/storage/StateCacheStorage';
@@ -122,16 +123,8 @@ export interface IDependenciesFactoryArgs {
   res?: ServerResponse;
 }
 
-const stubStorage = {
-  length: 0,
-  clear: () => {},
-  getItem: (key: string): string | null => null,
-  key: (index: number): string | null => null,
-  removeItem: (key: string) => {},
-  setItem: (key: string, value: string) => {},
-};
 export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {}): IDependenciesContainer => {
-  const localStorage = safeWindow(w => w.localStorage, stubStorage);
+  const localStorage = safeWindow(w => w.localStorage, new InMemoryStorage());
   const cookieStorage = req && res ? new ServerCookieStorage(req, res) : new CookieStorage();
   const storagesContainer = {
     auth: new authStorage.AuthStorage(cookieStorage),
