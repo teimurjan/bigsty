@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { useDependencies } from 'src/DI/DI';
 import { safeWindow } from 'src/utils/dom';
+import { isInAppSafari } from 'src/utils/platform';
 
 export const CacheBuster = () => {
   const {
@@ -12,6 +13,10 @@ export const CacheBuster = () => {
   } = useDependencies();
 
   React.useEffect(() => {
+    if (isInAppSafari()) {
+      return;
+    }
+
     safeWindow(w => {
       const currentVersion = versionStorage.getVersion();
       const newVersion = pkgJSON.version;

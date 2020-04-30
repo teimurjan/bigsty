@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
+import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useIntlState } from 'src/state/IntlState';
 import { useRatesState } from 'src/state/RatesState';
 import { calculateDiscountedPrice } from 'src/utils/number';
@@ -14,22 +15,6 @@ interface IPriceRangeTextProps {
   range: IPriceProps[];
 }
 
-export const useAllPrices = (prices: IPriceProps[]) => {
-  const intl = useIntl();
-  const {
-    ratesState: { rates },
-  } = useRatesState();
-
-  return prices.map(({ price, discount }) => {
-    const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
-    if (intl.locale === 'en' || !rates.usdToKgs) {
-      return { price: calculatedPrice, currency: 'USD' };
-    } else {
-      return { price: Math.round(calculatedPrice * rates.usdToKgs), currency: 'KGS' };
-    }
-  });
-};
-
 const useFormattedPrice = ({ price, discount }: IPriceProps) => {
   const {
     intlState: { locale },
@@ -39,11 +24,20 @@ const useFormattedPrice = ({ price, discount }: IPriceProps) => {
   } = useRatesState();
 
   const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
-  if (locale === 'en' || !rates.usdToKgs) {
-    return <>${calculatedPrice}</>;
-  } else {
-    return <>{Math.round(calculatedPrice * rates.usdToKgs)} <u>с</u></>;
-  }
+  const defaultFormattedPrice = React.useMemo(() => <>${calculatedPrice}</>, [calculatedPrice]);
+  const formattedPrice = React.useMemo(() => {
+    if (locale === 'en' || !rates.usdToKgs) {
+      return defaultFormattedPrice;
+    } else {
+      return (
+        <>
+          {Math.round(calculatedPrice * rates.usdToKgs)} <u>с</u>
+        </>
+      );
+    }
+  }, [calculatedPrice, rates, locale, defaultFormattedPrice]);
+
+  return useLazyInitialization(formattedPrice, defaultFormattedPrice).value;
 };
 
 const usePriceRange = ({ range }: IPriceRangeTextProps) => {

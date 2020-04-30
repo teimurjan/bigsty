@@ -42,33 +42,37 @@ export const ProductTypesListView = ({ filter, isLoading, error, productTypes, m
       >
         {filter}
 
-        <>
-          <Columns
-            css={css`
-              width: 100%;
-              flex-wrap: wrap;
-              border-radius: 40px;
-              margin-top: 10px !important;
-            `}
-            className="is-mobile"
-          >
-            {productTypes.map(productType => (
-              <Column
-                key={productType.id}
-                className={
-                  filter
-                    ? classNames('is-half-mobile', 'is-one-third-desktop', 'is-one-quarter-widescreen')
-                    : classNames('is-half-mobile', 'is-one-quarter-desktop', 'is-one-fifths-widescreen')
-                }
-              >
-                <ProductTypeCard productType={productType} />
-              </Column>
-            ))}
-          </Columns>
-          {meta && meta.pages_count > 1 && (
-            <Pagination length={meta.pages_count} page={meta.page} onChange={onPageChange} />
-          )}
-        </>
+        {isLoading ? (
+          <LoaderLayout />
+        ) : (
+          <>
+            <Columns
+              css={css`
+                width: 100%;
+                flex-wrap: wrap;
+                border-radius: 40px;
+                margin-top: 10px !important;
+              `}
+              className="is-mobile"
+            >
+              {productTypes.map(productType => (
+                <Column
+                  key={productType.id}
+                  className={
+                    filter
+                      ? classNames('is-half-mobile', 'is-one-third-desktop', 'is-one-quarter-widescreen')
+                      : classNames('is-half-mobile', 'is-one-quarter-desktop', 'is-one-fifths-widescreen')
+                  }
+                >
+                  <ProductTypeCard productType={productType} />
+                </Column>
+              ))}
+            </Columns>
+            {meta && meta.pages_count > 1 && (
+              <Pagination length={meta.pages_count} page={meta.page} onChange={onPageChange} />
+            )}
+          </>
+        )}
       </div>
     </Container>
   );
