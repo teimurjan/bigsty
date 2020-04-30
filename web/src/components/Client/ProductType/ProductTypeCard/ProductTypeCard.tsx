@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { css, jsx, keyframes } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import Link from 'next/link';
 import * as React from 'react';
@@ -12,23 +12,13 @@ import { Subtitle } from 'src/components/common-v2/Subtitle/Subtitle';
 import { Title } from 'src/components/common-v2/Title/Title';
 import { Image } from 'src/components/common/Image/Image';
 import { useIntersectionObserver } from 'src/hooks/useIntersectionObserver';
+import { fadeInFromTop } from 'src/styles/keyframes';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
 
 export interface IProps {
   productType: IProductTypeListResponseItem;
 }
-
-const fadeIn = keyframes`
-  0%   {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-`;
 
 const intersectionObserverOptions = {
   threshold: 0.3,
@@ -54,7 +44,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
           flex-direction: column;
           animation: ${hasIntersected
             ? css`
-                ${fadeIn} 400ms cubic-bezier(0.61, 1, 0.88, 1);
+                ${fadeInFromTop} 400ms cubic-bezier(0.61, 1, 0.88, 1);
               `
             : undefined};
           animation-fill-mode: forwards;

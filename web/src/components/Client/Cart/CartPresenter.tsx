@@ -6,6 +6,7 @@ import * as schemaValidator from 'src/components/SchemaValidator';
 import { getUserPropertySafe } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useForceUpdate } from 'src/hooks/useForceUpdate';
+import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { IOrderService } from 'src/services/OrderService';
 import { IProductService } from 'src/services/ProductService';
 import { IContextValue as UserStateContextValue } from 'src/state/UserState';
@@ -150,6 +151,7 @@ export const CartPresenter: React.FC<IProps> = ({
   );
 
   const totalCartItemsCount = storage.getItems().reduce((acc, item) => acc + (item.count || 0), 0);
+  const { value: lazyTotalCartItemsCount } = useLazyInitialization(totalCartItemsCount, 0);
 
   return (
     <View
@@ -172,7 +174,7 @@ export const CartPresenter: React.FC<IProps> = ({
       initialValues={{
         name: getUserPropertySafe(user, 'name', '') as string,
       }}
-      cartItemsCount={totalCartItemsCount}
+      cartItemsCount={lazyTotalCartItemsCount}
       onSubmit={onSubmit}
     />
   );

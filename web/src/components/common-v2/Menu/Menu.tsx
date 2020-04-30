@@ -19,24 +19,23 @@ export interface IMenuListProps {
   direction?: 'column' | 'row';
 }
 
-let heightAutoTimeoutID: NodeJS.Timeout;
-let height0TimeoutID: NodeJS.Timeout;
-
 const List = ({ children, className, collapsed, direction = 'column' }: IMenuListProps) => {
   const ref = React.useRef<HTMLUListElement>(null);
   const [height, setHeight] = React.useState<number | undefined | 'auto'>(collapsed ? 0 : ref.current?.scrollHeight);
 
   React.useEffect(() => {
+    let timeoutID: NodeJS.Timeout;
+
     if (!collapsed) {
       setHeight(ref.current?.scrollHeight);
-      heightAutoTimeoutID = setTimeout(() => setHeight('auto'), 300);
+      timeoutID = setTimeout(() => setHeight('auto'), 300);
     } else {
       setHeight(ref.current?.scrollHeight);
-      height0TimeoutID = setTimeout(() => setHeight(0), 0);
+      timeoutID = setTimeout(() => setHeight(0), 0);
     }
-  }, [collapsed, ref]);
 
-  React.useEffect(() => () => [heightAutoTimeoutID, height0TimeoutID].forEach(clearTimeout), []);
+    return () => clearTimeout(timeoutID);
+  }, [collapsed, ref]);
 
   return (
     <ul

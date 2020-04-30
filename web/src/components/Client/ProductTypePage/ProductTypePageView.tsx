@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { css, jsx, ClassNames, keyframes } from '@emotion/core';
+import { css, jsx, ClassNames } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import uniqBy from 'lodash/uniqBy';
 import Head from 'next/head';
@@ -17,6 +17,7 @@ import { Container } from 'src/components/common/Container/Container';
 import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { fadeInFromLeft, fadeInFromRight, fadeInFromTop } from 'src/styles/keyframes';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
 
@@ -38,16 +39,6 @@ const getAllFeatureValuesGroupedByType = (
     }),
     {},
   );
-
-const slideFromRight = keyframes`
-  0%   { transform: translateX(100%); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
-`;
-
-const slideFromLeft = keyframes`
-  0%   { transform: translateX(-100%); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
-`;
 
 export const ProductTypePageView = ({ productType, products, error, isLoading, action, actionText }: IProps) => {
   const intl = useIntl();
@@ -146,10 +137,11 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
               display: flex;
               justify-content: flex-start;
               width: 40vw;
-              animation: ${slideFromLeft} 700ms cubic-bezier(0.33, 1, 0.68, 1);
+              animation: ${fadeInFromLeft} 700ms cubic-bezier(0.33, 1, 0.68, 1);
 
               @media ${mediaQueries.maxWidth768} {
                 width: 100%;
+                animation: ${fadeInFromTop} 500ms cubic-bezier(0.33, 1, 0.68, 1);
               }
             `}
           >
@@ -165,11 +157,12 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
               padding: 0 0 7.5vw 50px;
               flex-direction: column;
               width: calc(100% - 40vw);
-              animation: ${slideFromRight} 700ms cubic-bezier(0.33, 1, 0.68, 1);
+              animation: ${fadeInFromRight} 700ms cubic-bezier(0.33, 1, 0.68, 1);
 
               @media ${mediaQueries.maxWidth768} {
                 padding: 25px 0 0 0;
                 width: 100%;
+                animation: ${fadeInFromTop} 700ms cubic-bezier(0.33, 1, 0.68, 1);
               }
             `}
           >

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import * as React from 'react';
 
 import { useIsTouch } from 'src/hooks/useIsTouch';
+import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 
 interface IProps {
   className?: string;
@@ -57,6 +58,8 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
 
     const isTouch = useIsTouch();
 
+    const { value: lazyClassNames } = useLazyInitialization(classNames({ 'no-hover': noHoverOnTouch && isTouch }), '');
+
     const hoverColor = primary ? theme.primaryColor : theme.anchorColor;
 
     const anchor = (
@@ -64,7 +67,7 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
         ref={ref}
         rel={rel}
         target={target}
-        className={classNames(className, { active, thin })}
+        className={classNames(className, { active, thin }, lazyClassNames)}
         href={href || '#'}
         onClick={modifiedOnClick}
         onMouseEnter={onMouseEnter}
@@ -92,7 +95,12 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
 
           .anchor:hover > &::before,
           &.active::before {
-            transform: ${noHoverOnTouch && isTouch ? undefined : 'translateX(0)'};
+            transform: translateX(0);
+          }
+
+          .anchor:hover > &.no-hover::before,
+          &.active.no-hover::before {
+            transform: translateX(-100%);
           }
 
           &.thin {

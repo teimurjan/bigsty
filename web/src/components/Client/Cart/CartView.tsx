@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { css, jsx, keyframes } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
@@ -19,6 +19,7 @@ import { FormTextField } from 'src/components/common/FormTextField/FormTextField
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Message } from 'src/components/common/Message/Message';
+import { bounce } from 'src/styles/keyframes';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { parsePhoneNumber } from 'src/utils/phone';
 
@@ -155,16 +156,6 @@ const ThirdStep: React.FC<IProps> = () => {
     </Message>
   );
 };
-
-const bounce = keyframes`
-  0%   { transform: scale(1,1)      translateY(0); }
-  10%  { transform: scale(1.1,.9)   translateY(0); }
-  30%  { transform: scale(.9,1.1)   translateY(-20px); }
-  50%  { transform: scale(1.05,.95) translateY(0); }
-  57%  { transform: scale(1,1)      translateY(-3px); }
-  64%  { transform: scale(1,1)      translateY(0); }
-  100% { transform: scale(1,1)      translateY(0); }
-`;
 
 export const CartView: React.FC<IProps> = props => {
   const intl = useIntl();

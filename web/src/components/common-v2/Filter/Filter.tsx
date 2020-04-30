@@ -8,6 +8,7 @@ import { useIntl } from 'react-intl';
 import { Button } from 'src/components/common-v2/Button/Button';
 import { Drawer } from 'src/components/common/Drawer/Drawer';
 import { useBoolean } from 'src/hooks/useBoolean';
+import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
 
@@ -32,6 +33,7 @@ export const Filter = ({ className, title, children }: IProps) => {
   const intl = useIntl();
   const theme = useTheme<CSSThemeV2>();
   const isMobile = useMedia([mediaQueries.maxWidth768], [true], false);
+  const { value: lazyIsMobile, isInitialized } = useLazyInitialization(isMobile, false);
   const { value: isOpen, setNegative: close, setPositive: open } = useBoolean();
 
   const filter = (
@@ -48,7 +50,11 @@ export const Filter = ({ className, title, children }: IProps) => {
     </div>
   );
 
-  return isMobile ? (
+  if (!isInitialized) {
+    return null;
+  }
+
+  return lazyIsMobile ? (
     <>
       <Button
         css={css`

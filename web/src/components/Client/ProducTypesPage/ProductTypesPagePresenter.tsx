@@ -14,6 +14,7 @@ import {
 import { IProps as IListViewProps } from 'src/components/Client/ProductType/ProductTypesList/ProductTypesListView';
 import { Filter } from 'src/components/common-v2/Filter/Filter';
 import { IProductTypeService } from 'src/services/ProductTypeService';
+import { mediaQueries } from 'src/styles/media';
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
 export interface IProps {
@@ -139,6 +140,10 @@ export const ProductTypesPagePresenter = ({
         <Filter
           css={css`
             padding: 20px 30px 0 0;
+
+            @media ${mediaQueries.maxWidth768} {
+              padding: 0;
+            }
           `}
         >
           <Filter.ItemGroup title={intl.formatMessage({ id: 'common.sortBy' })}>
