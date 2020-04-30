@@ -149,6 +149,8 @@ export const CartPresenter: React.FC<IProps> = ({
     [goToNextStep, orderService, storage],
   );
 
+  const totalCartItemsCount = storage.getItems().reduce((acc, item) => acc + (item.count || 0), 0);
+
   return (
     <View
       isOpen={isOpen}
@@ -170,7 +172,7 @@ export const CartPresenter: React.FC<IProps> = ({
       initialValues={{
         name: getUserPropertySafe(user, 'name', '') as string,
       }}
-      cartItemsCount={storage.getItems().length}
+      cartItemsCount={totalCartItemsCount}
       onSubmit={onSubmit}
     />
   );

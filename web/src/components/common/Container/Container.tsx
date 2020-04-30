@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
+import classNames from 'classnames';
 import * as React from 'react';
 
 import { mediaQueries } from 'src/styles/media';
@@ -12,14 +13,13 @@ export const Container = ({ children, className, ...props }: IProps) => (
   <div
     css={css`
       box-sizing: border-box;
-      padding: 0 25px;
-      width: 100%;
 
       @media ${mediaQueries.maxWidth768} {
         padding: 0 15px;
+        width: 100%;
       }
     `}
-    className={className}
+    className={classNames(className, 'container')}
     {...props}
   >
     {children}
