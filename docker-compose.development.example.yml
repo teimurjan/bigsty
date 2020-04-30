@@ -4,9 +4,9 @@ services:
     restart: always
     image: postgres:alpine
     environment: 
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=test
-      - POSTGRES_DB=bigsty
+      - POSTGRES_PASSWORD=db_password
+      - POSTGRES_USER=db_user_name
+      - POSTGRES_DB=db_name
     ports:
       - "5432:5432"
     volumes:
@@ -28,16 +28,20 @@ services:
     ports:
       - 5000:5000
     environment: 
+      - HOST=0.0.0.0
+      - PORT=5000
       - ALLOWED_ORIGINS=http://localhost:3000
-      - SECRET_KEY=secret
-      - DB_URL=postgresql://test:password@db:5432/bigsty
-      - ADMIN_EMAIL=test@test.com
-      - ADMIN_PASSWORD=password
+      - SECRET_KEY=secret_key
+      - DB_URL=postgresql://db_user_name:db_password@db:5432/db_name
+      - ADMIN_EMAILS=test1@test.com,test2@test.com
+      - ADMIN_PASSWORDS=admin_password1,admin_password2
       - ELASTICSEARCH_URL=es:9200
       - AWS_ACCESS_KEY_ID=aws_access_key_id
       - AWS_SECRET_ACCESS_KEY=aws_secret_access_key
       - AWS_BUCKET_NAME=aws_bucket_name
-      - AWS_DEFAULT_REGION=eu-central-1
+      - AWS_DEFAULT_REGION=aws_default_region
+      - EMAIL_USERNAME=broadcast@email.com
+      - EMAIL_PASSWORD=email_password
     volumes: ['./backend:/usr/src/app']
     restart: on-failure
     depends_on:
@@ -50,7 +54,10 @@ services:
     build:
       context: ./web
       dockerfile: Dockerfile.dev
-    volumes: ['./web:/app']
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+      - /app/.next
     ports:
       - 3000:3000
     depends_on:

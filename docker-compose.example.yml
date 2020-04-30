@@ -4,9 +4,9 @@ services:
     restart: always
     image: postgres:alpine
     environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=user
-      - POSTGRES_DB=db
+      - POSTGRES_PASSWORD=db_password
+      - POSTGRES_USER=db_user
+      - POSTGRES_DB=db_name
     ports:
       - "5432:5432"
     volumes:
@@ -25,20 +25,24 @@ services:
     build: 
       context: ./backend
     environment:
-      - SECRET_KEY=secret
-      - DB_URL=db_url
-      - ADMIN_EMAIL=email@email.com
-      - ADMIN_PASSWORD=password
+      - APP_SETTINGS=config.ProductionConfig
+      - SECRET_KEY=secret_key
+      - DB_URL=postgresql://db_user:db_password@db:5432/db_name
+      - ADMIN_EMAIL=admin@example.com,admin2@example.com,
+      - ADMIN_PASSWORD=admin_password1,admin_password2
       - ELASTICSEARCH_URL=es:9200
-      - ALLOWED_ORIGINS=http://www.test.com,http://test.com
+      - ALLOWED_ORIGINS=http://www.allowed.origin,http://allowed.origin
       - AWS_ACCESS_KEY_ID=aws_access_key_id
-      - AWS_SECRET_ACCESS_KEY=aws_secret_key
+      - AWS_SECRET_ACCESS_KEY=aws_secret_access_key
       - AWS_BUCKET_NAME=aws_bucket_name
-      - AWS_DEFAULT_REGION=eu-central-1
-      - EMAIL_USERNAME=noreply@example.com
-      - EMAIL_PASSWORD=password
-      - EMAIL_UNSUBSCRIBE_USERNAME=support@example.com
-      - HOST=https://example.com
+      - AWS_DEFAULT_REGION=aws_default_region
+      - EMAIL_SMTP_SERVER=smtp.gmail.com
+      - EMAIL_SMTP_PORT=465
+      - EMAIL_USERNAME=broadcast@email.com
+      - EMAIL_ORDERS_USERNAME=staff@email.com
+      - EMAIL_PASSWORD=email_password
+      - EMAIL_UNSUBSCRIBE_USERNAME=unsubscribe@email.com
+      - HOST=https://host.com
     restart: on-failure
     ports:
       - 8080:8080
@@ -48,19 +52,23 @@ services:
     links:
       - db
       - es
-  web:
-    build:
-      context: ./web
-    ports:
-      - 80:80
-    depends_on:
-      - backend
-    links:
-      - backend
   nginx:
     image: nginx:alpine
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     ports:
       - 80:80
       - 443:443
+    depends_on:
+      - web
+    links:
+      - web
+      - backend
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+  web:
+    build: 
+      context: ./web
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
