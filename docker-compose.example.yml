@@ -68,6 +68,8 @@ services:
   web:
     build: 
       context: ./web
+    environment: 
+      - SENTRY_DSN=sentry_dsn
     ports:
       - 3000:3000
     depends_on:

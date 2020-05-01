@@ -13,4 +13,4 @@ FROM node:12.14.0-alpine
 WORKDIR /app
 COPY --from=builder /app .
 EXPOSE 3000
-CMD env SERVER_API_URL=http://backend:8080 PUBLIC_URL=https://eye8.kg yarn start
+CMD env SENTRY_DSN=${SENTRY_DSN} SERVER_API_URL=http://backend:8080 PUBLIC_URL=https://eye8.kg yarn start
