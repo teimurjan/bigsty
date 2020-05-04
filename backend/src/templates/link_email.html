@@ -18,7 +18,7 @@
       }
 
       body {
-        background-color: #f6f6f6;
+        background-color: #f0ebe3;
         font-family: sans-serif;
         -webkit-font-smoothing: antialiased;
         font-size: 14px;
@@ -45,7 +45,7 @@
       ------------------------------------- */
 
       .body {
-        background-color: #f6f6f6;
+        background-color: #f0ebe3;
         width: 100%; 
       }
 
@@ -122,6 +122,8 @@
         font-weight: 300;
         text-align: center;
         text-transform: capitalize; 
+        color: #26D93B;
+        font-weight: bold;
       }
 
       p,
@@ -141,7 +143,7 @@
       }
 
       a {
-        color: #3498db;
+        color: #26D93B;
         text-decoration: underline; 
       }
 
@@ -158,15 +160,15 @@
       }
         .btn table td {
           background-color: #ffffff;
-          border-radius: 5px;
+          border-radius: 24px;
           text-align: center; 
       }
         .btn a {
           background-color: #ffffff;
-          border: solid 1px #209cee;
-          border-radius: 5px;
+          border: solid 1px #1e1e1c;
+          border-radius: 24px;
           box-sizing: border-box;
-          color: #209cee;
+          color: #1e1e1c;
           cursor: pointer;
           display: inline-block;
           font-size: 14px;
@@ -178,12 +180,12 @@
       }
 
       .btn-primary table td {
-        background-color: #209cee; 
+        background-color: #1e1e1c; 
       }
 
       .btn-primary a {
-        background-color: #209cee;
-        border-color: #209cee;
+        background-color: #1e1e1c;
+        border-color: #1e1e1c;
         color: #ffffff; 
       }
 
@@ -322,18 +324,18 @@
           line-height: inherit;
         }
         .btn-primary table td:hover {
-          background-color: #34495e !important; 
+          background-color: #fff !important; 
         }
         .btn-primary a:hover {
-          background-color: #34495e !important;
-          border-color: #34495e !important; 
+          background-color: #fff !important; 
+          color: #1e1e1c;
         } 
       }
 
     </style>
   </head>
   <body class="">
-    <span class="preheader">Регистрация на eye8.kg</span>
+    <span class="preheader">{{ preheader }}</span>
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
       <tr>
         <td>&nbsp;</td>
@@ -359,7 +361,7 @@
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                           <tbody>
                             <tr>
-                              <td align="left">
+                              <td align="center">
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                   <tbody>
                                     <tr>

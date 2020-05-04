@@ -33,12 +33,19 @@ class SignupService:
         link = app.config.get('HOST') + '/auth/register/confirm?token=' + \
             TokenFactory.create(SIGNUP_TOKEN_TYPE, signup)
 
-        title = 'Hello!' if language.name == 'en' else 'Привет'
+        title = 'Hello!' if language.name == 'en' else 'Привет!'
         description = 'You\'re almost eye8 user. Click to the button to proceed.' if language.name == 'en' else 'Вы всего в шаге от того, чтобы стать пользователем eye8. Нажмите на кнопку, чтобы продолжить.'
         link_text = 'Complete registration' if language.name == 'en' else 'Завершить регистрацию'
+        preheader = 'Signup at eye8.kg' if language.name == 'en' else 'Регистрация на eye8.kg'
         subject = link_text
-        body = render_template('link_email.html', link=link,
-                               title=title, description=description, link_text=link_text, preheader='Регистрация на eye8.kg')
+        body = render_template(
+            'link_email.html', 
+            link=link,
+            title=title,
+            description=description,
+            link_text=link_text,
+            preheader=preheader
+        )
 
         self._mail.send(subject, body, [signup.user_email])
 
