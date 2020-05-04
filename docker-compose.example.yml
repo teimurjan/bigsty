@@ -68,7 +68,7 @@ services:
   web:
     build: 
       context: ./web
-    environment: 
+    args: 
       - SENTRY_DSN=sentry_dsn
     ports:
       - 3000:3000
