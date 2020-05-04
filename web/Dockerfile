@@ -1,5 +1,6 @@
 FROM node:12.14.0-alpine as builder
 WORKDIR /app
+ARG _SENTRY_DSN
 RUN npm config set unsafe-perm true
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
@@ -7,7 +8,6 @@ COPY yarn.lock /app/yarn.lock
 RUN set http_proxy= && set https_proxy= && yarn config delete proxy && npm config rm https-proxy && npm config rm proxy
 RUN yarn --network-timeout 1000000
 COPY . /app
-ARG SENTRY_DSN
-RUN env SENTRY_DSN=$SENTRY_DSN SERVER_API_URL=http://backend:8080 PUBLIC_URL=https://eye8.kg yarn build
+RUN env _SENTRY_DSN=$SENTRY_DSN SERVER_API_URL=http://backend:8080 PUBLIC_URL=https://eye8.kg yarn build
 EXPOSE 3000
 CMD env SERVER_API_URL=http://backend:8080 PUBLIC_URL=https://eye8.kg yarn start
