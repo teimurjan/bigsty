@@ -136,7 +136,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             css={css`
               display: flex;
               justify-content: flex-start;
-              width: 40vw;
+              width: 30vw;
               animation: ${fadeInFromLeft} 700ms cubic-bezier(0.33, 1, 0.68, 1);
 
               @media ${mediaQueries.maxWidth768} {
@@ -156,7 +156,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
               display: flex;
               padding: 0 0 7.5vw 50px;
               flex-direction: column;
-              width: calc(100% - 40vw);
+              width: calc(100% - 30vw);
               animation: ${fadeInFromRight} 700ms cubic-bezier(0.33, 1, 0.68, 1);
 
               @media ${mediaQueries.maxWidth768} {

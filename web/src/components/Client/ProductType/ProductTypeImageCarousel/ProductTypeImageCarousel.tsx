@@ -31,8 +31,8 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
               css={css`
                 margin: auto;
                 display: flex;
-                height: 40vw;
-                width: 40vw;
+                height: 30vw;
+                width: 30vw;
 
                 @media ${mediaQueries.maxWidth768} {
                   width: 100%;
@@ -49,7 +49,7 @@ export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImage
           height: ${CONTROL_IMAGE_SIZE};
           overflow: auto;
           display: flex;
-          width: 40vw;
+          width: 30vw;
           margin: auto;
 
           @media ${mediaQueries.maxWidth768} {
