@@ -37,6 +37,7 @@ export const ProductTypesListView = ({ filter, isLoading, error, productTypes, m
 
           @media ${mediaQueries.maxWidth768} {
             flex-direction: column;
+            align-items: center;
           }
         `}
       >
