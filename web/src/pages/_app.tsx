@@ -1,4 +1,5 @@
 import { CacheProvider } from '@emotion/core';
+import { Global, css } from '@emotion/core';
 import * as Sentry from '@sentry/browser';
 import { cache } from 'emotion';
 import { ThemeProvider } from 'emotion-theming';
@@ -54,6 +55,10 @@ const CustomHead = () => {
 
   return (
     <Head>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;700&display=swap"
+        rel="stylesheet"
+      ></link>
       <link rel="apple-touch-icon" sizes="180x180" href={withPublicURL(`${iconFolder}/apple-touch-icon.png`)} />
       <link rel="icon" type="image/png" sizes="32x32" href={withPublicURL(`${iconFolder}/favicon-32x32.png`)} />
       <link rel="icon" type="image/png" sizes="16x16" href={withPublicURL(`${iconFolder}/favicon-16x16.png`)} />
@@ -76,6 +81,16 @@ const CustomHead = () => {
     </Head>
   );
 };
+
+const GlobalStyle = () => (
+  <Global
+    styles={css`
+      body {
+        font-family: 'Nunito', sans-serif;
+      }
+    `}
+  />
+);
 
 const LoadingOverlay = () => {
   const {
@@ -140,6 +155,7 @@ const CustomNextApp = ({
                         <EntryPoint>
                           <>
                             <CustomHead />
+                            <GlobalStyle />
                             <PageProgressBar />
                             <Component {...pageProps} />
                             <LoadingOverlay />
