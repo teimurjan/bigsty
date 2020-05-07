@@ -8,7 +8,9 @@ RUN set http_proxy= && set https_proxy= && yarn config delete proxy && npm confi
 RUN yarn --network-timeout 1000000
 COPY . /app
 ARG SENTRY_DSN
+ARG YM_ACCOUNT_ID
 ENV _SENTRY_DSN $SENTRY_DSN
-RUN env SENTRY_DSN=$_SENTRY_DSN SERVER_API_URL=http://backend:8080 PUBLIC_URL=https://eye8.kg yarn build
+ENV _YM_ACCOUNT_ID $YM_ACCOUNT_ID
+RUN env SENTRY_DSN=$_SENTRY_DSN YM_ACCOUNT_ID=$_YM_ACCOUNT_ID SERVER_API_URL=http://backend:8080 PUBLIC_URL=https://eye8.kg yarn build
 EXPOSE 3000
-CMD env SENTRY_DSN=$_SENTRY_DSN SERVER_API_URL=http://backend:8080 PUBLIC_URL=https://eye8.kg yarn start
+CMD env SENTRY_DSN=$_SENTRY_DSN YM_ACCOUNT_ID=$_YM_ACCOUNT_ID SERVER_API_URL=http://backend:8080 PUBLIC_URL=https://eye8.kg yarn start

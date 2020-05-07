@@ -6,5 +6,6 @@ module.exports = withSourceMaps({
     CLIENT_API_URL: process.env.CLIENT_API_URL,
     PUBLIC_URL: process.env.PUBLIC_URL,
     SENTRY_DSN: process.env.SENTRY_DSN,
+    YM_ACCOUNT_ID: process.env.YM_ACCOUNT_ID,
   },
 });
