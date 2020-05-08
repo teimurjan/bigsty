@@ -17,6 +17,7 @@ import { Container } from 'src/components/common/Container/Container';
 import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
+import { NotFoundView } from 'src/components/NotFound/NotFoundView';
 import { fadeInFromLeft, fadeInFromRight, fadeInFromTop } from 'src/styles/keyframes';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
@@ -254,5 +255,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         </Container>
       </div>
     </div>
-  ) : null;
+  ) : (
+    <NotFoundView />
+  );
 };
