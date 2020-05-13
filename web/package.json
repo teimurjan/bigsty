@@ -82,7 +82,7 @@
     "fast-deep-equal": "^3.1.1",
     "glob": "^7.1.4",
     "prettier": "^1.19.1",
-    "typescript": "~3.7.2"
+    "typescript": "~3.9.2"
   },
   "scripts": {
     "pretty": "prettier --write \"./src/**/*.{ts,tsx,js,jsx,json}\"",
