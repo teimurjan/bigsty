@@ -22,7 +22,7 @@ export const fadeInFromLeft = keyframes`
   }
 `;
 
-export const fadeInFromTop = keyframes`
+export const fadeInFromBottom = keyframes`
   0%   {
     transform: translateY(100%);
     opacity: 0;

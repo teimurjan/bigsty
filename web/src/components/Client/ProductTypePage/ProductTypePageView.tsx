@@ -18,7 +18,7 @@ import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
 import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { NotFoundView } from 'src/components/NotFound/NotFoundView';
-import { fadeInFromLeft, fadeInFromRight, fadeInFromTop } from 'src/styles/keyframes';
+import { fadeInFromLeft, fadeInFromRight, fadeInFromBottom } from 'src/styles/keyframes';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
 
@@ -142,7 +142,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
 
               @media ${mediaQueries.maxWidth768} {
                 width: 100%;
-                animation: ${fadeInFromTop} 500ms cubic-bezier(0.33, 1, 0.68, 1);
+                animation: ${fadeInFromBottom} 500ms cubic-bezier(0.33, 1, 0.68, 1);
               }
             `}
           >
@@ -163,7 +163,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
               @media ${mediaQueries.maxWidth768} {
                 padding: 25px 0 0 0;
                 width: 100%;
-                animation: ${fadeInFromTop} 700ms cubic-bezier(0.33, 1, 0.68, 1);
+                animation: ${fadeInFromBottom} 700ms cubic-bezier(0.33, 1, 0.68, 1);
               }
             `}
           >
@@ -261,7 +261,13 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         `}
       >
         <Container>
-          <div className="content" dangerouslySetInnerHTML={{ __html: productType.description }} />
+          <div
+            css={css`
+              animation: ${fadeInFromBottom} 700ms cubic-bezier(0.33, 1, 0.68, 1);
+            `}
+            className="content"
+            dangerouslySetInnerHTML={{ __html: productType.description }}
+          />
         </Container>
       </div>
     </div>
