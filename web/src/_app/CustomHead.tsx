@@ -37,10 +37,6 @@ export const CustomHead = () => {
           <img src="https://mc.yandex.ru/watch/62615554" style={{ position: 'absolute', left: '-9999px' }} alt="" />
         </div>
       </noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;700&display=swap"
-        rel="stylesheet"
-      ></link>
       <link rel="apple-touch-icon" sizes="180x180" href={withPublicURL(`${iconFolder}/apple-touch-icon.png`)} />
       <link rel="icon" type="image/png" sizes="32x32" href={withPublicURL(`${iconFolder}/favicon-32x32.png`)} />
       <link rel="icon" type="image/png" sizes="16x16" href={withPublicURL(`${iconFolder}/favicon-16x16.png`)} />

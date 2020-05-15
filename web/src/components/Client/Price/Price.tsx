@@ -55,17 +55,21 @@ export const usePriceRangeText = ({ range }: IPriceRangeTextProps) => {
 
   const { calculatedRange, discounts, biggestFormattedPrice, lowestFormattedPrice } = usePriceRange({ range });
 
-  const price = React.useMemo(
-    () =>
-      calculatedRange.length > 1 ? (
+  const price = React.useMemo(() => {
+    if (range.length === 1) {
+      return <PriceCrossedText price={range[0].price} discount={range[0].discount} />;
+    }
+
+    if (calculatedRange.length > 1) {
+      return (
         <>
           {lowestFormattedPrice} - {biggestFormattedPrice}
         </>
-      ) : (
-        <>{biggestFormattedPrice}</>
-      ),
-    [lowestFormattedPrice, biggestFormattedPrice, calculatedRange],
-  );
+      );
+    }
+
+    return null;
+  }, [lowestFormattedPrice, biggestFormattedPrice, calculatedRange, range]);
 
   const discount = React.useMemo(() => {
     if (range.length === 1 && discounts.length === 1) {
