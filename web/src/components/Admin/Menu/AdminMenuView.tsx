@@ -1,10 +1,10 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import * as React from 'react';
-import { useIntl, IntlShape } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { NavLink, Link } from 'react-router-dom';
 
-import { IViewProps as IProps } from 'src/components/Admin/Header/AdminHeaderPresenter';
+import { IViewProps as IProps } from 'src/components/Admin/Menu/AdminMenuPresenter';
 import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
 import { Menu } from 'src/components/common/Menu/Menu';
 import { TriggerClickProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
@@ -38,7 +38,9 @@ const LanguageDrodownTrigger = React.forwardRef<any, PopoverTriggerProps>((props
   );
 });
 
-export const AdminHeaderView = ({ intl, onLogOutClick }: IProps & { intl: IntlShape }) => {
+export const AdminMenuView = ({ onLogOutClick }: IProps) => {
+  const intl = useIntl();
+
   return (
     <Menu
       css={css`

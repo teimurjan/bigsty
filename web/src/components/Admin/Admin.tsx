@@ -2,6 +2,7 @@
 import { css, jsx } from '@emotion/core';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Route, Switch } from 'react-router';
@@ -13,7 +14,7 @@ import { AdminFeatureTypes } from 'src/components/Admin/FeatureTypes/AdminFeatur
 import { NewFeatureTypeButton } from 'src/components/Admin/FeatureTypes/List/AdminFeatureTypesListView';
 import { AdminFeatureValues } from 'src/components/Admin/FeatureValues/AdminFeatureValues';
 import { NewFeatureValueButton } from 'src/components/Admin/FeatureValues/List/AdminFeatureValuesListView';
-import { AdminHeaderContainer } from 'src/components/Admin/Header/AdminHeaderContainer';
+import { AdminMenuContainer } from 'src/components/Admin/Menu/AdminMenuContainer';
 import { AdminOrders } from 'src/components/Admin/Orders/AdminOrders';
 import { AdminProducts } from 'src/components/Admin/Products/AdminProducts';
 import { NewProductButton } from 'src/components/Admin/Products/List/AdminProductsListView';
@@ -23,6 +24,7 @@ import { Section } from 'src/components/common/Section/Section';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Tag } from 'src/components/common/Tag/Tag';
 import { Title } from 'src/components/common/Title/Title';
+import { isUserAdmin } from 'src/helpers/user';
 import { AdminBannersStateProvider } from 'src/state/AdminBannersState';
 import { AdminCategoriesStateProvider } from 'src/state/AdminCategoriesState';
 import { AdminFeatureTypesStateProvider } from 'src/state/AdminFeatureTypesState';
@@ -30,6 +32,7 @@ import { AdminFeatureValuesStateProvider } from 'src/state/AdminFeatureValuesSta
 import { AdminOrdersStateProvider } from 'src/state/AdminOrdersState';
 import { AdminProductsStateProvider } from 'src/state/AdminProductsState';
 import { AdminProductTypesStateProvider } from 'src/state/AdminProductTypesState';
+import { useUserState } from 'src/state/UserState';
 import { mediaQueries } from 'src/styles/media';
 
 const arrowDivider = (
@@ -146,58 +149,71 @@ const AdminHome = () => {
   );
 };
 
-export const Admin = () => (
-  <AdminBannersStateProvider>
-    <AdminCategoriesStateProvider>
-      <AdminFeatureTypesStateProvider>
-        <AdminFeatureValuesStateProvider>
-          <AdminProductTypesStateProvider>
-            <AdminProductsStateProvider>
-              <AdminOrdersStateProvider>
-                <div
-                  css={css`
-                    align-items: flex-start;
-                    display: flex;
-                  `}
-                >
+export const Admin = () => {
+  const router = useRouter();
+  const {
+    userState: { user },
+  } = useUserState();
+
+  React.useEffect(() => {
+    if (!isUserAdmin(user)) {
+      router.push('/');
+    }
+  }, [router, user]);
+
+  return (
+    <AdminBannersStateProvider>
+      <AdminCategoriesStateProvider>
+        <AdminFeatureTypesStateProvider>
+          <AdminFeatureValuesStateProvider>
+            <AdminProductTypesStateProvider>
+              <AdminProductsStateProvider>
+                <AdminOrdersStateProvider>
                   <div
                     css={css`
-                      flex: 0 0 350px;
-
-                      @media ${mediaQueries.maxWidth768} {
-                        position: absolute;
-                        left: -350px;
-                      }
+                      align-items: flex-start;
+                      display: flex;
                     `}
                   >
-                    <AdminHeaderContainer />
-                  </div>
-                  <div
-                    css={css`
-                      width: calc(100% - 350px);
+                    <div
+                      css={css`
+                        flex: 0 0 350px;
 
-                      @media ${mediaQueries.maxWidth768} {
-                        width: 100%;
-                      }
-                    `}
-                  >
-                    <Switch>
-                      <Route path="/admin/categories" component={AdminCategories} />
-                      <Route path="/admin/featureTypes" component={AdminFeatureTypes} />
-                      <Route path="/admin/featureValues" component={AdminFeatureValues} />
-                      <Route path="/admin/productTypes" component={AdminProductTypes} />
-                      <Route path="/admin/products" component={AdminProducts} />
-                      <Route path="/admin/banners" component={AdminBanners} />
-                      <Route path="/admin/orders" component={AdminOrders} />
-                      <Route component={AdminHome} />
-                    </Switch>
+                        @media ${mediaQueries.maxWidth768} {
+                          position: absolute;
+                          left: -350px;
+                        }
+                      `}
+                    >
+                      <AdminMenuContainer />
+                    </div>
+                    <div
+                      css={css`
+                        width: calc(100% - 350px);
+
+                        @media ${mediaQueries.maxWidth768} {
+                          width: 100%;
+                        }
+                      `}
+                    >
+                      <Switch>
+                        <Route path="/admin/categories" component={AdminCategories} />
+                        <Route path="/admin/featureTypes" component={AdminFeatureTypes} />
+                        <Route path="/admin/featureValues" component={AdminFeatureValues} />
+                        <Route path="/admin/productTypes" component={AdminProductTypes} />
+                        <Route path="/admin/products" component={AdminProducts} />
+                        <Route path="/admin/banners" component={AdminBanners} />
+                        <Route path="/admin/orders" component={AdminOrders} />
+                        <Route component={AdminHome} />
+                      </Switch>
+                    </div>
                   </div>
-                </div>
-              </AdminOrdersStateProvider>
-            </AdminProductsStateProvider>
-          </AdminProductTypesStateProvider>
-        </AdminFeatureValuesStateProvider>
-      </AdminFeatureTypesStateProvider>
-    </AdminCategoriesStateProvider>
-  </AdminBannersStateProvider>
-);
+                </AdminOrdersStateProvider>
+              </AdminProductsStateProvider>
+            </AdminProductTypesStateProvider>
+          </AdminFeatureValuesStateProvider>
+        </AdminFeatureTypesStateProvider>
+      </AdminCategoriesStateProvider>
+    </AdminBannersStateProvider>
+  );
+};

@@ -3,11 +3,11 @@ const { createServer } = require('http');
 const { basename } = require('path');
 const { parse } = require('url');
 
+const cookie = require('cookie');
 const glob = require('glob');
 const IntlPolyfill = require('intl');
-const next = require('next');
-const cookie = require('cookie');
 const jwtDecode = require('jwt-decode');
+const next = require('next');
 
 Intl.NumberFormat = IntlPolyfill.NumberFormat;
 Intl.DateTimeFormat = IntlPolyfill.DateTimeFormat;
