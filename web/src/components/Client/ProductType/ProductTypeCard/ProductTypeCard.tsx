@@ -128,8 +128,24 @@ export const ProductTypeCard = ({ productType }: IProps) => {
                 ></span>
                 <span
                   css={css`
+                    color: ${theme.textColor};
+
+                    button:hover &,
+                    button:focus & {
+                      color: inherit;
+                    }
+
+                    del {
+                      font-size: 14px;
+                      color: ${theme.textSecondaryColor};
+                    }
+
                     @media ${mediaQueries.maxWidth768} {
                       font-size: 12px;
+
+                      del {
+                        font-size: 10px;
+                      }
                     }
                   `}
                 >
@@ -154,6 +170,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
             <small
               css={css`
                 font-size: 12px;
+                text-transform: uppercase;
               `}
             >
               {discount}

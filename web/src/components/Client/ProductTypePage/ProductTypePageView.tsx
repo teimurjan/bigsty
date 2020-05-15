@@ -183,7 +183,17 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
                 {productType.name}
               </Title>
               {matchingProduct && matchingProduct.quantity > 0 ? (
-                <Subtitle size={3}>
+                <Subtitle
+                  css={css`
+                    color: ${theme.textColor};
+
+                    del {
+                      color: ${theme.textSecondaryColor};
+                      font-size: 18px;
+                    }
+                  `}
+                  size={3}
+                >
                   <PriceCrossedText price={matchingProduct.price} discount={matchingProduct.discount} />
                 </Subtitle>
               ) : (

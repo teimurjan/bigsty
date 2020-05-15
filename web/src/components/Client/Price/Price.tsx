@@ -96,7 +96,7 @@ export const PriceCrossedText = ({ price, discount }: IPriceProps) => {
 
   return formattedPrice !== formattedInitialPrice ? (
     <React.Fragment>
-      <del>{formattedInitialPrice}</del> {formattedPrice}
+      {formattedPrice} <del>{formattedInitialPrice}</del>
     </React.Fragment>
   ) : (
     <React.Fragment>{formattedInitialPrice}</React.Fragment>
