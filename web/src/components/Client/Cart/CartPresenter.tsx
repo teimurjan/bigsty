@@ -36,6 +36,7 @@ export interface IViewProps {
   cartItemsCount: number;
   step: number;
   goToNextStep: () => void;
+  goToPrevStep: () => void;
   validator: schemaValidator.ISchemaValidator;
   initialValues: Partial<IFormValues>;
   onSubmit: (values: IFormValues) => Promise<void>;
@@ -128,6 +129,10 @@ export const CartPresenter: React.FC<IProps> = ({
     setStep(step + 1);
   }, [step]);
 
+  const goToPrevStep = React.useCallback(() => {
+    setStep(step - 1);
+  }, [step]);
+
   const onSubmit = React.useCallback(
     async ({ name, phone, address }: IFormValues) => {
       const cartItems = storage.getItems();
@@ -172,6 +177,7 @@ export const CartPresenter: React.FC<IProps> = ({
       remove={remove}
       step={step}
       goToNextStep={goToNextStep}
+      goToPrevStep={goToPrevStep}
       validator={validator}
       initialValues={{
         name: getUserPropertySafe(user, 'name', '') as string,

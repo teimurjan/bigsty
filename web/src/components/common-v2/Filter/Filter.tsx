@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 
 import { Button } from 'src/components/common-v2/Button/Button';
-import { Drawer } from 'src/components/common/Drawer/Drawer';
+import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useMedia } from 'src/hooks/useMedia';
@@ -60,6 +60,7 @@ export const Filter = ({ className, title, children }: IProps) => {
         css={css`
           width: 100px !important;
           margin-top: 10px;
+          align-self: flex-start;
         `}
         size="mini"
         color="dark"

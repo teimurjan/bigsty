@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 import { IViewProps as IProps } from 'src/components/Client/LanguageDropdown/LanguageDropdownPresenter';
 import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
-import { Popover, TriggerClickProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
+import { Popover, TriggerClickProps as PopoverTriggerProps } from 'src/components/common-v2/Popover/Popover';
 
 const nameOfLocale = {
   en: 'English',

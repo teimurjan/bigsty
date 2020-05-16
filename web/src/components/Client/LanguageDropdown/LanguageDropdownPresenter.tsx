@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { TriggerClickProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
+import { TriggerClickProps as PopoverTriggerProps } from 'src/components/common-v2/Popover/Popover';
 import { IIntlService } from 'src/services/IntlService';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { safeWindow } from 'src/utils/dom';

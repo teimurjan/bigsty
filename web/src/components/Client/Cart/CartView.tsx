@@ -1,25 +1,28 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Form, Field as FinalFormField, FieldRenderProps } from 'react-final-form';
 import { useIntl } from 'react-intl';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import { CartItem } from 'src/components/Client/Cart/CartItem/CartItem';
 import { IViewProps as IProps, IFormValues } from 'src/components/Client/Cart/CartPresenter';
 import { PriceText } from 'src/components/Client/Price/Price';
 import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
 import { Button } from 'src/components/common-v2/Button/Button';
+import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
 import { Title } from 'src/components/common-v2/Title/Title';
 import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
-import { Drawer } from 'src/components/common/Drawer/Drawer';
 import { FormPhoneField } from 'src/components/common/FormPhoneField/FormPhoneField';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Message } from 'src/components/common/Message/Message';
-import { bounce } from 'src/styles/keyframes';
+import { bounce, fadeInFromRight, fadeInFromLeft } from 'src/styles/keyframes';
+import { easeOutCubic } from 'src/styles/timing-functions';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { parsePhoneNumber } from 'src/utils/phone';
 
@@ -48,7 +51,7 @@ const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, add
   const isAnyProductCountNotAllowed = products.some(product => product.quantity < getProductCount(product.id));
 
   return (
-    <React.Fragment>
+    <div>
       <div>
         {products.map(product => (
           <CartItem
@@ -66,7 +69,7 @@ const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, add
       <Button color="dark" css={buttonCSS} disabled={isAnyProductCountNotAllowed} onClick={goToNextStep}>
         {intl.formatMessage({ id: 'Cart.order' })}
       </Button>
-    </React.Fragment>
+    </div>
   );
 };
 
@@ -159,7 +162,7 @@ const ThirdStep: React.FC<IProps> = () => {
 
 export const CartView: React.FC<IProps> = props => {
   const intl = useIntl();
-  const { isOpen, open, close, step, cartItemsCount } = props;
+  const { isOpen, open, close, step, cartItemsCount, goToPrevStep } = props;
   const theme = useTheme<CSSThemeV2>();
   return (
     <React.Fragment>
@@ -197,7 +200,7 @@ export const CartView: React.FC<IProps> = props => {
       </div>
       <Drawer
         css={css`
-          padding: 1rem 2rem;
+          padding: 20px 30px;
           background: ${theme.backgroundSecondaryColor};
           width: 500px;
           max-width: 100%;
@@ -209,9 +212,67 @@ export const CartView: React.FC<IProps> = props => {
         backdrop
         fixed
       >
-        {step === 0 && <FirstStep {...props} />}
-        {step === 1 && <SecondStep {...props} />}
-        {step === 2 && <ThirdStep {...props} />}
+        <div
+          css={css`
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+          `}
+        >
+          <FontAwesomeIcon
+            onClick={goToPrevStep}
+            css={css`
+              position: absolute;
+              left: 0;
+              top: 0;
+              cursor: pointer;
+              opacity: ${step > 0 ? 1 : 0};
+              transition: opacity 200ms;
+              color: ${theme.textColor};
+            `}
+            icon={faArrowLeft}
+          />
+          <TransitionGroup component={null}>
+            <CSSTransition key={step} classNames="fading" timeout={400}>
+              <div
+                css={css`
+                  position: absolute;
+                  top: 30px;
+                  left: 0;
+                  width: 100%;
+                  overflow: auto;
+
+                  &.fading-enter {
+                    transform: translateX(100%);
+                  }
+
+                  &.fading-exit {
+                    transform: translateX(-100%);
+                  }
+
+                  &.fading-enter,
+                  &.fading-entered {
+                    animation: ${fadeInFromRight} 300ms ${easeOutCubic};
+                    animation-fill-mode: forwards;
+                    animation-delay: 100ms;
+                  }
+
+                  &.fading-exit,
+                  &.fading-exited {
+                    animation: ${fadeInFromLeft} 200ms ${easeOutCubic};
+                    animation-direction: reverse;
+                    animation-fill-mode: forwards;
+                  }
+                `}
+              >
+                {step === 0 && <FirstStep {...props} />}
+                {step === 1 && <SecondStep {...props} />}
+                {step === 2 && <ThirdStep {...props} />}
+              </div>
+            </CSSTransition>
+          </TransitionGroup>
+        </div>
       </Drawer>
     </React.Fragment>
   );

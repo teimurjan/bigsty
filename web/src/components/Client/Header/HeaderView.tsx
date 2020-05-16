@@ -11,9 +11,9 @@ import { SearchContainer } from 'src/components/Client/Search/SearchContainer';
 import { UserDropdownContainer as UserDropdown } from 'src/components/Client/UserDropdown/UserDropdownContainer';
 import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
 import { Navbar } from 'src/components/common-v2/Navbar/Navbar';
+import { Popover } from 'src/components/common-v2/Popover/Popover';
+import { TriggerHoverProps as PopoverTriggerProps } from 'src/components/common-v2/Popover/Popover';
 import { Container } from 'src/components/common/Container/Container';
-import { Popover } from 'src/components/common/Popover/Popover';
-import { TriggerHoverProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
 import { mediaQueries } from 'src/styles/media';
 import { withPublicURL } from 'src/utils/url';
 

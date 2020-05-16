@@ -8,13 +8,13 @@ import { useIntl } from 'react-intl';
 
 import { IViewProps as IProps } from 'src/components/Client/Search/SearchPresenter';
 import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
+import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
+import { Popover } from 'src/components/common-v2/Popover/Popover';
 import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
-import { Drawer } from 'src/components/common/Drawer/Drawer';
 import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
 import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
 import { DropdownItemLink } from 'src/components/common/DropdownItemLink/DropdownItemLink';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { Popover } from 'src/components/common/Popover/Popover';
 import { Tag } from 'src/components/common/Tag/Tag';
 import { UnderlinedInput } from 'src/components/common/UnderlinedInput/UnderlinedInput';
 import { useBoolean } from 'src/hooks/useBoolean';

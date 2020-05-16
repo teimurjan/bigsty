@@ -6,10 +6,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
 
+import { ModalClose } from 'src/components/common-v2/Modal/Modal';
 import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
-import { ModalClose } from 'src/components/common/ModalClose/ModalClose';
 import useClickOutside from 'src/hooks/useClickOutside';
 import { useModalScrollLock } from 'src/hooks/useModalScrollLock';
+import { useMousetrap } from 'src/hooks/useMousetrap';
 import { safeDocument } from 'src/utils/dom';
 
 type FromSide = 'top' | 'left' | 'bottom' | 'right';
@@ -79,80 +80,92 @@ const cssOfSide = {
 
 const getSlidingCSS = (from: FromSide) => {
   const { permanent, initial, final } = cssOfSide[from];
-  return css`
-    width: 100vw;
-    height: 100vh;
 
-    & > .drawer-content {
-      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15), 0 8px 8px 0 rgba(0, 0, 0, 0.05);
-      transition: transform 300ms ease-in-out, opacity 175ms ease-in-out;
-      position: absolute;
-      z-index: 99;
-      ${permanent};
-      ${initial}
+  const drawerContentCSS = css`
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15), 0 8px 8px 0 rgba(0, 0, 0, 0.05);
+    transition: transform 300ms ease-in-out, opacity 175ms ease-in-out;
+    position: absolute;
+    z-index: 99;
+    ${permanent};
+    ${initial}
 
-      &.fixed {
-        position: fixed;
-      }
-    }
-
-    & > .modal-background {
-      opacity: 0;
-      z-index: 98;
-      transition: opacity 175ms ease-in-out;
-    }
-
-    & > .modal-close {
-      opacity: 0;
-      z-index: 100;
-      transition: opacity 175ms ease-in-out;
-    }
-
-    &.sliding-enter > .drawer-content {
+    .sliding-enter & {
       ${initial}
     }
-    &.sliding-enter-active > .drawer-content,
-    &.sliding-enter-done > .drawer-content {
+    .sliding-enter-active &,
+    .sliding-enter-done & {
       ${final}
     }
-    &.sliding-exit > .drawer-content {
+    .sliding-exit & {
       ${final}
     }
-    &.sliding-exit-active > .drawer-content,
-    &.sliding-exit-done > .drawer-content {
+    .sliding-exit-active &,
+    .sliding-exit-done & {
       ${initial}
     }
 
-    &.sliding-enter > .modal-background {
-      opacity: 0;
+    &.fixed {
+      position: fixed;
     }
-    &.sliding-enter-active > .modal-background,
-    &.sliding-enter-done > .modal-background {
-      opacity: 1;
-    }
-    &.sliding-exit > .modal-background {
-      opacity: 1;
-    }
-    &.sliding-exit-active > .modal-background,
-    &.sliding-exit-done > .modal-background {
-      opacity: 0;
+  `;
+
+  const modalBackgroundCSS = css`
+    opacity: 0;
+    z-index: 98;
+    transition: opacity 175ms ease-in-out;
+
+    &.fixed {
+      position: fixed;
     }
 
-    &.sliding-enter > .modal-close {
+    .sliding-enter & {
       opacity: 0;
     }
-    &.sliding-enter-active > .modal-close,
-    &.sliding-enter-done > .modal-close {
+    .sliding-enter-active &,
+    .sliding-enter-done & {
       opacity: 1;
     }
-    &.sliding-exit > .modal-close {
+    .sliding-exit & {
       opacity: 1;
     }
-    &.sliding-exit-active > .modal-close,
-    &.sliding-exit-done > .modal-close {
+    .sliding-exit-active &,
+    .sliding-exit-done & {
       opacity: 0;
     }
   `;
+
+  const modalCloseCSS = css`
+    opacity: 0;
+    z-index: 100;
+    transition: opacity 175ms ease-in-out;
+
+    .sliding-enter & {
+      opacity: 0;
+    }
+    .sliding-enter-active &,
+    .sliding-enter-done & {
+      opacity: 1;
+    }
+    .sliding-exit & {
+      opacity: 1;
+    }
+    .sliding-exit-active &,
+    .sliding-exit-done & {
+      opacity: 0;
+    }
+  `;
+
+  const drawerCSS = css`
+    width: 100vw;
+    height: 100vh;
+  `;
+
+  return {
+    drawerContentCSS,
+    modalBackgroundCSS,
+    modalCloseCSS,
+    drawerCSS,
+  };
 };
 
 export interface IProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -186,18 +199,22 @@ export const Drawer = ({
   fixed,
   ...props
 }: IProps) => {
-  const theme = useTheme<CSSTheme>();
+  const theme = useTheme<CSSThemeV2>();
   useModalScrollLock(isOpen, lockScroll);
 
   const ref = React.useRef<HTMLDivElement>(null);
-  useClickOutside([ref], () => {
+
+  const closeIfOpen = React.useCallback(() => {
     if (isOpen) {
       close();
     }
-  });
+  }, [isOpen, close]);
+
+  useClickOutside([ref], closeIfOpen);
+  useMousetrap('esc', closeIfOpen);
 
   const drawerRoot = safeDocument(d => d.getElementById('drawerRoot'), null);
-  const slidingCSS = getSlidingCSS(fromSide);
+  const { drawerContentCSS, modalBackgroundCSS, modalCloseCSS, drawerCSS } = getSlidingCSS(fromSide);
 
   return drawerRoot
     ? ReactDOM.createPortal(
@@ -211,37 +228,21 @@ export const Drawer = ({
           onExit={onExit}
           onExited={onExited}
         >
-          <div css={slidingCSS}>
-            <div className={classNames(className, 'drawer-content', { fixed })} ref={ref} {...props}>
+          <div css={drawerCSS}>
+            <div css={drawerContentCSS} className={classNames(className, { fixed })} ref={ref} {...props}>
               {children}
             </div>
             {showClose && (
               <ModalClose
                 css={css`
-                  &::after,
-                  &::before {
-                    background: ${fromSide === 'top' || fromSide === 'right' ? theme.greyLight : theme.white};
-                  }
-                  &:hover {
-                    &::after,
-                    &::before {
-                      background: ${theme.white};
-                    }
-                  }
+                  ${modalCloseCSS};
+
+                  color: ${fromSide === 'top' || fromSide === 'right' ? theme.textColor : theme.textOnPrimaryColor};
                 `}
                 onClick={close}
               />
             )}
-            {backdrop && (
-              <ModalBackground
-                className={classNames({ fixed })}
-                css={css`
-                  &.fixed {
-                    position: fixed;
-                  }
-                `}
-              ></ModalBackground>
-            )}
+            {backdrop && <ModalBackground className={classNames({ fixed })} css={modalBackgroundCSS}></ModalBackground>}
           </div>
         </CSSTransition>,
         drawerRoot,

@@ -1,7 +1,12 @@
 import { keyframes } from '@emotion/core';
 
+export const fadeIn = keyframes`
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+`;
+
 export const fadeInFromRight = keyframes`
-  0%   {
+  0% {
     transform: translateX(100%);
     opacity: 0;
   }
@@ -12,7 +17,7 @@ export const fadeInFromRight = keyframes`
 `;
 
 export const fadeInFromLeft = keyframes`
-  0%   {
+  0% {
     transform: translateX(-100%);
     opacity: 0;
   }
@@ -23,7 +28,7 @@ export const fadeInFromLeft = keyframes`
 `;
 
 export const fadeInFromBottom = keyframes`
-  0%   {
+  0% {
     transform: translateY(100%);
     opacity: 0;
   }

@@ -5,8 +5,8 @@ import { useIntl } from 'react-intl';
 import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
 import { IViewProps as IProps } from 'src/components/Client/UserDropdown/UserDropdownPresenter';
 import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
+import { Popover, TriggerHoverProps as PopoverTriggerProps } from 'src/components/common-v2/Popover/Popover';
 import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
-import { Popover, TriggerHoverProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
 import { isUserAuthorized, isUserAdmin } from 'src/helpers/user';
 
 const Trigger = React.forwardRef<HTMLAnchorElement, PopoverTriggerProps>((props, ref) => {

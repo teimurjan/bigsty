@@ -6,8 +6,8 @@ import { NavLink, Link } from 'react-router-dom';
 
 import { IViewProps as IProps } from 'src/components/Admin/Menu/AdminMenuPresenter';
 import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
+import { TriggerClickProps as PopoverTriggerProps } from 'src/components/common-v2/Popover/Popover';
 import { Menu } from 'src/components/common/Menu/Menu';
-import { TriggerClickProps as PopoverTriggerProps } from 'src/components/common/Popover/Popover';
 import { mediaQueries } from 'src/styles/media';
 
 const LanguageDrodownTrigger = React.forwardRef<any, PopoverTriggerProps>((props, ref) => {

@@ -20,6 +20,7 @@ import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { NotFoundView } from 'src/components/NotFound/NotFoundView';
 import { fadeInFromLeft, fadeInFromRight, fadeInFromBottom } from 'src/styles/keyframes';
 import { mediaQueries } from 'src/styles/media';
+import { easeOutCubic } from 'src/styles/timing-functions';
 import { formatMediaURL } from 'src/utils/url';
 
 const getAllFeatureValuesGroupedByType = (
@@ -138,11 +139,11 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
               display: flex;
               justify-content: flex-start;
               width: 30vw;
-              animation: ${fadeInFromLeft} 700ms cubic-bezier(0.33, 1, 0.68, 1);
+              animation: ${fadeInFromLeft} 700ms ${easeOutCubic};
 
               @media ${mediaQueries.maxWidth768} {
                 width: 100%;
-                animation: ${fadeInFromBottom} 500ms cubic-bezier(0.33, 1, 0.68, 1);
+                animation: ${fadeInFromBottom} 500ms ${easeOutCubic};
               }
             `}
           >
@@ -158,12 +159,12 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
               padding: 0 0 7.5vw 50px;
               flex-direction: column;
               width: calc(100% - 30vw);
-              animation: ${fadeInFromRight} 700ms cubic-bezier(0.33, 1, 0.68, 1);
+              animation: ${fadeInFromRight} 700ms ${easeOutCubic};
 
               @media ${mediaQueries.maxWidth768} {
                 padding: 25px 0 0 0;
                 width: 100%;
-                animation: ${fadeInFromBottom} 700ms cubic-bezier(0.33, 1, 0.68, 1);
+                animation: ${fadeInFromBottom} 700ms ${easeOutCubic};
               }
             `}
           >
@@ -263,7 +264,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         <Container>
           <div
             css={css`
-              animation: ${fadeInFromBottom} 700ms cubic-bezier(0.33, 1, 0.68, 1);
+              animation: ${fadeInFromBottom} 700ms ${easeOutCubic};
             `}
             className="content"
             dangerouslySetInnerHTML={{ __html: productType.description }}
