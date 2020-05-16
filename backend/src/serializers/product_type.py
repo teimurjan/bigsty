@@ -21,7 +21,7 @@ class ProductTypeSerializer(IntlSerializer):
         self._slug = product_type.slug
 
     def serialize(self):
-        return self._filter_with_only_fields({
+        return self._filter_fields({
             'id': self._id,
             'name': self._serialize_name(),
             'description': self._serialize_description(),

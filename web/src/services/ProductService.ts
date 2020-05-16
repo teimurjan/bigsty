@@ -28,16 +28,16 @@ export interface IProductService {
   ): Promise<{
     entities: {
       products: {
-        [key: string]: productAPI.IProductForCartResponseItem;
+        [key: string]: productAPI.IProductListResponseItem;
       };
     };
     result: number[];
   }>;
   delete(id: number): Promise<{}>;
-  create(payload: productAPI.IProductCreatePayload): Promise<productAPI.IProductListResponseItem>;
-  edit(id: number, payload: productAPI.IProductEditPayload): Promise<productAPI.IProductListResponseItem>;
+  create(payload: productAPI.IProductCreatePayload): Promise<productAPI.IProductResponseItem>;
+  edit(id: number, payload: productAPI.IProductEditPayload): Promise<productAPI.IProductResponseItem>;
   exists(id: number): Promise<boolean>;
-  getOne(id: number): Promise<productAPI.IProductListResponseItem | undefined>;
+  getOne(id: number): Promise<productAPI.IProductResponseItem | undefined>;
   getForProductType(productTypeID: number): Promise<productAPI.IProductForProductTypeResponseItem[]>;
 }
 

@@ -74,11 +74,6 @@ export interface IProductTypeListRawIntlResponseData {
   meta: IProductTypeListResponseMeta;
 }
 
-// NEWEST
-export interface IProductTypeNewestResponseData {
-  data: IProductTypeListResponseItem[];
-}
-
 // DETAIL RAW INTL
 export interface IProductTypeDetailRawIntlResponseItem {
   id: number;
@@ -156,7 +151,7 @@ export interface IProductTypeAPI {
     sortBy?: ProductTypeSortingType,
   ): Promise<IProductTypeListResponseData>;
   getAll(page: number): Promise<IProductTypeListResponseData>;
-  getNewest(): Promise<IProductTypeNewestResponseData>;
+  getNewest(): Promise<IProductTypeListResponseData>;
   getByID(id: number): Promise<IProductTypeDetailResponseItemData>;
   getBySlug(slug: string): Promise<IProductTypeDetailResponseItemData>;
   getAllRawIntlMinified(): Promise<IProductTypeListRawIntlMinifiedResponseData>;
@@ -229,9 +224,15 @@ export class ProductTypeAPI implements IProductTypeAPI {
 
   public async getNewest() {
     try {
-      const response = await this.client.get<IProductTypeNewestResponseData>('/api/product_types/newest', {
-        headers: this.headersManager.getHeaders(),
-      });
+      const response = await this.client.get<IProductTypeListResponseData>(
+        `/api/product_types${buildQueryString({
+          page: 1,
+          sort_by: queryValueOfSortingType[ProductTypeSortingType.RECENT],
+        })}`,
+        {
+          headers: this.headersManager.getHeaders(),
+        },
+      );
       return response.data;
     } catch (e) {
       throw e;

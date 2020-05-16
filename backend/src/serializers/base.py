@@ -6,6 +6,7 @@ from sqlalchemy.orm.exc import DetachedInstanceError
 class Serializer:
     def __init__(self):
         self._only_fields = None
+        self._ignore_fields = None
 
     def _init_relation_safely(self, attr_name, obj, relation_name):
         try:
@@ -18,14 +19,21 @@ class Serializer:
             self._only_fields = only_fields
         return self
 
-    def _filter_with_only_fields(self, serialized_dict):
-        if self._only_fields:
-            filtered_dict = {}
-            for field in serialized_dict.keys():
-                if field in self._only_fields:
-                    filtered_dict[field] = serialized_dict[field]
-            return filtered_dict
-        return serialized_dict
+    def ignore(self, ignore_fields):
+        if ignore_fields:
+            self._ignore_fields = ignore_fields
+        return self
+
+    def _filter_fields(self, serialized_dict):
+        filtered_dict = {}
+
+        for field in serialized_dict.keys():
+            is_field_in_only = not self._only_fields or field in self._only_fields
+            is_field_in_ignore = self._ignore_fields and field in self._ignore_fields
+            if is_field_in_only and not is_field_in_ignore:
+                filtered_dict[field] = serialized_dict[field]
+
+        return filtered_dict
 
     def _with_serialized_relation(self, attr_name, model_cls, serializer_cls, before_serialize=None):
         if isinstance(getattr(self, attr_name), model_cls):

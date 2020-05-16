@@ -99,12 +99,8 @@ class ProductTypeService:
         except self._feature_type_repo.DoesNotExist:
             raise self.FeatureTypesInvalid()
 
-    def get_all(self, offset=None, limit=None):
-        return self._repo.get_all(offset=offset, limit=limit)
-
-    def get_newest(self, count):
-        product_types, count = self._repo.get_all(limit=count, join_products=True, sorting_type=ProductTypeSortingType.NEWLY_ADDED)
-        return product_types
+    def get_all(self, join_products: bool = False, sorting_type: ProductTypeSortingType = None, offset: int=None, limit: int=None):
+        return self._repo.get_all(join_products=join_products, offset=offset, limit=limit, sorting_type=sorting_type)
 
     def get_all_by_category(self, category_slug: str, sorting_type: ProductTypeSortingType, offset: int = None, limit: int = None):
         with self._repo.session() as s:

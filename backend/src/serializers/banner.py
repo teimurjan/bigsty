@@ -17,7 +17,7 @@ class BannerSerializer(IntlSerializer):
         self._text_bottom_offset = banner.text_bottom_offset
 
     def serialize(self):
-        return self._filter_with_only_fields({
+        return self._filter_fields({
             'id': self._id,
             'text': self._serialize_text(),
             'link_text': self._serialize_link_text(),

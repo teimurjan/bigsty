@@ -18,7 +18,7 @@ class OrderSerializer(IntlSerializer):
         self._created_on = order.created_on
 
     def serialize(self):
-        return self._filter_with_only_fields({
+        return self._filter_fields({
             'id': self._id,
             'items': self._serialize_items(),
             'user': self._serialize_user(),

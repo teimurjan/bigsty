@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as yup from 'yup';
 
-import { IProductForCartResponseItem } from 'src/api/ProductAPI';
+import { IProductListResponseItem } from 'src/api/ProductAPI';
 import * as schemaValidator from 'src/components/SchemaValidator';
 import { getUserPropertySafe } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
@@ -27,11 +27,11 @@ export interface IViewProps {
   open: () => void;
   close: () => void;
   toggle: () => void;
-  products: IProductForCartResponseItem[];
+  products: IProductListResponseItem[];
   isLoading: boolean;
   error?: string;
-  addMore: (product: IProductForCartResponseItem) => void;
-  remove: (product: IProductForCartResponseItem) => void;
+  addMore: (product: IProductListResponseItem) => void;
+  remove: (product: IProductListResponseItem) => void;
   getProductCount: (id: number) => number;
   cartItemsCount: number;
   step: number;
@@ -77,7 +77,7 @@ export const CartPresenter: React.FC<IProps> = ({
   const [step, setStep] = React.useState(0);
   const [isLoading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | undefined>(undefined);
-  const [products, setProducts] = React.useState<{ [key: number]: IProductForCartResponseItem }>({});
+  const [products, setProducts] = React.useState<{ [key: number]: IProductListResponseItem }>({});
   const [productsOrder, setProductsOrder] = React.useState<number[]>([]);
   const forceUpdate = useForceUpdate();
 
@@ -93,9 +93,11 @@ export const CartPresenter: React.FC<IProps> = ({
       try {
         setLoading(true);
         const ids = storage.getItems().map(item => item.id);
-        const { entities, result } = await productService.getForCart(ids);
-        setProducts(entities.products);
-        setProductsOrder(result);
+        if (ids.length > 0) {
+          const { entities, result } = await productService.getForCart(ids);
+          setProducts(entities.products);
+          setProductsOrder(result);
+        }
       } catch (e) {
         setError('errors.common');
       } finally {
@@ -106,14 +108,14 @@ export const CartPresenter: React.FC<IProps> = ({
   }, [isOpen]);
 
   const addMore = React.useCallback(
-    (product: IProductForCartResponseItem) => {
+    (product: IProductListResponseItem) => {
       storage.add(product);
     },
     [storage],
   );
 
   const remove = React.useCallback(
-    (product: IProductForCartResponseItem) => {
+    (product: IProductListResponseItem) => {
       const newCount = storage.remove(product);
       if (newCount === 0) {
         setProductsOrder(productsOrder.filter(id => id !== product.id));

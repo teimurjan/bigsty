@@ -8,7 +8,7 @@ class FeatureTypeSerializer(IntlSerializer):
         self._names = feature_type.names
 
     def serialize(self):
-        return self._filter_with_only_fields({
+        return self._filter_fields({
             'id': self._id,
             'name': self._serialize_name(),
         })

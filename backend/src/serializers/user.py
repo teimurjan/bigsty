@@ -12,7 +12,7 @@ class UserSerializer(Serializer):
         self._group = user.group
 
     def serialize(self):
-        return self._filter_with_only_fields({
+        return self._filter_fields({
             'id': self._id,
             'email': self._email,
             'name': self._name,

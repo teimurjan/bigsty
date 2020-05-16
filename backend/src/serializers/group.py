@@ -8,7 +8,7 @@ class GroupSerializer(Serializer):
         self._name = group.name
 
     def serialize(self):
-        return self._filter_with_only_fields({
+        return self._filter_fields({
             'name': self._name,
             'id': self._id
         })

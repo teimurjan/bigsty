@@ -2,7 +2,7 @@
 import { css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 
-import { IProductForCartResponseItem } from 'src/api/ProductAPI';
+import { IProductListResponseItem } from 'src/api/ProductAPI';
 import { Quantity } from 'src/components/Client/Cart/CartItem/Quantity';
 import { PriceCrossedText } from 'src/components/Client/Price/Price';
 import { Subtitle } from 'src/components/common-v2/Subtitle/Subtitle';
@@ -10,7 +10,7 @@ import { Title } from 'src/components/common-v2/Title/Title';
 import { Image } from 'src/components/common/Image/Image';
 
 interface IProps {
-  product: IProductForCartResponseItem;
+  product: IProductListResponseItem;
   count: number;
   onRemoveClick: () => void;
   onAddClick: () => void;

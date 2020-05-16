@@ -88,12 +88,10 @@ from src.views.order.detail import OrderDetailView
 from src.views.order.list import OrderListView
 from src.views.product.by_product_type import ProductByProductTypeView
 from src.views.product.detail import ProductDetailView
-from src.views.product.for_cart import ProductForCartView
 from src.views.product.list import ProductListView
 from src.views.product_type.by_category import ProductTypeByCategoryView
 from src.views.product_type.detail import ProductTypeDetailView
 from src.views.product_type.list import ProductTypeListView
-from src.views.product_type.newest import ProductTypeNewestView
 from src.views.product_type.slug import ProductTypeSlugView
 from src.views.refresh_token import RefreshTokenView
 from src.views.registration import RegistrationView
@@ -367,16 +365,6 @@ class App:
             methods=['GET']
         )
         self.flask_app.add_url_rule(
-            '/api/products/for_cart',
-            view_func=AbstractView.as_view(
-                'products_for_cart',
-                concrete_view=ProductForCartView(
-                    self.__product_service, ProductSerializer),
-                middlewares=middlewares
-            ),
-            methods=['GET']
-        )
-        self.flask_app.add_url_rule(
             '/api/product_types',
             view_func=AbstractView.as_view(
                 'product_types',
@@ -395,16 +383,6 @@ class App:
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
-        )
-        self.flask_app.add_url_rule(
-            '/api/product_types/newest',
-            view_func=AbstractView.as_view(
-                'product_type_newest',
-                concrete_view=ProductTypeNewestView(
-                    self.__product_type_service, ProductTypeSerializer),
-                middlewares=middlewares
-            ),
-            methods=['GET']
         )
         self.flask_app.add_url_rule(
             '/api/languages',

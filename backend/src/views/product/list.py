@@ -14,11 +14,14 @@ class ProductListView(ValidatableView, PaginatableView):
 
     def get(self, request):
         pagination_data = self._get_pagination_data(request)
+        ids = request.args.getlist('ids', type=int)
 
         meta = None
         products = []
 
-        if pagination_data:
+        if ids:
+            products = self._service.get_by_ids(ids)
+        elif pagination_data:
             products, count = self._service.get_all(
                 offset=pagination_data['offset'],
                 limit=pagination_data['limit']
@@ -36,6 +39,7 @@ class ProductListView(ValidatableView, PaginatableView):
             ._serializer_cls(product)
             .in_language(request.language)
             .with_serialized_product_type()
+            .with_serialized_feature_values()
             .serialize()
             for product in products
         ]

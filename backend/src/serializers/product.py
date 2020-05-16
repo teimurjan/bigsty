@@ -18,7 +18,7 @@ class ProductSerializer(IntlSerializer):
         self._feature_values = product.feature_values
 
     def serialize(self):
-        return self._filter_with_only_fields({
+        return self._filter_fields({
             'id': self._id,
             'discount': self._discount,
             'price': self._price,

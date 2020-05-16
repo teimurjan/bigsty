@@ -9,7 +9,7 @@ class LanguageSerializer(Serializer):
         self._name = language.name
 
     def serialize(self):
-        return self._filter_with_only_fields({
+        return self._filter_fields({
             'id': self._id,
             'name': self._name,
         })
