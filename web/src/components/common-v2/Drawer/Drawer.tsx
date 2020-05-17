@@ -235,6 +235,7 @@ export const Drawer = ({
             {showClose && (
               <ModalClose
                 css={css`
+                  position: fixed;
                   ${modalCloseCSS};
 
                   color: ${fromSide === 'top' || fromSide === 'right' ? theme.textColor : theme.textOnPrimaryColor};

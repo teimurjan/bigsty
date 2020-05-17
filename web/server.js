@@ -6,7 +6,6 @@ const { parse } = require('url');
 const cookie = require('cookie');
 const glob = require('glob');
 const IntlPolyfill = require('intl');
-const jwtDecode = require('jwt-decode');
 const next = require('next');
 
 Intl.NumberFormat = IntlPolyfill.NumberFormat;
@@ -45,22 +44,7 @@ app.prepare().then(() => {
     const { pathname, query } = parsedUrl;
 
     if (pathname.startsWith('/admin')) {
-      const redirect = () => {
-        res.writeHead(301, { Location: '/' });
-        res.end();
-      };
-
-      try {
-        const accessToken = cookie.parse(req.headers.cookie || '').access_token;
-        const accessTokenDecoded = jwtDecode(accessToken);
-        if ('group' in accessTokenDecoded && accessTokenDecoded.group === 'admin') {
-          app.render(req, res, '/admin', query);
-        } else {
-          redirect();
-        }
-      } catch (e) {
-        redirect();
-      }
+      app.render(req, res, '/admin', query);
     } else {
       handle(req, res, parsedUrl);
     }

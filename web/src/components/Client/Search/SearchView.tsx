@@ -151,6 +151,7 @@ export const SearchView: React.FC<IProps> = ({
                 placeholder={intl.formatMessage({ id: 'Search.searchFor' })}
                 onChange={onSearchChange}
                 value={searchValue}
+                data-mousetrap
               />
             )}
           >

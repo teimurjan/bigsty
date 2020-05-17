@@ -3,6 +3,7 @@ import * as React from 'react';
 import { ICategoryListResponseItem } from 'src/api/CategoryAPI';
 import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
 import { useBoolean } from 'src/hooks/useBoolean';
+import { useMousetrap } from 'src/hooks/useMousetrap';
 import { ISearchService } from 'src/services/SearchService';
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
 
@@ -34,6 +35,16 @@ export const SearchPresenter = ({ service, View }: IProps) => {
   });
   const [isLoading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
+
+  const openOnKeyDown = React.useCallback(
+    (e: Event) => {
+      e.preventDefault && e.preventDefault();
+      open();
+    },
+    [open],
+  );
+
+  useMousetrap('f', openOnKeyDown);
 
   const onSearchValueChange = React.useCallback(
     async (value: string) => {
