@@ -39,5 +39,5 @@ export const defaultTheme: CSSTheme & CSSThemeV2 = {
   textOnPrimaryColor: '#fff',
   dangerColor: '#f86203',
   tooltipBackgroundColor: '#111',
-  buttonPrimaryBackgroundHoverColor: colorTone('#26D93B', 0.1),
+  buttonPrimaryBackgroundHoverColor: colorTone('#26D93B', -20),
 };
