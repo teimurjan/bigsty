@@ -228,6 +228,7 @@ export class ProductTypeAPI implements IProductTypeAPI {
         `/api/product_types${buildQueryString({
           page: 1,
           sort_by: queryValueOfSortingType[ProductTypeSortingType.RECENT],
+          limit: 8,
         })}`,
         {
           headers: this.headersManager.getHeaders(),
