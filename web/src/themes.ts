@@ -1,3 +1,5 @@
+import { colorTone } from 'src/styles/colorTone';
+
 export const defaultTheme: CSSTheme & CSSThemeV2 = {
   danger: 'hsl(348, 100%, 61%)',
   dark: 'hsl(0, 0%, 21%)',
@@ -37,5 +39,5 @@ export const defaultTheme: CSSTheme & CSSThemeV2 = {
   textOnPrimaryColor: '#fff',
   dangerColor: '#f86203',
   tooltipBackgroundColor: '#111',
-  buttonPrimaryBackgroundHoverColor: '#26c739',
+  buttonPrimaryBackgroundHoverColor: colorTone('#26D93B', 0.1),
 };

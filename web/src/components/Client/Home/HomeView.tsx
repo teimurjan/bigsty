@@ -11,7 +11,6 @@ import { LinkButton } from 'src/components/common-v2/Button/Button';
 import { Title } from 'src/components/common-v2/Title/Title';
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
 import { Container } from 'src/components/common/Container/Container';
-import { useBoolean } from 'src/hooks/useBoolean';
 import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
@@ -61,7 +60,6 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
   const isMobile = useMedia([mediaQueries.maxWidth768], [true], false);
   const { value: lazyIsMobile } = useLazyInitialization(isMobile, false);
   const [activeBannerIndex, setActiveBannerIndex] = React.useState(0);
-  const { value: isTransitioning, setPositive: setTransitioning, setNegative: setIdle } = useBoolean(false);
 
   React.useEffect(() => {
     const intervalID = setInterval(() => {
@@ -76,8 +74,6 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
   return (
     <div>
       <Carousel
-        onEnter={setTransitioning}
-        onEntered={setIdle}
         css={css`
           text-align: center;
         `}

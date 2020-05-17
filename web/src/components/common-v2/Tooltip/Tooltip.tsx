@@ -4,9 +4,7 @@ import { useTheme } from 'emotion-theming';
 import React from 'react';
 
 import { Popover, IProps as IPopoverProps } from 'src/components/common-v2/Popover/Popover';
-import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { mediaQueries } from 'src/styles/media';
-import { safeWindow } from 'src/utils/dom';
 
 export interface ITooltipContentProps {
   children?: React.ReactNode;
