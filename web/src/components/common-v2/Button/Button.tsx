@@ -8,17 +8,19 @@ import * as React from 'react';
 import { mediaQueries } from 'src/styles/media';
 
 export interface IProps {
-  color?: 'light' | 'default' | 'dark';
-  size?: 'default' | 'mini';
+  color?: 'light' | 'default' | 'dark' | 'primary';
+  size?: 'default' | 'mini' | 'large';
   inverted?: boolean;
   loading?: boolean;
   disabled?: boolean;
   circled?: boolean;
+  squared?: boolean;
   active?: boolean;
   type?: 'submit' | 'reset' | 'button';
   className?: string;
   children: React.ReactNode;
   onClick?: React.MouseEventHandler;
+  onMouseEnter?: React.MouseEventHandler;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, IProps>(
@@ -31,9 +33,11 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
       loading = false,
       circled = false,
       active = false,
+      squared = false,
       type = 'button',
       size,
       onClick,
+      onMouseEnter,
     },
     ref,
   ) => {
@@ -95,6 +99,17 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             }
           }
 
+          &.primary {
+            color: ${theme.textOnPrimaryColor};
+            border: none;
+            background: ${theme.primaryColor};
+
+            &:hover,
+            &.active {
+              background: ${theme.buttonPrimaryBackgroundHoverColor};
+            }
+          }
+
           &.mini {
             height: auto;
             width: auto;
@@ -105,14 +120,26 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
           }
 
           &.circled {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
 
             &.mini {
               width: 18px;
               height: 18px;
             }
+
+            &.large {
+              width: 40px;
+              height: 40px;
+            }
+          }
+
+          &.squared {
+            border-radius: 0;
           }
         `}
         className={classNames(className, color, size, {
@@ -120,7 +147,9 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
           inverted,
           circled,
           active,
+          squared,
         })}
+        onMouseEnter={onMouseEnter}
         type={type}
       >
         {children}
@@ -129,28 +158,42 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
   },
 );
 
-export const LinkButton: React.FC<LinkProps & IProps> = ({
-  className,
-  color,
-  inverted,
-  loading,
-  disabled,
-  type,
-  children,
-  size,
-  ...linkProps
-}) => (
-  <Link {...linkProps}>
-    <Button
-      color={color}
-      className={className}
-      inverted={inverted}
-      loading={loading}
-      disabled={disabled}
-      type={type}
-      size={size}
-    >
-      {children}
-    </Button>
-  </Link>
+export const LinkButton = React.forwardRef<HTMLButtonElement, LinkProps & IProps>(
+  (
+    {
+      className,
+      color,
+      inverted,
+      loading,
+      disabled,
+      type,
+      children,
+      size,
+      squared,
+      circled,
+      onClick,
+      onMouseEnter,
+      ...linkProps
+    },
+    ref,
+  ) => (
+    <Link {...linkProps}>
+      <Button
+        ref={ref}
+        color={color}
+        className={className}
+        inverted={inverted}
+        loading={loading}
+        disabled={disabled}
+        squared={squared}
+        circled={circled}
+        type={type}
+        size={size}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+      >
+        {children}
+      </Button>
+    </Link>
+  ),
 );

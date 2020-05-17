@@ -41,6 +41,7 @@ export type RenderChildren = (props: {
   close: () => void;
   toggle: () => void;
   isOpen: boolean;
+  update: (() => void) | null;
 }) => React.ReactNode;
 
 export type RenderTrigger<T> = (props: {
@@ -60,17 +61,19 @@ export type TriggerHoverProps = {
 type TriggerClickComponent<T> = React.ComponentType<TriggerClickProps & React.RefAttributes<T>>;
 type TriggerHoverComponent<T> = React.ComponentType<TriggerHoverProps & React.RefAttributes<T>>;
 
-interface IProps<T> {
+export interface IProps<T> {
   TriggerComponent?: TriggerClickComponent<T> | TriggerHoverComponent<T>;
   renderTrigger?: RenderTrigger<T>;
   hasArrow?: boolean;
   children?: React.ReactNode | RenderChildren;
   forceClose?: boolean;
+  forceOpen?: boolean;
   preventOverflow?: boolean;
   openOnHover?: boolean;
   placement?: PopperProps['placement'];
   offset?: number[];
   refsToInclude?: React.RefObject<HTMLElement>[];
+  arrowClassName?: string;
 }
 
 export const Popover = <T extends HTMLElement>({
@@ -79,19 +82,32 @@ export const Popover = <T extends HTMLElement>({
   hasArrow = false,
   children,
   forceClose = false,
+  forceOpen = false,
   preventOverflow = true,
   placement = 'bottom-start',
   openOnHover = false,
   refsToInclude = [],
   offset = [0, 10],
+  arrowClassName,
 }: IProps<T>) => {
   const popoverRoot = safeDocument(d => d.getElementById('popoverRoot'), null);
 
   const { value: isOpen, toggle, setNegative: close, setPositive: open } = useBoolean();
+  const isOpenMemoized = React.useMemo(() => {
+    if (forceOpen) {
+      return true;
+    }
+
+    if (forceClose) {
+      return false;
+    }
+
+    return isOpen;
+  }, [forceClose, forceOpen, isOpen]);
 
   const triggerRef = React.useRef<T>(null);
   const [popperRef, setPopperRef] = React.useState<HTMLDivElement | null>(null);
-  const arrowRef = React.useRef<HTMLDivElement>(null);
+  const [arrowRef, setArrowRef] = React.useState<HTMLDivElement | null>(null);
 
   const isTouch = useIsTouch();
   const shouldOpenOnHover = openOnHover && !isTouch;
@@ -113,6 +129,13 @@ export const Popover = <T extends HTMLElement>({
   }, [hasArrow, arrowRef, preventOverflow, offset]);
 
   const popper = usePopper(triggerRef.current, popperRef, { modifiers, placement });
+  React.useEffect(() => {
+    if (isOpenMemoized && popper.update) {
+      popper.update();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpenMemoized, !popper.update]);
 
   const trigger = React.useMemo(() => {
     if (renderTrigger) {
@@ -137,7 +160,7 @@ export const Popover = <T extends HTMLElement>({
 
       {popoverRoot
         ? ReactDOM.createPortal(
-            <CSSTransition in={forceClose ? false : isOpen} timeout={300} classNames="popping" unmountOnExit>
+            <CSSTransition in={isOpenMemoized} timeout={300} classNames="popping" unmountOnExit>
               <div
                 css={css`
                   z-index: 100;
@@ -153,8 +176,43 @@ export const Popover = <T extends HTMLElement>({
                     ${poppingCSS};
                   `}
                 >
-                  {typeof children === 'function' ? children({ open, close, isOpen, toggle }) : children}
-                  {hasArrow && <div ref={arrowRef} style={popper.styles.arrow} />}
+                  {typeof children === 'function'
+                    ? children({ open, close, isOpen, toggle, update: popper.update })
+                    : children}
+                  {hasArrow && (
+                    <div
+                      ref={setArrowRef}
+                      style={popper.styles.arrow}
+                      data-placement={placement}
+                      css={css`
+                        &[data-placement*='bottom'] {
+                          top: 0;
+                          margin-top: -3.75px;
+                        }
+                        &[data-placement*='top'] {
+                          bottom: 0;
+                          margin-bottom: -3.75px;
+                        }
+                        &[data-placement*='right'] {
+                          left: 0;
+                          margin-right: -3.75px;
+                        }
+                        &[data-placement*='left'] {
+                          right: 0;
+                          margin-right: -3.75px;
+                        }
+                      `}
+                    >
+                      <div
+                        className={arrowClassName}
+                        css={css`
+                          width: 7.5px;
+                          height: 7.5px;
+                          transform: rotate(45deg);
+                        `}
+                      ></div>
+                    </div>
+                  )}
                 </div>
               </div>
             </CSSTransition>,
@@ -165,7 +223,7 @@ export const Popover = <T extends HTMLElement>({
   );
 };
 
-interface IPopoverContentProps {
+export interface IPopoverContentProps {
   className?: string;
   children?: React.ReactNode;
 }

@@ -38,6 +38,8 @@ declare interface CSSThemeV2 {
   primaryColor: string;
   textOnPrimaryColor: string;
   dangerColor: string;
+  tooltipBackgroundColor: string;
+  buttonPrimaryBackgroundHoverColor: string;
 }
 
 declare type Then<T> = T extends PromiseLike<infer U> ? U : T;

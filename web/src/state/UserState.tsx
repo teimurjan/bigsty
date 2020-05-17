@@ -9,11 +9,8 @@ export type AuthorizedUser = {
   email: string;
   group: string;
 };
-
 export type EmptyUser = null;
-
 export type AnonymousUser = {};
-
 export type User = AuthorizedUser | EmptyUser | AnonymousUser;
 
 export interface IContextValue {
@@ -30,8 +27,8 @@ interface IProviderProps {
   children?: React.ReactNode;
 }
 
-const USER_NOT_SET_STATE = null;
-const USER_ANONYMOUS_STATE = {};
+const USER_NOT_SET_STATE: EmptyUser = null;
+const USER_ANONYMOUS_STATE: AnonymousUser = {};
 
 export const UserStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const {

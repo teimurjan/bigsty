@@ -1,9 +1,9 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
-import { Transition } from 'react-transition-group';
 
 import { IViewProps as IProps } from 'src/components/Client/Home/HomePresenter';
 import { ProductTypesListView } from 'src/components/Client/ProductType/ProductTypesList/ProductTypesListView';
@@ -11,6 +11,8 @@ import { LinkButton } from 'src/components/common-v2/Button/Button';
 import { Title } from 'src/components/common-v2/Title/Title';
 import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
 import { Container } from 'src/components/common/Container/Container';
+import { useBoolean } from 'src/hooks/useBoolean';
+import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
 
@@ -21,17 +23,45 @@ const getTextPositioningCSS = (banner: IProps['banners'][0]) => {
   const verticalRule = banner.text_top_offset
     ? { key: 'top', value: banner.text_top_offset, tranlate: -banner.text_top_offset }
     : { key: 'bottom', value: banner.text_bottom_offset, tranlate: banner.text_bottom_offset };
+  const textAlign = (() => {
+    if (!horizontalRule.value || horizontalRule.value === 50) {
+      return 'center';
+    }
+
+    if (
+      (horizontalRule.value > 50 && horizontalRule.key === 'left') ||
+      (horizontalRule.value < 50 && horizontalRule.key === 'right')
+    ) {
+      return 'right';
+    }
+
+    if (
+      (horizontalRule.value > 50 && horizontalRule.key === 'right') ||
+      (horizontalRule.value < 50 && horizontalRule.key === 'left')
+    ) {
+      return 'left';
+    }
+  })();
   return `
     ${verticalRule.key}: ${verticalRule.value}%;
     ${horizontalRule.key}: ${horizontalRule.value}%;
+    text-align: ${textAlign};
     transform: translate(${horizontalRule.tranlate}%, ${verticalRule.tranlate}%);
   `;
 };
 
+export interface IBannerButtonProps {
+  banner: IProps['banners'][0];
+  onMouseEnter: React.MouseEventHandler;
+}
+
 export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
   const intl = useIntl();
+  const theme = useTheme<CSSThemeV2>();
   const isMobile = useMedia([mediaQueries.maxWidth768], [true], false);
+  const { value: lazyIsMobile } = useLazyInitialization(isMobile, false);
   const [activeBannerIndex, setActiveBannerIndex] = React.useState(0);
+  const { value: isTransitioning, setPositive: setTransitioning, setNegative: setIdle } = useBoolean(false);
 
   React.useEffect(() => {
     const intervalID = setInterval(() => {
@@ -45,78 +75,95 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
 
   return (
     <div>
-      <Transition in={banners.length > 0} timeout={300}>
-        {status => (
-          <Carousel
-            css={css`
-              transition: max-height 1000ms;
-              max-height: ${status === 'entering' || status === 'entered' ? '1000px' : '1px'};
-              text-align: center;
-            `}
-            activeIndex={activeBannerIndex}
-            fullWidth
-          >
-            {banners.map(banner => {
-              const button =
-                banner.link && banner.link_text ? (
-                  <LinkButton color="light" href={banner.link}>
-                    {banner.link_text}
-                  </LinkButton>
-                ) : null;
-
-              return (
-                <CarouselItem
-                  key={banner.id}
+      <Carousel
+        onEnter={setTransitioning}
+        onEntered={setIdle}
+        css={css`
+          text-align: center;
+        `}
+        activeIndex={activeBannerIndex}
+        fullWidth
+      >
+        {banners.map((banner, i) => {
+          return (
+            <CarouselItem
+              key={banner.id}
+              css={css`
+                width: 100%;
+                overflow: hidden;
+              `}
+            >
+              <img
+                alt={banner.text}
+                css={css`
+                  width: 100%;
+                  display: block;
+                `}
+                src={banner.image}
+              />
+              {banner.text && (
+                <div
                   css={css`
-                    width: 100%;
-                    min-height: 150px;
-                    overflow: hidden;
+                    position: absolute;
+                    max-width: 33vw;
+                    color: ${banner.text_color || theme.textOnPrimaryColor} !important;
+                    ${getTextPositioningCSS(banner)};
+
+                    @media ${mediaQueries.maxWidth768} {
+                      max-width: 50vw;
+                    }
                   `}
                 >
-                  <img
-                    alt={banner.text}
-                    css={css`
-                      width: 100%;
-                      display: block;
-                      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
-                      transition: transform 300ms ease-in-out;
-                      transform: scale(1);
-                      transform-origin: 50% 50%;
-                    `}
-                    src={banner.image}
-                  />
                   <div
                     css={css`
-                      text-align: left;
-                      position: absolute;
-                      max-width: 60%;
-                      ${getTextPositioningCSS(banner)}
+                      color: inherit;
+                      text-align: inherit;
+
+                      h1 {
+                        line-height: 1.35;
+                        font-size: 40px;
+                      }
+                      h2 {
+                        line-height: 1.25;
+                        font-size: 30px;
+                      }
+                      h3 {
+                        line-height: 1.15;
+                        font-size: 24px;
+                      }
 
                       @media ${mediaQueries.maxWidth768} {
-                        max-width: 90%;
+                        h1 {
+                          font-size: 24px;
+                        }
+                        h2 {
+                          font-size: 18px;
+                        }
+                        h3 {
+                          font-size: 16px;
+                        }
                       }
                     `}
-                  >
-                    {banner.text && (
-                      <Title
-                        css={css`
-                          color: ${banner.text_color || '#fff'} !important;
-                          font-weight: 500;
-                          text-shadow: 0 1px 0 black;
-                        `}
-                        size={isMobile ? 3 : 1}
-                      >
-                        {banner.text}
-                      </Title>
-                    )}
-                    {button}
-                  </div>
-                </CarouselItem>
-              );
-            })}
-          </Carousel>
-        )}
-      </Transition>
+                    dangerouslySetInnerHTML={{ __html: banner.text }}
+                  ></div>
+                  {banner.link && banner.link_text && (
+                    <LinkButton
+                      css={css`
+                        margin-top: 10px;
+                      `}
+                      color="primary"
+                      size={lazyIsMobile ? 'mini' : 'default'}
+                      href={banner.link}
+                    >
+                      {banner.link_text}
+                    </LinkButton>
+                  )}
+                </div>
+              )}
+            </CarouselItem>
+          );
+        })}
+      </Carousel>
 
       <Container>
         <Title

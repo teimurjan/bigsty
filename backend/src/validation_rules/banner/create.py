@@ -2,7 +2,7 @@ CREATE_BANNER_VALIDATION_RULES = {
     'texts': {
         'type': 'dict',
         'keyschema': {'regex': r'^\d+$'},
-        'valueschema': {'type': 'string', 'required': True, 'empty': False, 'nullable': False,'maxlength': 50},
+        'valueschema': {'type': 'string', 'required': True, 'empty': False, 'nullable': False},
         'required': True,
         'nullable': False,
     },

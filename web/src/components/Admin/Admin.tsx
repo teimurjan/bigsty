@@ -24,7 +24,7 @@ import { Section } from 'src/components/common/Section/Section';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Tag } from 'src/components/common/Tag/Tag';
 import { Title } from 'src/components/common/Title/Title';
-import { isUserAdmin } from 'src/helpers/user';
+import { isUserAdmin, isUserNotSetYet } from 'src/helpers/user';
 import { AdminBannersStateProvider } from 'src/state/AdminBannersState';
 import { AdminCategoriesStateProvider } from 'src/state/AdminCategoriesState';
 import { AdminFeatureTypesStateProvider } from 'src/state/AdminFeatureTypesState';
@@ -156,12 +156,12 @@ export const Admin = () => {
   } = useUserState();
 
   React.useEffect(() => {
-    if (!isUserAdmin(user)) {
+    if (!isUserNotSetYet(user) && !isUserAdmin(user)) {
       router.push('/');
     }
   }, [router, user]);
 
-  return (
+  return isUserNotSetYet(user) ? null : (
     <AdminBannersStateProvider>
       <AdminCategoriesStateProvider>
         <AdminFeatureTypesStateProvider>

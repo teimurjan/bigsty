@@ -42,15 +42,35 @@ interface IProps {
   activeIndex: number;
   fullWidth?: boolean;
   className?: string;
+  onEnter?: () => void;
+  onEntered?: () => void;
 }
 
-export const Carousel: React.FC<IProps> = ({ className, children, activeIndex, fullWidth = false }) => {
+export const Carousel: React.FC<IProps> = ({
+  className,
+  children,
+  activeIndex,
+  fullWidth = false,
+  onEnter,
+  onEntered,
+}) => {
   const width = React.useMemo(() => {
     if (fullWidth) {
       return '100%';
     }
     return undefined;
   }, [fullWidth]);
+
+  React.useEffect(() => {
+    onEnter && onEnter();
+    const timeoutID = setTimeout(() => {
+      onEntered && onEntered();
+    }, 500);
+
+    return () => clearTimeout(timeoutID);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeIndex]);
 
   return (
     <div

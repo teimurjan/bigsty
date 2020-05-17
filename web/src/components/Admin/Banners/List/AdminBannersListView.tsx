@@ -2,7 +2,7 @@
 import { jsx, css } from '@emotion/core';
 import { IntlShape, injectIntl } from 'react-intl';
 
-import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
+import { AdminTable, ImageRenderer } from 'src/components/Admin/AdminTable';
 import { IViewProps as IProps } from 'src/components/Admin/Banners/List/AdminBannersListPresenter';
 import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
 import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
@@ -28,19 +28,14 @@ const renderNoData = () => <NoBannersAvialable />;
 
 type Banner = IProps['banners'][0];
 
-export const AdminBannersListView = ({
-  banners,
-  locales,
-  intl,
-  isLoading,
-  isDataLoaded,
-}: IProps & { intl: IntlShape }) => (
+export const AdminBannersListView = ({ banners, intl, isLoading, isDataLoaded }: IProps & { intl: IntlShape }) => (
   <Section
     css={css`
       width: 100%;
     `}
   >
     <AdminTable<Banner>
+      hideSubheader={true}
       pathPrefix="/admin/banners"
       isLoading={isLoading}
       isDataLoaded={isDataLoaded}
@@ -56,9 +51,11 @@ export const AdminBannersListView = ({
         })}
       />
       <AdminTable.Col<Banner>
-        key_="text"
-        title={intl.formatMessage({ id: 'AdminBanners.texts' })}
-        renderer={new IntlRenderer(locales)}
+        key_="image"
+        title={intl.formatMessage({
+          id: 'AdminBanners.image',
+        })}
+        renderer={new ImageRenderer(banner => `Banner #${banner.id}`)}
       />
     </AdminTable>
 

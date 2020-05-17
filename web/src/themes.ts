@@ -35,5 +35,7 @@ export const defaultTheme: CSSTheme & CSSThemeV2 = {
   textSecondaryColor: '#606060',
   primaryColor: '#26D93B',
   textOnPrimaryColor: '#fff',
-  dangerColor: '#f86203'
+  dangerColor: '#f86203',
+  tooltipBackgroundColor: '#111',
+  buttonPrimaryBackgroundHoverColor: '#26c739',
 };

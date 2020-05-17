@@ -47,3 +47,20 @@ export const bounce = keyframes`
   64%  { transform: scale(1,1)      translateY(0); }
   100% { transform: scale(1,1)      translateY(0); }
 `;
+
+export const pulse = (r = 0, g = 0, b = 0) => keyframes`
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(${r}, ${g}, ${b}, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(${r}, ${g}, ${b}, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(${r}, ${g}, ${b}, 0);
+	}
+`;

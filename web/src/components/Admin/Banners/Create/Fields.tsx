@@ -2,12 +2,14 @@ import * as React from 'react';
 import { FieldRenderProps, Field as FinalFormField } from 'react-final-form';
 import { IntlShape, injectIntl, useIntl } from 'react-intl';
 
-import { IntlField } from 'src/components/Admin/IntlField';
+import { IntlField, IProps as IIntlFieldProps } from 'src/components/Admin/IntlField';
 import { Field } from 'src/components/common/Field/Field';
 import { FileInput } from 'src/components/common/FileInput/FileInput';
 import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
 import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { Label } from 'src/components/common/Label/Label';
+import { Tag } from 'src/components/common/Tag/Tag';
+import { WYSIWYG } from 'src/components/common/WYSIWYG/WYSIWYG';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { isAllowedForNumberInput } from 'src/utils/number';
 
@@ -112,6 +114,36 @@ const getOffsetFieldRenderer = (label: string, placeholder: string) => ({ input,
   );
 };
 
+const renderTextField: IIntlFieldProps['render'] = ({ input, meta, label, placeholder, locale, intl }) => {
+  const showError = meta.touched && meta.error;
+
+  return (
+    <FormTextField
+      labelProps={{
+        children: (
+          <>
+            {label} <Tag color="is-primary">{locale.name}</Tag>
+          </>
+        ),
+      }}
+      renderInput={() => (
+        <WYSIWYG
+          initialValue={input.value}
+          placeholder={placeholder}
+          onChange={input.onChange}
+          onBlur={input.onBlur}
+          onFocus={input.onFocus}
+          hasError={showError}
+        />
+      )}
+      helpTextProps={{
+        children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
+        type: 'is-danger',
+      }}
+    />
+  );
+};
+
 export const Fields = injectIntl(
   ({ availableLocales, intl, textFieldKey, linkTextFieldKey }: IFieldsProps & { intl: IntlShape }) => (
     <>
@@ -124,6 +156,7 @@ export const Fields = injectIntl(
         placeholder={intl.formatMessage({
           id: 'AdminBanners.textInput.placeholder',
         })}
+        render={renderTextField}
       />
       <IntlField
         key_={linkTextFieldKey}
