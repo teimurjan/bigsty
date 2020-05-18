@@ -2,6 +2,7 @@
 import { css, jsx } from '@emotion/core';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useTheme } from 'emotion-theming';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
@@ -20,11 +21,15 @@ import { AdminProducts } from 'src/components/Admin/Products/AdminProducts';
 import { NewProductButton } from 'src/components/Admin/Products/List/AdminProductsListView';
 import { AdminProductTypes } from 'src/components/Admin/ProductTypes/AdminProductTypes';
 import { NewProductTypeButton } from 'src/components/Admin/ProductTypes/List/AdminProductTypesListView';
+import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
+import { Button } from 'src/components/common/Button/Button';
 import { Section } from 'src/components/common/Section/Section';
 import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
 import { Tag } from 'src/components/common/Tag/Tag';
 import { Title } from 'src/components/common/Title/Title';
 import { isUserAdmin, isUserNotSetYet } from 'src/helpers/user';
+import { useBoolean } from 'src/hooks/useBoolean';
+import { useMedia } from 'src/hooks/useMedia';
 import { AdminBannersStateProvider } from 'src/state/AdminBannersState';
 import { AdminCategoriesStateProvider } from 'src/state/AdminCategoriesState';
 import { AdminFeatureTypesStateProvider } from 'src/state/AdminFeatureTypesState';
@@ -149,6 +154,50 @@ const AdminHome = () => {
   );
 };
 
+const Menu = () => {
+  const theme = useTheme<CSSTheme>();
+  const intl = useIntl();
+
+  const isMobile = useMedia([mediaQueries.maxWidth768], [true], false);
+  const { value: isOpen, setPositive: openMobileMenu, setNegative: closeMobileMenu } = useBoolean();
+
+  const menu = <AdminMenuContainer />;
+
+  return isMobile ? (
+    <>
+      <Button
+        css={css`
+          position: fixed;
+          top: 10px;
+          left: 1.5rem;
+        `}
+        color="is-info"
+        onClick={openMobileMenu}
+      >
+        {intl.formatMessage({ id: 'common.menu' })}
+      </Button>
+      <Drawer isOpen={isOpen} close={closeMobileMenu} fromSide="left" fixed backdrop>
+        <div
+          css={css`
+            background: ${theme.white};
+            height: 100%;
+          `}
+        >
+          {menu}
+        </div>
+      </Drawer>
+    </>
+  ) : (
+    <div
+      css={css`
+        flex: 0 0 350px;
+      `}
+    >
+      {menu}
+    </div>
+  );
+};
+
 export const Admin = () => {
   const router = useRouter();
   const {
@@ -175,18 +224,7 @@ export const Admin = () => {
                       display: flex;
                     `}
                   >
-                    <div
-                      css={css`
-                        flex: 0 0 350px;
-
-                        @media ${mediaQueries.maxWidth768} {
-                          position: absolute;
-                          left: -350px;
-                        }
-                      `}
-                    >
-                      <AdminMenuContainer />
-                    </div>
+                    <Menu />
                     <div
                       css={css`
                         width: calc(100% - 350px);
