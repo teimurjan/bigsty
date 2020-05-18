@@ -14,11 +14,11 @@ import { PriceText } from 'src/components/Client/Price/Price';
 import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
 import { Button } from 'src/components/common-v2/Button/Button';
 import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
+import { HelpText } from 'src/components/common-v2/HelpText/HelpText';
 import { Title } from 'src/components/common-v2/Title/Title';
+import { Tooltip } from 'src/components/common-v2/Tooltip/Tooltip';
+import { UnderlinedInput } from 'src/components/common-v2/UnderlinedInput/UnderlinedInput';
 import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
-import { FormPhoneField } from 'src/components/common/FormPhoneField/FormPhoneField';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { HelpText } from 'src/components/common/HelpText/HelpText';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Message } from 'src/components/common/Message/Message';
 import { bounce, fadeInFromRight, fadeInFromLeft } from 'src/styles/keyframes';
@@ -31,6 +31,15 @@ const buttonCSS = css`
   margin: 10px auto;
   width: 100% !important;
 `;
+
+const CartTrigger = React.forwardRef<HTMLSpanElement>((props, ref) => {
+  const intl = useIntl();
+  return (
+    <WithIcon ref={ref} icon={faShoppingCart} hideTextOnMobile {...props}>
+      {intl.formatMessage({ id: 'common.cart' })}
+    </WithIcon>
+  );
+});
 
 const FirstStep: React.FC<IProps> = ({ isLoading, products, getProductCount, addMore, remove, goToNextStep }) => {
   const intl = useIntl();
@@ -77,22 +86,10 @@ const NameField = ({ input, meta }: FieldRenderProps<string>) => {
   const intl = useIntl();
   const showError = meta.touched && meta.error;
   return (
-    <FormTextField
-      labelProps={{
-        children: intl.formatMessage({ id: 'Cart.nameInput.label' }),
-      }}
-      inputProps={{
-        ...input,
-        isDanger: showError,
-        placeholder: intl.formatMessage({
-          id: 'Cart.nameInput.placeholder',
-        }),
-        type: 'text',
-      }}
-      helpTextProps={{
-        children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
-        type: 'is-danger',
-      }}
+    <UnderlinedInput
+      placeholder={intl.formatMessage({ id: 'Cart.nameInput.label' })}
+      error={showError ? intl.formatMessage({ id: meta.error }) : undefined}
+      {...input}
     />
   );
 };
@@ -101,22 +98,23 @@ const AddressField = ({ input, meta }: FieldRenderProps<string>) => {
   const intl = useIntl();
   const showError = meta.touched && meta.error;
   return (
-    <FormTextField
-      labelProps={{
-        children: intl.formatMessage({ id: 'Cart.addressInput.label' }),
-      }}
-      inputProps={{
-        ...input,
-        isDanger: showError,
-        placeholder: intl.formatMessage({
-          id: 'Cart.addressInput.placeholder',
-        }),
-        type: 'text',
-      }}
-      helpTextProps={{
-        children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
-        type: 'is-danger',
-      }}
+    <UnderlinedInput
+      placeholder={intl.formatMessage({ id: 'Cart.addressInput.label' })}
+      error={showError ? intl.formatMessage({ id: meta.error }) : undefined}
+      {...input}
+    />
+  );
+};
+
+const PhoneField = ({ input, meta }: FieldRenderProps<string>) => {
+  const intl = useIntl();
+  const showError = meta.touched && meta.error;
+  return (
+    <UnderlinedInput
+      mask="+\9\96 (999) 99-99-99"
+      placeholder={intl.formatMessage({ id: 'common.phoneInput.label' })}
+      error={showError ? intl.formatMessage({ id: meta.error }) : undefined}
+      {...input}
     />
   );
 };
@@ -132,7 +130,7 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, erro
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <FinalFormField name="name" component={NameField} />
-          <FinalFormField name="phone" component={FormPhoneField} parse={parsePhoneNumber} />
+          <FinalFormField name="phone" component={PhoneField} parse={parsePhoneNumber} />
           <FinalFormField name="address" component={AddressField} />
           <Button color="dark" type="submit" css={buttonCSS} loading={submitting}>
             {intl.formatMessage({ id: 'Cart.order' })}
@@ -142,7 +140,7 @@ const SecondStep: React.FC<IProps> = ({ validator, initialValues, onSubmit, erro
               text-align: center;
             `}
           >
-            {error && <HelpText type="is-danger">{intl.formatMessage({ id: error })}</HelpText>}
+            {error && <HelpText color="danger">{intl.formatMessage({ id: error })}</HelpText>}
           </div>
         </form>
       )}
@@ -161,7 +159,6 @@ const ThirdStep: React.FC<IProps> = () => {
 };
 
 export const CartView: React.FC<IProps> = props => {
-  const intl = useIntl();
   const { isOpen, open, close, step, cartItemsCount, goToPrevStep } = props;
   const theme = useTheme<CSSThemeV2>();
   return (
@@ -193,9 +190,7 @@ export const CartView: React.FC<IProps> = props => {
           </span>
         )}
         <Anchor onClick={open} noHoverOnTouch>
-          <WithIcon icon={faShoppingCart} hideTextOnMobile>
-            {intl.formatMessage({ id: 'common.cart' })}
-          </WithIcon>
+          <Tooltip TriggerComponent={CartTrigger}>shift + c</Tooltip>
         </Anchor>
       </div>
       <Drawer

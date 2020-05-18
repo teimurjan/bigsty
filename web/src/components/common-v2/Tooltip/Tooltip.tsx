@@ -23,7 +23,7 @@ const TooltipContent = React.forwardRef<HTMLDivElement, ITooltipContentProps>(({
         color: ${theme.textOnPrimaryColor};
 
         @media ${mediaQueries.maxWidth768} {
-          max-width: 150px;
+          display: none;
         }
       `}
     >
@@ -38,7 +38,19 @@ export const Tooltip = <T extends HTMLElement>({ children, ...props }: IPopoverP
   return (
     <ClassNames>
       {({ css: css_ }) => (
-        <Popover {...props} arrowClassName={css_`background: ${theme.tooltipBackgroundColor};`} openOnHover hasArrow>
+        <Popover
+          {...props}
+          delay={200}
+          arrowClassName={css_`
+            background: ${theme.tooltipBackgroundColor};
+            
+            @media ${mediaQueries.maxWidth768} {
+              display: none;
+            }
+          `}
+          openOnHover
+          hasArrow
+        >
           <TooltipContent>{children}</TooltipContent>
         </Popover>
       )}

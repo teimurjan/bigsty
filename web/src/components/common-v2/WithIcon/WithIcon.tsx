@@ -6,35 +6,38 @@ import * as React from 'react';
 
 import { mediaQueries } from 'src/styles/media';
 
-interface IProps {
-  children: React.ReactNode;
+interface IProps extends React.HTMLAttributes<HTMLSpanElement> {
   icon: IconProp;
   size?: SizeProp;
   hideTextOnMobile?: boolean;
 }
 
-export const WithIcon = ({ children, icon, size, hideTextOnMobile = false }: IProps) => (
-  <span
-    css={css`
-      display: flex;
-      align-items: center;
-    `}
-  >
+export const WithIcon = React.forwardRef<HTMLSpanElement, IProps>(
+  ({ children, icon, size, hideTextOnMobile = false, ...props }, ref) => (
     <span
+      ref={ref}
       css={css`
-        @media ${mediaQueries.maxWidth768} {
-          display: ${hideTextOnMobile ? 'none' : undefined};
-        }
+        display: flex;
+        align-items: center;
       `}
+      {...props}
     >
-      {children}
+      <span
+        css={css`
+          @media ${mediaQueries.maxWidth768} {
+            display: ${hideTextOnMobile ? 'none' : undefined};
+          }
+        `}
+      >
+        {children}
+      </span>
+      <FontAwesomeIcon
+        css={css`
+          margin-left: 5px;
+        `}
+        icon={icon}
+        size={size}
+      />
     </span>
-    <FontAwesomeIcon
-      css={css`
-        margin-left: 5px;
-      `}
-      icon={icon}
-      size={size}
-    />
-  </span>
+  ),
 );

@@ -8,6 +8,7 @@ import { CSSTransition } from 'react-transition-group';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 import useClickOutside from 'src/hooks/useClickOutside';
+import { useDebounce } from 'src/hooks/useDebounce';
 import { useIsTouch } from 'src/hooks/useIsTouch';
 import useMouseOutside from 'src/hooks/useMouseOutside';
 import { safeDocument } from 'src/utils/dom';
@@ -74,6 +75,7 @@ export interface IProps<T> {
   offset?: number[];
   refsToInclude?: React.RefObject<HTMLElement>[];
   arrowClassName?: string;
+  delay?: number;
 }
 
 export const Popover = <T extends HTMLElement>({
@@ -89,10 +91,12 @@ export const Popover = <T extends HTMLElement>({
   refsToInclude = [],
   offset = [0, 10],
   arrowClassName,
+  delay = 0,
 }: IProps<T>) => {
   const popoverRoot = safeDocument(d => d.getElementById('popoverRoot'), null);
 
   const { value: isOpen, toggle, setNegative: close, setPositive: open } = useBoolean();
+  const isOpenDebounced = useDebounce(isOpen, delay);
   const isOpenMemoized = React.useMemo(() => {
     if (forceOpen) {
       return true;
@@ -102,8 +106,8 @@ export const Popover = <T extends HTMLElement>({
       return false;
     }
 
-    return isOpen;
-  }, [forceClose, forceOpen, isOpen]);
+    return isOpenDebounced;
+  }, [forceClose, forceOpen, isOpenDebounced]);
 
   const triggerRef = React.useRef<T>(null);
   const [popperRef, setPopperRef] = React.useState<HTMLDivElement | null>(null);
@@ -112,7 +116,7 @@ export const Popover = <T extends HTMLElement>({
   const isTouch = useIsTouch();
   const shouldOpenOnHover = openOnHover && !isTouch;
   useClickOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close);
-  useMouseOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close, shouldOpenOnHover && isOpen);
+  useMouseOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close, shouldOpenOnHover && isOpenMemoized);
 
   const modifiers = React.useMemo(() => {
     const modifiers_ = [];

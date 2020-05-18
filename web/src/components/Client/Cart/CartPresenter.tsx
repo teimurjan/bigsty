@@ -7,6 +7,7 @@ import { getUserPropertySafe } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useForceUpdate } from 'src/hooks/useForceUpdate';
 import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
+import { useMousetrap } from 'src/hooks/useMousetrap';
 import { IOrderService } from 'src/services/OrderService';
 import { IProductService } from 'src/services/ProductService';
 import { IContextValue as UserStateContextValue } from 'src/state/UserState';
@@ -81,6 +82,8 @@ export const CartPresenter: React.FC<IProps> = ({
   const [products, setProducts] = React.useState<{ [key: number]: IProductListResponseItem }>({});
   const [productsOrder, setProductsOrder] = React.useState<number[]>([]);
   const forceUpdate = useForceUpdate();
+
+  useMousetrap('shift+c', open);
 
   React.useEffect(() => storage.addChangeListener(() => forceUpdate()), [forceUpdate, storage]);
 

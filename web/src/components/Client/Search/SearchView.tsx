@@ -10,13 +10,14 @@ import { IViewProps as IProps } from 'src/components/Client/Search/SearchPresent
 import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
 import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
 import { Popover } from 'src/components/common-v2/Popover/Popover';
+import { Tooltip } from 'src/components/common-v2/Tooltip/Tooltip';
+import { UnderlinedInput } from 'src/components/common-v2/UnderlinedInput/UnderlinedInput';
 import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
 import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
 import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
 import { DropdownItemLink } from 'src/components/common/DropdownItemLink/DropdownItemLink';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { Tag } from 'src/components/common/Tag/Tag';
-import { UnderlinedInput } from 'src/components/common/UnderlinedInput/UnderlinedInput';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
@@ -35,6 +36,15 @@ const contentCSS = css`
   ${inputCSS};
   padding: 5px;
 `;
+
+const SearchTrigger = React.forwardRef<HTMLSpanElement>((props, ref) => {
+  const intl = useIntl();
+  return (
+    <WithIcon ref={ref} icon={faSearch} hideTextOnMobile {...props}>
+      {intl.formatMessage({ id: 'common.search' })}
+    </WithIcon>
+  );
+});
 
 export const SearchView: React.FC<IProps> = ({
   categories,
@@ -116,9 +126,7 @@ export const SearchView: React.FC<IProps> = ({
   return (
     <>
       <Anchor onClick={open} noHoverOnTouch>
-        <WithIcon icon={faSearch} hideTextOnMobile>
-          {intl.formatMessage({ id: 'common.search' })}
-        </WithIcon>
+        <Tooltip TriggerComponent={SearchTrigger}>shift + f</Tooltip>
       </Anchor>
       <Drawer
         isOpen={isOpen}
@@ -146,7 +154,7 @@ export const SearchView: React.FC<IProps> = ({
               <UnderlinedInput
                 autoFocus
                 css={inputCSS}
-                ref={ref}
+                containerRef={ref}
                 onFocus={open}
                 placeholder={intl.formatMessage({ id: 'Search.searchFor' })}
                 onChange={onSearchChange}

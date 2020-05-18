@@ -44,7 +44,7 @@ export const SearchPresenter = ({ service, View }: IProps) => {
     [open],
   );
 
-  useMousetrap('f', openOnKeyDown);
+  useMousetrap('shift+f', openOnKeyDown);
 
   const onSearchValueChange = React.useCallback(
     async (value: string) => {

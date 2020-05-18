@@ -2,10 +2,10 @@
 import { css, jsx } from '@emotion/core';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useTheme } from 'emotion-theming';
 import { useIntl } from 'react-intl';
 
 import { Button } from 'src/components/common-v2/Button/Button';
+import { HelpText } from 'src/components/common-v2/HelpText/HelpText';
 import { Title } from 'src/components/common-v2/Title/Title';
 import { preventDefault } from 'src/utils/dom';
 
@@ -18,7 +18,6 @@ interface IProps {
 
 export const Quantity = ({ count, allowedCount, onAddClick, onRemoveClick }: IProps) => {
   const intl = useIntl();
-  const theme = useTheme<CSSThemeV2>();
 
   return (
     <div
@@ -48,13 +47,9 @@ export const Quantity = ({ count, allowedCount, onAddClick, onRemoveClick }: IPr
         </Button>
       </div>
       {count > allowedCount && (
-        <small
-          css={css`
-            color: ${theme.dangerColor};
-          `}
-        >
+        <HelpText color="danger">
           {intl.formatMessage({ id: 'Cart.onlySomeAvailable' }, { quantity: allowedCount })}
-        </small>
+        </HelpText>
       )}
     </div>
   );
