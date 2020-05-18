@@ -22,23 +22,23 @@ export const useMouseOutside = (
       safeDocument(d => {
         const handleMouseOut: EventListener = e => {
           if (Array.isArray(refs)) {
-            if (refs.every(ref => !isEventInBounds(e as MouseEvent, ref, 10))) {
+            if (refs.every(ref => !isEventInBounds(e as MouseEvent, ref, 30))) {
               callback();
             }
           } else {
-            if (!isEventInBounds(e as MouseEvent, refs, 10)) {
+            if (!isEventInBounds(e as MouseEvent, refs, 30)) {
               callback();
             }
           }
         };
 
         if (attachHandler) {
-          d.addEventListener('mouseout', handleMouseOut);
+          d.addEventListener('mousemove', handleMouseOut);
         } else {
-          d.removeEventListener('mouseout', handleMouseOut);
+          d.removeEventListener('mousemove', handleMouseOut);
         }
         return () => {
-          d.removeEventListener('mouseout', handleMouseOut);
+          d.removeEventListener('mousemove', handleMouseOut);
         };
       }, undefined),
     [attachHandler, callback, refs],

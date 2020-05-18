@@ -190,7 +190,9 @@ export const CartView: React.FC<IProps> = props => {
           </span>
         )}
         <Anchor onClick={open} noHoverOnTouch>
-          <Tooltip TriggerComponent={CartTrigger}>shift + c</Tooltip>
+          <Tooltip forceClose={isOpen} TriggerComponent={CartTrigger}>
+            shift + c
+          </Tooltip>
         </Anchor>
       </div>
       <Drawer

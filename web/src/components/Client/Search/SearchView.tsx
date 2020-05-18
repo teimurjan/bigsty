@@ -126,7 +126,9 @@ export const SearchView: React.FC<IProps> = ({
   return (
     <>
       <Anchor onClick={open} noHoverOnTouch>
-        <Tooltip TriggerComponent={SearchTrigger}>shift + f</Tooltip>
+        <Tooltip forceClose={isOpen} TriggerComponent={SearchTrigger}>
+          shift + f
+        </Tooltip>
       </Anchor>
       <Drawer
         isOpen={isOpen}

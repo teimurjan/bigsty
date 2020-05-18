@@ -115,8 +115,13 @@ export const Popover = <T extends HTMLElement>({
 
   const isTouch = useIsTouch();
   const shouldOpenOnHover = openOnHover && !isTouch;
-  useClickOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close);
-  useMouseOutside([{ current: popperRef }, triggerRef, ...refsToInclude], close, shouldOpenOnHover && isOpenMemoized);
+  const outsideRefs = React.useMemo(() => [{ current: popperRef }, triggerRef, ...refsToInclude], [
+    popperRef,
+    triggerRef,
+    refsToInclude,
+  ]);
+  useClickOutside(outsideRefs, close);
+  useMouseOutside(outsideRefs, close, shouldOpenOnHover && isOpenMemoized);
 
   const modifiers = React.useMemo(() => {
     const modifiers_ = [];
