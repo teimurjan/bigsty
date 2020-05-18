@@ -16,7 +16,6 @@ import { Button } from 'src/components/common-v2/Button/Button';
 import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
 import { HelpText } from 'src/components/common-v2/HelpText/HelpText';
 import { Title } from 'src/components/common-v2/Title/Title';
-import { Tooltip } from 'src/components/common-v2/Tooltip/Tooltip';
 import { UnderlinedInput } from 'src/components/common-v2/UnderlinedInput/UnderlinedInput';
 import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
 import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
@@ -190,9 +189,7 @@ export const CartView: React.FC<IProps> = props => {
           </span>
         )}
         <Anchor onClick={open} noHoverOnTouch>
-          <Tooltip forceClose={isOpen} TriggerComponent={CartTrigger}>
-            shift + c
-          </Tooltip>
+          <CartTrigger />
         </Anchor>
       </div>
       <Drawer

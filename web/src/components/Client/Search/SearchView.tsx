@@ -10,7 +10,6 @@ import { IViewProps as IProps } from 'src/components/Client/Search/SearchPresent
 import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
 import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
 import { Popover } from 'src/components/common-v2/Popover/Popover';
-import { Tooltip } from 'src/components/common-v2/Tooltip/Tooltip';
 import { UnderlinedInput } from 'src/components/common-v2/UnderlinedInput/UnderlinedInput';
 import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
 import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
@@ -126,9 +125,7 @@ export const SearchView: React.FC<IProps> = ({
   return (
     <>
       <Anchor onClick={open} noHoverOnTouch>
-        <Tooltip forceClose={isOpen} TriggerComponent={SearchTrigger}>
-          shift + f
-        </Tooltip>
+        <SearchTrigger />
       </Anchor>
       <Drawer
         isOpen={isOpen}
