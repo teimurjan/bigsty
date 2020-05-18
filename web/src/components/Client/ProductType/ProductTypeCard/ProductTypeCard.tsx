@@ -9,6 +9,7 @@ import { IProductTypeListResponseItem } from 'src/api/ProductTypeAPI';
 import { usePriceRangeText } from 'src/components/Client/Price/Price';
 import { Button } from 'src/components/common-v2/Button/Button';
 import { Subtitle } from 'src/components/common-v2/Subtitle/Subtitle';
+import { Tag } from 'src/components/common-v2/Tag/Tag';
 import { Title } from 'src/components/common-v2/Title/Title';
 import { Image } from 'src/components/common/Image/Image';
 import { mediaQueries } from 'src/styles/media';
@@ -142,26 +143,15 @@ export const ProductTypeCard = ({ productType }: IProps) => {
           </span>
         </Button>
         {discount && (
-          <div
+          <Tag
             css={css`
-              padding: 2.5px 5px;
-              background-color: ${theme.primaryColor};
-              color: ${theme.textOnPrimaryColor};
               position: absolute;
               top: 10px;
               right: 10px;
-              font-weight: bold;
             `}
           >
-            <small
-              css={css`
-                font-size: 12px;
-                text-transform: uppercase;
-              `}
-            >
-              {discount}
-            </small>
-          </div>
+            {discount}
+          </Tag>
         )}
       </a>
     </Link>

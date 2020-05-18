@@ -1,4 +1,4 @@
-import { colorTone } from 'src/styles/colorTone';
+import color from 'color';
 
 export const defaultTheme: CSSTheme & CSSThemeV2 = {
   danger: 'hsl(348, 100%, 61%)',
@@ -13,11 +13,6 @@ export const defaultTheme: CSSTheme & CSSThemeV2 = {
   // V2
   headerBackgroundColor: '#fff',
   borderColor: '#1e1e1c',
-  buttonLightColor: '#1e1e1c',
-  buttonLightBorderColor: '#fff',
-  buttonLightHoverColor: '#fff',
-  buttonLightBackgroundColor: '#fff',
-  buttonLightBackgroundHoverColor: 'rgba(0, 0, 0, 0.05);',
   buttonDefaultColor: '#1e1e1c',
   buttonDefaultBorderColor: '#1e1e1c',
   buttonDefaultHoverColor: '#fff',
@@ -29,15 +24,16 @@ export const defaultTheme: CSSTheme & CSSThemeV2 = {
   buttonDarkBackgroundColor: '#1e1e1c',
   buttonDarkBackgroundHoverColor: '#fff',
   anchorColor: '#1e1e1c',
-  anchorSecondaryColor: '#26D93B',
   backgroundPrimaryColor: '#fff',
   backgroundSecondaryColor: '#f0ebe3',
   textColor: '#1e1e1c',
   textFadedColor: '#d3d3d3',
   textSecondaryColor: '#606060',
-  primaryColor: '#26D93B',
+  primaryColor: '#76bdae',
   textOnPrimaryColor: '#fff',
-  dangerColor: '#f86203',
+  dangerColor: '#e71d36',
   tooltipBackgroundColor: '#111',
-  buttonPrimaryBackgroundHoverColor: colorTone('#26D93B', -20),
+  buttonPrimaryBackgroundHoverColor: color('#76bdae')
+    .darken(0.15)
+    .hex(),
 };

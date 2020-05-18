@@ -148,10 +148,10 @@ export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
                         margin-top: 10px;
                       `}
                       color="primary"
-                      size={lazyIsMobile ? 'mini' : 'default'}
+                      size={lazyIsMobile ? 'small' : 'default'}
                       href={banner.link}
                     >
-                      {banner.link_text}
+                      <b>{banner.link_text}</b>
                     </LinkButton>
                   )}
                 </div>

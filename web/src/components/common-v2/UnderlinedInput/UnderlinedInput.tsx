@@ -93,7 +93,6 @@ export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
               border: none;
               padding: ${VERTICAL_PADDING_PX + 15}px ${HORIZONTAL_PADDING_PX}px ${VERTICAL_PADDING_PX}px
                 ${HORIZONTAL_PADDING_PX}px;
-              margin-bottom: 1px;
               font-size: 16px;
               background: transparent;
               width: 100%;

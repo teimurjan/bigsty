@@ -13,11 +13,6 @@ declare interface CSSTheme {
 declare interface CSSThemeV2 {
   headerBackgroundColor: string;
   borderColor: string;
-  buttonLightColor: string;
-  buttonLightHoverColor: string;
-  buttonLightBorderColor: string;
-  buttonLightBackgroundColor: string;
-  buttonLightBackgroundHoverColor: string;
   buttonDefaultColor: string;
   buttonDefaultBorderColor: string;
   buttonDefaultHoverColor: string;
@@ -29,7 +24,6 @@ declare interface CSSThemeV2 {
   buttonDarkBackgroundColor: string;
   buttonDarkBackgroundHoverColor: string;
   anchorColor: string;
-  anchorSecondaryColor: string;
   backgroundPrimaryColor: string;
   backgroundSecondaryColor: string;
   textColor: string;

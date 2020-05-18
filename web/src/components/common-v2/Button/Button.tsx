@@ -8,9 +8,8 @@ import * as React from 'react';
 import { mediaQueries } from 'src/styles/media';
 
 export interface IProps {
-  color?: 'light' | 'default' | 'dark' | 'primary';
-  size?: 'default' | 'mini' | 'large';
-  inverted?: boolean;
+  color?: 'default' | 'dark' | 'primary';
+  size?: 'default' | 'mini' | 'large' | 'small';
   loading?: boolean;
   disabled?: boolean;
   circled?: boolean;
@@ -29,7 +28,6 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
       children,
       color = 'default',
       className,
-      inverted = false,
       loading = false,
       circled = false,
       active = false,
@@ -48,7 +46,6 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
         ref={ref}
         onClick={onClick}
         css={css`
-          border-radius: 24px;
           transition: all 200ms;
           font-size: 16px;
           width: 240px;
@@ -72,18 +69,6 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             &.active {
               color: ${theme.buttonDefaultHoverColor};
               background: ${theme.buttonDefaultBackgroundHoverColor};
-            }
-          }
-
-          &.light {
-            color: ${theme.buttonLightColor};
-            border: 1px solid ${theme.buttonLightBorderColor};
-            background: ${theme.buttonLightBackgroundColor};
-
-            &:hover,
-            &.active {
-              color: ${theme.buttonLightHoverColor};
-              background: ${theme.buttonLightBackgroundHoverColor};
             }
           }
 
@@ -119,6 +104,12 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             font-weight: bold;
           }
 
+          &.small {
+            font-size: 12px;
+            width: 120px;
+            height: 24px;
+          }
+
           &.circled {
             display: flex;
             justify-content: center;
@@ -144,7 +135,6 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
         `}
         className={classNames(className, color, size, {
           loading,
-          inverted,
           circled,
           active,
           squared,
@@ -163,7 +153,6 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, LinkProps & IProps
     {
       className,
       color,
-      inverted,
       loading,
       disabled,
       type,
@@ -182,7 +171,6 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, LinkProps & IProps
         ref={ref}
         color={color}
         className={className}
-        inverted={inverted}
         loading={loading}
         disabled={disabled}
         squared={squared}
