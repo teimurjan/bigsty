@@ -7,10 +7,10 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
-import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { Table } from 'src/components/common/Table/Table';
-import { UncontrolledPagination } from 'src/components/common/UncontrolledPagination/UncontrolledPagination';
+import { ReactRouterLinkButton } from 'src/components/admin-ui/LinkButton/LinkButton';
+import { Table } from 'src/components/admin-ui/Table/Table';
+import { UncontrolledPagination } from 'src/components/admin-ui/UncontrolledPagination/UncontrolledPagination';
+import { LoaderLayout } from 'src/components/client-ui/LoaderLayout/LoaderLayout';
 import { mediaQueries } from 'src/styles/media';
 import { formatMediaURL } from 'src/utils/url';
 

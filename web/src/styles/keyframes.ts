@@ -38,6 +38,15 @@ export const fadeInFromBottom = keyframes`
   }
 `;
 
+export const expand = keyframes`
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+`;
+
 export const bounce = keyframes`
   0%   { transform: scale(1,1)      translateY(0); }
   10%  { transform: scale(1.1,.9)   translateY(0); }

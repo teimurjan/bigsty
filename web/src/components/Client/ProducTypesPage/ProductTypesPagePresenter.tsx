@@ -11,8 +11,8 @@ import {
   sortingTypeOfQueryValue,
   queryValueOfSortingType,
 } from 'src/api/ProductTypeAPI';
+import { Filter } from 'src/components/client-ui/Filter/Filter';
 import { IProps as IListViewProps } from 'src/components/Client/ProductType/ProductTypesList/ProductTypesListView';
-import { Filter } from 'src/components/common-v2/Filter/Filter';
 import { IProductTypeService } from 'src/services/ProductTypeService';
 import { mediaQueries } from 'src/styles/media';
 import { agregateOrderedMapToArray } from 'src/utils/agregate';

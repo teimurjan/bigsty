@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { PageLoader } from 'src/components/common/PageLoader/PageLoader';
+import { PageLoader } from 'src/components/admin-ui/PageLoader/PageLoader';
 import { useAppState } from 'src/state/AppState';
 
 export const LoadingOverlay = () => {

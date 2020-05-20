@@ -3,7 +3,7 @@ import { css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 
-import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
+import { Carousel, CarouselItem } from 'src/components/client-ui/Carousel/Carousel';
 import { mediaQueries } from 'src/styles/media';
 
 const CONTROL_IMAGE_SIZE = '8vw';
@@ -16,7 +16,7 @@ interface IProps {
 }
 
 export const ProductTypeImageCarousel: React.FC<IProps> = ({ images, activeImageIndex, setActiveImageIndex }) => {
-  const theme = useTheme<CSSThemeV2>();
+  const theme = useTheme<ClientUITheme>();
 
   return (
     <div

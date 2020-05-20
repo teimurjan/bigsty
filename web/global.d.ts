@@ -1,4 +1,4 @@
-declare interface CSSTheme {
+declare interface AdminUITheme {
   primary: string;
   light: string;
   white: string;
@@ -10,7 +10,7 @@ declare interface CSSTheme {
   warning: string;
 }
 
-declare interface CSSThemeV2 {
+declare interface ClientUITheme {
   headerBackgroundColor: string;
   borderColor: string;
   buttonDefaultColor: string;
@@ -34,6 +34,7 @@ declare interface CSSThemeV2 {
   dangerColor: string;
   tooltipBackgroundColor: string;
   buttonPrimaryBackgroundHoverColor: string;
+  backgroundPrimaryHoverColor: string;
 }
 
 declare type Then<T> = T extends PromiseLike<infer U> ? U : T;

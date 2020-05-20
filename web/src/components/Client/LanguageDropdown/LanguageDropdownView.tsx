@@ -3,9 +3,9 @@ import { css, jsx } from '@emotion/core';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
+import { Anchor } from 'src/components/client-ui/Anchor/Anchor';
+import { Popover, TriggerClickProps as PopoverTriggerProps } from 'src/components/client-ui/Popover/Popover';
 import { IViewProps as IProps } from 'src/components/Client/LanguageDropdown/LanguageDropdownPresenter';
-import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
-import { Popover, TriggerClickProps as PopoverTriggerProps } from 'src/components/common-v2/Popover/Popover';
 
 const nameOfLocale = {
   en: 'English',

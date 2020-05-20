@@ -198,7 +198,7 @@
   "ConfirmSignup.success": "Подтверждение аккаунта прошло успешно. Перенаправляем на страницу входа в аккаунт.",
   "ConfirmSignup.invalidToken": "Ссылка неверна или истек период использования.",
   "common.loading": "Загрузка...",
-  "Cart.orderReceived": "Спасибо за заказ. Мы свяжемся с Вами в ближайшее время, чтобы уточнить условия доставки.",
+  "Cart.orderReceived": "Спасибо за заказ. Мы свяжемся с Вами в ближайшее время, чтобы уточнить условия доставки. ✅",
   "Cart.total": "Итого",
   "AdminOrders.userName": "Имя клиента",
   "AdminOrders.userPhoneNumber": "Номер телефона клиента",
@@ -234,6 +234,6 @@
   "common.filter": "Фильтры",
   "common.sortBy": "Сортировка",
   "filter.newlyAdded": "Недавно добавленные",
-  "filter.priceAscending": "Сначала дешевые",
-  "filter.priceDescending": "Сначала дорогие"
+  "filter.priceAscending": "Цены по возрастанию",
+  "filter.priceDescending": "Цены по убыванию"
 }

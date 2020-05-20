@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
+import { Button } from 'src/components/admin-ui/Button/Button';
+import { Message } from 'src/components/admin-ui/Message/Message';
+import { Modal } from 'src/components/admin-ui/Modal/Modal';
+import { ModalBackground } from 'src/components/admin-ui/ModalBackground/ModalBackground';
+import { ModalCard } from 'src/components/admin-ui/ModalCard/ModalCard';
+import { ModalContent } from 'src/components/admin-ui/ModalContent/ModalContent';
 import { IViewProps as IProps } from 'src/components/Admin/DeleteModal/DeleteModalPresenter';
-import { Button } from 'src/components/common/Button/Button';
-import { Message } from 'src/components/common/Message/Message';
-import { Modal } from 'src/components/common/Modal/Modal';
-import { ModalBackground } from 'src/components/common/ModalBackground/ModalBackground';
-import { ModalCard } from 'src/components/common/ModalCard/ModalCard';
-import { ModalContent } from 'src/components/common/ModalContent/ModalContent';
 
 export const DeleteModalView = ({
   isOpen,

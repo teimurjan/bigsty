@@ -8,6 +8,11 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Route, Switch } from 'react-router';
 
+import { Button } from 'src/components/admin-ui/Button/Button';
+import { Section } from 'src/components/admin-ui/Section/Section';
+import { Subtitle } from 'src/components/admin-ui/Subtitle/Subtitle';
+import { Tag } from 'src/components/admin-ui/Tag/Tag';
+import { Title } from 'src/components/admin-ui/Title/Title';
 import { AdminBanners } from 'src/components/Admin/Banners/AdminBanners';
 import { AdminCategories } from 'src/components/Admin/Categories/AdminCategories';
 import { NewCategoryButton } from 'src/components/Admin/Categories/List/AdminCategoriesListView';
@@ -21,12 +26,7 @@ import { AdminProducts } from 'src/components/Admin/Products/AdminProducts';
 import { NewProductButton } from 'src/components/Admin/Products/List/AdminProductsListView';
 import { AdminProductTypes } from 'src/components/Admin/ProductTypes/AdminProductTypes';
 import { NewProductTypeButton } from 'src/components/Admin/ProductTypes/List/AdminProductTypesListView';
-import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
-import { Button } from 'src/components/common/Button/Button';
-import { Section } from 'src/components/common/Section/Section';
-import { Subtitle } from 'src/components/common/Subtitle/Subtitle';
-import { Tag } from 'src/components/common/Tag/Tag';
-import { Title } from 'src/components/common/Title/Title';
+import { Drawer } from 'src/components/client-ui/Drawer/Drawer';
 import { isUserAdmin, isUserNotSetYet } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useMedia } from 'src/hooks/useMedia';
@@ -155,7 +155,7 @@ const AdminHome = () => {
 };
 
 const Menu = () => {
-  const theme = useTheme<CSSTheme>();
+  const theme = useTheme<AdminUITheme>();
   const intl = useIntl();
 
   const isMobile = useMedia([mediaQueries.maxWidth768], [true], false);

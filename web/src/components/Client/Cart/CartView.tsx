@@ -8,19 +8,19 @@ import { Form, Field as FinalFormField, FieldRenderProps } from 'react-final-for
 import { useIntl } from 'react-intl';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
+import { Anchor } from 'src/components/client-ui/Anchor/Anchor';
+import { Button } from 'src/components/client-ui/Button/Button';
+import { Drawer } from 'src/components/client-ui/Drawer/Drawer';
+import { HelpText } from 'src/components/client-ui/HelpText/HelpText';
+import { LoaderLayout } from 'src/components/client-ui/LoaderLayout/LoaderLayout';
+import { Message } from 'src/components/client-ui/Message/Message';
+import { Title } from 'src/components/client-ui/Title/Title';
+import { UnderlinedInput } from 'src/components/client-ui/UnderlinedInput/UnderlinedInput';
+import { WithIcon } from 'src/components/client-ui/WithIcon/WithIcon';
 import { CartItem } from 'src/components/Client/Cart/CartItem/CartItem';
 import { IViewProps as IProps, IFormValues } from 'src/components/Client/Cart/CartPresenter';
 import { PriceText } from 'src/components/Client/Price/Price';
-import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
-import { Button } from 'src/components/common-v2/Button/Button';
-import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
-import { HelpText } from 'src/components/common-v2/HelpText/HelpText';
-import { Title } from 'src/components/common-v2/Title/Title';
-import { UnderlinedInput } from 'src/components/common-v2/UnderlinedInput/UnderlinedInput';
-import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
-import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { Message } from 'src/components/common/Message/Message';
-import { bounce, fadeInFromRight, fadeInFromLeft } from 'src/styles/keyframes';
+import { bounce, fadeInFromRight, fadeInFromLeft, expand } from 'src/styles/keyframes';
 import { easeOutCubic } from 'src/styles/timing-functions';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { parsePhoneNumber } from 'src/utils/phone';
@@ -151,15 +151,24 @@ const ThirdStep: React.FC<IProps> = () => {
   const intl = useIntl();
 
   return (
-    <Message color="is-success">
-      <Message.Body>{intl.formatMessage({ id: 'Cart.orderReceived' })}</Message.Body>
+    <Message
+      color="primary"
+      css={css`
+        transform: scaleY(0);
+        transform-origin: 50% 0;
+        animation: ${expand} 300ms ${easeOutCubic};
+        animation-delay: 300ms;
+        animation-fill-mode: forwards;
+      `}
+    >
+      {intl.formatMessage({ id: 'Cart.orderReceived' })}
     </Message>
   );
 };
 
 export const CartView: React.FC<IProps> = props => {
   const { isOpen, open, close, step, cartItemsCount, goToPrevStep } = props;
-  const theme = useTheme<CSSThemeV2>();
+  const theme = useTheme<ClientUITheme>();
   return (
     <React.Fragment>
       <div
@@ -232,7 +241,7 @@ export const CartView: React.FC<IProps> = props => {
               <div
                 css={css`
                   position: absolute;
-                  top: 30px;
+                  top: 40px;
                   left: 0;
                   width: 100%;
                   overflow: auto;

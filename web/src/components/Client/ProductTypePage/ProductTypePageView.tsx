@@ -1,23 +1,23 @@
 /** @jsx jsx */
-import { css, jsx, ClassNames } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import uniqBy from 'lodash/uniqBy';
 import Head from 'next/head';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
+import { Container } from 'src/components/admin-ui/Container/Container';
+import { Anchor } from 'src/components/client-ui/Anchor/Anchor';
+import { Button } from 'src/components/client-ui/Button/Button';
+import { ErrorLayout } from 'src/components/client-ui/ErrorLayout/ErrorLayout';
+import { LoaderLayout } from 'src/components/client-ui/LoaderLayout/LoaderLayout';
+import { Select } from 'src/components/client-ui/Select/Select';
+import { Subtitle } from 'src/components/client-ui/Subtitle/Subtitle';
+import { Title } from 'src/components/client-ui/Title/Title';
 import { PriceCrossedText } from 'src/components/Client/Price/Price';
 import { ProductTypeImageCarousel } from 'src/components/Client/ProductType/ProductTypeImageCarousel/ProductTypeImageCarousel';
 import { IViewProps as IProps } from 'src/components/Client/ProductTypePage/ProductTypePagePresenter';
-import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
-import { Button } from 'src/components/common-v2/Button/Button';
-import { Subtitle } from 'src/components/common-v2/Subtitle/Subtitle';
-import { Title } from 'src/components/common-v2/Title/Title';
-import { Container } from 'src/components/common/Container/Container';
-import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
-import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
-import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { NotFoundView } from 'src/components/NotFound/NotFoundView';
+import { NotFoundView } from 'src/components/common-ui/NotFound/NotFoundView';
 import { fadeInFromLeft, fadeInFromRight, fadeInFromBottom } from 'src/styles/keyframes';
 import { mediaQueries } from 'src/styles/media';
 import { easeOutCubic } from 'src/styles/timing-functions';
@@ -44,7 +44,7 @@ const getAllFeatureValuesGroupedByType = (
 
 export const ProductTypePageView = ({ productType, products, error, isLoading, action, actionText }: IProps) => {
   const intl = useIntl();
-  const theme = useTheme<CSSThemeV2>();
+  const theme = useTheme<ClientUITheme>();
   const [activeImageIndex, setActiveImageIndex] = React.useState(0);
 
   const allImages = products
@@ -76,7 +76,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
   }, [activeImageIndex, allImages, matchingProduct]);
 
   const onFeatureValueChange = React.useCallback(
-    (featureTypeId: number, featureValueId: number) => {
+    (featureTypeId: number, featureValueId?: number) => {
       setChosenFeatureValues({ ...chosenFeatureValues, [featureTypeId]: featureValueId });
       autoChangeImage();
     },
@@ -201,23 +201,26 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
                 <Subtitle size={3}>{intl.formatMessage({ id: 'ProductPage.notInStock' })}</Subtitle>
               )}
             </div>
-            {allFeatureTypes.map(featureType => (
-              <ClassNames key={featureType.id}>
-                {({ css: css_ }) => (
-                  <FormNativeSelectField
-                    labelProps={{ children: featureType.name }}
-                    selectProps={{
-                      value: chosenFeatureValues[featureType.id]
-                        ? chosenFeatureValues[featureType.id].toString()
-                        : undefined,
-                      onChange: e => onFeatureValueChange(featureType.id, parseInt(e.currentTarget.value, 10)),
-                      options: getOptions(featureType),
-                    }}
-                    fieldProps={{ className: css_`width: 300px; @media ${mediaQueries.maxWidth768} { width: 100%; }` }}
-                  />
-                )}
-              </ClassNames>
-            ))}
+            {allFeatureTypes.map(featureType => {
+              const chosenFeatureValue = chosenFeatureValues[featureType.id];
+              return (
+                <Select
+                  css={css`
+                    margin-bottom: 20px;
+                  `}
+                  key={featureType.id}
+                  value={chosenFeatureValue ? chosenFeatureValue.toString() : undefined}
+                  onChange={value => onFeatureValueChange(featureType.id, value ? parseInt(value, 10) : undefined)}
+                  placeholder={featureType.name}
+                >
+                  {getOptions(featureType).map(option => (
+                    <Select.Option key={option.value} value={option.value}>
+                      {option.title}
+                    </Select.Option>
+                  ))}
+                </Select> 
+              );
+            })}
             <Subtitle
               css={css`
                 width: 100%;

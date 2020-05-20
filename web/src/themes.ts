@@ -1,6 +1,6 @@
 import color from 'color';
 
-export const defaultTheme: CSSTheme & CSSThemeV2 = {
+export const defaultTheme: AdminUITheme & ClientUITheme = {
   danger: 'hsl(348, 100%, 61%)',
   dark: 'hsl(0, 0%, 21%)',
   info: 'hsl(204, 86%,  53%)',
@@ -25,9 +25,12 @@ export const defaultTheme: CSSTheme & CSSThemeV2 = {
   buttonDarkBackgroundHoverColor: '#fff',
   anchorColor: '#1e1e1c',
   backgroundPrimaryColor: '#fff',
+  backgroundPrimaryHoverColor: color('#fff')
+    .darken(0.05)
+    .hex(),
   backgroundSecondaryColor: '#f0ebe3',
   textColor: '#1e1e1c',
-  textFadedColor: '#d3d3d3',
+  textFadedColor: '#b9b9b9',
   textSecondaryColor: '#606060',
   primaryColor: '#76bdae',
   textOnPrimaryColor: '#fff',

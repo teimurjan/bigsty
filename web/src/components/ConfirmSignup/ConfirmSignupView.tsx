@@ -3,10 +3,10 @@ import { jsx, css, Global } from '@emotion/core';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Container } from 'src/components/common/Container/Container';
-import { Hero } from 'src/components/common/Hero/Hero';
-import { HeroBody } from 'src/components/common/HeroBody/HeroBody';
-import { Title } from 'src/components/common/Title/Title';
+import { Container } from 'src/components/admin-ui/Container/Container';
+import { Hero } from 'src/components/admin-ui/Hero/Hero';
+import { HeroBody } from 'src/components/admin-ui/HeroBody/HeroBody';
+import { Title } from 'src/components/admin-ui/Title/Title';
 import { IViewProps as IProps } from 'src/components/ConfirmSignup/ConfirmSignupPresenter';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { PAGE_LOADER_ID } from 'src/utils/dom';

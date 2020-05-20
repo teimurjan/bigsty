@@ -6,15 +6,15 @@ import { Field as FinalFormField, FieldRenderProps } from 'react-final-form';
 import { useIntl } from 'react-intl';
 
 import { IOrderListResponseItem } from 'src/api/OrderAPI';
+import { Field } from 'src/components/admin-ui/Field/Field';
+import { FormNativeSelectField } from 'src/components/admin-ui/FormNativeSelectField/FormNativeSelectField';
+import { FormPhoneField } from 'src/components/admin-ui/FormPhoneField/FormPhoneField';
+import { FormTextField } from 'src/components/admin-ui/FormTextField/FormTextField';
+import { HelpText } from 'src/components/admin-ui/HelpText/HelpText';
+import { Label } from 'src/components/admin-ui/Label/Label';
 import { Quantity } from 'src/components/Client/Cart/CartItem/Quantity';
 import { PriceText } from 'src/components/Client/Price/Price';
-import { Field } from 'src/components/common/Field/Field';
-import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
-import { FormPhoneField } from 'src/components/common/FormPhoneField/FormPhoneField';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { HelpText } from 'src/components/common/HelpText/HelpText';
-import { Label } from 'src/components/common/Label/Label';
-import { ProductSelectContainer } from 'src/components/ProductSelect/ProductSelectContainer';
+import { ProductSelectContainer } from 'src/components/common-ui/ProductSelect/ProductSelectContainer';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { parsePhoneNumber } from 'src/utils/phone';
 

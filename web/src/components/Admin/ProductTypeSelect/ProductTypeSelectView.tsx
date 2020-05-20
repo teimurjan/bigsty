@@ -3,7 +3,7 @@ import { FieldRenderProps } from 'react-final-form';
 import { useIntl } from 'react-intl';
 
 import { IProductTypeListRawIntlMinifiedResponseItem } from 'src/api/ProductTypeAPI';
-import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
+import { FormNativeSelectField } from 'src/components/admin-ui/FormNativeSelectField/FormNativeSelectField';
 
 interface IProps {
   productTypes: IProductTypeListRawIntlMinifiedResponseItem[];

@@ -2,12 +2,12 @@
 import { jsx, css } from '@emotion/core';
 import { IntlShape, injectIntl } from 'react-intl';
 
+import { ReactRouterLinkButton } from 'src/components/admin-ui/LinkButton/LinkButton';
+import { NoDataAvailable } from 'src/components/admin-ui/NoDataAvailable/NoDataAvaiable';
+import { Section } from 'src/components/admin-ui/Section/Section';
 import { AdminTable, IntlRenderer } from 'src/components/Admin/AdminTable';
 import { IViewProps as IProps } from 'src/components/Admin/FeatureValues/List/AdminFeatureValuesListPresenter';
 import { FeatureValueTypeRenderer } from 'src/components/Admin/FeatureValues/List/FeatureValueTypeRenderer';
-import { ReactRouterLinkButton } from 'src/components/common/LinkButton/LinkButton';
-import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
-import { Section } from 'src/components/common/Section/Section';
 
 export const NewFeatureValueButton = injectIntl(({ intl }) => (
   <ReactRouterLinkButton to="/admin/featureValues/new" color="is-primary">

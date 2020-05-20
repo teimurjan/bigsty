@@ -6,17 +6,15 @@ import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
+import { Anchor } from 'src/components/client-ui/Anchor/Anchor';
+import { Drawer } from 'src/components/client-ui/Drawer/Drawer';
+import { LinkPassingProps } from 'src/components/client-ui/LinkPassingProps/LinkPassingProps';
+import { LoaderLayout } from 'src/components/client-ui/LoaderLayout/LoaderLayout';
+import { Popover } from 'src/components/client-ui/Popover/Popover';
+import { Tag } from 'src/components/client-ui/Tag/Tag';
+import { UnderlinedInput } from 'src/components/client-ui/UnderlinedInput/UnderlinedInput';
+import { WithIcon } from 'src/components/client-ui/WithIcon/WithIcon';
 import { IViewProps as IProps } from 'src/components/Client/Search/SearchPresenter';
-import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
-import { Drawer } from 'src/components/common-v2/Drawer/Drawer';
-import { Popover } from 'src/components/common-v2/Popover/Popover';
-import { UnderlinedInput } from 'src/components/common-v2/UnderlinedInput/UnderlinedInput';
-import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
-import { DropdownDivider } from 'src/components/common/DropdownDivider/DropdownDivider';
-import { DropdownItem } from 'src/components/common/DropdownItem/DropdownItem';
-import { DropdownItemLink } from 'src/components/common/DropdownItemLink/DropdownItemLink';
-import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
-import { Tag } from 'src/components/common/Tag/Tag';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { mediaQueries } from 'src/styles/media';
@@ -33,7 +31,7 @@ const inputCSS = css`
 
 const contentCSS = css`
   ${inputCSS};
-  padding: 5px;
+  padding: 0;
 `;
 
 const SearchTrigger = React.forwardRef<HTMLSpanElement>((props, ref) => {
@@ -56,7 +54,7 @@ export const SearchView: React.FC<IProps> = ({
   close,
 }) => {
   const { value: drawerOpened, setPositive: setDrawerOpened, setNegative: setDrawerClosed } = useBoolean();
-  const theme = useTheme<CSSThemeV2>();
+  const theme = useTheme<ClientUITheme>();
   const intl = useIntl();
   const [searchValue, setSearchValue] = React.useState('');
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(
@@ -82,25 +80,31 @@ export const SearchView: React.FC<IProps> = ({
       <React.Fragment>
         {categories.length > 0 &&
           categories.map(category => (
-            <DropdownItemLink
+            <Popover.Item
+              Component={LinkPassingProps}
               key={category.id}
               as={`/categories/${category.slug}/products`}
               href="/categories/[id]/products"
+              passHref
+              css={css`
+                display: block;
+              `}
             >
-              {category.name} <Tag color="is-primary">{intl.formatMessage({ id: 'common.category' })}</Tag>
-            </DropdownItemLink>
+              {category.name} <Tag>{intl.formatMessage({ id: 'common.category' })}</Tag>
+            </Popover.Item>
           ))}
-        {productTypes.length > 0 && categories.length > 0 && <DropdownDivider />}
         {productTypes.length > 0 &&
           productTypes.map(productType => (
-            <DropdownItemLink
-              css={css`
-                overflow: hidden;
-                text-overflow: ellipsis;
-              `}
+            <Popover.Item
+              Component={LinkPassingProps}
               key={productType.id}
               as={`/products/${productType.slug}`}
               href="/products/[slug]"
+              css={css`
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block;
+              `}
             >
               <img
                 alt={productType.name}
@@ -113,10 +117,10 @@ export const SearchView: React.FC<IProps> = ({
                 src={formatMediaURL(productType.image)}
               />{' '}
               {productType.name}
-            </DropdownItemLink>
+            </Popover.Item>
           ))}
         {categories.length === 0 && productTypes.length === 0 && (
-          <DropdownItem elementType="div">{intl.formatMessage({ id: 'common.noResults' })}</DropdownItem>
+          <Popover.Item Component="div">{intl.formatMessage({ id: 'common.noResults' })}</Popover.Item>
         )}
       </React.Fragment>
     );
@@ -148,6 +152,7 @@ export const SearchView: React.FC<IProps> = ({
           `}
         >
           <Popover<HTMLInputElement>
+            offset={[0, 0]}
             forceClose={searchValue === '' || !drawerOpened}
             renderTrigger={({ ref, open }) => (
               <UnderlinedInput

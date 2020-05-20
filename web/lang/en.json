@@ -198,7 +198,7 @@
   "ConfirmSignup.success": "Confirmation is successful. Redirecting you the login page.",
   "ConfirmSignup.invalidToken": "The link is whether invalid or expired.",
   "common.loading": "Loading...",
-  "Cart.orderReceived": "Thank you for your order. We'll contact you as soon as possible.",
+  "Cart.orderReceived": "Thank you for your order. We'll contact you as soon as possible. ✅",
   "Cart.total": "Total",
   "AdminOrders.userName": "User Name",
   "AdminOrders.userPhoneNumber": "User Phone Number",

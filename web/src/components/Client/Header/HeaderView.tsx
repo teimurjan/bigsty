@@ -5,15 +5,15 @@ import Link from 'next/link';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
+import { Container } from 'src/components/admin-ui/Container/Container';
+import { Anchor } from 'src/components/client-ui/Anchor/Anchor';
+import { Navbar } from 'src/components/client-ui/Navbar/Navbar';
+import { Popover } from 'src/components/client-ui/Popover/Popover';
+import { TriggerHoverProps as PopoverTriggerProps } from 'src/components/client-ui/Popover/Popover';
 import { CartContainer } from 'src/components/Client/Cart/CartContainer';
 import { NavContainer } from 'src/components/Client/Nav/NavContainer';
 import { SearchContainer } from 'src/components/Client/Search/SearchContainer';
 import { UserDropdownContainer as UserDropdown } from 'src/components/Client/UserDropdown/UserDropdownContainer';
-import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
-import { Navbar } from 'src/components/common-v2/Navbar/Navbar';
-import { Popover } from 'src/components/common-v2/Popover/Popover';
-import { TriggerHoverProps as PopoverTriggerProps } from 'src/components/common-v2/Popover/Popover';
-import { Container } from 'src/components/common/Container/Container';
 import { mediaQueries } from 'src/styles/media';
 import { withPublicURL } from 'src/utils/url';
 
@@ -28,7 +28,7 @@ const Trigger = React.forwardRef<HTMLAnchorElement, PopoverTriggerProps>((props,
 
 export const HeaderView = () => {
   const intl = useIntl();
-  const theme = useTheme<CSSThemeV2>();
+  const theme = useTheme<ClientUITheme>();
 
   return (
     <Navbar>

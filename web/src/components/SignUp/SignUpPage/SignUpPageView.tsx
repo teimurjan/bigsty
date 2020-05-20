@@ -2,7 +2,7 @@
 import { jsx, css } from '@emotion/core';
 import { useIntl } from 'react-intl';
 
-import { Title } from 'src/components/common/Title/Title';
+import { Title } from 'src/components/admin-ui/Title/Title';
 import { SignUpFormContainer } from 'src/components/SignUp/SignUpForm/SignUpFormContainer';
 
 export const SignUpPageView = () => {

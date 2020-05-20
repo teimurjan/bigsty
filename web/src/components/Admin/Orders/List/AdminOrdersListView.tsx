@@ -2,10 +2,10 @@
 import { jsx, css } from '@emotion/core';
 import { IntlShape, injectIntl } from 'react-intl';
 
+import { NoDataAvailable } from 'src/components/admin-ui/NoDataAvailable/NoDataAvaiable';
+import { Section } from 'src/components/admin-ui/Section/Section';
 import { AdminTable } from 'src/components/Admin/AdminTable';
 import { IViewProps as IProps } from 'src/components/Admin/Orders/List/AdminOrdersListPresenter';
-import { NoDataAvailable } from 'src/components/common/NoDataAvailable/NoDataAvaiable';
-import { Section } from 'src/components/common/Section/Section';
 
 const NoOrdersAvialable = injectIntl(({ intl }) => (
   <NoDataAvailable title={intl.formatMessage({ id: 'AdminOrders.notFound.title' })} />

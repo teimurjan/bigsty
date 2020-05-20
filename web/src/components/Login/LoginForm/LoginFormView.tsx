@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
-import Link from 'next/link';
 import * as React from 'react';
 import { Field, FieldRenderProps, Form, FormRenderProps } from 'react-final-form';
 import { IntlShape } from 'react-intl';
 
-import { Button } from 'src/components/common/Button/Button';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { HelpText } from 'src/components/common/HelpText/HelpText';
+import { Button } from 'src/components/admin-ui/Button/Button';
+import { FormTextField } from 'src/components/admin-ui/FormTextField/FormTextField';
+import { HelpText } from 'src/components/admin-ui/HelpText/HelpText';
+import { LinkPassingProps } from 'src/components/client-ui/LinkPassingProps/LinkPassingProps';
 import { IViewProps as IProps, IFormValues } from 'src/components/Login/LoginForm/LoginFormPresenter';
 
 export class LoginFormView extends React.Component<IProps & { intl: IntlShape }> {
@@ -26,9 +26,9 @@ export class LoginFormView extends React.Component<IProps & { intl: IntlShape }>
           <Button className="level-left is-uppercase" color="is-success" loading={submitting} type="submit">
             {intl.formatMessage({ id: 'LoginForm.submitButton.text' })}
           </Button>
-          <Link href="/signup">
-            <a className="level-right">{intl.formatMessage({ id: 'LoginForm.signUpLink' })}</a>
-          </Link>
+          <LinkPassingProps className="level-right" href="/signup">
+            {intl.formatMessage({ id: 'LoginForm.signUpLink' })}
+          </LinkPassingProps>
         </div>
         <div
           css={css`

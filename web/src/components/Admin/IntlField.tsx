@@ -3,8 +3,8 @@ import { Field, FieldRenderProps } from 'react-final-form';
 import { IntlShape, injectIntl } from 'react-intl';
 
 import { IIntlListResponseItem } from 'src/api/IntlAPI';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { Tag } from 'src/components/common/Tag/Tag';
+import { FormTextField } from 'src/components/admin-ui/FormTextField/FormTextField';
+import { Tag } from 'src/components/admin-ui/Tag/Tag';
 
 export const getFieldName = (key: string, locale: IIntlListResponseItem): string =>
   `${key}-${locale.name}-${locale.id}`;

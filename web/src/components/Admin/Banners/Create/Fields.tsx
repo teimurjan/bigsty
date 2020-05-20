@@ -2,14 +2,14 @@ import * as React from 'react';
 import { FieldRenderProps, Field as FinalFormField } from 'react-final-form';
 import { IntlShape, injectIntl, useIntl } from 'react-intl';
 
+import { Field } from 'src/components/admin-ui/Field/Field';
+import { FileInput } from 'src/components/admin-ui/FileInput/FileInput';
+import { FormTextField } from 'src/components/admin-ui/FormTextField/FormTextField';
+import { HelpText } from 'src/components/admin-ui/HelpText/HelpText';
+import { Label } from 'src/components/admin-ui/Label/Label';
+import { Tag } from 'src/components/admin-ui/Tag/Tag';
 import { IntlField, IProps as IIntlFieldProps } from 'src/components/Admin/IntlField';
-import { Field } from 'src/components/common/Field/Field';
-import { FileInput } from 'src/components/common/FileInput/FileInput';
-import { FormTextField } from 'src/components/common/FormTextField/FormTextField';
-import { HelpText } from 'src/components/common/HelpText/HelpText';
-import { Label } from 'src/components/common/Label/Label';
-import { Tag } from 'src/components/common/Tag/Tag';
-import { WYSIWYG } from 'src/components/common/WYSIWYG/WYSIWYG';
+import { WYSIWYG } from 'src/components/client-ui/WYSIWYG/WYSIWYG';
 import { IContextValue as IntlStateContextValue } from 'src/state/IntlState';
 import { isAllowedForNumberInput } from 'src/utils/number';
 

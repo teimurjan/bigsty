@@ -3,9 +3,9 @@ import { css, jsx } from '@emotion/core';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { useIntl } from 'react-intl';
 
-import { Anchor } from 'src/components/common-v2/Anchor/Anchor';
-import { WithIcon } from 'src/components/common-v2/WithIcon/WithIcon';
-import { Container } from 'src/components/common/Container/Container';
+import { Container } from 'src/components/admin-ui/Container/Container';
+import { Anchor } from 'src/components/client-ui/Anchor/Anchor';
+import { WithIcon } from 'src/components/client-ui/WithIcon/WithIcon';
 import { mediaQueries } from 'src/styles/media';
 
 export const FooterView = () => {

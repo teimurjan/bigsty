@@ -4,13 +4,13 @@ import classNames from 'classnames';
 import { useIntl } from 'react-intl';
 
 import { IProductTypeListResponseItem, IProductTypeListResponseMeta } from 'src/api/ProductTypeAPI';
+import { Column } from 'src/components/admin-ui/Column/Column';
+import { Columns } from 'src/components/admin-ui/Columns/Columns';
+import { Container } from 'src/components/admin-ui/Container/Container';
+import { ErrorLayout } from 'src/components/client-ui/ErrorLayout/ErrorLayout';
+import { LoaderLayout } from 'src/components/client-ui/LoaderLayout/LoaderLayout';
+import { Pagination } from 'src/components/client-ui/Pagination/Pagination';
 import { ProductTypeCard } from 'src/components/Client/ProductType/ProductTypeCard/ProductTypeCard';
-import { Pagination } from 'src/components/common-v2/Pagination/Pagination';
-import { Column } from 'src/components/common/Column/Column';
-import { Columns } from 'src/components/common/Columns/Columns';
-import { Container } from 'src/components/common/Container/Container';
-import { ErrorLayout } from 'src/components/common/ErrorLayout/ErrorLayout';
-import { LoaderLayout } from 'src/components/common/LoaderLayout/LoaderLayout';
 import { mediaQueries } from 'src/styles/media';
 
 export interface IProps {

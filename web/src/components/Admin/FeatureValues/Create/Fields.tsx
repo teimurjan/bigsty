@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Field, FieldRenderProps } from 'react-final-form';
 import { IntlShape, injectIntl } from 'react-intl';
 
+import { FormNativeSelectField } from 'src/components/admin-ui/FormNativeSelectField/FormNativeSelectField';
 import {
   FEATURE_VALUE_NAME_FIELD_KEY,
   IViewProps as IProps,
 } from 'src/components/Admin/FeatureValues/Create/AdminFeatureValuesCreatePresenter';
 import { IntlField } from 'src/components/Admin/IntlField';
-import { FormNativeSelectField } from 'src/components/common/FormNativeSelectField/FormNativeSelectField';
 import { IContextValue as AdminFeatureTypesStateContextValue } from 'src/state/AdminFeatureTypesState';
 
 export interface IFieldsProps {

@@ -3,11 +3,11 @@ import { css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 
 import { IProductListResponseItem } from 'src/api/ProductAPI';
+import { Image } from 'src/components/admin-ui/Image/Image';
+import { Subtitle } from 'src/components/client-ui/Subtitle/Subtitle';
+import { Title } from 'src/components/client-ui/Title/Title';
 import { Quantity } from 'src/components/Client/Cart/CartItem/Quantity';
 import { PriceCrossedText } from 'src/components/Client/Price/Price';
-import { Subtitle } from 'src/components/common-v2/Subtitle/Subtitle';
-import { Title } from 'src/components/common-v2/Title/Title';
-import { Image } from 'src/components/common/Image/Image';
 
 interface IProps {
   product: IProductListResponseItem;
@@ -17,7 +17,7 @@ interface IProps {
 }
 
 export const CartItem = ({ product, count, onRemoveClick, onAddClick }: IProps) => {
-  const theme = useTheme<CSSThemeV2>();
+  const theme = useTheme<ClientUITheme>();
 
   return (
     <div

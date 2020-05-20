@@ -5,12 +5,12 @@ import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
+import { Container } from 'src/components/admin-ui/Container/Container';
+import { LinkButton } from 'src/components/client-ui/Button/Button';
+import { Carousel, CarouselItem } from 'src/components/client-ui/Carousel/Carousel';
+import { Title } from 'src/components/client-ui/Title/Title';
 import { IViewProps as IProps } from 'src/components/Client/Home/HomePresenter';
 import { ProductTypesListView } from 'src/components/Client/ProductType/ProductTypesList/ProductTypesListView';
-import { LinkButton } from 'src/components/common-v2/Button/Button';
-import { Title } from 'src/components/common-v2/Title/Title';
-import { Carousel, CarouselItem } from 'src/components/common/Carousel/Carousel';
-import { Container } from 'src/components/common/Container/Container';
 import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useMedia } from 'src/hooks/useMedia';
 import { mediaQueries } from 'src/styles/media';
@@ -56,7 +56,7 @@ export interface IBannerButtonProps {
 
 export const HomeView: React.FC<IProps> = ({ banners, productTypes }) => {
   const intl = useIntl();
-  const theme = useTheme<CSSThemeV2>();
+  const theme = useTheme<ClientUITheme>();
   const isMobile = useMedia([mediaQueries.maxWidth768], [true], false);
   const { value: lazyIsMobile } = useLazyInitialization(isMobile, false);
   const [activeBannerIndex, setActiveBannerIndex] = React.useState(0);

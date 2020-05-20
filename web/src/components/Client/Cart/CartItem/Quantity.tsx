@@ -4,9 +4,9 @@ import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useIntl } from 'react-intl';
 
-import { Button } from 'src/components/common-v2/Button/Button';
-import { HelpText } from 'src/components/common-v2/HelpText/HelpText';
-import { Title } from 'src/components/common-v2/Title/Title';
+import { Button } from 'src/components/client-ui/Button/Button';
+import { HelpText } from 'src/components/client-ui/HelpText/HelpText';
+import { Title } from 'src/components/client-ui/Title/Title';
 import { preventDefault } from 'src/utils/dom';
 
 interface IProps {
