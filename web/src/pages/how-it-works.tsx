@@ -10,8 +10,8 @@ const HowItWorks = () => {
   return (
     <Layout>
       <Story
-        backgroundPosition="center top"
-        src="/static/gif/making-order.gif"
+        type={Story.SourceType.Video}
+        src="/static/video/making-order.mov"
         title={<Story.Title>{intl.formatMessage({ id: 'HowItWorks.makingOrder.title' })}</Story.Title>}
         description={
           <Story.Description>

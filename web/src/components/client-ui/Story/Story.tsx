@@ -9,15 +9,66 @@ import { fadeInFromBottom } from 'src/styles/keyframes';
 import { mediaQueries } from 'src/styles/media';
 import { easeOutCubic } from 'src/styles/timing-functions';
 
+enum StorySourceType {
+  Video,
+  Image,
+}
+
 interface IProps {
   src: string;
+  type?: StorySourceType;
   title: React.ReactNode;
   description: React.ReactNode;
   rtl?: boolean;
   backgroundPosition?: string;
 }
 
-export const Story = ({ src, title, description, rtl, backgroundPosition }: IProps) => {
+export const Story = ({ src, title, description, rtl, backgroundPosition, type = StorySourceType.Image }: IProps) => {
+  const media =
+    type === StorySourceType.Video ? (
+      <div
+        css={css`
+          flex: 0 0 50%;
+
+          @media ${mediaQueries.maxWidth768} {
+            margin-bottom: 20px;
+            width: 100%;
+            flex: 1 1 300px;
+          }
+        `}
+      >
+        <video
+          css={css`
+            vertical-align: top;
+          `}
+          height="100%"
+          width="100%"
+          src={src}
+          autoPlay
+          loop
+        >
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    ) : (
+      <div
+        style={{ backgroundImage: `url(${src})`, backgroundPosition }}
+        css={css`
+          flex: 0 0 50%;
+          height: 650px;
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: cover;
+
+          @media ${mediaQueries.maxWidth768} {
+            margin-bottom: 20px;
+            width: 100%;
+            flex: 1 1 300px;
+          }
+        `}
+      ></div>
+    );
+
   return (
     <div
       className={classNames({ rtl })}
@@ -40,22 +91,7 @@ export const Story = ({ src, title, description, rtl, backgroundPosition }: IPro
         }
       `}
     >
-      <div
-        style={{ backgroundImage: `url(${src})`, backgroundPosition }}
-        css={css`
-          flex: 0 0 50%;
-          height: 650px;
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-size: cover;
-
-          @media ${mediaQueries.maxWidth768} {
-            margin-bottom: 20px;
-            width: 100%;
-            flex: 1 1 300px;
-          }
-        `}
-      ></div>
+      {media}
       <div
         css={css`
           flex: 0 0 50%;
@@ -96,3 +132,4 @@ const StoryDescription: React.FC = ({ children }) => {
 
 Story.Description = StoryDescription;
 Story.Title = StoryTitle;
+Story.SourceType = StorySourceType;
