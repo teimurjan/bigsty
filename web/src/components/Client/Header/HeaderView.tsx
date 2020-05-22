@@ -17,7 +17,7 @@ import { UserDropdownContainer as UserDropdown } from 'src/components/Client/Use
 import { mediaQueries } from 'src/styles/media';
 import { withPublicURL } from 'src/utils/url';
 
-const Trigger = React.forwardRef<HTMLAnchorElement, PopoverTriggerProps>((props, ref) => {
+const CategoriesTrigger = React.forwardRef<HTMLAnchorElement, PopoverTriggerProps>((props, ref) => {
   const intl = useIntl();
   return (
     <Anchor ref={ref} {...props}>
@@ -66,7 +66,7 @@ export const HeaderView = () => {
               margin-left: 10px;
             `}
           >
-            <Popover TriggerComponent={Trigger} offset={[0, 24]} openOnHover>
+            <Popover TriggerComponent={CategoriesTrigger} offset={[0, 24]} openOnHover>
               <Popover.Content
                 css={css`
                   width: 100vw;
@@ -80,6 +80,16 @@ export const HeaderView = () => {
                 </Container>
               </Popover.Content>
             </Popover>
+            <Anchor
+              css={css`
+                @media ${mediaQueries.maxWidth768} {
+                  display: none;
+                }
+              `}
+              href="/how-it-works"
+            >
+              {intl.formatMessage({ id: 'HowItWorks.title' })}
+            </Anchor>
           </Navbar.Section>
           <Navbar.Section
             css={css`

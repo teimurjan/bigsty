@@ -218,7 +218,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
                       {option.title}
                     </Select.Option>
                   ))}
-                </Select> 
+                </Select>
               );
             })}
             <Subtitle
@@ -252,6 +252,9 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
             >
               >{' '}
               {intl.formatMessage({ id: 'ProductTypePage.findMoreForCategory' }, { value: productType.category.name })}
+            </Anchor>
+            <Anchor primary href="/how-it-works">
+              > {intl.formatMessage({ id: 'HowItWorks.help' })}
             </Anchor>
           </div>
         </div>

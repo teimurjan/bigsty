@@ -235,5 +235,16 @@
   "common.sortBy": "Сортировка",
   "filter.newlyAdded": "Недавно добавленные",
   "filter.priceAscending": "Цены по возрастанию",
-  "filter.priceDescending": "Цены по убыванию"
+  "filter.priceDescending": "Цены по убыванию",
+  "HowItWorks.title": "Как заказать",
+  "HowItWorks.help": "Не знаете как заказать?",
+  "HowItWorks.makingOrder.title": "Как заказать очки на eye8.kg?",
+  "HowItWorks.makingOrder.description.1": "Зайти на сайт.",
+  "HowItWorks.makingOrder.description.2": "Выбрать одну или несколько понравившихся моделей.",
+  "HowItWorks.makingOrder.description.3": "Нажать на кнопку «Добавить в корзину».",
+  "HowItWorks.makingOrder.description.4": "Когда вы добавите все модели, которые хотите приобрести, перейдите в корзину и нажмите «заказать». У вас на экране появится форма, в которую вам нужно будет внести свое имя, номер телефона и адрес. Заполните ее и нажмите «заказать».",
+  "HowItWorks.delievery.title": "Доставка",
+  "HowItWorks.delievery.description": "После оформления заказа с вами свяжется курьер и в течение дня осуществит доставку.",
+  "HowItWorks.fitting.title": "Примерка",
+  "HowItWorks.fitting.description": "При получении заказа у вас будет возможность примерить все выбранные вами модели и приобрести те, которые подойдут. Остальные заберет наш курьер. Оплатить вы сможете наличными курьеру (позже будет доступна опция оплаты картой)."
 }

@@ -235,5 +235,16 @@
   "common.sortBy": "Sort By",
   "filter.newlyAdded": "Newly added",
   "filter.priceAscending": "Price Ascending",
-  "filter.priceDescending": "Price Descending"
+  "filter.priceDescending": "Price Descending",
+  "HowItWorks.title": "How it works",
+  "HowItWorks.help": "Do not know how to order?",
+  "HowItWorks.makingOrder.title": "How to order glasses at eye8.kg?",
+  "HowItWorks.makingOrder.description.1": "Go to the site.",
+  "HowItWorks.makingOrder.description.2": "Select one or more models you like.",
+  "HowItWorks.makingOrder.description.3": "Click on the \"Add to Cart\" button.",
+  "HowItWorks.makingOrder.description.4": "When you add all the models you want to purchase, go to the basket and click \"Order.\" A form will appear on the screen in which you will need to enter your name, phone number and address. Fill it out and click \"Order\".",
+  "HowItWorks.delievery.title": "Delivery",
+  "HowItWorks.delievery.description": "After registration, the courier will contact you and deliver the order to you within a day.",
+  "HowItWorks.fitting.title": "Fitting",
+  "HowItWorks.fitting.description": "Upon receipt of the order, you will have the opportunity to try on all the models you have chosen and purchase the ones that are suitable. Our courier will pick up the rest. You can pay in cash to the courier (later the card payment option will be available)."
 }
