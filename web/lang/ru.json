@@ -266,7 +266,7 @@
   "AdminOrders.errors.promoCodeInvalid": "Неверный промо-код",
   "Cart.promoCodeInput.label": "Промо-код",
   "common.apply": "Применить",
-  "Cart.promoCodeApplied": "Промо-код {value} успешно применен",
+  "Cart.promoCodeApplied": "Дополнительная скидка {discount}% с промо-кодом {value}",
   "Cart.promoCodeNotApplicable": "Промо-код {value} не может быть применен к этому продукту",
   "Cart.invalidPromoCode": "Неверный промо-код"
 }

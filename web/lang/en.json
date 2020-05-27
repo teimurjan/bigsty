@@ -266,7 +266,7 @@
   "AdminOrders.errors.promoCodeInvalid": "Invalid promo code",
   "Cart.promoCodeInput.label": "Promo code",
   "common.apply": "Apply",
-  "Cart.promoCodeApplied": "Promo code {value} is successfully applied",
+  "Cart.promoCodeApplied": "Extra {discount}% off with promo code {value}",
   "Cart.promoCodeNotApplicable": "Promo code {value} is not applicable to this product",
   "Cart.invalidPromoCode": "Invalid promo code"
 }

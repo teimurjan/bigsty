@@ -98,7 +98,9 @@ export const PriceCrossedText = ({ price, discount }: IPriceProps) => {
   const formattedPrice = useFormattedPrice({ price, discount });
   const formattedInitialPrice = useFormattedPrice({ price, discount: 0 });
 
-  return formattedPrice !== formattedInitialPrice ? (
+  const hasDiscount = Array.isArray(discount) ? discount.reduce((acc, d) => acc + d, 0) > 0 : discount && discount > 0;
+
+  return hasDiscount ? (
     <React.Fragment>
       {formattedPrice} <del>{formattedInitialPrice}</del>
     </React.Fragment>

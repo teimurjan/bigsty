@@ -76,7 +76,7 @@ export const CartItem = ({ product, count, onRemoveClick, onAddClick, promoCode 
       <Quantity count={count} allowedCount={product.quantity} onAddClick={onAddClick} onRemoveClick={onRemoveClick} />
       {promoCode && promoCodeApplicable && (
         <HelpText color="success">
-          {intl.formatMessage({ id: 'Cart.promoCodeApplied' }, { value: promoCode.value.toUpperCase() })}
+          {intl.formatMessage({ id: 'Cart.promoCodeApplied' }, { value: promoCode.value.toUpperCase(), discount: promoCode.discount })}
         </HelpText>
       )}
       {promoCode && !promoCodeApplicable && (

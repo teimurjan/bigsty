@@ -14,4 +14,4 @@ class FeatureValuesPolicy:
             feature_value.feature_type.id for feature_value in feature_values
         ]
 
-        return product_type_feature_types_ids == feature_types_ids
+        return set(product_type_feature_types_ids) == set(feature_types_ids)
