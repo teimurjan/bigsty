@@ -25,7 +25,7 @@
     "bulma": "^0.7.2",
     "classnames": "^2.2.6",
     "color": "^3.1.2",
-    "css-loader": "0.28.7",
+    "css-loader": "0.28.11",
     "dotenv": "4.0.0",
     "emotion": "^10.0.27",
     "emotion-server": "^10.0.27",
