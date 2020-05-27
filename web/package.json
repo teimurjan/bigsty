@@ -22,7 +22,7 @@
     "@zeit/next-source-maps": "^0.0.3",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.1",
-    "bulma": "^0.7.2",
+    "bulma": "^0.8.2",
     "classnames": "^2.2.6",
     "color": "^3.1.2",
     "css-loader": "0.28.7",
