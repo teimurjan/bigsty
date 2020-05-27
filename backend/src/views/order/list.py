@@ -57,3 +57,6 @@ class OrderListView(ValidatableView, PaginatableView):
             return {'data': serialized_product}, OK_CODE
         except self._service.ProductInvalid:
             raise InvalidEntityFormat({'product': 'errors.invalidID'})
+        except self._service.PromoCodeInvalid:
+            raise InvalidEntityFormat({'promo_code': 'errors.invalidID'})
+

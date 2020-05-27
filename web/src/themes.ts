@@ -35,6 +35,7 @@ export const defaultTheme: AdminUITheme & ClientUITheme = {
   primaryColor: '#76bdae',
   textOnPrimaryColor: '#fff',
   dangerColor: '#e71d36',
+  successColor: '#73a942',
   tooltipBackgroundColor: '#111',
   buttonPrimaryBackgroundHoverColor: color('#76bdae')
     .darken(0.15)

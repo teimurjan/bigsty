@@ -11,4 +11,5 @@ CREATE_ORDER_VALIDATION_RULES = {
     'user_name': {'type': 'string', 'required': True, 'nullable': False},
     'user_phone_number': {'type': 'string', 'required': True, 'nullable': False},
     'user_address': {'type': 'string', 'required': True, 'nullable': False},
+    'promo_code': {'type': 'string', 'required': False},
 }

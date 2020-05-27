@@ -4,32 +4,39 @@ from sqlalchemy.orm import joinedload
 
 from src.models import Order, OrderItem
 from src.models.order import order_item
-from src.repos.base import Repo, with_session
+from src.repos.base import NonDeletableRepo, with_session
 
 
-class OrderRepo(Repo):
+class OrderRepo(NonDeletableRepo):
     def __init__(self, db_conn):
         super().__init__(db_conn, Order)
 
     @with_session
     def get_for_user(self, user_id, session):
-        return session.query(Order).filter(Order.user_id == user_id).all()
+        return self.get_non_deleted_query(session=session).filter(Order.user_id == user_id).all()
 
     @with_session
     def get_by_id(self, id_, session) -> Order:
-        obj = session.query(Order).options(joinedload(Order.items)).get(id_)
-        if obj is None:
+        objects = (
+            self
+            .get_non_deleted_query(session=session)
+            .options(joinedload(Order.items))
+            .filter(Order.id == id_)
+            .all()
+        )
+        if len(objects) == 0:
             raise self.DoesNotExist()
 
-        return obj
+        return objects[0]
 
     @with_session
-    def add_order(self, user, user_name, user_phone_number, user_address, items, session):
+    def add_order(self, user, user_name, user_phone_number, user_address, items, promo_code, session):
         order = Order()
         order.user = user
         order.user_name = user_name
         order.user_phone_number = user_phone_number
         order.user_address = user_address
+        order.promo_code = promo_code
 
         order_items = []
         for item in items:
@@ -50,12 +57,13 @@ class OrderRepo(Repo):
         return order
 
     @with_session
-    def update_order(self, id_, user_name, user_phone_number, user_address, items, status, session):
+    def update_order(self, id_, user_name, user_phone_number, user_address, items, status, promo_code, session):
         order = self.get_by_id(id_, session=session)
         order.user_name = user_name
         order.user_phone_number = user_phone_number
         order.user_address = user_address
         order.status = status
+        order.promo_code = promo_code
 
         new_order_items = []
         for item in items:

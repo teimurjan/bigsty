@@ -6,6 +6,7 @@ import { IOrderListResponseItem } from 'src/api/OrderAPI';
 import * as schemaValidator from 'src/components/SchemaValidator';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { IOrderService } from 'src/services/OrderService';
+import * as orderService from 'src/services/OrderService';
 import { IContextValue as AdminOrdersStateContextValue } from 'src/state/AdminOrdersState';
 import { PHONE_REGEX } from 'src/utils/phone';
 
@@ -50,6 +51,14 @@ const validator = new schemaValidator.SchemaValidator(
     items: yup.array().min(1, 'common.errors.field.atLeast1'),
   }),
 );
+
+export const getErrorMessageID = (e: Error) => {
+  if (e instanceof orderService.errors.PromoCodeInvalid) {
+    return 'AdminOrders.errors.promoCodeInvalid';
+  }
+
+  return 'errors.common';
+};
 
 export const AdminOrdersEditPresenter: React.FC<IProps> = ({
   history,
@@ -98,7 +107,7 @@ export const AdminOrdersEditPresenter: React.FC<IProps> = ({
         getOrders();
         close();
       } catch (e) {
-        setError('errors.common');
+        setError(getErrorMessageID(e));
       } finally {
         setUpdating(false);
       }
@@ -124,6 +133,7 @@ export const AdminOrdersEditPresenter: React.FC<IProps> = ({
               user_address: order.user_address,
               status: order.status,
               items: order.items,
+              promo_code: order.promo_code,
             }
           : {}
       }

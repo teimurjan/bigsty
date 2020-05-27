@@ -1,6 +1,7 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Field as FinalFormField, FieldRenderProps } from 'react-final-form';
 import { useIntl } from 'react-intl';
@@ -12,6 +13,7 @@ import { FormPhoneField } from 'src/components/admin-ui/FormPhoneField/FormPhone
 import { FormTextField } from 'src/components/admin-ui/FormTextField/FormTextField';
 import { HelpText } from 'src/components/admin-ui/HelpText/HelpText';
 import { Label } from 'src/components/admin-ui/Label/Label';
+import { Subtitle } from 'src/components/admin-ui/Subtitle/Subtitle';
 import { Quantity } from 'src/components/Client/Cart/CartItem/Quantity';
 import { PriceText } from 'src/components/Client/Price/Price';
 import { ProductSelectContainer } from 'src/components/common-ui/ProductSelect/ProductSelectContainer';
@@ -49,6 +51,28 @@ const UserAddressField = ({ input, meta }: FieldRenderProps<string>) => {
     <FormTextField
       labelProps={{
         children: intl.formatMessage({ id: 'AdminOrders.userAddress' }),
+      }}
+      inputProps={{
+        ...input,
+        isDanger: showError,
+      }}
+      helpTextProps={{
+        children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
+        type: 'is-danger',
+      }}
+    />
+  );
+};
+
+const PromoCodeField = ({ input, meta }: FieldRenderProps<string>) => {
+  const intl = useIntl();
+
+  const showError = meta.touched && meta.error;
+
+  return (
+    <FormTextField
+      labelProps={{
+        children: intl.formatMessage({ id: 'AdminOrders.promoCode' }),
       }}
       inputProps={{
         ...input,
@@ -106,6 +130,8 @@ const StatusSelectField = ({ input, meta }: FieldRenderProps<string>) => {
 const OrderItemsField = ({ input, meta }: FieldRenderProps<IOrderListResponseItem['items']>) => {
   const intl = useIntl();
 
+  const theme = useTheme<AdminUITheme>();
+
   const showError = meta.touched && meta.error;
 
   const setOrderItem = React.useCallback(
@@ -151,14 +177,28 @@ const OrderItemsField = ({ input, meta }: FieldRenderProps<IOrderListResponseIte
       <Label>{intl.formatMessage({ id: 'AdminOrders.items' })}</Label>
       {input.value
         ? input.value.map(orderItem => (
-            <div key={orderItem.id}>
+            <div
+              css={css`
+                margin: 10px 0;
+                padding: 10px;
+                background: ${theme.greyLight};
+                border-radius: 10px;
+              `}
+              key={orderItem.id}
+            >
               <div
                 css={css`
                   display: flex;
                   justify-content: space-between;
                 `}
               >
-                {orderItem.product && orderItem.product.product_type.name}
+                {orderItem.product && (
+                  <Subtitle
+                    size={4}
+                  >
+                    {orderItem.product.product_type.name}
+                  </Subtitle>
+                )}
                 <ProductSelectContainer
                   placeholder={intl.formatMessage({ id: 'AdminOrders.anotherProduct.placeholder' })}
                   onChange={product => {
@@ -225,6 +265,7 @@ export const Fields: React.SFC<{}> = () => {
       />
       <FinalFormField key="user_address" name="user_address" component={UserAddressField} />
       <FinalFormField key="items" name="items" render={OrderItemsField} />
+      <FinalFormField key="promo_code" name="promo_code" component={PromoCodeField} />
       <FinalFormField key="status" name="status" component={StatusSelectField} />
     </React.Fragment>
   );

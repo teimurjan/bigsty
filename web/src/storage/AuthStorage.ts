@@ -1,4 +1,4 @@
-import { Storage } from 'ttypes/storage';
+import { ICookieStorage } from 'src/storage/cookie/CookieStorage';
 
 export interface IAuthStorage {
   getAccessToken(): string | null;
@@ -10,8 +10,8 @@ export interface IAuthStorage {
 }
 
 export class AuthStorage implements IAuthStorage {
-  private storage: Storage;
-  constructor(storage: Storage) {
+  private storage: ICookieStorage;
+  constructor(storage: ICookieStorage) {
     this.storage = storage;
   }
 
@@ -28,7 +28,9 @@ export class AuthStorage implements IAuthStorage {
   }
 
   public setRefreshToken(token: string) {
-    this.storage.setItem('refresh_token', token);
+    const expires = new Date();
+    expires.setTime(expires.getTime() + 30 * 24 * 3600 * 1000); // 30 days
+    this.storage.setItem('refresh_token', token, { expires, path: '/' });
   }
 
   public clearAccessToken() {

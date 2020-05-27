@@ -105,7 +105,7 @@ export class FeatureValueAPI implements IFeatureValueAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.FeatureValueNotFound();
       }
       throw e;
@@ -134,7 +134,7 @@ export class FeatureValueAPI implements IFeatureValueAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.FeatureValueNotFound();
       }
       throw e;
@@ -148,7 +148,7 @@ export class FeatureValueAPI implements IFeatureValueAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.FeatureValueNotFound();
       }
       throw e;
@@ -165,7 +165,7 @@ export class FeatureValueAPI implements IFeatureValueAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.FeatureValueNotFound();
       }
       throw e;

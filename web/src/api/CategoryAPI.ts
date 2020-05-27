@@ -110,7 +110,7 @@ export class CategoryAPI implements ICategoryAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.CategoryNotFound();
       }
       if (e.response.data.children) {
@@ -131,7 +131,7 @@ export class CategoryAPI implements ICategoryAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.CategoryNotFound();
       }
       throw e;
@@ -160,7 +160,7 @@ export class CategoryAPI implements ICategoryAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.CategoryNotFound();
       }
       throw e;
@@ -177,7 +177,7 @@ export class CategoryAPI implements ICategoryAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.CategoryNotFound();
       }
       throw e;

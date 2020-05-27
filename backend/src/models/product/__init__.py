@@ -1,9 +1,9 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import Column, String, Integer, ForeignKey, orm, func
-from src.models.base import BaseModel
+from src.models.base import NonDeletableModel
 
 
-class Product(BaseModel):
+class Product(NonDeletableModel):
     __tablename__ = 'product'
 
     discount = Column(Integer, default=0)
@@ -32,7 +32,4 @@ class Product(BaseModel):
 
     @calculated_price.expression
     def calculated_price(cls):
-        print(cls.price * ((100 - cls.discount) * 0.01))
-        print(cls.price * ((100 - cls.discount) * 0.01))
-        print(cls.price * ((100 - cls.discount) * 0.01))
         return cls.price * ((100 - cls.discount) * 0.01)

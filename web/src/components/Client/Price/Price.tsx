@@ -8,7 +8,7 @@ import { calculateDiscountedPrice } from 'src/utils/number';
 
 interface IPriceProps {
   price: number;
-  discount?: number;
+  discount?: number | number[];
 }
 
 interface IPriceRangeTextProps {
@@ -42,7 +42,11 @@ const useFormattedPrice = ({ price, discount }: IPriceProps) => {
 
 const usePriceRange = ({ range }: IPriceRangeTextProps) => {
   const calculatedRange = range.map(price => calculateDiscountedPrice(price.price, price.discount || 0));
-  const discounts = range.map(price => price.discount || 0).filter(discount => discount !== 0);
+  const discounts = range
+    .map(price => {
+      return Array.isArray(price.discount) ? Math.max(...price.discount) : price.discount || 0;
+    })
+    .filter(discount => discount !== 0);
 
   const biggestFormattedPrice = useFormattedPrice({ price: Math.max(...calculatedRange), discount: 0 });
   const lowestFormattedPrice = useFormattedPrice({ price: Math.min(...calculatedRange), discount: 0 });

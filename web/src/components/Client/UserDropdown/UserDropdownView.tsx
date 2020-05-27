@@ -52,7 +52,7 @@ export const UserDropdownView = ({ user, onLogoutClick }: IProps) => {
 
   items.push(
     <Anchor key="language" thin>
-      <LanguageDropdown ref={languageDropdownRef} openOnHover />
+      <LanguageDropdown ref={languageDropdownRef} openOnHover placement="left" />
     </Anchor>,
   );
 

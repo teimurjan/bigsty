@@ -1,9 +1,9 @@
 from src.storage.base import Storage
 from src.models import ProductImage, Product
-from src.repos.base import Repo, with_session
+from src.repos.base import NonDeletableRepo, with_session
 
 
-class ProductRepo(Repo):
+class ProductRepo(NonDeletableRepo):
     def __init__(self, db_conn, file_storage: Storage):
         super().__init__(db_conn, Product)
         self.__file_storage = file_storage
@@ -95,13 +95,13 @@ class ProductRepo(Repo):
 
     @with_session
     def get_first_by_upc(self, upc, session):
-        return session.query(Product).filter(Product.upc == upc).first()
+        return self.get_non_deleted_query(session=session).filter(Product.upc == upc).first()
 
     @with_session
     def get_for_product_type(self, product_type_id, session):
         return (
-            session
-            .query(Product)
+            self
+            .get_non_deleted_query(session=session)
             .filter(Product.product_type_id == product_type_id)
             .order_by(Product.id)
             .all()

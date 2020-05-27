@@ -100,6 +100,11 @@ export const AdminMenuView = ({ onLogOutClick }: IProps) => {
             {intl.formatMessage({ id: 'AdminMenu.ordersLinkText' })}
           </NavLink>
         </Menu.Item>
+        <Menu.Item>
+          <NavLink to="/admin/promoCodes" activeClassName="is-active">
+            {intl.formatMessage({ id: 'AdminMenu.promoCodesLinkText' })}
+          </NavLink>
+        </Menu.Item>
       </Menu.List>
 
       <Menu.Label>{intl.formatMessage({ id: 'AdminMenu.actionsLabel' })}</Menu.Label>

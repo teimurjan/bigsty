@@ -107,6 +107,7 @@ interface IProps<T> {
   currentPage?: number;
   onPageChange?: (newPage: number) => void;
   hideSubheader?: boolean;
+  hideDelete?: boolean;
 }
 
 const defaultRenderer = new DefaultRenderer();
@@ -123,6 +124,7 @@ export const AdminTable = <T extends { id: number }>({
   currentPage,
   onPageChange,
   hideSubheader = false,
+  hideDelete = false,
 }: IProps<T> & { intl: IntlShape }) => {
   if (isLoading) {
     return <LoaderLayout />;
@@ -192,9 +194,11 @@ export const AdminTable = <T extends { id: number }>({
                 >
                   <FontAwesomeIcon icon={faPencilAlt} />
                 </ReactRouterLinkButton>
-                <ReactRouterLinkButton to={`${pathPrefix}/delete/${entity.id}`} color="is-danger">
-                  <FontAwesomeIcon icon={faTrashAlt} />
-                </ReactRouterLinkButton>
+                {!hideDelete && (
+                  <ReactRouterLinkButton to={`${pathPrefix}/delete/${entity.id}`} color="is-danger">
+                    <FontAwesomeIcon icon={faTrashAlt} />
+                  </ReactRouterLinkButton>
+                )}
               </Table.Cell>
             </Table.Row>
           ))}

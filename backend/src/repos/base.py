@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, List
 
 from sqlalchemy.orm import sessionmaker
 
@@ -22,7 +22,7 @@ def with_session(f):
 class Repo(Generic[T]):
     def __init__(self, db_conn, Model: T):
         self.__db_conn = db_conn
-        self.__Model = Model
+        self._Model = Model
 
     @contextmanager
     def session(self):
@@ -39,26 +39,26 @@ class Repo(Generic[T]):
 
     @with_session
     def get_by_id(self, id_, session) -> T:
-        obj = session.query(self.__Model).get(id_)
+        obj = session.query(self._Model).get(id_)
         if obj is None:
             raise self.DoesNotExist()
 
         return obj
 
     @with_session
-    def get_all(self, offset = None, limit = None, session=None):
-        return session.query(self.__Model).order_by(self.__Model.id).offset(offset).limit(limit).all()
-   
-    @with_session
-    def count_all(self, session=None):
-        return session.query(self.__Model).count()
-    
-    @with_session
-    def filter_by_ids(self, ids, session):
-        return session.query(self.__Model).filter(self.__Model.id.in_(ids)).all()
+    def get_all(self, offset=None, limit=None, session=None) -> List[T]:
+        return session.query(self._Model).order_by(self._Model.id).offset(offset).limit(limit).all()
 
     @with_session
-    def delete(self, id_, session):
+    def count_all(self, session=None) -> int:
+        return session.query(self._Model).count()
+
+    @with_session
+    def filter_by_ids(self, ids, session) -> List[T]:
+        return session.query(self._Model).filter(self._Model.id.in_(ids)).all()
+
+    @with_session
+    def delete(self, id_, session) -> None:
         obj = self.get_by_id(id_, session=session)
         return session.delete(obj)
 
@@ -67,15 +67,48 @@ class Repo(Generic[T]):
             raise NotImplementedError
 
 
-class IntlRepo(Repo):
+class NonDeletableRepo(Repo[T]):
+    def __init__(self, db_conn, Model: T):
+        super().__init__(db_conn, Model)
+        
     @with_session
-    def _set_intl_texts(self, texts, owner, owner_field_name, IntlTextModel, session):
-        new_texts = []
-        for language_id, value in texts.items():
-            text = IntlTextModel()
-            text.value = value
-            language = session.query(Language).get(int(language_id))
-            text.language = language
-            new_texts.append(text)
+    def delete(self, id_, session):
+        obj = self.get_by_id(id_, session=session)
+        obj.is_deleted = True
+        return obj
 
-        setattr(owner, owner_field_name, new_texts)
+    @with_session
+    def get_non_deleted_query(self, session=None):
+        return session.query(self._Model).filter((self._Model.is_deleted == None) | (self._Model.is_deleted == False))
+
+    @with_session
+    def get_by_id(self, id_, session=None):
+        obj = self.get_non_deleted_query(session=session).filter(self._Model.id == id_).first()
+        if obj is None:
+            raise self.DoesNotExist()
+
+        return obj
+
+    @with_session
+    def get_all(self, offset=None, limit=None, session=None):
+        return self.get_non_deleted_query(session=session).order_by(self._Model.id).offset(offset).limit(limit).all()
+
+    @with_session
+    def count_all(self, session=None):
+        return self.get_non_deleted_query(session=session).count()
+
+    @with_session
+    def filter_by_ids(self, ids, session):
+        return self.get_non_deleted_query(session=session).filter(self._Model.id.in_(ids)).all()
+
+
+def set_intl_texts(texts, owner, owner_field_name, IntlTextModel, session):
+    new_texts = []
+    for language_id, value in texts.items():
+        text = IntlTextModel()
+        text.value = value
+        language = session.query(Language).get(int(language_id))
+        text.language = language
+        new_texts.append(text)
+
+    setattr(owner, owner_field_name, new_texts)

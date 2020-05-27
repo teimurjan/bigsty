@@ -57,8 +57,8 @@ export class AuthService implements IAuthService {
     try {
       const { accessToken, refreshToken } = await this.API.logIn(email, password);
 
-      this.storage.setAccessToken(accessToken);
       this.storage.setRefreshToken(refreshToken);
+      this.storage.setAccessToken(accessToken);
     } catch (e) {
       if (e instanceof authAPI.errors.EmailOrPasswordInvalidError) {
         throw new errors.InvalidCredentialsError();
@@ -94,8 +94,8 @@ export class AuthService implements IAuthService {
     if (oldRefreshToken) {
       const { accessToken, refreshToken } = await this.API.refreshTokens(oldRefreshToken);
 
-      this.storage.setAccessToken(accessToken);
       this.storage.setRefreshToken(refreshToken);
+      this.storage.setAccessToken(accessToken);
     } else {
       throw new errors.NoRefreshToken();
     }

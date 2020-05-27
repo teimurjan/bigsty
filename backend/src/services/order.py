@@ -8,6 +8,7 @@ from src.repos.feature_value import FeatureValueRepo
 from src.repos.order import OrderRepo
 from src.repos.product import ProductRepo
 from src.repos.product_type import ProductTypeRepo
+from src.repos.promo_code import PromoCodeRepo
 from src.services.decorators import allow_roles
 
 
@@ -16,10 +17,12 @@ class OrderService:
         self,
         repo: OrderRepo,
         product_repo: ProductRepo,
+        promo_code_repo: PromoCodeRepo,
         mail: Mail
     ):
         self._repo = repo
         self._product_repo = product_repo
+        self._promo_code_repo = promo_code_repo
         self._mail = mail
 
     def create(self, data, user):
@@ -32,22 +35,37 @@ class OrderService:
                     )
                     item['product'] = product
 
+                promo_code_value = data.get('promo_code')
+                promo_code = None
+
+                if promo_code_value:
+                    promo_code = self._promo_code_repo.get_by_value(promo_code_value.lower(), False)
+
+                    if not promo_code.is_active:
+                        raise self.PromoCodeInvalid()
+                    
+                    if promo_code.disable_on_use:
+                        promo_code.is_active = False
+
                 order = self._repo.add_order(
                     user,
                     data['user_name'],
                     data['user_phone_number'],
                     data['user_address'],
                     data['items'],
+                    promo_code,
                     session=s
                 )
 
-                link = app.config.get('HOST') + '/admin/orders/' + str(order.id)
+                link = app.config.get('HOST') + \
+                    '/admin/orders/' + str(order.id)
                 title = 'Заказ!'
-                description = 'Имя: ' + order.user_name + '<br/>' + 'Телефон: ' + order.user_phone_number + '<br/>' + 'Адрес: ' + order.user_address
+                description = 'Имя: ' + order.user_name + '<br/>' + 'Телефон: ' + \
+                    order.user_phone_number + '<br/>' + 'Адрес: ' + order.user_address
                 link_text = 'Подробнее'
                 subject = link_text
                 body = render_template(
-                    'link_email.html', 
+                    'link_email.html',
                     link=link,
                     title=title,
                     description=description,
@@ -55,14 +73,17 @@ class OrderService:
                     preheader=title
                 )
 
-                self._mail.send(subject, body, [app.config.get('MAIL_ORDERS_USERNAME')])
+                self._mail.send(
+                    subject, body, [app.config.get('MAIL_ORDERS_USERNAME')])
 
                 return order
+        except self._promo_code_repo.DoesNotExist:
+            raise self.PromoCodeInvalid()
         except self._product_repo.DoesNotExist:
             raise self.ProductInvalid()
 
     @allow_roles(['admin', 'manager'])
-    def update(self, order_id, data, user = None):
+    def update(self, order_id, data, user=None):
         try:
             with self._repo.session() as s:
                 for item in data['items']:
@@ -72,6 +93,18 @@ class OrderService:
                     )
                     item['product'] = product
 
+                promo_code_value = data.get('promo_code')
+                promo_code = None
+
+                if promo_code_value:
+                    promo_code = self._promo_code_repo.get_by_value(promo_code_value.lower(), False)
+
+                    if not promo_code.is_active:
+                        raise self.PromoCodeInvalid()
+                    
+                    if promo_code.disable_on_use:
+                        promo_code.is_active = False
+
                 order = self._repo.update_order(
                     order_id,
                     data['user_name'],
@@ -79,16 +112,19 @@ class OrderService:
                     data['user_address'],
                     data['items'],
                     data['status'],
+                    promo_code,
                     session=s
                 )
 
-                link = app.config.get('HOST') + '/admin/orders/' + str(order.id)
+                link = app.config.get('HOST') + \
+                    '/admin/orders/' + str(order.id)
                 title = 'Заказ обновлен!'
-                description = 'Имя: ' + order.user_name + '<br/>' + 'Телефон: ' + order.user_phone_number + '<br/>' + 'Адрес: ' + order.user_address + '<br/>' + 'Статус: ' + order.status
+                description = 'Имя: ' + order.user_name + '<br/>' + 'Телефон: ' + order.user_phone_number + \
+                    '<br/>' + 'Адрес: ' + order.user_address + '<br/>' + 'Статус: ' + order.status
                 link_text = 'Подробнее'
                 subject = link_text
                 body = render_template(
-                    'link_email.html', 
+                    'link_email.html',
                     link=link,
                     title=title,
                     description=description,
@@ -96,9 +132,12 @@ class OrderService:
                     preheader=title
                 )
 
-                self._mail.send(subject, body, [app.config.get('MAIL_ORDERS_USERNAME')])
+                self._mail.send(
+                    subject, body, [app.config.get('MAIL_ORDERS_USERNAME')])
 
                 return order
+        except self._promo_code_repo.DoesNotExist:
+            raise self.PromoCodeInvalid()
         except self._product_repo.DoesNotExist:
             raise self.ProductInvalid()
         except self._repo.DoesNotExist:
@@ -112,7 +151,6 @@ class OrderService:
         if user and user.id == user_id:
             return self._repo.get_for_user(user_id)
         raise AccessRoleError()
-        
 
     @allow_roles(['admin', 'manager'])
     def get_one(self, id_, user=None):
@@ -129,6 +167,9 @@ class OrderService:
             raise self.OrderNotFound()
 
     class ProductInvalid(Exception):
+        pass
+
+    class PromoCodeInvalid(Exception):
         pass
 
     class OrderNotFound(Exception):

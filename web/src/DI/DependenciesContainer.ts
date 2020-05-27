@@ -11,6 +11,7 @@ import * as intlAPI from 'src/api/IntlAPI';
 import * as orderAPI from 'src/api/OrderAPI';
 import * as productAPI from 'src/api/ProductAPI';
 import * as productTypeAPI from 'src/api/ProductTypeAPI';
+import * as promoCodeAPI from 'src/api/PromoCodeAPI';
 import * as searchAPI from 'src/api/SearchAPI';
 import { HeadersManager } from 'src/manager/HeadersManager';
 import * as authService from 'src/services/AuthService';
@@ -22,13 +23,14 @@ import * as intlService from 'src/services/IntlService';
 import * as orderService from 'src/services/OrderService';
 import * as productService from 'src/services/ProductService';
 import * as productTypeService from 'src/services/ProductTypeService';
+import * as promoCodeService from 'src/services/PromoCodeService';
 import * as searchService from 'src/services/SearchService';
 import * as authStorage from 'src/storage/AuthStorage';
 import * as cartStorage from 'src/storage/CartStorage';
-import { CookieStorage } from 'src/storage/CookieStorage';
+import { CookieStorage } from 'src/storage/cookie/CookieStorage';
+import { ServerCookieStorage } from 'src/storage/cookie/ServerCookieStorage';
 import { InMemoryStorage } from 'src/storage/InMemoryStorage';
 import * as intlStorage from 'src/storage/IntlStorage';
-import { ServerCookieStorage } from 'src/storage/ServerCookieStorage';
 import * as stateCacheStorage from 'src/storage/StateCacheStorage';
 import * as versionStorage from 'src/storage/VersionStorage';
 import { safeWindow } from 'src/utils/dom';
@@ -45,6 +47,7 @@ export interface IAPIsContainer {
   search: searchAPI.ISearchAPI;
   banner: bannerAPI.IBannerAPI;
   order: orderAPI.IOrderAPI;
+  promoCode: promoCodeAPI.IPromoCodeAPI;
 }
 
 export interface IServicesContainer {
@@ -58,6 +61,7 @@ export interface IServicesContainer {
   search: searchService.ISearchService;
   banner: bannerService.IBannerService;
   order: orderService.IOrderService;
+  promoCode: promoCodeService.IPromoCodeService;
 }
 
 export interface IStoragesContainer {
@@ -84,13 +88,14 @@ const makeResponseErrorInterceptor = (
   authService: authService.IAuthService,
   APIClient: AxiosInstance,
   headersManager: HeadersManager,
-) => async (error: { response: AxiosResponse; config: AxiosRequestConfig }) => {
-  if (error.response.status === 401) {
+) => async (error: { response?: AxiosResponse; config: AxiosRequestConfig }) => {
+  if (error.response && error.response.status === 401) {
     if (tokensRefreshStatusWV.get() === Status.Idle) {
       try {
         tokensRefreshStatusWV.set(Status.Busy);
         await authService.refreshTokens();
       } catch (e) {
+        console.log(e);
         authService.logOut();
       } finally {
         tokensRefreshStatusWV.set(Status.Idle);
@@ -148,6 +153,7 @@ export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {})
     search: new searchAPI.SearchAPI(APIClient, headersManager),
     banner: new bannerAPI.BannerAPI(APIClient, headersManager),
     order: new orderAPI.OrderAPI(APIClient, headersManager),
+    promoCode: new promoCodeAPI.PromoCodeAPI(APIClient, headersManager),
   };
 
   const servicesContainer = {
@@ -161,6 +167,7 @@ export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {})
     search: new searchService.SearchService(APIsContainer.search),
     banner: new bannerService.BannerService(APIsContainer.banner),
     order: new orderService.OrderService(APIsContainer.order),
+    promoCode: new promoCodeService.PromoCodeService(APIsContainer.promoCode),
   };
 
   APIClient.interceptors.response.use(

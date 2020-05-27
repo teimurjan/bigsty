@@ -247,7 +247,7 @@ export class ProductTypeAPI implements IProductTypeAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductTypeNotFound();
       }
       throw e;
@@ -261,7 +261,7 @@ export class ProductTypeAPI implements IProductTypeAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductTypeNotFound();
       }
       throw e;
@@ -303,7 +303,7 @@ export class ProductTypeAPI implements IProductTypeAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductTypeNotFound();
       }
       if (e.response.data.products) {
@@ -342,7 +342,7 @@ export class ProductTypeAPI implements IProductTypeAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductTypeNotFound();
       }
       throw e;
@@ -356,7 +356,7 @@ export class ProductTypeAPI implements IProductTypeAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductTypeNotFound();
       }
       throw e;
@@ -373,7 +373,7 @@ export class ProductTypeAPI implements IProductTypeAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductTypeNotFound();
       }
       throw e;

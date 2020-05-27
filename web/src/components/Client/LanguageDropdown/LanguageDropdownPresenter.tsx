@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { PopperProps } from 'react-popper';
 
 import { TriggerClickProps as PopoverTriggerProps } from 'src/components/client-ui/Popover/Popover';
 import { IIntlService } from 'src/services/IntlService';
@@ -17,6 +18,7 @@ export interface IViewProps {
   TriggerComponent?: React.ComponentType<PopoverTriggerProps>;
   className?: string;
   openOnHover?: boolean;
+  placement?: PopperProps['placement'];
 }
 
 export const LanguageDropdownPresenter = ({

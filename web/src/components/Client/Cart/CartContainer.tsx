@@ -9,7 +9,7 @@ export const CartContainer = () => {
   const {
     dependencies: {
       storages: { cart: cartStorage },
-      services: { product: productService, order: orderService },
+      services: { product: productService, order: orderService, promoCode: promoCodeService },
     },
   } = useDependencies();
   const { userState } = useUserState();
@@ -20,6 +20,7 @@ export const CartContainer = () => {
       storage={cartStorage}
       productService={productService}
       orderService={orderService}
+      promoCodeService={promoCodeService}
       View={CartView}
     />
   );

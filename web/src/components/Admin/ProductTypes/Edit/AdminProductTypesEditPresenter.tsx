@@ -112,7 +112,7 @@ export const AdminProductTypesEditPresenter: React.FC<IProps> = ({
       try {
         setLoading(true);
 
-        Promise.all([getCategories(), getFeatureTypes()]);
+        await Promise.all([getCategories(), getFeatureTypes()]);
 
         const productType = await service.getOneRawIntl(productTypeId);
         if (productType) {

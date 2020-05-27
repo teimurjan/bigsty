@@ -1,11 +1,11 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, orm
 from sqlalchemy.sql.expression import select
 
-from src.models.base import BaseModel
+from src.models.base import NonDeletableModel
 from src.models.product import Product
 
 
-class ProductType(BaseModel):
+class ProductType(NonDeletableModel):
     __tablename__ = 'product_type'
 
     names = orm.relationship(

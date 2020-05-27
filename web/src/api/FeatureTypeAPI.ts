@@ -100,7 +100,7 @@ export class FeatureTypeAPI implements IFeatureTypeAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.FeatureTypeNotFound();
       }
       throw e;
@@ -129,7 +129,7 @@ export class FeatureTypeAPI implements IFeatureTypeAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.FeatureTypeNotFound();
       }
       throw e;
@@ -143,7 +143,7 @@ export class FeatureTypeAPI implements IFeatureTypeAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.FeatureTypeNotFound();
       }
       throw e;
@@ -160,7 +160,7 @@ export class FeatureTypeAPI implements IFeatureTypeAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.FeatureTypeNotFound();
       }
       throw e;

@@ -16,18 +16,20 @@ export interface IProps {
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   value?: string;
   disabled?: boolean;
   autoFocus?: boolean;
   mask?: string;
   containerRef?: React.Ref<HTMLDivElement>;
+  append?: React.ReactNode;
 }
 
 const VERTICAL_PADDING_PX = 7.5;
 const HORIZONTAL_PADDING_PX = 2.5;
 
 export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
-  ({ containerRef, className, error, placeholder, onFocus, autoFocus, onBlur, mask = '', ...props }, ref) => {
+  ({ containerRef, className, error, placeholder, onFocus, autoFocus, onBlur, mask = '', append, ...props }, ref) => {
     const theme = useTheme<ClientUITheme>();
     const { value: isFocused, setNegative: blur, setPositive: focus } = useBoolean();
 
@@ -131,6 +133,7 @@ export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
           >
             {placeholder}
           </span>
+          {append}
         </div>
         <HelpText
           color="danger"
@@ -146,6 +149,7 @@ export const UnderlinedInput = React.forwardRef<HTMLInputElement, IProps>(
             }
           `}
         >
+          {/* Show debounced error till the help text is hidden */}
           {error ? error : debouncedError}
         </HelpText>
       </div>

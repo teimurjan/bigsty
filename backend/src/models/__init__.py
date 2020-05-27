@@ -19,3 +19,4 @@ from src.models.banner.link_text import BannerLinkText
 from src.models.signup import Signup
 from src.models.order import Order
 from src.models.order.order_item import OrderItem
+from src.models.promo_code import PromoCode

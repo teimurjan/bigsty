@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as yup from 'yup';
 
 import { IProductListResponseItem } from 'src/api/ProductAPI';
+import { IPromoCodeDetailResponseItem } from 'src/api/PromoCodeAPI';
+import { getErrorMessageID } from 'src/components/Admin/Orders/Edit/AdminOrdersEditPresenter';
 import * as schemaValidator from 'src/components/SchemaValidator';
 import { getUserPropertySafe } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
@@ -10,6 +12,7 @@ import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useMousetrap } from 'src/hooks/useMousetrap';
 import { IOrderService } from 'src/services/OrderService';
 import { IProductService } from 'src/services/ProductService';
+import { IPromoCodeService } from 'src/services/PromoCodeService';
 import { IContextValue as UserStateContextValue } from 'src/state/UserState';
 import { ICartStorage } from 'src/storage/CartStorage';
 import { agregateOrderedMapToArray } from 'src/utils/agregate';
@@ -20,6 +23,7 @@ export interface IProps extends UserStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   productService: IProductService;
   orderService: IOrderService;
+  promoCodeService: IPromoCodeService;
   storage: ICartStorage;
 }
 
@@ -41,6 +45,8 @@ export interface IViewProps {
   validator: schemaValidator.ISchemaValidator;
   initialValues: Partial<IFormValues>;
   onSubmit: (values: IFormValues) => Promise<void>;
+  promoCode?: IPromoCodeDetailResponseItem;
+  onPromoCodeApply: (newPromoCode: string) => void;
 }
 
 const validator = new schemaValidator.SchemaValidator(
@@ -53,7 +59,6 @@ const validator = new schemaValidator.SchemaValidator(
       .string()
       .required('common.errors.field.empty')
       .matches(PHONE_REGEX, 'common.errors.invalidPhone'),
-
     address: yup
       .string()
       .test('isTrimmed', 'common.errors.notTrimmed', isTrimmed)
@@ -72,12 +77,14 @@ export const CartPresenter: React.FC<IProps> = ({
   productService,
   orderService,
   storage,
+  promoCodeService,
   userState: { user },
 }) => {
   const { value: isOpen, setPositive: open, setNegative: close, toggle } = useBoolean();
 
   const [step, setStep] = React.useState(0);
   const [isLoading, setLoading] = React.useState(true);
+  const [promoCode, setPromoCode] = React.useState<IPromoCodeDetailResponseItem | undefined>(undefined);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [products, setProducts] = React.useState<{ [key: number]: IProductListResponseItem }>({});
   const [productsOrder, setProductsOrder] = React.useState<number[]>([]);
@@ -145,23 +152,40 @@ export const CartPresenter: React.FC<IProps> = ({
       }));
 
       try {
+        setError(undefined);
         await orderService.create({
           items: itemsToSubmit,
           user_name: name,
           user_phone_number: phone,
           user_address: address,
+          promo_code: promoCode?.value,
         });
         goToNextStep();
         storage.clear();
       } catch (e) {
-        setError('errors.common');
+        setError(getErrorMessageID(e));
       }
     },
-    [goToNextStep, orderService, storage],
+    [goToNextStep, orderService, storage, promoCode],
   );
 
   const totalCartItemsCount = storage.getItems().reduce((acc, item) => acc + (item.count || 0), 0);
   const { value: lazyTotalCartItemsCount } = useLazyInitialization(totalCartItemsCount, 0);
+
+  const onPromoCodeApply: IViewProps['onPromoCodeApply'] = React.useCallback(
+    async value => {
+      setError(undefined);
+      if (value.length > 0) {
+        const promoCode = await promoCodeService.getByValue(value);
+        if (promoCode) {
+          setPromoCode(promoCode);
+        } else {
+          setError('Cart.invalidPromoCode');
+        }
+      }
+    },
+    [promoCodeService],
+  );
 
   return (
     <View
@@ -187,6 +211,8 @@ export const CartPresenter: React.FC<IProps> = ({
       }}
       cartItemsCount={lazyTotalCartItemsCount}
       onSubmit={onSubmit}
+      promoCode={promoCode}
+      onPromoCodeApply={onPromoCodeApply}
     />
   );
 };

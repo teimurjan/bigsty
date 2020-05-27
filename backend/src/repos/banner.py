@@ -1,11 +1,9 @@
-from sqlalchemy.orm import joinedload
-
 from src.storage.base import Storage
 from src.models import Banner, BannerText, BannerLinkText
-from src.repos.base import IntlRepo, with_session
+from src.repos.base import Repo, with_session, set_intl_texts
 
 
-class BannerRepo(IntlRepo):
+class BannerRepo(Repo):
     def __init__(self, db_conn, file_storage: Storage):
         super().__init__(db_conn, Banner)
         self.__file_storage = file_storage
@@ -26,8 +24,8 @@ class BannerRepo(IntlRepo):
     ):
         banner = Banner()
 
-        self._set_intl_texts(texts, banner, 'texts', BannerText, session=session)
-        self._set_intl_texts(link_texts, banner, 'link_texts', BannerLinkText, session=session)
+        set_intl_texts(texts, banner, 'texts', BannerText, session=session)
+        set_intl_texts(link_texts, banner, 'link_texts', BannerLinkText, session=session)
 
         banner.link = link
         banner.text_color = text_color
@@ -63,8 +61,8 @@ class BannerRepo(IntlRepo):
     ):
         banner = self.get_by_id(id_, session=session)
 
-        self._set_intl_texts(texts, banner, 'texts', BannerText, session=session)
-        self._set_intl_texts(link_texts, banner, 'link_texts', BannerLinkText, session=session)
+        set_intl_texts(texts, banner, 'texts', BannerText, session=session)
+        set_intl_texts(link_texts, banner, 'link_texts', BannerLinkText, session=session)
 
         banner.link = link
         banner.text_color = text_color

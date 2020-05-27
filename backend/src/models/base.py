@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, func, DateTime
+from sqlalchemy import Column, String, Integer, func, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -14,3 +14,8 @@ class BaseModel(Base):
         default=func.now(),
         onupdate=func.now()
     )
+
+class NonDeletableModel(BaseModel):
+    __abstract__ = True
+
+    is_deleted = Column(Boolean, nullable=False, default=False)

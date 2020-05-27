@@ -32,6 +32,7 @@ declare interface ClientUITheme {
   primaryColor: string;
   textOnPrimaryColor: string;
   dangerColor: string;
+  successColor: string;
   tooltipBackgroundColor: string;
   buttonPrimaryBackgroundHoverColor: string;
   backgroundPrimaryHoverColor: string;

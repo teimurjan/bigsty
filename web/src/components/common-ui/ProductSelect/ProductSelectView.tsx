@@ -104,7 +104,9 @@ export const ProductSelectView: React.FC<IProps> = ({
   return (
     <React.Fragment>
       <Dropdown
-        css={dropdownCSS}
+        css={css`
+          ${dropdownCSS};
+        `}
         className={className}
         menuClassName={`css-${dropdownCSS.name}`}
         trigger={({ open }) => (

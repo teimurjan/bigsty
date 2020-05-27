@@ -25,6 +25,10 @@ export interface IOrderListResponseItem {
     };
   }>;
   status: 'idle' | 'completed' | 'approved' | 'rejected';
+  promo_code: {
+    id: number;
+    value: string;
+  }
 }
 
 export interface IOrderListResponseData {
@@ -45,6 +49,7 @@ export interface IOrderCreatePayload {
     product_id: number;
     quantity: number;
   }>;
+  promo_code?: string;
 }
 
 export interface IOrderEditPayload {
@@ -59,6 +64,7 @@ export interface IOrderEditPayload {
     | number
   >;
   status: string;
+  promo_code?: string;
 }
 
 export interface IOrderAPI {
@@ -74,6 +80,12 @@ export const errors = {
   OrderNotFound: class extends Error {
     constructor() {
       super('Order type not found');
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
+  PromoCodeInvalid: class extends Error {
+    constructor() {
+      super('Promo code invalid');
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
@@ -106,6 +118,9 @@ export class OrderAPI implements IOrderAPI {
       });
       return response.data;
     } catch (e) {
+      if (e.response.data.promo_code) {
+        throw new errors.PromoCodeInvalid();
+      }
       throw e;
     }
   }
@@ -117,8 +132,11 @@ export class OrderAPI implements IOrderAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.OrderNotFound();
+      }
+      if (e.response.data.promo_code) {
+        throw new errors.PromoCodeInvalid();
       }
       throw e;
     }
@@ -131,7 +149,7 @@ export class OrderAPI implements IOrderAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.OrderNotFound();
       }
       throw e;
@@ -145,7 +163,7 @@ export class OrderAPI implements IOrderAPI {
       });
       return {};
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.OrderNotFound();
       }
       throw e;
@@ -159,7 +177,7 @@ export class OrderAPI implements IOrderAPI {
       });
       return {};
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.OrderNotFound();
       }
       throw e;

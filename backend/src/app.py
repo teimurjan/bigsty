@@ -24,6 +24,7 @@ from src.repos.language import LanguageRepo
 from src.repos.order import OrderRepo
 from src.repos.product import ProductRepo
 from src.repos.product_type import ProductTypeRepo
+from src.repos.promo_code import PromoCodeRepo
 from src.repos.signup import SignupRepo
 from src.repos.user import UserRepo
 from src.serializers.banner import BannerSerializer
@@ -34,6 +35,7 @@ from src.serializers.language import LanguageSerializer
 from src.serializers.order import OrderSerializer
 from src.serializers.product import ProductSerializer
 from src.serializers.product_type import ProductTypeSerializer
+from src.serializers.promo_code import PromoCodeSerializer
 from src.services.banner import BannerService
 from src.services.category import CategoryService
 from src.services.feature_type import FeatureTypeService
@@ -42,6 +44,7 @@ from src.services.language import LanguageService
 from src.services.order import OrderService
 from src.services.product import FeatureValuesPolicy, ProductService
 from src.services.product_type import ProductTypeService
+from src.services.promo_code import PromoCodeService
 from src.services.signup import SignupService
 from src.services.user import UserService
 from src.storage.aws_storage import AWSStorage
@@ -70,6 +73,10 @@ from src.validation_rules.product_type.create import \
     CREATE_PRODUCT_TYPE_VALIDATION_RULES
 from src.validation_rules.product_type.update import \
     UPDATE_PRODUCT_TYPE_VALIDATION_RULES
+from src.validation_rules.promo_code.create import \
+    CREATE_PROMO_CODE_VALIDATION_RULES
+from src.validation_rules.promo_code.update import \
+    UPDATE_PROMO_CODE_VALIDATION_RULES
 from src.validation_rules.refresh_token import REFRESH_TOKEN_VALIDATION_RULES
 from src.validation_rules.registration import REGISTRATION_VALIDATION_RULES
 from src.views.authentication import AuthenticationView
@@ -93,6 +100,9 @@ from src.views.product_type.by_category import ProductTypeByCategoryView
 from src.views.product_type.detail import ProductTypeDetailView
 from src.views.product_type.list import ProductTypeListView
 from src.views.product_type.slug import ProductTypeSlugView
+from src.views.promo_code.detail import PromoCodeDetailView
+from src.views.promo_code.list import PromoCodeListView
+from src.views.promo_code.value import PromoCodeValueView
 from src.views.refresh_token import RefreshTokenView
 from src.views.registration import RegistrationView
 from src.views.search import SearchView
@@ -137,6 +147,7 @@ class App:
         self.__banner_repo = BannerRepo(self.__db_conn, self.__file_storage)
         self.__signup_repo = SignupRepo(self.__db_conn)
         self.__order_repo = OrderRepo(self.__db_conn)
+        self.__promo_code_repo = PromoCodeRepo(self.__db_conn)
 
     def __init_services(self):
         self.__category_service = CategoryService(
@@ -159,7 +170,9 @@ class App:
         self.__signup_service = SignupService(
             self.__signup_repo, self.__user_repo, self.mail)
         self.__order_service = OrderService(
-            self.__order_repo, self.__product_repo, self.mail)
+            self.__order_repo, self.__product_repo, self.__promo_code_repo, self.mail)
+        self.__promo_code_service = PromoCodeService(
+            self.__promo_code_repo, self.__product_repo)
 
     def __init_search(self):
         if not self.__es.indices.exists(index="category"):
@@ -433,6 +446,37 @@ class App:
                 middlewares=middlewares
             ),
             methods=['GET', 'POST']
+        )
+        self.flask_app.add_url_rule(
+            '/api/promo_codes/<int:promo_code_id>',
+            view_func=AbstractView.as_view(
+                'promo_code',
+                concrete_view=PromoCodeDetailView(Validator(
+                    UPDATE_PROMO_CODE_VALIDATION_RULES), self.__promo_code_service, PromoCodeSerializer),
+                middlewares=middlewares
+            ),
+            methods=['GET', 'PUT', 'DELETE']
+        )
+        self.flask_app.add_url_rule(
+            '/api/promo_codes',
+            view_func=AbstractView.as_view(
+                'promo_codes',
+                concrete_view=PromoCodeListView(Validator(
+                    CREATE_PROMO_CODE_VALIDATION_RULES), self.__promo_code_service, PromoCodeSerializer),
+                middlewares=middlewares
+            ),
+            methods=['GET', 'POST']
+        )
+        self.flask_app.add_url_rule(
+            '/api/promo_codes/<path:value>',
+            view_func=AbstractView.as_view(
+                'promo_code_value',
+                concrete_view=PromoCodeValueView(
+                    self.__promo_code_service, PromoCodeSerializer
+                ),
+                middlewares=middlewares
+            ),
+            methods=['GET']
         )
 
     def __handle_media_request(self, path):

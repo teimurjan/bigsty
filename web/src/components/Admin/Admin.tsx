@@ -26,6 +26,7 @@ import { AdminProducts } from 'src/components/Admin/Products/AdminProducts';
 import { NewProductButton } from 'src/components/Admin/Products/List/AdminProductsListView';
 import { AdminProductTypes } from 'src/components/Admin/ProductTypes/AdminProductTypes';
 import { NewProductTypeButton } from 'src/components/Admin/ProductTypes/List/AdminProductTypesListView';
+import { AdminPromoCodes } from 'src/components/Admin/PromoCodes/AdminPromoCodes';
 import { Drawer } from 'src/components/client-ui/Drawer/Drawer';
 import { isUserAdmin, isUserNotSetYet } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
@@ -37,6 +38,7 @@ import { AdminFeatureValuesStateProvider } from 'src/state/AdminFeatureValuesSta
 import { AdminOrdersStateProvider } from 'src/state/AdminOrdersState';
 import { AdminProductsStateProvider } from 'src/state/AdminProductsState';
 import { AdminProductTypesStateProvider } from 'src/state/AdminProductTypesState';
+import { AdminPromoCodesStateProvider } from 'src/state/AdminPromoCodesState';
 import { useUserState } from 'src/state/UserState';
 import { mediaQueries } from 'src/styles/media';
 
@@ -204,13 +206,15 @@ export const Admin = () => {
     userState: { user },
   } = useUserState();
 
+  const shouldShowAdmin = React.useMemo(() => !isUserNotSetYet(user) && isUserAdmin(user), [user]);
+  const shouldRedirect = React.useMemo(() => !isUserNotSetYet(user) && !isUserAdmin(user), [user]);
   React.useEffect(() => {
-    if (!isUserNotSetYet(user) && !isUserAdmin(user)) {
+    if (shouldRedirect) {
       router.push('/');
     }
-  }, [router, user]);
+  }, [router, shouldRedirect]);
 
-  return isUserNotSetYet(user) ? null : (
+  return shouldShowAdmin ? (
     <AdminBannersStateProvider>
       <AdminCategoriesStateProvider>
         <AdminFeatureTypesStateProvider>
@@ -218,34 +222,37 @@ export const Admin = () => {
             <AdminProductTypesStateProvider>
               <AdminProductsStateProvider>
                 <AdminOrdersStateProvider>
-                  <div
-                    css={css`
-                      align-items: flex-start;
-                      display: flex;
-                    `}
-                  >
-                    <Menu />
+                  <AdminPromoCodesStateProvider>
                     <div
                       css={css`
-                        width: calc(100% - 350px);
-
-                        @media ${mediaQueries.maxWidth768} {
-                          width: 100%;
-                        }
+                        align-items: flex-start;
+                        display: flex;
                       `}
                     >
-                      <Switch>
-                        <Route path="/admin/categories" component={AdminCategories} />
-                        <Route path="/admin/featureTypes" component={AdminFeatureTypes} />
-                        <Route path="/admin/featureValues" component={AdminFeatureValues} />
-                        <Route path="/admin/productTypes" component={AdminProductTypes} />
-                        <Route path="/admin/products" component={AdminProducts} />
-                        <Route path="/admin/banners" component={AdminBanners} />
-                        <Route path="/admin/orders" component={AdminOrders} />
-                        <Route component={AdminHome} />
-                      </Switch>
+                      <Menu />
+                      <div
+                        css={css`
+                          width: calc(100% - 350px);
+
+                          @media ${mediaQueries.maxWidth768} {
+                            width: 100%;
+                          }
+                        `}
+                      >
+                        <Switch>
+                          <Route path="/admin/categories" component={AdminCategories} />
+                          <Route path="/admin/featureTypes" component={AdminFeatureTypes} />
+                          <Route path="/admin/featureValues" component={AdminFeatureValues} />
+                          <Route path="/admin/productTypes" component={AdminProductTypes} />
+                          <Route path="/admin/products" component={AdminProducts} />
+                          <Route path="/admin/banners" component={AdminBanners} />
+                          <Route path="/admin/orders" component={AdminOrders} />
+                          <Route path="/admin/promoCodes" component={AdminPromoCodes} />
+                          <Route component={AdminHome} />
+                        </Switch>
+                      </div>
                     </div>
-                  </div>
+                  </AdminPromoCodesStateProvider>
                 </AdminOrdersStateProvider>
               </AdminProductsStateProvider>
             </AdminProductTypesStateProvider>
@@ -253,5 +260,5 @@ export const Admin = () => {
         </AdminFeatureTypesStateProvider>
       </AdminCategoriesStateProvider>
     </AdminBannersStateProvider>
-  );
+  ) : null;
 };

@@ -121,7 +121,7 @@ export class BannerAPI implements IBannerAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.BannerNotFound();
       }
 
@@ -136,7 +136,7 @@ export class BannerAPI implements IBannerAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.BannerNotFound();
       }
       throw e;
@@ -171,7 +171,7 @@ export class BannerAPI implements IBannerAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.BannerNotFound();
       }
       throw e;
@@ -188,7 +188,7 @@ export class BannerAPI implements IBannerAPI {
       );
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.BannerNotFound();
       }
       throw e;

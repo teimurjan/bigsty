@@ -9,6 +9,12 @@ export const errors = {
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
+  PromoCodeInvalid: class extends Error {
+    constructor() {
+      super();
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
 };
 
 export interface IOrderService {
@@ -39,7 +45,14 @@ export class OrderService implements IOrderService {
   };
 
   public create: IOrderService['create'] = async (payload: orderAPI.IOrderCreatePayload) => {
-    return (await this.API.create(payload)).data;
+    try {
+      return (await this.API.create(payload)).data;
+    } catch (e) {
+      if (e instanceof orderAPI.errors.PromoCodeInvalid) {
+        throw new errors.PromoCodeInvalid();
+      }
+      throw e;
+    }
   };
 
   public edit: IOrderService['edit'] = async (id, payload: orderAPI.IOrderEditPayload) => {
@@ -48,6 +61,9 @@ export class OrderService implements IOrderService {
     } catch (e) {
       if (e instanceof orderAPI.errors.OrderNotFound) {
         throw new errors.OrderNotExists();
+      }
+      if (e instanceof orderAPI.errors.PromoCodeInvalid) {
+        throw new errors.PromoCodeInvalid();
       }
       throw e;
     }

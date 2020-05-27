@@ -12,4 +12,5 @@ UPDATE_ORDER_VALIDATION_RULES = {
     'user_phone_number': {'type': 'string', 'required': True, 'nullable': False},
     'user_address': {'type': 'string', 'required': True, 'nullable': False},
     'status': {'type': 'string', 'allowed': ['idle', 'rejected', 'approved', 'completed'], 'required': True, 'nullable': False},
+    'promo_code': {'type': 'string', 'required': False},
 }

@@ -150,7 +150,7 @@ export class ProductAPI implements IProductAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductNotFound();
       }
       throw e;
@@ -185,7 +185,7 @@ export class ProductAPI implements IProductAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductNotFound();
       }
       throw e;
@@ -199,7 +199,7 @@ export class ProductAPI implements IProductAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductNotFound();
       }
       throw e;
@@ -213,7 +213,7 @@ export class ProductAPI implements IProductAPI {
       });
       return response.data;
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response && e.response.status === 404) {
         throw new errors.ProductNotFound();
       }
       throw e;

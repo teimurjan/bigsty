@@ -1,11 +1,11 @@
 from sqlalchemy.orm.query import aliased
 
 from src.models import Category, CategoryName, FeatureType
-from src.repos.base import IntlRepo, with_session
+from src.repos.base import Repo, set_intl_texts, with_session
 from src.utils.slug import generate_slug
 
 
-class CategoryRepo(IntlRepo):
+class CategoryRepo(Repo):
     def __init__(self, db_conn):
         super().__init__(db_conn, Category)
 
@@ -14,7 +14,7 @@ class CategoryRepo(IntlRepo):
         category = Category()
         category.parent_category_id = parent_category_id
 
-        self._set_intl_texts(names, category, 'names', CategoryName, session=session)
+        set_intl_texts(names, category, 'names', CategoryName, session=session)
         category.slug = self.get_unique_slug(category, session=session)
 
         session.add(category)
@@ -28,7 +28,7 @@ class CategoryRepo(IntlRepo):
         category = self.get_by_id(id_, session=session)
         category.parent_category_id = parent_category_id
 
-        self._set_intl_texts(names, category, 'names', CategoryName, session=session)
+        set_intl_texts(names, category, 'names', CategoryName, session=session)
         category.slug = self.get_unique_slug(category, session=session)
 
         session.flush()
@@ -37,15 +37,21 @@ class CategoryRepo(IntlRepo):
 
     @with_session
     def get_children(self, id_, session):
-        category_recursive_query = session.query(Category).filter(
-            Category.id == id_).cte(recursive=True)
+        category_recursive_query = (
+            session
+            .query(Category)
+            .filter(Category.id == id_)
+            .cte(recursive=True)
+        )
 
         category_alias = aliased(category_recursive_query, name="parent")
         children_alias = aliased(Category, name='children')
 
         final_query = category_recursive_query.union_all(
-            session.query(children_alias).filter(
-                children_alias.parent_category_id == category_alias.c.id)
+            session.query(children_alias)
+            .filter(
+                children_alias.parent_category_id == category_alias.c.id
+            )
         )
 
         return session.query(final_query).all()
@@ -69,7 +75,6 @@ class CategoryRepo(IntlRepo):
             slug = generate_slug(category, with_hash=True)
 
         return slug
-
 
     class DoesNotExist(Exception):
         pass

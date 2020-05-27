@@ -20,11 +20,7 @@ const NoProductTypesAvialable = injectIntl(({ intl }) => (
     description={intl.formatMessage({
       id: 'AdminProductTypes.notFound.description',
     })}
-    CTA={
-      <ReactRouterLinkButton to="/admin/productTypes/new" color="is-primary">
-        {intl.formatMessage({ id: 'AdminProductTypes.notFound.cta' })}
-      </ReactRouterLinkButton>
-    }
+    CTA={<NewProductTypeButton />}
   />
 ));
 

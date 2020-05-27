@@ -1,8 +1,8 @@
-from src.repos.base import IntlRepo, with_session
+from src.repos.base import Repo, set_intl_texts, with_session
 from src.models import FeatureType, FeatureTypeName, Category
 
 
-class FeatureTypeRepo(IntlRepo):
+class FeatureTypeRepo(Repo):
     def __init__(self, db_conn):
         super().__init__(db_conn, FeatureType)
 
@@ -10,7 +10,8 @@ class FeatureTypeRepo(IntlRepo):
     def add_feature_type(self, names, session):
         feature_type = FeatureType()
 
-        self._set_intl_texts(names, feature_type, 'names', FeatureTypeName, session=session)
+        set_intl_texts(names, feature_type, 'names',
+                             FeatureTypeName, session=session)
 
         session.add(feature_type)
 
@@ -24,7 +25,7 @@ class FeatureTypeRepo(IntlRepo):
     def update_feature_type(self, id_, names, session):
         feature_type = self.get_by_id(id_, session=session)
 
-        self._set_intl_texts(names, feature_type, 'names', FeatureTypeName, session=session)
+        set_intl_texts(names, feature_type, 'names', FeatureTypeName, session=session)
 
         return feature_type
 

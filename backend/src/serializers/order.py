@@ -14,6 +14,7 @@ class OrderSerializer(IntlSerializer):
         self._user_phone_number = order.user_phone_number
         self._user_address = order.user_address
         self._status = order.status
+        self._promo_code = order.promo_code
         self._init_relation_safely('_items', order, 'items')
         self._created_on = order.created_on
 
@@ -26,6 +27,7 @@ class OrderSerializer(IntlSerializer):
             'user_phone_number': self._user_phone_number,
             'user_address': self._user_address,
             'status': self._status,
+            'promo_code': self._promo_code.value if self._promo_code else None,
             'created_on': self._created_on,
         })
 

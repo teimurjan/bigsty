@@ -1,10 +1,10 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
-from src.models.base import BaseModel
+from src.models.base import NonDeletableModel
 
 
-class User(BaseModel):
+class User(NonDeletableModel):
     __tablename__ = 'user'
 
     email = Column(String(80), unique=True, nullable=False)

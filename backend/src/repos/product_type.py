@@ -5,13 +5,13 @@ from sqlalchemy import desc, orm, asc
 from src.models import (ProductType, ProductTypeDescription, ProductTypeName,
                         ProductTypeShortDescription)
 from src.models.product import Product
-from src.repos.base import IntlRepo, with_session
+from src.repos.base import set_intl_texts, NonDeletableRepo, with_session
 from src.storage.base import Storage
 from src.utils.slug import generate_slug
 from src.utils.sorting import ProductTypeSortingType
 
 
-class ProductTypeRepo(IntlRepo):
+class ProductTypeRepo(NonDeletableRepo):
     def __init__(self, db_conn, file_storage: Storage):
         super().__init__(db_conn, ProductType)
         self.__file_storage = file_storage
@@ -29,13 +29,13 @@ class ProductTypeRepo(IntlRepo):
     ):
         product_type = ProductType()
 
-        self._set_intl_texts(names, product_type, 'names',
-                             ProductTypeName, session=session)
+        set_intl_texts(names, product_type, 'names',
+                       ProductTypeName, session=session)
         product_type.slug = self.get_unique_slug(product_type, session=session)
-        self._set_intl_texts(descriptions, product_type,
-                             'descriptions', ProductTypeDescription, session=session)
-        self._set_intl_texts(short_descriptions, product_type,
-                             'short_descriptions', ProductTypeShortDescription, session=session)
+        set_intl_texts(descriptions, product_type,
+                       'descriptions', ProductTypeDescription, session=session)
+        set_intl_texts(short_descriptions, product_type,
+                       'short_descriptions', ProductTypeShortDescription, session=session)
 
         for feature_type in feature_types:
             product_type.feature_types.append(feature_type)
@@ -65,12 +65,12 @@ class ProductTypeRepo(IntlRepo):
     ):
         product_type = self.get_by_id(id_, session=session)
 
-        self._set_intl_texts(names, product_type, 'names',
-                             ProductTypeName, session=session)
-        self._set_intl_texts(
+        set_intl_texts(names, product_type, 'names',
+                       ProductTypeName, session=session)
+        set_intl_texts(
             descriptions, product_type, 'descriptions', ProductTypeDescription, session=session)
-        self._set_intl_texts(short_descriptions, product_type,
-                             'short_descriptions', ProductTypeShortDescription, session=session)
+        set_intl_texts(short_descriptions, product_type,
+                       'short_descriptions', ProductTypeShortDescription, session=session)
 
         product_type.feature_types = feature_types
         product_type.slug = self.get_unique_slug(product_type, session=session)
@@ -93,13 +93,17 @@ class ProductTypeRepo(IntlRepo):
         join_products: bool = False,
         session=None,
     ):
-        q = session.query(ProductType)
-        
+        q = self.get_non_deleted_query(session=session)
+
         if category_ids is not None:
             q = q.filter(ProductType.category_id.in_(category_ids))
-        
+
         if join_products:
-            q = q.options(orm.joinedload(ProductType.products)).outerjoin(ProductType.products)
+            q = (
+                q
+                .options(orm.joinedload(ProductType.products))
+                .outerjoin(ProductType.products)
+            )
 
         q = q.order_by(self._get_order_by_from_sorting_type(sorting_type))
 
