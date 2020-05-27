@@ -86,7 +86,7 @@ export const AdminPromoCodesEditPresenter: React.FC<IProps> = ({
     },
     [service, getPromoCodes, close, promoCodeId],
   );
-    console.log(promoCode);
+
   return (
     <View
       isOpen={true}

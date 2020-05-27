@@ -95,7 +95,6 @@ const makeResponseErrorInterceptor = (
         tokensRefreshStatusWV.set(Status.Busy);
         await authService.refreshTokens();
       } catch (e) {
-        console.log(e);
         authService.logOut();
       } finally {
         tokensRefreshStatusWV.set(Status.Idle);
