@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import classNames from 'classnames';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
@@ -72,6 +71,10 @@ export const Filter = ({ className, title, children }: IProps) => {
         css={css`
           background: ${theme.backgroundPrimaryColor};
           padding: 10px 20px;
+
+          & ~ span > .fa-times {
+            color: ${theme.textOnPrimaryColor};
+          }
         `}
         backdrop
         isOpen={isOpen}
@@ -118,7 +121,7 @@ const FilterItem = ({ children, active, onClick }: IFilterItemProps) => {
   return (
     <div
       onClick={onClick}
-      className={classNames({ active })}
+      data-active={active}
       css={css`
         padding-left: 40px;
         position: relative;
@@ -154,7 +157,7 @@ const FilterItem = ({ children, active, onClick }: IFilterItemProps) => {
           opacity: 0;
         }
 
-        &.active::after {
+        &[data-active='true']::after {
           opacity: 1;
         }
       `}

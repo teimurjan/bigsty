@@ -238,7 +238,7 @@ export const Drawer = ({
                   position: fixed;
                   ${modalCloseCSS};
 
-                  color: ${fromSide === 'top' || fromSide === 'right' ? theme.textColor : theme.textOnPrimaryColor};
+                  color: ${theme.textColor};
                 `}
                 onClick={close}
               />

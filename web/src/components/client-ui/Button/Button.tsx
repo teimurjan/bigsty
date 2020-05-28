@@ -45,6 +45,9 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
       <button
         ref={ref}
         onClick={onClick}
+        data-active={active}
+        disabled={loading}
+        data-loading={loading}
         css={css`
           transition: all 200ms;
           font-size: 16px;
@@ -53,6 +56,10 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
           cursor: pointer;
           font-weight: 500;
           outline: none;
+
+          &[data-loading='true'] {
+            cursor: wait;
+          }
 
           @media ${mediaQueries.maxWidth768} {
             width: 160px;
@@ -66,7 +73,7 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             background: ${theme.buttonDefaultBackgroundColor};
 
             &:hover,
-            &.active {
+            &[data-active='true'] {
               color: ${theme.buttonDefaultHoverColor};
               background: ${theme.buttonDefaultBackgroundHoverColor};
             }
@@ -78,7 +85,7 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             background: ${theme.buttonDarkBackgroundColor};
 
             &:hover,
-            &.active {
+            &[data-active='true'] {
               color: ${theme.buttonDarkHoverColor};
               background: ${theme.buttonDarkBackgroundHoverColor};
             }
@@ -90,7 +97,7 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
             background: ${theme.primaryColor};
 
             &:hover,
-            &.active {
+            &[data-active='true'] {
               background: ${theme.buttonPrimaryBackgroundHoverColor};
             }
           }
@@ -134,9 +141,7 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
           }
         `}
         className={classNames(className, color, size, {
-          loading,
           circled,
-          active,
           squared,
         })}
         onMouseEnter={onMouseEnter}

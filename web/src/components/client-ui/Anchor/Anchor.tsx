@@ -57,8 +57,7 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
     );
 
     const isTouch = useIsTouch();
-
-    const { value: lazyClassNames } = useLazyInitialization(classNames({ 'no-hover': noHoverOnTouch && isTouch }), '');
+    const { value: lazyDataAttributes } = useLazyInitialization({ 'data-ignore-hover': noHoverOnTouch && isTouch }, {});
 
     const hoverColor = primary ? theme.primaryColor : theme.anchorColor;
 
@@ -67,10 +66,12 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
         ref={ref}
         rel={rel}
         target={target}
-        className={classNames(className, { active, thin }, lazyClassNames)}
+        className={classNames(className, { thin })}
         href={href || '#'}
         onClick={modifiedOnClick}
         onMouseEnter={onMouseEnter}
+        data-active={active}
+        {...lazyDataAttributes}
         css={css`
           color: ${theme.anchorColor};
           transition: color 300ms;
@@ -94,12 +95,12 @@ export const Anchor = React.forwardRef<HTMLAnchorElement, IProps>(
           }
 
           .anchor:hover > &::before,
-          &.active::before {
+          &[data-active='true']::before {
             transform: translateX(0);
           }
 
-          .anchor:hover > &.no-hover::before,
-          &.active.no-hover::before {
+          .anchor:hover > &[data-ignore-hover='true']::before,
+          &[data-active='true'][data-ignore-hover='true']::before {
             transform: translateX(-100%);
           }
 
