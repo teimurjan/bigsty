@@ -43,6 +43,15 @@ export const UserDropdownView = ({ user, onLogoutClick }: IProps) => {
         {intl.formatMessage({ id: 'Header.signUp' })}
       </Anchor>,
     );
+  } else {
+    items.push(
+      <Anchor key="orders" href="/profile/orders" thin>
+        {intl.formatMessage({ id: 'Header.orders' })}
+      </Anchor>,
+      <Anchor key="logOut" onClick={onLogoutClick} thin>
+        {intl.formatMessage({ id: 'Header.logOut' })}
+      </Anchor>,
+    );
   }
 
   items.push(
@@ -50,14 +59,6 @@ export const UserDropdownView = ({ user, onLogoutClick }: IProps) => {
       <LanguageDropdown ref={languageDropdownRef} openOnHover placement="left" />
     </Anchor>,
   );
-
-  if (isUserAuthorized(user)) {
-    items.push(
-      <Anchor key="logOut" onClick={onLogoutClick} thin>
-        {intl.formatMessage({ id: 'Header.logOut' })}
-      </Anchor>,
-    );
-  }
 
   return (
     <Popover refsToInclude={[languageDropdownRef]} TriggerComponent={Trigger} openOnHover>

@@ -32,7 +32,8 @@
   "Nav.categories.title": "Категории",
   "Header.logIn": "Войти",
   "Header.signUp": "Зарегистрироваться",
-  "Header.admin": "Панель Администратора",
+  "Header.admin": "Админка",
+  "Header.orders": "Мои заказы",
   "Header.logOut": "Выйти",
   "Pagination.next": "След.",
   "Pagination.prev": "Пред.",
@@ -268,5 +269,13 @@
   "common.apply": "Применить",
   "Cart.promoCodeApplied": "Дополнительная скидка {discount}% с промо-кодом {value}",
   "Cart.promoCodeNotApplicable": "Промо-код {value} не может быть применен к этому продукту",
-  "Cart.invalidPromoCode": "Неверный промо-код"
+  "Cart.invalidPromoCode": "Неверный промо-код",
+  "Order.orderPlaced": "Заказ оформлен",
+  "Order.status.idle": "Ожидает подтверждения ✏️",
+  "Order.status.idle.tooltip": "Ожидает подтверждения ✏️",
+  "Order.status.approved": "Подтвержден 👍",
+  "Order.status.approved.tooltip": "Ожидает подтверждения ✏️",
+  "Order.status.completed": "Доставлен ✅",
+  "Order.status.rejected": "Отменен ❌",
+  "Orders.empty": "Вы еще ничего не заказали."
 }

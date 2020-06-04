@@ -12,8 +12,20 @@ class OrderRepo(NonDeletableRepo):
         super().__init__(db_conn, Order)
 
     @with_session
-    def get_for_user(self, user_id, session):
-        return self.get_non_deleted_query(session=session).filter(Order.user_id == user_id).all()
+    def get_for_user(self, user_id, offset=None, limit=None, session=None):
+        q = (
+            self
+            .get_non_deleted_query(session=session)
+            .options(joinedload(Order.items))
+            .filter(Order.user_id == user_id)
+        )
+        return (
+            q
+            .order_by(Order.id)
+            .offset(offset)
+            .limit(limit)
+            .all()
+        ), q.count()
 
     @with_session
     def get_by_id(self, id_, session) -> Order:

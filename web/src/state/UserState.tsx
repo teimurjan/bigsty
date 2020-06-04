@@ -4,9 +4,8 @@ import * as React from 'react';
 import { useDependencies } from 'src/DI/DI';
 
 export type AuthorizedUser = {
-  id: number;
+  user_id: number;
   name: string;
-  email: string;
   group: string;
 };
 export type EmptyUser = null;

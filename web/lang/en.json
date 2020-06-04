@@ -33,6 +33,7 @@
   "Header.logIn": "Log in",
   "Header.signUp": "Sign up",
   "Header.admin": "Admin Panel",
+  "Header.orders": "My orders",
   "Header.logOut": "Log out",
   "Pagination.next": "Next",
   "Pagination.prev": "Prev",
@@ -268,5 +269,11 @@
   "common.apply": "Apply",
   "Cart.promoCodeApplied": "Extra {discount}% off with promo code {value}",
   "Cart.promoCodeNotApplicable": "Promo code {value} is not applicable to this product",
-  "Cart.invalidPromoCode": "Invalid promo code"
+  "Cart.invalidPromoCode": "Invalid promo code",
+  "Order.orderPlaced": "Order placed",
+  "Order.status.idle": "Processing ✏️",
+  "Order.status.approved": "Approved 👍",
+  "Order.status.completed": "Completed ✅",
+  "Order.status.rejected": "Canceled ❌",
+  "Orders.empty": "You have no orders yet."
 }

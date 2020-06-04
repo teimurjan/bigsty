@@ -21,6 +21,7 @@ export interface IOrderListResponseItem {
       product_type: {
         id: number;
         name: string;
+        slug: string;
       };
     };
   }>;
@@ -28,7 +29,7 @@ export interface IOrderListResponseItem {
   promo_code: {
     id: number;
     value: string;
-  }
+  };
 }
 
 export interface IOrderListResponseData {
@@ -69,6 +70,7 @@ export interface IOrderEditPayload {
 
 export interface IOrderAPI {
   getAll(): Promise<IOrderListResponseData>;
+  getForUser(userID: number): Promise<IOrderListResponseData>;
   create(payload: IOrderCreatePayload): Promise<IOrderResponseData>;
   edit(orderID: number, payload: IOrderEditPayload): Promise<IOrderResponseData>;
   getOne(orderID: number): Promise<IOrderResponseData>;
@@ -138,6 +140,17 @@ export class OrderAPI implements IOrderAPI {
       if (e.response.data.promo_code) {
         throw new errors.PromoCodeInvalid();
       }
+      throw e;
+    }
+  }
+
+  public async getForUser(userID: number) {
+    try {
+      const response = await this.client.get<IOrderListResponseData>(`/api/users/${userID}/orders`, {
+        headers: this.headersManager.getHeaders(),
+      });
+      return response.data;
+    } catch (e) {
       throw e;
     }
   }

@@ -10,10 +10,11 @@ interface IProps extends React.HTMLAttributes<HTMLSpanElement> {
   color?: 'default';
 }
 
-export const Tag: React.FC<IProps> = ({ children, className, color, ...props }) => {
+export const Tag = React.forwardRef<HTMLSpanElement, IProps>(({ children, className, color, ...props }, ref) => {
   const theme = useTheme<ClientUITheme>();
   return (
     <small
+      ref={ref}
       css={css`
         font-size: 12px;
         background: ${theme.primaryColor};
@@ -32,4 +33,4 @@ export const Tag: React.FC<IProps> = ({ children, className, color, ...props }) 
       {children}
     </small>
   );
-};
+});

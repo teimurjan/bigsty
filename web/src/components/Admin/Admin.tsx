@@ -3,7 +3,6 @@ import { css, jsx } from '@emotion/core';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTheme } from 'emotion-theming';
-import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Route, Switch } from 'react-router';
@@ -31,6 +30,7 @@ import { Drawer } from 'src/components/client-ui/Drawer/Drawer';
 import { isUserAdmin, isUserNotSetYet } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useMedia } from 'src/hooks/useMedia';
+import { useProtectedResource } from 'src/hooks/useProtectedResource';
 import { AdminBannersStateProvider } from 'src/state/AdminBannersState';
 import { AdminCategoriesStateProvider } from 'src/state/AdminCategoriesState';
 import { AdminFeatureTypesStateProvider } from 'src/state/AdminFeatureTypesState';
@@ -39,7 +39,7 @@ import { AdminOrdersStateProvider } from 'src/state/AdminOrdersState';
 import { AdminProductsStateProvider } from 'src/state/AdminProductsState';
 import { AdminProductTypesStateProvider } from 'src/state/AdminProductTypesState';
 import { AdminPromoCodesStateProvider } from 'src/state/AdminPromoCodesState';
-import { useUserState } from 'src/state/UserState';
+import { User } from 'src/state/UserState';
 import { mediaQueries } from 'src/styles/media';
 
 const arrowDivider = (
@@ -200,19 +200,11 @@ const Menu = () => {
   );
 };
 
-export const Admin = () => {
-  const router = useRouter();
-  const {
-    userState: { user },
-  } = useUserState();
+const showAdminRule = (user: User) => !isUserNotSetYet(user) && isUserAdmin(user);
+const redirectAdminRule = (user: User) => !isUserNotSetYet(user) && !isUserAdmin(user);
 
-  const shouldShowAdmin = React.useMemo(() => !isUserNotSetYet(user) && isUserAdmin(user), [user]);
-  const shouldRedirect = React.useMemo(() => !isUserNotSetYet(user) && !isUserAdmin(user), [user]);
-  React.useEffect(() => {
-    if (shouldRedirect) {
-      router.push('/');
-    }
-  }, [router, shouldRedirect]);
+export const Admin = () => {
+  const shouldShowAdmin = useProtectedResource(showAdminRule, redirectAdminRule);
 
   return shouldShowAdmin ? (
     <AdminBannersStateProvider>

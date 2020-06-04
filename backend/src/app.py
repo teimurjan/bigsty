@@ -91,6 +91,7 @@ from src.views.feature_type.list import FeatureTypeListView
 from src.views.feature_value.detail import FeatureValueDetailView
 from src.views.feature_value.list import FeatureValueListView
 from src.views.language.list import LanguageListView
+from src.views.order.by_user import OrderByUserView
 from src.views.order.detail import OrderDetailView
 from src.views.order.list import OrderListView
 from src.views.product.by_product_type import ProductByProductTypeView
@@ -443,6 +444,15 @@ class App:
                 'orders',
                 concrete_view=OrderListView(Validator(
                     CREATE_ORDER_VALIDATION_RULES), self.__order_service, OrderSerializer),
+                middlewares=middlewares
+            ),
+            methods=['GET', 'POST']
+        )
+        self.flask_app.add_url_rule(
+            '/api/users/<int:user_id>/orders',
+            view_func=AbstractView.as_view(
+                'user_orders',
+                concrete_view=OrderByUserView(self.__order_service, OrderSerializer),
                 middlewares=middlewares
             ),
             methods=['GET', 'POST']

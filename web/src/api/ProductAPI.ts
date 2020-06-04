@@ -69,6 +69,7 @@ export interface IProductForProductTypeResponseItem {
     feature_types: number[];
     id: number;
     name: string;
+    slug: string;
   };
   quantity: number;
   sku?: string;

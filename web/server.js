@@ -45,6 +45,8 @@ app.prepare().then(() => {
 
     if (pathname.startsWith('/admin')) {
       app.render(req, res, '/admin', query);
+    } else if (pathname.startsWith('/profile')) {
+      app.render(req, res, '/profile', query);
     } else {
       handle(req, res, parsedUrl);
     }

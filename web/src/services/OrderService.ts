@@ -26,6 +26,14 @@ export interface IOrderService {
     };
     result: number[];
   }>;
+  getForUser(userID: number): Promise<{
+    entities: {
+      orders: {
+        [key: string]: orderAPI.IOrderListResponseItem;
+      };
+    };
+    result: number[];
+  }>;
   create(payload: orderAPI.IOrderCreatePayload): Promise<orderAPI.IOrderListResponseItem>;
   edit(id: number, payload: orderAPI.IOrderEditPayload): Promise<orderAPI.IOrderListResponseItem>;
   delete(id: number): Promise<{}>;
@@ -40,8 +48,13 @@ export class OrderService implements IOrderService {
   }
 
   public getAll: IOrderService['getAll'] = async () => {
-    const products = await this.API.getAll();
-    return normalize(products.data, [new schema.Entity('orders')]);
+    const orders = await this.API.getAll();
+    return normalize(orders.data, [new schema.Entity('orders')]);
+  };
+
+  public getForUser: IOrderService['getForUser'] = async (userID: number) => {
+    const orders = await this.API.getForUser(userID);
+    return normalize(orders.data, [new schema.Entity('orders')]);
   };
 
   public create: IOrderService['create'] = async (payload: orderAPI.IOrderCreatePayload) => {

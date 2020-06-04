@@ -1,7 +1,7 @@
 from flask import current_app as app
 from flask import render_template
 
-from src.errors import AccessRoleError
+from src.errors import AccessRoleError, InvalidEntityFormat
 from src.mail import Mail
 from src.policies.feature_values import FeatureValuesPolicy
 from src.repos.feature_value import FeatureValueRepo
@@ -39,11 +39,12 @@ class OrderService:
                 promo_code = None
 
                 if promo_code_value:
-                    promo_code = self._promo_code_repo.get_by_value(promo_code_value.lower(), False)
+                    promo_code = self._promo_code_repo.get_by_value(
+                        promo_code_value.lower(), False)
 
                     if not promo_code.is_active:
                         raise self.PromoCodeInvalid()
-                    
+
                     if promo_code.disable_on_use:
                         promo_code.is_active = False
 
@@ -97,11 +98,12 @@ class OrderService:
                 promo_code = None
 
                 if promo_code_value:
-                    promo_code = self._promo_code_repo.get_by_value(promo_code_value.lower(), False)
+                    promo_code = self._promo_code_repo.get_by_value(
+                        promo_code_value.lower(), False)
 
                     if not promo_code.is_active:
                         raise self.PromoCodeInvalid()
-                    
+
                     if promo_code.disable_on_use:
                         promo_code.is_active = False
 
@@ -147,10 +149,10 @@ class OrderService:
     def get_all(self, offset=None, limit=None, user=None):
         return self._repo.get_all(offset=offset, limit=limit), self._repo.count_all()
 
-    def get_for_user(self, user_id, user=None):
-        if user and user.id == user_id:
-            return self._repo.get_for_user(user_id)
-        raise AccessRoleError()
+    def get_for_user(self, user_id, offset=None, limit=None, user=None):
+        if user and (user.id == user_id or user.group.name in ['admin', 'manager']):
+            return self._repo.get_for_user(user_id, offset=offset, limit=limit)
+        raise InvalidEntityFormat()
 
     @allow_roles(['admin', 'manager'])
     def get_one(self, id_, user=None):
