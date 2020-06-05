@@ -5,39 +5,51 @@ import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useIntlState } from 'src/state/IntlState';
 import { useRatesState } from 'src/state/RatesState';
 import { calculateDiscountedPrice } from 'src/utils/number';
+import { getRatesDateKey } from 'src/utils/rates';
 
 interface IPriceProps {
   price: number;
   discount?: number | number[];
+  date?: string;
+  forceLocale?: string;
 }
 
 interface IPriceRangeTextProps {
   range: IPriceProps[];
 }
 
-const useFormattedPrice = ({ price, discount }: IPriceProps) => {
+const useFormattedPrice = ({ price, discount, date, forceLocale }: IPriceProps) => {
   const {
     intlState: { locale },
   } = useIntlState();
   const {
-    ratesState: { rates },
+    ratesState: { rates, fetchRates },
   } = useRatesState();
+
+  const ratesOnDay = rates[getRatesDateKey(date)];
+  React.useEffect(() => {
+    if (!ratesOnDay) {
+      fetchRates(date);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [!!ratesOnDay]);
 
   const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
   const defaultFormattedPrice = React.useMemo(() => <>${calculatedPrice}</>, [calculatedPrice]);
   const formattedPrice = React.useMemo(() => {
-    if (locale === 'en' || !rates.usdToKgs) {
+    const kgsToUsdRate = ratesOnDay ? ratesOnDay.kgsToUsd : undefined;
+    if ([locale, forceLocale].some(l => l === 'en') || !kgsToUsdRate) {
       return defaultFormattedPrice;
     } else {
       return (
         <>
-          {Math.round(calculatedPrice * rates.usdToKgs)} <u>с</u>
+          {Math.round(calculatedPrice * kgsToUsdRate)} <u>с</u>
         </>
       );
     }
-  }, [calculatedPrice, rates, locale, defaultFormattedPrice]);
+  }, [calculatedPrice, locale, defaultFormattedPrice, forceLocale, ratesOnDay]);
 
-  return useLazyInitialization(formattedPrice, defaultFormattedPrice).value;
+  return useLazyInitialization(formattedPrice, null).value;
 };
 
 const usePriceRange = ({ range }: IPriceRangeTextProps) => {
@@ -94,9 +106,9 @@ export const usePriceRangeText = ({ range }: IPriceRangeTextProps) => {
   };
 };
 
-export const PriceCrossedText = ({ price, discount }: IPriceProps) => {
-  const formattedPrice = useFormattedPrice({ price, discount });
-  const formattedInitialPrice = useFormattedPrice({ price, discount: 0 });
+export const PriceCrossedText = ({ price, discount, date, forceLocale }: IPriceProps) => {
+  const formattedPrice = useFormattedPrice({ price, discount, date, forceLocale });
+  const formattedInitialPrice = useFormattedPrice({ price, discount: 0, date });
 
   const hasDiscount = Array.isArray(discount) ? discount.reduce((acc, d) => acc + d, 0) > 0 : discount && discount > 0;
 
@@ -109,4 +121,6 @@ export const PriceCrossedText = ({ price, discount }: IPriceProps) => {
   );
 };
 
-export const PriceText = ({ price }: IPriceProps) => <>{useFormattedPrice({ price, discount: 0 })}</>;
+export const PriceText = ({ price, date, forceLocale }: IPriceProps) => (
+  <>{useFormattedPrice({ price, discount: 0, date, forceLocale })}</>
+);

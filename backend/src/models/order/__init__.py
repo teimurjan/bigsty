@@ -30,4 +30,3 @@ class Order(NonDeletableModel):
     )
     # statuses are: idle, approved, rejected, completed
     status = Column(String(60), default='idle', nullable=False)
-

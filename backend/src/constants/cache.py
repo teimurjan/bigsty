@@ -1,0 +1,1 @@
+USER_ORDERS_CACHE_KEY = 'user_orders'

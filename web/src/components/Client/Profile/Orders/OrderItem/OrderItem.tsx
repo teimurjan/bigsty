@@ -6,21 +6,23 @@ import { useTheme } from 'emotion-theming';
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { IOrderListResponseItem } from 'src/api/OrderAPI';
+import { IOrderForUserResponseItem } from 'src/api/OrderAPI';
 import { Anchor } from 'src/components/client-ui/Anchor/Anchor';
 import { Tag } from 'src/components/client-ui/Tag/Tag';
 import { Tooltip } from 'src/components/client-ui/Tooltip/Tooltip';
 import { PriceText } from 'src/components/Client/Price/Price';
 import { useIntlState } from 'src/state/IntlState';
 import { mediaQueries } from 'src/styles/media';
+import { getFormattedDateString } from 'src/utils/date';
 import { calculateDiscountedPrice } from 'src/utils/number';
+import { isPromoCodeApplicableForProduct } from 'src/utils/promoCode';
 
 interface IProps {
-  order: IOrderListResponseItem;
+  order: IOrderForUserResponseItem;
   className?: string;
 }
 
-const OrderStatus = ({ status }: { status: IOrderListResponseItem['status'] }) => {
+const OrderStatus = ({ status }: { status: IOrderForUserResponseItem['status'] }) => {
   const intl = useIntl();
 
   return status === 'rejected' || status === 'completed' ? (
@@ -61,15 +63,26 @@ export const OrderItem: React.FC<IProps> = ({ order, className }) => {
   } = useIntlState();
 
   const total = order.items.reduce(
-    (acc, item) => acc + calculateDiscountedPrice(item.product_price_per_item, item.product_discount) * item.quantity,
+    (acc, item) =>
+      acc +
+      calculateDiscountedPrice(item.product_price_per_item, [
+        item.product_discount,
+        order.promo_code && item.product && isPromoCodeApplicableForProduct(order.promo_code, item.product)
+          ? order.promo_code.discount || 0
+          : 0,
+      ]) *
+        item.quantity,
     0,
   );
+
+  const orderCreatedOnDate = new Date(order.created_on);
 
   return (
     <div
       className={className}
       css={css`
         border-bottom: 1px solid ${theme.borderColor};
+        padding: 0 10px;
 
         &:hover {
           background: ${theme.backgroundPrimaryHoverColor};
@@ -90,7 +103,7 @@ export const OrderItem: React.FC<IProps> = ({ order, className }) => {
         >
           {intl.formatMessage({ id: 'Order.orderPlaced' })}
           <br />
-          {new Date(order.created_on).toLocaleDateString(locale)}
+          {orderCreatedOnDate.toLocaleDateString(locale)}
         </div>
         <div
           css={css`
@@ -101,7 +114,7 @@ export const OrderItem: React.FC<IProps> = ({ order, className }) => {
           {intl.formatMessage({ id: 'Cart.total' })}:
           <br />
           <b>
-            <PriceText price={total} />
+            <PriceText price={total} date={getFormattedDateString(orderCreatedOnDate)} />
           </b>
         </div>
       </div>

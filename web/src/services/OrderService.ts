@@ -29,7 +29,7 @@ export interface IOrderService {
   getForUser(userID: number): Promise<{
     entities: {
       orders: {
-        [key: string]: orderAPI.IOrderListResponseItem;
+        [key: string]: orderAPI.IOrderForUserResponseItem;
       };
     };
     result: number[];

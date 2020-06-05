@@ -192,13 +192,7 @@ const OrderItemsField = ({ input, meta }: FieldRenderProps<IOrderListResponseIte
                   justify-content: space-between;
                 `}
               >
-                {orderItem.product && (
-                  <Subtitle
-                    size={4}
-                  >
-                    {orderItem.product.product_type.name}
-                  </Subtitle>
-                )}
+                {orderItem.product && <Subtitle size={4}>{orderItem.product.product_type.name}</Subtitle>}
                 <ProductSelectContainer
                   placeholder={intl.formatMessage({ id: 'AdminOrders.anotherProduct.placeholder' })}
                   onChange={product => {
@@ -243,7 +237,7 @@ const OrderItemsField = ({ input, meta }: FieldRenderProps<IOrderListResponseIte
         }}
       />
       <div>
-        {intl.formatMessage({ id: 'Cart.total' })}: <PriceText price={totalPrice} />
+        {intl.formatMessage({ id: 'Cart.total' })}: <PriceText price={totalPrice} forceLocale="en" />
       </div>
       <HelpText type="is-danger">{showError ? intl.formatMessage({ id: meta.error }) : undefined}</HelpText>
     </Field>

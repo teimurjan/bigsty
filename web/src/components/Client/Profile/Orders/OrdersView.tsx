@@ -15,18 +15,32 @@ export const OrdersView: React.FC<IProps> = ({ isLoading, orders, error }) => {
   const intl = useIntl();
 
   if (isLoading) {
-    return <LoaderLayout />;
+    return (
+      <LoaderLayout
+        css={css`
+          height: calc(80vh);
+        `}
+      />
+    );
   }
 
   if (error) {
-    return <ErrorLayout>{intl.formatMessage({ id: error })}</ErrorLayout>;
+    return (
+      <ErrorLayout
+        css={css`
+          height: calc(80vh);
+        `}
+      >
+        {intl.formatMessage({ id: error })}
+      </ErrorLayout>
+    );
   }
 
   return (
     <Container>
       <Title
         css={css`
-          margin-top: 20px;
+          padding-top: 20px;
         `}
         size={3}
       >
@@ -37,9 +51,6 @@ export const OrdersView: React.FC<IProps> = ({ isLoading, orders, error }) => {
       {orders.map(order => (
         <OrderItem
           key={order.id}
-          css={css`
-            margin-bottom: 10px;
-          `}
           order={order}
         />
       ))}

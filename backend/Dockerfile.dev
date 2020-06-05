@@ -12,9 +12,9 @@ RUN apk update \
     && apk add postgresql-dev gcc python3-dev musl-dev libffi-dev
 
 # install dependencies
-RUN pip install --upgrade pip
+RUN pip install --default-timeout=100 --upgrade pip
 COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --default-timeout=100 -r requirements.txt
 
 # copy project
 COPY . /usr/src/app/

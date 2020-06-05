@@ -27,7 +27,12 @@ class OrderSerializer(IntlSerializer):
             'user_phone_number': self._user_phone_number,
             'user_address': self._user_address,
             'status': self._status,
-            'promo_code': self._promo_code.value if self._promo_code else None,
+            'promo_code': {
+                'value': self._promo_code.value,
+                'id': self._promo_code.id,
+                'discount': self._promo_code.discount,
+                'products': self._get_relation_safely(self._promo_code, 'products'),
+            } if self._promo_code else None,
             'created_on': self._created_on,
         })
 

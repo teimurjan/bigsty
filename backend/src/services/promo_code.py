@@ -51,13 +51,19 @@ class PromoCodeService:
 
     def get_one(self, id_):
         try:
-            return self._repo.get_by_id(id_, True)
+            promo_code = self._repo.get_by_id(id_, True)
+            if not promo_code.is_active:
+                raise self.PromoCodeNotFound()
+            return promo_code
         except self._repo.DoesNotExist:
             raise self.PromoCodeNotFound()
 
     def get_one_by_value(self, value):
         try:
-            return self._repo.get_by_value(value, True)
+            promo_code = self._repo.get_by_value(value, True)
+            if not promo_code.is_active:
+                raise self.PromoCodeNotFound()
+            return promo_code
         except self._repo.DoesNotExist:
             raise self.PromoCodeNotFound()
 

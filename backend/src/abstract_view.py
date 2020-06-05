@@ -9,9 +9,10 @@ from src.errors import AccessRoleError, InvalidEntityFormat, NotAuthorizedError
 
 
 class AbstractView(View):
-    def __init__(self, concrete_view, middlewares):
+    def __init__(self, concrete_view, middlewares, on_respond = None):
         self._concrete_view = concrete_view
         self._middlewares = middlewares
+        self._on_respond = on_respond
 
     def dispatch_request(self, *args, **kwargs):
         try:
@@ -20,11 +21,12 @@ class AbstractView(View):
             handler = self._get_handler(request.method.lower())
             if handler is None:
                 return None, METHOD_NOT_ALLOWED_CODE
-                
+
             body, status = handler(request, **kwargs)
-            return jsonify(
-                body or {},
-            ), status
+            if self._on_respond:
+                self._on_respond(request, body, status)
+
+            return jsonify(body or {}), status
         except InvalidEntityFormat as e:
             errors = e.errors or {}
             return jsonify(errors), UNPROCESSABLE_ENTITY_CODE

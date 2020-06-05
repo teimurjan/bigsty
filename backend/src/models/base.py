@@ -18,4 +18,4 @@ class BaseModel(Base):
 class NonDeletableModel(BaseModel):
     __abstract__ = True
 
-    is_deleted = Column(Boolean, nullable=False, default=False)
+    is_deleted = Column(Boolean, nullable=True, default=False)

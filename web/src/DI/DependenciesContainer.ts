@@ -12,6 +12,7 @@ import * as orderAPI from 'src/api/OrderAPI';
 import * as productAPI from 'src/api/ProductAPI';
 import * as productTypeAPI from 'src/api/ProductTypeAPI';
 import * as promoCodeAPI from 'src/api/PromoCodeAPI';
+import * as ratesAPI from 'src/api/RatesAPI';
 import * as searchAPI from 'src/api/SearchAPI';
 import { HeadersManager } from 'src/manager/HeadersManager';
 import * as authService from 'src/services/AuthService';
@@ -48,6 +49,7 @@ export interface IAPIsContainer {
   banner: bannerAPI.IBannerAPI;
   order: orderAPI.IOrderAPI;
   promoCode: promoCodeAPI.IPromoCodeAPI;
+  rates: ratesAPI.IRatesAPI;
 }
 
 export interface IServicesContainer {
@@ -153,6 +155,7 @@ export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {})
     banner: new bannerAPI.BannerAPI(APIClient, headersManager),
     order: new orderAPI.OrderAPI(APIClient, headersManager),
     promoCode: new promoCodeAPI.PromoCodeAPI(APIClient, headersManager),
+    rates: new ratesAPI.RatesAPI(APIClient, headersManager),
   };
 
   const servicesContainer = {

@@ -26,14 +26,35 @@ export interface IOrderListResponseItem {
     };
   }>;
   status: 'idle' | 'completed' | 'approved' | 'rejected';
-  promo_code: {
+  promo_code?: {
     id: number;
     value: string;
+    discount?: number;
   };
 }
 
 export interface IOrderListResponseData {
   data: IOrderListResponseItem[];
+}
+
+// FOR USER
+export interface IOrderForUserResponseItem extends IOrderListResponseItem {
+  promo_code: IOrderListResponseItem['promo_code'] & {
+    products: Array<{
+      product_type: {
+        id: number;
+        name: string;
+      };
+      discount: number;
+      id: number;
+      price: number;
+      quantity: number;
+    }>;
+  };
+}
+
+export interface IOrderForUserResponseData {
+  data: IOrderForUserResponseItem[];
 }
 
 // DETAIL
@@ -65,7 +86,11 @@ export interface IOrderEditPayload {
     | number
   >;
   status: string;
-  promo_code?: string;
+  promo_code?: {
+    id: number;
+    value: string;
+    discount?: number;
+  };
 }
 
 export interface IOrderAPI {

@@ -1,8 +1,9 @@
 import bcrypt
 
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, defaultload
+from sqlalchemy import desc
 
-from src.models import Order, OrderItem
+from src.models import Order, OrderItem, PromoCode
 from src.models.order import order_item
 from src.repos.base import NonDeletableRepo, with_session
 
@@ -16,14 +17,14 @@ class OrderRepo(NonDeletableRepo):
         q = (
             self
             .get_non_deleted_query(session=session)
-            .options(joinedload(Order.items))
             .filter(Order.user_id == user_id)
         )
         return (
             q
-            .order_by(Order.id)
+            .order_by(desc(Order.id))
             .offset(offset)
             .limit(limit)
+            .options(joinedload(Order.items), defaultload(Order.promo_code).subqueryload(PromoCode.products))
             .all()
         ), q.count()
 
@@ -49,6 +50,8 @@ class OrderRepo(NonDeletableRepo):
         order.user_phone_number = user_phone_number
         order.user_address = user_address
         order.promo_code = promo_code
+        order.promo_code_discount = promo_code.discount if promo_code else None
+        order.promo_code_value = promo_code.value if promo_code else None
 
         order_items = []
         for item in items:
@@ -76,6 +79,8 @@ class OrderRepo(NonDeletableRepo):
         order.user_address = user_address
         order.status = status
         order.promo_code = promo_code
+        order.promo_code_discount = promo_code.discount if promo_code else None
+        order.promo_code_value = promo_code.value if promo_code else None
 
         new_order_items = []
         for item in items:

@@ -4,7 +4,7 @@ import os
 import sqlalchemy as db
 from cerberus.validator import Validator
 from elasticsearch import Elasticsearch
-from flask import Flask, Response, send_from_directory
+from flask import Flask, Response, send_from_directory, jsonify, request
 from flask.templating import render_template
 from flask_caching import Cache
 from flask_cors import CORS
@@ -12,6 +12,7 @@ from flask_mail import Mail as FlaskMail
 
 from paths import APP_ROOT_PATH
 from src.abstract_view import AbstractView
+from src.constants.cache import USER_ORDERS_CACHE_KEY
 from src.constants.status_codes import OK_CODE
 from src.mail import Mail
 from src.middleware.http.authorize import AuthorizeHttpMiddleware
@@ -48,6 +49,7 @@ from src.services.promo_code import PromoCodeService
 from src.services.signup import SignupService
 from src.services.user import UserService
 from src.storage.aws_storage import AWSStorage
+from src.utils.cache import make_cache_invalidator, response_filter
 from src.validation_rules.authentication import AUTHENTICATION_VALIDATION_RULES
 from src.validation_rules.banner.create import CREATE_BANNER_VALIDATION_RULES
 from src.validation_rules.banner.update import UPDATE_BANNER_VALIDATION_RULES
@@ -86,6 +88,7 @@ from src.views.category.detail import CategoryDetailView
 from src.views.category.list import CategoryListView
 from src.views.category.slug import CategorySlugView
 from src.views.confirm_registration import ConfirmRegistrationView
+from src.views.currency_rates import get_currency_rates
 from src.views.feature_type.detail import FeatureTypeDetailView
 from src.views.feature_type.list import FeatureTypeListView
 from src.views.feature_value.detail import FeatureValueDetailView
@@ -135,6 +138,7 @@ class App:
         self.__init_api_routes()
         self.__init_media_route()
         self.__init_sitemap_route()
+        self.__init_currency_rates_route()
 
     def __init_repos(self):
         self.__category_repo = CategoryRepo(self.__db_conn)
@@ -193,6 +197,9 @@ class App:
         language_middleware = LanguageHttpMiddleware(self.__language_repo)
         middlewares = [authorize_middleware, language_middleware]
 
+        orders_on_respond = make_cache_invalidator(
+            self.cache, USER_ORDERS_CACHE_KEY)
+
         self.flask_app.add_url_rule(
             '/api/auth/login',
             view_func=AbstractView.as_view(
@@ -210,8 +217,8 @@ class App:
             view_func=AbstractView.as_view(
                 'register',
                 concrete_view=RegistrationView(
-                    self.__signup_service, Validator(
-                        REGISTRATION_VALIDATION_RULES)
+                    self.__signup_service,
+                    Validator(REGISTRATION_VALIDATION_RULES)
                 ),
                 middlewares=[language_middleware]
             ),
@@ -222,8 +229,8 @@ class App:
             view_func=AbstractView.as_view(
                 'register_confirm',
                 concrete_view=ConfirmRegistrationView(
-                    self.__signup_service, Validator(
-                        CONFIRM_REGISTRATION_VALIDATION_RULES)
+                    self.__signup_service,
+                    Validator(CONFIRM_REGISTRATION_VALIDATION_RULES)
                 ),
                 middlewares=[language_middleware]
             ),
@@ -234,8 +241,8 @@ class App:
             view_func=AbstractView.as_view(
                 'refresh_token',
                 concrete_view=RefreshTokenView(
-                    self.__user_service, Validator(
-                        REFRESH_TOKEN_VALIDATION_RULES)
+                    self.__user_service,
+                    Validator(REFRESH_TOKEN_VALIDATION_RULES)
                 ),
                 middlewares=[language_middleware]
             ),
@@ -247,8 +254,9 @@ class App:
             view_func=AbstractView.as_view(
                 'categories',
                 concrete_view=CategoryListView(
-                    Validator(
-                        CREATE_CATEGORY_VALIDATION_RULES), self.__category_service, CategorySerializer
+                    Validator(CREATE_CATEGORY_VALIDATION_RULES),
+                    self.__category_service,
+                    CategorySerializer
                 ),
                 middlewares=middlewares
             ),
@@ -259,8 +267,9 @@ class App:
             view_func=AbstractView.as_view(
                 'category',
                 concrete_view=CategoryDetailView(
-                    Validator(
-                        UPDATE_CATEGORY_VALIDATION_RULES), self.__category_service, CategorySerializer
+                    Validator(UPDATE_CATEGORY_VALIDATION_RULES),
+                    self.__category_service,
+                    CategorySerializer
                 ),
                 middlewares=middlewares
             ),
@@ -282,7 +291,9 @@ class App:
             view_func=AbstractView.as_view(
                 'category_product_types',
                 concrete_view=ProductTypeByCategoryView(
-                    self.__product_type_service, ProductTypeSerializer),
+                    self.__product_type_service,
+                    ProductTypeSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET']
@@ -292,7 +303,11 @@ class App:
             view_func=AbstractView.as_view(
                 'search',
                 concrete_view=SearchView(
-                    self.__category_service, self.__product_type_service, CategorySerializer, ProductTypeSerializer),
+                    self.__category_service,
+                    self.__product_type_service,
+                    CategorySerializer,
+                    ProductTypeSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET']
@@ -301,8 +316,11 @@ class App:
             '/api/feature_types',
             view_func=AbstractView.as_view(
                 'feature_types',
-                concrete_view=FeatureTypeListView(Validator(
-                    CREATE_FEATURE_TYPE_VALIDATION_RULES), self.__feature_type_service, FeatureTypeSerializer),
+                concrete_view=FeatureTypeListView(
+                    Validator(CREATE_FEATURE_TYPE_VALIDATION_RULES),
+                    self.__feature_type_service,
+                    FeatureTypeSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'POST']
@@ -311,8 +329,11 @@ class App:
             '/api/feature_types/<int:feature_type_id>',
             view_func=AbstractView.as_view(
                 'feature_type',
-                concrete_view=FeatureTypeDetailView(Validator(
-                    UPDATE_FEATURE_TYPE_VALIDATION_RULES), self.__feature_type_service, FeatureTypeSerializer),
+                concrete_view=FeatureTypeDetailView(
+                    Validator(UPDATE_FEATURE_TYPE_VALIDATION_RULES),
+                    self.__feature_type_service,
+                    FeatureTypeSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
@@ -321,8 +342,11 @@ class App:
             '/api/feature_values',
             view_func=AbstractView.as_view(
                 'feature_values',
-                concrete_view=FeatureValueListView(Validator(
-                    CREATE_FEATURE_VALUE_VALIDATION_RULES), self.__feature_value_service, FeatureValueSerializer),
+                concrete_view=FeatureValueListView(
+                    Validator(CREATE_FEATURE_VALUE_VALIDATION_RULES),
+                    self.__feature_value_service,
+                    FeatureValueSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'POST']
@@ -331,8 +355,10 @@ class App:
             '/api/feature_values/<int:feature_value_id>',
             view_func=AbstractView.as_view(
                 'feature_value',
-                concrete_view=FeatureValueDetailView(Validator(
-                    UPDATE_FEATURE_VALUE_VALIDATION_RULES), self.__feature_value_service, FeatureValueSerializer),
+                concrete_view=FeatureValueDetailView(
+                    Validator(UPDATE_FEATURE_VALUE_VALIDATION_RULES),
+                    self.__feature_value_service,
+                    FeatureValueSerializer),
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
@@ -341,8 +367,11 @@ class App:
             '/api/products',
             view_func=AbstractView.as_view(
                 'products',
-                concrete_view=ProductListView(Validator(
-                    CREATE_PRODUCT_VALIDATION_RULES), self.__product_service, ProductSerializer),
+                concrete_view=ProductListView(
+                    Validator(CREATE_PRODUCT_VALIDATION_RULES),
+                    self.__product_service,
+                    ProductSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'POST']
@@ -351,8 +380,10 @@ class App:
             '/api/products/<int:product_id>',
             view_func=AbstractView.as_view(
                 'product',
-                concrete_view=ProductDetailView(Validator(
-                    UPDATE_PRODUCT_VALIDATION_RULES), self.__product_service, ProductSerializer),
+                concrete_view=ProductDetailView(
+                    Validator(UPDATE_PRODUCT_VALIDATION_RULES),
+                    self.__product_service,
+                    ProductSerializer),
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
@@ -382,8 +413,11 @@ class App:
             '/api/product_types',
             view_func=AbstractView.as_view(
                 'product_types',
-                concrete_view=ProductTypeListView(Validator(
-                    CREATE_PRODUCT_TYPE_VALIDATION_RULES), self.__product_type_service, ProductTypeSerializer),
+                concrete_view=ProductTypeListView(
+                    Validator(CREATE_PRODUCT_TYPE_VALIDATION_RULES),
+                    self.__product_type_service,
+                    ProductTypeSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'POST']
@@ -392,28 +426,38 @@ class App:
             '/api/product_types/<int:product_type_id>',
             view_func=AbstractView.as_view(
                 'product_type',
-                concrete_view=ProductTypeDetailView(Validator(
-                    UPDATE_PRODUCT_TYPE_VALIDATION_RULES), self.__product_type_service, ProductTypeSerializer),
+                concrete_view=ProductTypeDetailView(
+                    Validator(UPDATE_PRODUCT_TYPE_VALIDATION_RULES),
+                    self.__product_type_service,
+                    ProductTypeSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
         )
         self.flask_app.add_url_rule(
             '/api/languages',
-            view_func=self.cache.cached(120, response_filter=lambda res: res[1] == OK_CODE)(AbstractView.as_view(
-                'languages',
-                concrete_view=LanguageListView(
-                    self.__language_service, LanguageSerializer),
-                middlewares=middlewares
-            )),
+            view_func=self.cache.cached(60 * 60 * 24, response_filter=response_filter)(
+                AbstractView.as_view(
+                    'languages',
+                    concrete_view=LanguageListView(
+                        self.__language_service,
+                        LanguageSerializer
+                    ),
+                    middlewares=middlewares
+                )
+            ),
             methods=['GET']
         )
         self.flask_app.add_url_rule(
             '/api/banners',
             view_func=AbstractView.as_view(
                 'banners',
-                concrete_view=BannerListView(Validator(
-                    CREATE_BANNER_VALIDATION_RULES), self.__banner_service, BannerSerializer),
+                concrete_view=BannerListView(
+                    Validator(CREATE_BANNER_VALIDATION_RULES),
+                    self.__banner_service,
+                    BannerSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'POST']
@@ -422,8 +466,11 @@ class App:
             '/api/banners/<int:banner_id>',
             view_func=AbstractView.as_view(
                 'banner',
-                concrete_view=BannerDetailView(Validator(
-                    UPDATE_BANNER_VALIDATION_RULES), self.__banner_service, BannerSerializer),
+                concrete_view=BannerDetailView(
+                    Validator(UPDATE_BANNER_VALIDATION_RULES),
+                    self.__banner_service,
+                    BannerSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
@@ -432,9 +479,13 @@ class App:
             '/api/orders/<int:order_id>',
             view_func=AbstractView.as_view(
                 'order',
-                concrete_view=OrderDetailView(Validator(
-                    UPDATE_ORDER_VALIDATION_RULES), self.__order_service, OrderSerializer),
-                middlewares=middlewares
+                concrete_view=OrderDetailView(
+                    Validator(UPDATE_ORDER_VALIDATION_RULES),
+                    self.__order_service,
+                    OrderSerializer
+                ),
+                middlewares=middlewares,
+                on_respond=orders_on_respond
             ),
             methods=['GET', 'PUT', 'DELETE']
         )
@@ -442,18 +493,33 @@ class App:
             '/api/orders',
             view_func=AbstractView.as_view(
                 'orders',
-                concrete_view=OrderListView(Validator(
-                    CREATE_ORDER_VALIDATION_RULES), self.__order_service, OrderSerializer),
-                middlewares=middlewares
+                concrete_view=OrderListView(
+                    Validator(CREATE_ORDER_VALIDATION_RULES),
+                    self.__order_service,
+                    OrderSerializer
+                ),
+                middlewares=middlewares,
+                on_respond=orders_on_respond
             ),
             methods=['GET', 'POST']
         )
         self.flask_app.add_url_rule(
             '/api/users/<int:user_id>/orders',
-            view_func=AbstractView.as_view(
-                'user_orders',
-                concrete_view=OrderByUserView(self.__order_service, OrderSerializer),
-                middlewares=middlewares
+            view_func=(
+                self.cache.cached(
+                    60 * 60,
+                    key_prefix=USER_ORDERS_CACHE_KEY,
+                    response_filter=response_filter
+                )(
+                    AbstractView.as_view(
+                        'user_orders',
+                        concrete_view=OrderByUserView(
+                            self.__order_service,
+                            OrderSerializer
+                        ),
+                        middlewares=middlewares,
+                    )
+                )
             ),
             methods=['GET', 'POST']
         )
@@ -461,8 +527,11 @@ class App:
             '/api/promo_codes/<int:promo_code_id>',
             view_func=AbstractView.as_view(
                 'promo_code',
-                concrete_view=PromoCodeDetailView(Validator(
-                    UPDATE_PROMO_CODE_VALIDATION_RULES), self.__promo_code_service, PromoCodeSerializer),
+                concrete_view=PromoCodeDetailView(
+                    Validator(UPDATE_PROMO_CODE_VALIDATION_RULES),
+                    self.__promo_code_service,
+                    PromoCodeSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'PUT', 'DELETE']
@@ -471,8 +540,11 @@ class App:
             '/api/promo_codes',
             view_func=AbstractView.as_view(
                 'promo_codes',
-                concrete_view=PromoCodeListView(Validator(
-                    CREATE_PROMO_CODE_VALIDATION_RULES), self.__promo_code_service, PromoCodeSerializer),
+                concrete_view=PromoCodeListView(
+                    Validator(CREATE_PROMO_CODE_VALIDATION_RULES),
+                    self.__promo_code_service,
+                    PromoCodeSerializer
+                ),
                 middlewares=middlewares
             ),
             methods=['GET', 'POST']
@@ -482,7 +554,8 @@ class App:
             view_func=AbstractView.as_view(
                 'promo_code_value',
                 concrete_view=PromoCodeValueView(
-                    self.__promo_code_service, PromoCodeSerializer
+                    self.__promo_code_service,
+                    PromoCodeSerializer
                 ),
                 middlewares=middlewares
             ),
@@ -516,3 +589,14 @@ class App:
                                   base_url=self.flask_app.config.get('HOST'))
 
             return Response(xml, mimetype='text/xml')
+
+    def __init_currency_rates_route(self):
+        memoized_get_currency_rates = self.cache.memoize(
+            timeout=60*60*24)(get_currency_rates)
+
+        @self.flask_app.route('/api/currency_rates')
+        def handle_currency_rates_request():
+            date = request.args.get('date')
+            print(date)
+            rates = memoized_get_currency_rates(date)
+            return jsonify({'data': rates})
