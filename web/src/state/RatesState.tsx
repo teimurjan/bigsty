@@ -38,10 +38,9 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [rates, setRates] = React.useState<IRates>(stateCacheStorage.get('rates') || {});
 
-
   const fetchRates = async (date?: string) => {
     if (datesToFetch.has(date)) {
-      return
+      return;
     }
 
     datesToFetch.add(date);
@@ -49,7 +48,7 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
     setLoading(true);
     try {
       const { data } = await ratesAPI.getAll(date);
-      const rates_ = { ...stateCacheStorage.get('rates'), [getRatesDateKey(date)]: { kgsToUsd: data.KGS_USD } };
+      const rates_ = { ...stateCacheStorage.get('rates'), [getRatesDateKey(date)]: { kgsToUsd: data.kgs_to_usd } };
       setRates(rates_);
       stateCacheStorage.set('rates', rates_, { expireIn: 60 * 60 });
     } catch (e) {

@@ -5,7 +5,7 @@ import { buildQueryString } from 'src/utils/queryString';
 
 export interface RatesListResponseData {
   data: {
-    KGS_USD: number;
+    kgs_to_usd: number;
   };
 }
 

@@ -8,27 +8,29 @@ def get_float_from_node(key, node):
     return float(node.find(key).text.replace(',', '.'))
 
 
+DELTA = 1.5
+
 def get_currency_rates(date=None):
     rates = {}
 
-    date_query = 'date_req=' + date if date else ''
+    date_query = 'fdate=' + date if date else ''
     response = requests.get(
-        f'http://www.cbr.ru/scripts/XML_daily.asp?{date_query}'
+        f'https://nationalbank.kz/rss/get_rates.cfm?{date_query}'
     )
     if response.status_code == 200:
-        currencies = ET.fromstring(response.text).getchildren()
+        currencies = ET.fromstring(response.text).iter('item')
         for currency in currencies:
-            if currency.find('CharCode').text == 'KGS':
-                value = get_float_from_node('Value', currency)
-                nominal = get_float_from_node('Nominal', currency)
-                rates['RUB_KGS'] = value / nominal
-            elif currency.find('CharCode').text == 'USD':
-                value = get_float_from_node('Value', currency)
-                nominal = get_float_from_node('Nominal', currency)
-                rates['RUB_USD'] = value / nominal
+            if currency.find('title').text == 'KGS':
+                value = get_float_from_node('description', currency)
+                nominal = get_float_from_node('quant', currency)
+                rates['kzt_to_kgs'] = value / nominal
+            elif currency.find('title').text == 'USD':
+                value = get_float_from_node('description', currency)
+                nominal = get_float_from_node('quant', currency)
+                rates['kzt_to_usd'] = value / nominal
 
-        if rates.get('RUB_KGS') and rates.get('RUB_USD'):
-            rates['KGS_USD'] = rates['RUB_USD'] / rates['RUB_KGS']
+        if rates.get('kzt_to_kgs') and rates.get('kzt_to_usd'):
+            rates['kgs_to_usd'] = rates['kzt_to_usd'] / rates['kzt_to_kgs'] + DELTA
 
         return rates if len(rates) > 0 else None
 
