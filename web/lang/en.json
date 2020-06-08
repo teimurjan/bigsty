@@ -272,7 +272,9 @@
   "Cart.invalidPromoCode": "Invalid promo code",
   "Order.orderPlaced": "Order placed",
   "Order.status.idle": "Processing ✏️",
+  "Order.status.idle.tooltip": "The operator will contact you shortly to clarify the order",
   "Order.status.approved": "Approved 👍",
+  "Order.status.approved.tooltip": "The order is confirmed, the courier will be with you at the appointed time",
   "Order.status.completed": "Completed ✅",
   "Order.status.rejected": "Canceled ❌",
   "Orders.empty": "You have no orders yet."
