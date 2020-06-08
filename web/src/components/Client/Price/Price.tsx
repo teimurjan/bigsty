@@ -23,7 +23,7 @@ const useFormattedPrice = ({ price, discount, date, forceLocale }: IPriceProps) 
     intlState: { locale },
   } = useIntlState();
   const {
-    ratesState: { rates, fetchRates },
+    ratesState: { rates, fetchRates, error },
   } = useRatesState();
 
   const ratesOnDay = rates[getRatesDateKey(date)];
@@ -36,18 +36,19 @@ const useFormattedPrice = ({ price, discount, date, forceLocale }: IPriceProps) 
 
   const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
   const defaultFormattedPrice = React.useMemo(() => <>${calculatedPrice}</>, [calculatedPrice]);
+  const isEn = [locale, forceLocale].some(l => l === 'en');
   const formattedPrice = React.useMemo(() => {
     const kgsToUsdRate = ratesOnDay ? ratesOnDay.kgsToUsd : undefined;
-    if ([locale, forceLocale].some(l => l === 'en') || !kgsToUsdRate) {
-      return defaultFormattedPrice;
-    } else {
-      return (
-        <>
-          {Math.round(calculatedPrice * kgsToUsdRate)} <u>с</u>
-        </>
-      );
+    if (!kgsToUsdRate) {
+      return error ? defaultFormattedPrice : null;
     }
-  }, [calculatedPrice, locale, defaultFormattedPrice, forceLocale, ratesOnDay]);
+
+    return (
+      <>
+        {Math.round(calculatedPrice * kgsToUsdRate)} {isEn ? 'KGS' : <u>с</u>}
+      </>
+    );
+  }, [calculatedPrice, ratesOnDay, isEn, defaultFormattedPrice, error]);
 
   return useLazyInitialization(formattedPrice, null).value;
 };
