@@ -6,12 +6,13 @@ import { useIntl } from 'react-intl';
 import { Container } from 'src/components/admin-ui/Container/Container';
 import { ErrorLayout } from 'src/components/client-ui/ErrorLayout/ErrorLayout';
 import { LoaderLayout } from 'src/components/client-ui/LoaderLayout/LoaderLayout';
+import { Pagination } from 'src/components/client-ui/Pagination/Pagination';
 import { Subtitle } from 'src/components/client-ui/Subtitle/Subtitle';
 import { Title } from 'src/components/client-ui/Title/Title';
 import { OrderItem } from 'src/components/Client/Profile/Orders/OrderItem/OrderItem';
 import { IViewProps as IProps } from 'src/components/Client/Profile/Orders/OrdersPresenter';
 
-export const OrdersView: React.FC<IProps> = ({ isLoading, orders, error }) => {
+export const OrdersView: React.FC<IProps> = ({ isLoading, orders, error, currentPage, onPageChange, pagesCount }) => {
   const intl = useIntl();
 
   if (isLoading) {
@@ -49,11 +50,19 @@ export const OrdersView: React.FC<IProps> = ({ isLoading, orders, error }) => {
       {orders.length === 0 && <Subtitle size={4}>{intl.formatMessage({ id: 'Orders.empty' })}</Subtitle>}
 
       {orders.map(order => (
-        <OrderItem
-          key={order.id}
-          order={order}
-        />
+        <OrderItem key={order.id} order={order} />
       ))}
+
+      {pagesCount > 1 && (
+        <Pagination
+          css={css`
+            margin-top: 20px;
+          `}
+          page={currentPage}
+          onChange={onPageChange}
+          length={pagesCount}
+        />
+      )}
     </Container>
   );
 };

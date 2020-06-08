@@ -1,6 +1,8 @@
+import { History, Location } from 'history';
 import React from 'react';
 
-import { IOrderForUserResponseItem } from 'src/api/OrderAPI';
+import { IOrderForUserResponseItem, IOrderListResponseMeta } from 'src/api/OrderAPI';
+import { isUserAuthorized } from 'src/helpers/user';
 import { useDebounce } from 'src/hooks/useDebounce';
 import { IOrderService } from 'src/services/OrderService';
 import { AuthorizedUser } from 'src/state/UserState';
@@ -10,41 +12,74 @@ export interface IViewProps {
   orders: IOrderForUserResponseItem[];
   isLoading?: boolean;
   error?: string;
+  currentPage: number;
+  pagesCount: number;
+  onPageChange: (page: number) => void;
 }
 
 interface IProps {
   service: IOrderService;
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
   user: AuthorizedUser;
+  history: History;
+  location: Location;
 }
 
-export const OrdersPresenter: React.FC<IProps> = ({ service, View, user }) => {
+export const OrdersPresenter: React.FC<IProps> = ({ service, View, user, history, location }) => {
   const [isLoading, setLoading] = React.useState(true);
   const [orders, setOrders] = React.useState<{ [key: string]: IOrderForUserResponseItem }>({});
   const [ordersOrder, setOrdersOrder] = React.useState<number[]>([]);
   const [error, setError] = React.useState<undefined | string>(undefined);
+  const [ordersMeta, setOrdersMeta] = React.useState<IOrderListResponseMeta>({
+    count: 0,
+    pages_count: 0,
+    limit: 0,
+    page: 0,
+  });
   const isLoadingDebounced = useDebounce(isLoading, 500);
 
-  React.useEffect(() => {
-    if (user) {
+  const getOrders = React.useCallback(
+    (page: number) => {
       (async () => {
         try {
           setLoading(true);
           const {
             entities: { orders },
             result,
-          } = await service.getForUser(user.user_id);
+            meta,
+          } = await service.getForUser(user.user_id, page);
           setOrders(orders);
           setOrdersOrder(result);
+          setOrdersMeta(meta);
+          history.replace({ pathname: `${location.pathname}`, search: `?page=${page}` });
         } catch (e) {
           setError('errors.common');
         } finally {
           setLoading(false);
         }
       })();
+    },
+    [service, user.user_id, history, location],
+  );
+
+  React.useEffect(() => {
+    if (isUserAuthorized(user)) {
+      const queryParams = new URLSearchParams(location.search);
+      const pageStr = queryParams.get('page');
+      const page = pageStr ? parseInt(pageStr, 10) : 1;
+      getOrders(page);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [!!user]);
 
-  return <View orders={agregateOrderedMapToArray(orders, ordersOrder)} isLoading={isLoadingDebounced} error={error} />;
+  return (
+    <View
+      orders={agregateOrderedMapToArray(orders, ordersOrder)}
+      isLoading={isLoadingDebounced}
+      error={error}
+      currentPage={ordersMeta.page}
+      onPageChange={getOrders}
+      pagesCount={ordersMeta.pages_count}
+    />
+  );
 };

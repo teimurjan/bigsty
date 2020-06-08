@@ -4,7 +4,7 @@ import os
 import sqlalchemy as db
 from cerberus.validator import Validator
 from elasticsearch import Elasticsearch
-from flask import Flask, Response, send_from_directory, jsonify, request
+from flask import Flask, Response, jsonify, request, send_from_directory
 from flask.templating import render_template
 from flask_caching import Cache
 from flask_cors import CORS
@@ -12,7 +12,8 @@ from flask_mail import Mail as FlaskMail
 
 from paths import APP_ROOT_PATH
 from src.abstract_view import AbstractView
-from src.constants.cache import USER_ORDERS_CACHE_KEY
+from src.constants.cache import (USER_ORDERS_CACHE_KEY,
+                                 make_user_orders_cache_key)
 from src.constants.status_codes import OK_CODE
 from src.mail import Mail
 from src.middleware.http.authorize import AuthorizeHttpMiddleware
@@ -508,7 +509,7 @@ class App:
             view_func=(
                 self.cache.cached(
                     60 * 60,
-                    key_prefix=USER_ORDERS_CACHE_KEY,
+                    key_prefix=make_user_orders_cache_key,
                     response_filter=response_filter
                 )(
                     AbstractView.as_view(
@@ -597,6 +598,5 @@ class App:
         @self.flask_app.route('/api/currency_rates')
         def handle_currency_rates_request():
             date = request.args.get('date')
-            print(date)
             rates = memoized_get_currency_rates(date)
             return jsonify({'data': rates})

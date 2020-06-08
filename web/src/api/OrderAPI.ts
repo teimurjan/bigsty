@@ -1,6 +1,7 @@
 import { Client } from 'ttypes/http';
 
 import { IHeadersManager } from 'src/manager/HeadersManager';
+import { buildQueryString } from 'src/utils/queryString';
 
 // LIST
 export interface IOrderListResponseItem {
@@ -33,8 +34,16 @@ export interface IOrderListResponseItem {
   };
 }
 
+export interface IOrderListResponseMeta {
+  count: number,
+  pages_count: number,
+  limit: number,
+  page: number,
+}
+
 export interface IOrderListResponseData {
   data: IOrderListResponseItem[];
+  meta: IOrderListResponseMeta;
 }
 
 // FOR USER
@@ -95,7 +104,7 @@ export interface IOrderEditPayload {
 
 export interface IOrderAPI {
   getAll(): Promise<IOrderListResponseData>;
-  getForUser(userID: number): Promise<IOrderListResponseData>;
+  getForUser(userID: number, page: number): Promise<IOrderListResponseData>;
   create(payload: IOrderCreatePayload): Promise<IOrderResponseData>;
   edit(orderID: number, payload: IOrderEditPayload): Promise<IOrderResponseData>;
   getOne(orderID: number): Promise<IOrderResponseData>;
@@ -169,11 +178,14 @@ export class OrderAPI implements IOrderAPI {
     }
   }
 
-  public async getForUser(userID: number) {
+  public async getForUser(userID: number, page: number) {
     try {
-      const response = await this.client.get<IOrderListResponseData>(`/api/users/${userID}/orders`, {
-        headers: this.headersManager.getHeaders(),
-      });
+      const response = await this.client.get<IOrderListResponseData>(
+        `/api/users/${userID}/orders${buildQueryString({ page, limit: 10 })}`,
+        {
+          headers: this.headersManager.getHeaders(),
+        },
+      );
       return response.data;
     } catch (e) {
       throw e;

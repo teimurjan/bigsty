@@ -8,11 +8,13 @@ interface IProps {
   length: number;
   page: number;
   onChange?: (page: number) => void;
+  className?: string;
 }
 
-export const Pagination = ({ length, page, onChange }: IProps) => {
+export const Pagination = ({ className, length, page, onChange }: IProps) => {
   return (
     <div
+      className={className}
       css={css`
         display: flex;
       `}

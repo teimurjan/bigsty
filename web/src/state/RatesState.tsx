@@ -42,7 +42,6 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
     if (datesToFetch.has(date)) {
       return;
     }
-
     datesToFetch.add(date);
 
     setLoading(true);
