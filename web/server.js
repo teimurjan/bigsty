@@ -6,6 +6,7 @@ const { parse } = require('url');
 const cookie = require('cookie');
 const glob = require('glob');
 const IntlPolyfill = require('intl');
+const Negotiator = require('negotiator');
 const next = require('next');
 
 Intl.NumberFormat = IntlPolyfill.NumberFormat;
@@ -33,12 +34,27 @@ const getMessages = locale => {
   return require(`./lang/${locale}.json`);
 };
 
+const detectLocale = (req) => {
+  const cookieLocale = cookie.parse(req.headers.cookie || '').locale;
+  if (cookieLocale) {
+    const supportedCookieLocale = supportedLanguages.find(l => l === cookieLocale);
+    if (supportedCookieLocale) {
+      return supportedCookieLocale;
+    }
+  }
+
+  const negotiator = new Negotiator(req);
+  const negotiatedLanguage = negotiator.language(supportedLanguages);
+
+  return negotiatedLanguage || 'ru';
+};
+
 app.prepare().then(() => {
   createServer((req, res) => {
-    const locale = cookie.parse(req.headers.cookie || '').locale || 'ru';
-    req.locale = supportedLanguages.some(l => l === locale) ? locale : 'ru';
-    req.localeDataScript = getLocaleDataScript(locale);
-    req.messages = getMessages(locale);
+    const detectedLocale = detectLocale(req);
+    req.locale = detectLocale(req);
+    req.localeDataScript = getLocaleDataScript(detectedLocale);
+    req.messages = getMessages(detectedLocale);
 
     const parsedUrl = parse(req.url, true);
     const { pathname, query } = parsedUrl;

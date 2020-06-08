@@ -40,10 +40,12 @@ const CustomNextApp = ({
     intlCache,
   );
 
+  const dependencies = dependenciesFactory();
+
   return (
     <SentryErrorBoundary>
       <CacheProvider value={cache}>
-        <DIProvider value={{ dependencies: dependenciesFactory() }}>
+        <DIProvider value={{ dependencies }}>
           <>
             <ThemeProvider theme={defaultTheme}>
               <AppStateProvider>

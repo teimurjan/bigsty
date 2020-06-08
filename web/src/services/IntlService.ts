@@ -1,10 +1,8 @@
 import * as intlAPI from 'src/api/IntlAPI';
 import * as intlStorage from 'src/storage/IntlStorage';
 
-export const DEFAULT_LOCALE = 'ru';
-
 export interface IIntlService {
-  getLocale(): string;
+  getLocale(): string | null;
   setLocale(locale: string): void;
   getAvailableLocales(): Promise<intlAPI.IIntlListResponseItem[]>;
 }
@@ -18,7 +16,7 @@ export class IntlService implements IIntlService {
     this.storage = storage;
   }
 
-  public getLocale = () => this.storage.getLocale() || DEFAULT_LOCALE;
+  public getLocale = () => this.storage.getLocale();
 
   public setLocale = (locale: string) => this.storage.setLocale(locale);
 
