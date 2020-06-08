@@ -29,9 +29,17 @@ const Trigger = React.forwardRef<HTMLDivElement, PopoverTriggerProps>((props, re
 });
 
 export const LanguageDropdownView = React.forwardRef<HTMLDivElement, IProps>(
-  ({ locales, changeLocale, currentLocale, TriggerComponent = Trigger, openOnHover, placement }, ref) => (
-    <Popover<HTMLDivElement> TriggerComponent={TriggerComponent} openOnHover={openOnHover} placement={placement}>
-      <Popover.Content ref={ref}>
+  (
+    { className, locales, changeLocale, currentLocale, TriggerComponent = Trigger, openOnHover, placement, offset },
+    ref,
+  ) => (
+    <Popover<HTMLDivElement>
+      TriggerComponent={TriggerComponent}
+      openOnHover={openOnHover}
+      placement={placement}
+      offset={offset}
+    >
+      <Popover.Content ref={ref} className={className}>
         {locales.map(locale => {
           const onClick = () => changeLocale(locale);
           return (

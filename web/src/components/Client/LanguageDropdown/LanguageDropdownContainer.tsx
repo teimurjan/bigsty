@@ -10,7 +10,7 @@ import { useIntlState } from 'src/state/IntlState';
 
 export const LanguageDropdownContainer = React.forwardRef<
   HTMLDivElement,
-  Pick<IViewProps, 'TriggerComponent' | 'className' | 'openOnHover' | 'placement'>
+  Pick<IViewProps, 'TriggerComponent' | 'className' | 'openOnHover' | 'placement' | 'offset'>
 >((viewProps, ref) => {
   const { dependencies } = useDependencies();
   const { intlState } = useIntlState();

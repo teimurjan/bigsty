@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
@@ -56,7 +58,7 @@ export const UserDropdownView = ({ user, onLogoutClick }: IProps) => {
 
   items.push(
     <Anchor key="language" thin>
-      <LanguageDropdown ref={languageDropdownRef} openOnHover placement="left" />
+      <LanguageDropdown ref={languageDropdownRef} openOnHover placement="bottom-start" offset={[-20, 10]} />
     </Anchor>,
   );
 

@@ -19,6 +19,7 @@ export interface IViewProps {
   className?: string;
   openOnHover?: boolean;
   placement?: PopperProps['placement'];
+  offset?: number[];
 }
 
 export const LanguageDropdownPresenter = ({
