@@ -140,6 +140,12 @@ export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {})
     version: new versionStorage.VersionStorage(localStorage),
   };
 
+  // Set locale detected on server if the intl storage is empty
+  const reqLocale = req ? (req as IncomingMessage & { locale?: string }).locale : undefined;
+  if (reqLocale && !storagesContainer.intl.getLocale()) {
+    storagesContainer.intl.setLocale(reqLocale);
+  }
+
   const headersManager = new HeadersManager(storagesContainer.auth, storagesContainer.intl);
   const APIClient = axios.create({ baseURL: safeWindow(process.env.CLIENT_API_URL, process.env.SERVER_API_URL) });
 

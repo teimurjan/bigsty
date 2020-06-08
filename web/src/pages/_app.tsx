@@ -24,6 +24,7 @@ import { defaultTheme } from 'src/themes';
 import 'bulma/css/bulma.css';
 
 const intlCache = createIntlCache();
+const dependencies = dependenciesFactory();
 
 const CustomNextApp = ({
   Component,
@@ -39,8 +40,6 @@ const CustomNextApp = ({
     },
     intlCache,
   );
-
-  const dependencies = dependenciesFactory();
 
   return (
     <SentryErrorBoundary>

@@ -52,7 +52,7 @@ const detectLocale = (req) => {
 app.prepare().then(() => {
   createServer((req, res) => {
     const detectedLocale = detectLocale(req);
-    req.locale = detectLocale(req);
+    req.locale = detectedLocale;
     req.localeDataScript = getLocaleDataScript(detectedLocale);
     req.messages = getMessages(detectedLocale);
 

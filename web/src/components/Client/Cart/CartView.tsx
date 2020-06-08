@@ -48,15 +48,12 @@ const Total: React.FC<Pick<IProps, 'getProductCount' | 'products' | 'promoCode'>
   const intl = useIntl();
 
   const totalPrice = products.reduce((acc, product) => {
-    console.log(promoCode);
-    console.log(calculateDiscountedPrice(product.price, [product.discount, promoCode ? promoCode.discount : 0]));
     const discountedPrice = calculateDiscountedPrice(product.price, [
       product.discount,
       promoCode ? promoCode.discount : 0,
     ]);
     return acc + discountedPrice * getProductCount(product.id);
   }, 0);
-  console.log(totalPrice);
 
   return (
     <Title
