@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { useDependencies } from 'src/DI/DI';
+import { getFormattedDateString } from 'src/utils/date';
 import { getRatesDateKey } from 'src/utils/rates';
 
 interface IRates {
@@ -25,6 +26,7 @@ interface IProviderProps {
 }
 
 const datesToFetch = new Set<string | undefined>();
+export const fixedRateDateStr = getFormattedDateString(new Date(2020, 6, 6));
 export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const {
     dependencies: {
@@ -39,15 +41,16 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ children }) => {
   const [rates, setRates] = React.useState<IRates>(stateCacheStorage.get('rates') || {});
 
   const fetchRates = async (date?: string) => {
-    if (datesToFetch.has(date)) {
+    const date_ = fixedRateDateStr ? fixedRateDateStr : date;
+    if (datesToFetch.has(date_)) {
       return;
     }
-    datesToFetch.add(date);
+    datesToFetch.add(date_);
 
     setLoading(true);
     try {
-      const { data } = await ratesAPI.getAll(date);
-      const rates_ = { ...stateCacheStorage.get('rates'), [getRatesDateKey(date)]: { kgsToUsd: data.kgs_to_usd } };
+      const { data } = await ratesAPI.getAll(date_);
+      const rates_ = { ...stateCacheStorage.get('rates'), [getRatesDateKey(date_)]: { kgsToUsd: data.kgs_to_usd } };
       setRates(rates_);
       stateCacheStorage.set('rates', rates_, { expireIn: 60 * 60 });
     } catch (e) {

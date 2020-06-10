@@ -9,6 +9,7 @@ def get_float_from_node(key, node):
 
 
 DELTA = 1.5
+ROUND_RATES = False
 
 def get_currency_rates(date=None):
     rates = {}
@@ -31,6 +32,8 @@ def get_currency_rates(date=None):
 
         if rates.get('kzt_to_kgs') and rates.get('kzt_to_usd'):
             rates['kgs_to_usd'] = rates['kzt_to_usd'] / rates['kzt_to_kgs'] + DELTA
+            if ROUND_RATES:
+                rates['kgs_to_usd'] = round(rates['kgs_to_usd'])
 
         return rates if len(rates) > 0 else None
 

@@ -3,7 +3,8 @@ import { useIntl } from 'react-intl';
 
 import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useIntlState } from 'src/state/IntlState';
-import { useRatesState } from 'src/state/RatesState';
+import { useRatesState, fixedRateDateStr } from 'src/state/RatesState';
+import { USE_CEILED_PRICE } from 'src/utils/featureFlags';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { getRatesDateKey } from 'src/utils/rates';
 
@@ -26,7 +27,7 @@ const useFormattedPrice = ({ price, discount, date, forceLocale }: IPriceProps) 
     ratesState: { rates, fetchRates, error },
   } = useRatesState();
 
-  const ratesOnDay = rates[getRatesDateKey(date)];
+  const ratesOnDay = rates[fixedRateDateStr ? fixedRateDateStr : getRatesDateKey(date)];
   React.useEffect(() => {
     if (!ratesOnDay) {
       fetchRates(date);
@@ -43,9 +44,12 @@ const useFormattedPrice = ({ price, discount, date, forceLocale }: IPriceProps) 
       return error ? defaultFormattedPrice : null;
     }
 
+    const ratedPrice = Math.round(calculatedPrice * kgsToUsdRate);
+    const ceiledPrice = Math.ceil(ratedPrice / 100) * 100;
+
     return (
       <>
-        {Math.round(calculatedPrice * kgsToUsdRate)} {isEn ? 'KGS' : <u>с</u>}
+        {USE_CEILED_PRICE ? ceiledPrice : ratedPrice} {isEn ? 'KGS' : <u>с</u>}
       </>
     );
   }, [calculatedPrice, ratesOnDay, isEn, defaultFormattedPrice, error]);

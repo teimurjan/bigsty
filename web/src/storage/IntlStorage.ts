@@ -1,4 +1,4 @@
-import { Storage } from 'ttypes/storage';
+import { ICookieStorage } from 'src/storage/cookie/CookieStorage';
 
 export interface IIntlStorage {
   getLocale(): string | null;
@@ -7,8 +7,8 @@ export interface IIntlStorage {
 }
 
 export class IntlStorage implements IIntlStorage {
-  private storage: Storage;
-  constructor(storage: Storage) {
+  private storage: ICookieStorage;
+  constructor(storage: ICookieStorage) {
     this.storage = storage;
   }
 
@@ -17,7 +17,9 @@ export class IntlStorage implements IIntlStorage {
   }
 
   public setLocale(locale: string) {
-    this.storage.setItem('locale', locale);
+    const expires = new Date();
+    expires.setFullYear(expires.getFullYear() + 1);
+    this.storage.setItem('locale', locale, { path: '/', expires });
   }
 
   public clearLocale() {
