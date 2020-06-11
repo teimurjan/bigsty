@@ -75,6 +75,7 @@ export const ProductTypePagePresenter: React.FC<IProps> = ({
     if (initialProps) {
       setError(initialProps.error);
       setProductType(initialProps.productType);
+      setProducts(initialProps.products);
     }
   }, [initialProps]);
 
