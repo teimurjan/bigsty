@@ -3,17 +3,24 @@ import { Storage } from 'ttypes/storage';
 import { objectWithout } from 'src/utils/object';
 import { getCurrentTimestamp } from 'src/utils/time';
 
+type SetOptions = { expireIn: number };
+
+type Listener = (key: string, value: object | undefined, options?: SetOptions) => void;
+
 export interface IStateCacheStorage {
-  get<T = object>(key: string): T | null;
-  set(key: string, value: object, options?: { expireIn: number }): void;
+  get(key: string): object | null;
+  set(key: string, value: object | undefined, options?: SetOptions): void;
   clear(key: string): void;
   clearAll(): void;
+  addChangeListener(listener: Listener): void;
 }
 
 export class StateCacheStorage implements IStateCacheStorage {
+  private listeners: Set<Listener>;
   private storage: Storage;
   constructor(storage: Storage) {
     this.storage = storage;
+    this.listeners = new Set();
   }
 
   private getCachedState() {
@@ -45,15 +52,21 @@ export class StateCacheStorage implements IStateCacheStorage {
       cachedState[key] = value;
     }
     this.storage.setItem('cachedState', JSON.stringify(cachedState));
+    this.listeners.forEach(l => l(key, value, options));
   };
 
   public clear(key: string) {
     const cachedState = this.getCachedState();
     cachedState[key] = undefined;
-    this.set(key, cachedState);
+    this.set(key, undefined);
   }
 
   public clearAll() {
     this.storage.removeItem('cachedState');
+  }
+
+  public addChangeListener(listener: Listener) {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
   }
 }

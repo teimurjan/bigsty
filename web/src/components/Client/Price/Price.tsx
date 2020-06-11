@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 
-import { useLazyInitialization } from 'src/hooks/useLazyInitialization';
 import { useIntlState } from 'src/state/IntlState';
 import { useRatesState, fixedRateDateStr } from 'src/state/RatesState';
 import { USE_CEILED_PRICE } from 'src/utils/featureFlags';
-import { calculateDiscountedPrice } from 'src/utils/number';
+import { calculateDiscountedPrice, getCeiledPrice } from 'src/utils/number';
 import { getRatesDateKey } from 'src/utils/rates';
 
 interface IPriceProps {
@@ -28,33 +27,30 @@ const useFormattedPrice = ({ price, discount, date, forceLocale }: IPriceProps) 
   } = useRatesState();
 
   const ratesOnDay = rates[fixedRateDateStr ? fixedRateDateStr : getRatesDateKey(date)];
+  const kgsToUsdRate = ratesOnDay ? ratesOnDay.kgsToUsd : undefined;
   React.useEffect(() => {
-    if (!ratesOnDay) {
+    if (!kgsToUsdRate) {
       fetchRates(date);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [!!ratesOnDay]);
+  }, [!!kgsToUsdRate]);
 
   const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
-  const defaultFormattedPrice = React.useMemo(() => <>${calculatedPrice}</>, [calculatedPrice]);
+  const defaultFormattedPrice = React.useMemo(() => `$${calculatedPrice}`, [calculatedPrice]);
   const isEn = [locale, forceLocale].some(l => l === 'en');
   const formattedPrice = React.useMemo(() => {
-    const kgsToUsdRate = ratesOnDay ? ratesOnDay.kgsToUsd : undefined;
     if (!kgsToUsdRate) {
       return error ? defaultFormattedPrice : null;
     }
-
-    const ratedPrice = Math.round(calculatedPrice * kgsToUsdRate);
-    const ceiledPrice = Math.ceil(ratedPrice / 100) * 100;
-
+    const kgsPrice = Math.round(calculatedPrice * kgsToUsdRate);
     return (
       <>
-        {USE_CEILED_PRICE ? ceiledPrice : ratedPrice} {isEn ? 'KGS' : <u>с</u>}
+        {USE_CEILED_PRICE ? getCeiledPrice(kgsPrice) : kgsPrice} {isEn ? 'KGS' : <u>с</u>}
       </>
     );
-  }, [calculatedPrice, ratesOnDay, isEn, defaultFormattedPrice, error]);
+  }, [calculatedPrice, kgsToUsdRate, isEn, defaultFormattedPrice, error]);
 
-  return useLazyInitialization(formattedPrice, null).value;
+  return formattedPrice;
 };
 
 const usePriceRange = ({ range }: IPriceRangeTextProps) => {

@@ -25,6 +25,7 @@ import * as orderService from 'src/services/OrderService';
 import * as productService from 'src/services/ProductService';
 import * as productTypeService from 'src/services/ProductTypeService';
 import * as promoCodeService from 'src/services/PromoCodeService';
+import * as ratesService from 'src/services/RatesService';
 import * as searchService from 'src/services/SearchService';
 import * as authStorage from 'src/storage/AuthStorage';
 import * as cartStorage from 'src/storage/CartStorage';
@@ -64,6 +65,7 @@ export interface IServicesContainer {
   banner: bannerService.IBannerService;
   order: orderService.IOrderService;
   promoCode: promoCodeService.IPromoCodeService;
+  rates: ratesService.IRatesService;
 }
 
 export interface IStoragesContainer {
@@ -132,11 +134,12 @@ export interface IDependenciesFactoryArgs {
 export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {}): IDependenciesContainer => {
   const localStorage = safeWindow(w => w.localStorage, new InMemoryStorage());
   const cookieStorage = req && res ? new ServerCookieStorage(req, res) : new CookieStorage();
+  const stateCacheStorage_ = new stateCacheStorage.StateCacheStorage(localStorage);
   const storagesContainer = {
     auth: new authStorage.AuthStorage(cookieStorage),
     intl: new intlStorage.IntlStorage(cookieStorage),
-    stateCache: new stateCacheStorage.StateCacheStorage(localStorage),
-    cart: new cartStorage.CartStorage(localStorage),
+    stateCache: stateCacheStorage_,
+    cart: new cartStorage.CartStorage(stateCacheStorage_),
     version: new versionStorage.VersionStorage(localStorage),
   };
 
@@ -176,6 +179,7 @@ export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {})
     banner: new bannerService.BannerService(APIsContainer.banner),
     order: new orderService.OrderService(APIsContainer.order),
     promoCode: new promoCodeService.PromoCodeService(APIsContainer.promoCode),
+    rates: new ratesService.RatesService(APIsContainer.rates, storagesContainer.stateCache),
   };
 
   APIClient.interceptors.response.use(

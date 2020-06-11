@@ -17,7 +17,7 @@ import { DIProvider } from 'src/DI/DI';
 import { AppStateProvider } from 'src/state/AppState';
 import { CategoriesStateProvider } from 'src/state/CategoriesState';
 import { IntlStateProvider } from 'src/state/IntlState';
-import { RatesStateProvider } from 'src/state/RatesState';
+import { RatesStateProvider, fixedRateDateStr } from 'src/state/RatesState';
 import { UserStateProvider } from 'src/state/UserState';
 import { defaultTheme } from 'src/themes';
 
@@ -55,7 +55,7 @@ const CustomNextApp = ({
                   }}
                   intl={intl}
                 >
-                  <RatesStateProvider>
+                  <RatesStateProvider initialProps={componentsInitialProps.ratesState}>
                     <UserStateProvider>
                       <CategoriesStateProvider initialProps={componentsInitialProps.categoriesState}>
                         <EntryPoint>
@@ -83,19 +83,22 @@ const CustomNextApp = ({
 
 const getComponentsInitialProps = async (args: IDependenciesFactoryArgs) => {
   const {
-    services: { category: categoryService, intl: intlService },
+    services: { category: categoryService, intl: intlService, rates: ratesService },
   } = dependenciesFactory(args);
   try {
     const { entities, result } = await categoryService.getAll();
     const availableLocales = await intlService.getAvailableLocales();
+    const { data: todaysRate } = await ratesService.getOne(fixedRateDateStr);
     return {
       categoriesState: { categories: entities.categories, categoriesOrder: result },
       intlState: { availableLocales },
+      ratesState: { rates: { [fixedRateDateStr]: { kgsToUsd: todaysRate.kgs_to_usd } } },
     };
   } catch (e) {
     return {
       categoriesState: { categories: {}, categoriesOrder: [], error: 'errors.common' },
       intlState: { availableLocales: [], error: 'errors.common' },
+      ratesState: { rates: {}, error: 'errors.common' },
     };
   }
 };

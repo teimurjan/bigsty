@@ -1,4 +1,4 @@
-import { Storage } from 'ttypes/storage';
+import { IStateCacheStorage } from 'src/storage/StateCacheStorage';
 
 export interface ICartItem {
   id: number;
@@ -12,32 +12,21 @@ export interface ICartStorage {
   remove(item: ICartItem): number;
   setItems(items: ICartItem[]): void;
   clear(): void;
-  addChangeListener(listener: Listener): () => void;
+  addChangeListener: IStateCacheStorage['addChangeListener'];
 }
 
-type Listener = (items: ICartItem[]) => void;
-
 export class CartStorage implements ICartStorage {
-  private listeners: Set<Listener>;
-  private storage: Storage;
-  constructor(storage: Storage) {
+  private storage: IStateCacheStorage;
+  constructor(storage: IStateCacheStorage) {
     this.storage = storage;
-    this.listeners = new Set();
   }
 
   public getItems(): ICartItem[] {
-    try {
-      const rawCartItems = this.storage.getItem('cart');
-      return rawCartItems ? JSON.parse(rawCartItems) : [];
-    } catch (e) {
-      this.clear();
-      return [];
-    }
+    return (this.storage.get('cart') || []) as ICartItem[];
   }
 
   public setItems(items: ICartItem[]) {
-    this.listeners.forEach(l => l(items));
-    this.storage.setItem('cart', JSON.stringify(items));
+    this.storage.set('cart', items);
   }
 
   public getItem(id: number) {
@@ -73,11 +62,10 @@ export class CartStorage implements ICartStorage {
   }
 
   public clear() {
-    this.storage.removeItem('cart');
+    this.storage.clear('cart');
   }
 
-  public addChangeListener(listener: Listener) {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
-  }
+  public addChangeListener: IStateCacheStorage['addChangeListener'] = listener => {
+    return this.storage.addChangeListener(listener);
+  };
 }

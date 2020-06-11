@@ -10,7 +10,7 @@ export interface RatesListResponseData {
 }
 
 export interface IRatesAPI {
-  getAll(date?: string): Promise<RatesListResponseData>;
+  getOne(date?: string): Promise<RatesListResponseData>;
 }
 
 export class RatesAPI implements IRatesAPI {
@@ -22,7 +22,7 @@ export class RatesAPI implements IRatesAPI {
     this.headersManager = headersManager;
   }
 
-  public async getAll(date?: string) {
+  public async getOne(date?: string) {
     try {
       const response = await this.client.get<RatesListResponseData>(
         `/api/currency_rates${buildQueryString({ date })}`,
