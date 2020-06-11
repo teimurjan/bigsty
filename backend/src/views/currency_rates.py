@@ -1,6 +1,7 @@
 from flask import current_app as app
 import requests
 import datetime
+import math
 from xml.etree import ElementTree as ET
 
 
@@ -10,6 +11,14 @@ def get_float_from_node(key, node):
 
 DELTA = 1.5
 ROUND_RATES = False
+
+
+def get_rounded_rate(rate):
+    _, integer = math.modf(rate)
+    for delta in [0, -1, 1]:
+        if (integer + delta) % 3 == 0:
+            return integer + delta
+
 
 def get_currency_rates(date=None):
     rates = {}
@@ -31,9 +40,10 @@ def get_currency_rates(date=None):
                 rates['kzt_to_usd'] = value / nominal
 
         if rates.get('kzt_to_kgs') and rates.get('kzt_to_usd'):
-            rates['kgs_to_usd'] = rates['kzt_to_usd'] / rates['kzt_to_kgs'] + DELTA
+            rates['kgs_to_usd'] = rates['kzt_to_usd'] / \
+                rates['kzt_to_kgs'] + DELTA
             if ROUND_RATES:
-                rates['kgs_to_usd'] = round(rates['kgs_to_usd'])
+                rates['kgs_to_usd'] = get_rounded_rate(rates['kgs_to_usd'])
 
         return rates if len(rates) > 0 else None
 
