@@ -55,11 +55,6 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ initialProps, ch
   };
 
   React.useEffect(() => {
-    fetchRates();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
     return ratesService.addChangeListener((_, rates) => setRates(rates as ICachedRates));
   }, [ratesService]);
 

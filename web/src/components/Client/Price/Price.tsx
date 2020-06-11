@@ -26,7 +26,7 @@ const useFormattedPrice = ({ price, discount, date, forceLocale }: IPriceProps) 
     ratesState: { rates, fetchRates, error },
   } = useRatesState();
 
-  const ratesOnDay = rates[fixedRateDateStr ? fixedRateDateStr : getRatesDateKey(date)];
+  const ratesOnDay = rates[fixedRateDateStr || getRatesDateKey(date)];
   const kgsToUsdRate = ratesOnDay ? ratesOnDay.kgsToUsd : undefined;
   React.useEffect(() => {
     if (!kgsToUsdRate) {

@@ -20,6 +20,7 @@ import { IntlStateProvider } from 'src/state/IntlState';
 import { RatesStateProvider, fixedRateDateStr } from 'src/state/RatesState';
 import { UserStateProvider } from 'src/state/UserState';
 import { defaultTheme } from 'src/themes';
+import { getRatesDateKey } from 'src/utils/rates';
 
 import 'bulma/css/bulma.css';
 
@@ -88,11 +89,12 @@ const getComponentsInitialProps = async (args: IDependenciesFactoryArgs) => {
   try {
     const { entities, result } = await categoryService.getAll();
     const availableLocales = await intlService.getAvailableLocales();
+    const ratesDateKey = fixedRateDateStr || getRatesDateKey()
     const { data: todaysRate } = await ratesService.getOne(fixedRateDateStr);
     return {
       categoriesState: { categories: entities.categories, categoriesOrder: result },
       intlState: { availableLocales },
-      ratesState: { rates: { [fixedRateDateStr]: { kgsToUsd: todaysRate.kgs_to_usd } } },
+      ratesState: { rates: { [ratesDateKey]: { kgsToUsd: todaysRate.kgs_to_usd } } },
     };
   } catch (e) {
     return {
