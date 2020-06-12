@@ -25,6 +25,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
   const asPath = `/products/${productType.slug}`;
   const ref = React.useRef<HTMLAnchorElement>(null);
   const { price, discount } = usePriceRangeText({ range: productType.products || [] });
+  const areProductsAvailable = productType.products?.some(product => product.quantity > 0);
 
   return (
     <LinkPassingProps
@@ -36,6 +37,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
         display: flex;
         flex-direction: column;
       `}
+      className={areProductsAvailable ? '' : 'unavailable'}
       href="/products/[slug]"
       as={asPath}
       passHref
@@ -91,7 +93,11 @@ export const ProductTypeCard = ({ productType }: IProps) => {
             }
           `}
         >
-          <span>{intl.formatMessage({ id: 'common.buy' })}</span>
+          <span>
+            {intl.formatMessage({
+              id: areProductsAvailable ? 'common.buy' : 'ProductPage.notInStock',
+            })}
+          </span>
           {price && (
             <>
               <span
@@ -119,6 +125,10 @@ export const ProductTypeCard = ({ productType }: IProps) => {
                   button:hover &,
                   button:focus & {
                     color: inherit;
+                  }
+
+                  &.unavailable {
+                    color: ${theme.textSecondaryColor};
                   }
 
                   del {

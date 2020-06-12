@@ -157,7 +157,7 @@
   "errors.categoryDeletion.hasProductTypes": "Category which contains product types cannot be deleted.",
   "errors.productTypeDeletion.hasProducts": "Product type which contains products cannot be deleted.",
   "ProductPage.notFound": "Product does not exist.",
-  "ProductPage.notInStock": "Not in stock",
+  "ProductPage.notInStock": "Sold out",
   "AdminBanners.notFound.title": "No banners found",
   "AdminBanners.notFound.cta": "Create a banner",
   "AdminBanners.notFound.description": "It seems that you've not added a banner. Click below to fix it.",

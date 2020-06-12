@@ -157,7 +157,7 @@
   "errors.categoryDeletion.hasProductTypes": "Категория у которой есть типы продуктов не может быть удалена.",
   "errors.productTypeDeletion.hasProducts": "Тип продукта у которого есть продукты не может быть удален.",
   "ProductPage.notFound": "Продукт не существует.",
-  "ProductPage.notInStock": "Нет в наличии",
+  "ProductPage.notInStock": "Проданы",
   "AdminBanners.notFound.title": "Нет баннеров",
   "AdminBanners.notFound.cta": "Создать баннер",
   "AdminBanners.notFound.description": "Кажется, вы не добавили ни одного баннера.",
