@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 from typing import Generic, TypeVar, List
 
+from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 
 from src.models.intl import Language

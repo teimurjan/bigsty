@@ -10,7 +10,6 @@ CREATE_PRODUCT_VALIDATION_RULES = {
     },
     'price': {'type': 'integer', 'required': True, 'min': 1, 'nullable': False},
     'upc': {'type': 'string', 'required': False, 'nullable': True},
-    'sku': {'type': 'string', 'required': False, 'nullable': True},
     'discount': {'type': 'integer', 'required': True, 'min': -1, 'max': 100, 'nullable': True},
     'quantity': {'type': 'integer', 'required': True, 'min': 0, 'nullable': False},
     'feature_values': {

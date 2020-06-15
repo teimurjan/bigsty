@@ -15,7 +15,6 @@ class ProductRepo(NonDeletableRepo):
         discount,
         quantity,
         upc,
-        sku,
         images,
         product_type,
         feature_values,
@@ -27,7 +26,6 @@ class ProductRepo(NonDeletableRepo):
         product.discount = discount
         product.quantity = quantity
         product.upc = upc
-        product.sku = sku
         product.feature_values = feature_values
         product.product_type = product_type
 
@@ -53,7 +51,6 @@ class ProductRepo(NonDeletableRepo):
         discount,
         quantity,
         upc,
-        sku,
         images,
         product_type,
         feature_values,
@@ -65,7 +62,6 @@ class ProductRepo(NonDeletableRepo):
         product.discount = discount
         product.quantity = quantity
         product.upc = upc
-        product.sku = sku
         product.feature_values = feature_values
         product.product_type = product_type
 

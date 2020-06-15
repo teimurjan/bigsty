@@ -23,7 +23,6 @@ class Product(NonDeletableModel):
         lazy='joined',
         cascade="all, delete, delete-orphan"
     )
-    sku = Column(String, nullable=True)
     upc = Column(String, nullable=True, unique=True)
 
     @hybrid_property

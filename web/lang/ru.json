@@ -114,7 +114,6 @@
   "AdminProducts.price": "Цена",
   "AdminProducts.discount": "Скидка",
   "AdminProducts.upc": "UPC",
-  "AdminProducts.sku": "SKU",
   "common.productType": "Тип продукта",
   "AdminProductTypes.notFound": "Тип продукта не найден",
   "AdminProducts.create.title": "Создать продукт",

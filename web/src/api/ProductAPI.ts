@@ -16,7 +16,6 @@ export interface IProductListResponseItem {
   discount: number;
   price: number;
   quantity: number;
-  sku?: string;
   upc?: string;
   product_type: { id: number; name: string; image: string };
   feature_values: Array<{
@@ -38,7 +37,6 @@ export interface IProductResponseItem {
   discount: number;
   price: number;
   quantity: number;
-  sku?: string;
   upc?: string;
   product_type: { id: number; name: string; image: string };
   feature_values: Array<{
@@ -72,7 +70,6 @@ export interface IProductForProductTypeResponseItem {
     slug: string;
   };
   quantity: number;
-  sku?: string;
   upc?: string;
 }
 
@@ -87,7 +84,6 @@ export interface IProductCreatePayload {
   quantity: number;
   product_type_id: number;
   images?: Array<File | string>;
-  sku?: string;
   upc?: string;
 }
 

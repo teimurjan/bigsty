@@ -70,29 +70,6 @@ const renderUPCField = injectIntl(({ input, meta, intl }: FieldRenderProps<strin
   );
 });
 
-const renderSKUField = injectIntl(({ input, meta, intl }: FieldRenderProps<string> & { intl: IntlShape }) => {
-  const showError = meta.touched && meta.error;
-
-  return (
-    <FormTextField
-      labelProps={{
-        children: intl.formatMessage({ id: 'AdminProducts.sku' }),
-      }}
-      inputProps={{
-        ...input,
-        isDanger: showError,
-        placeholder: intl.formatMessage({
-          id: 'AdminProducts.sku',
-        }),
-      }}
-      helpTextProps={{
-        children: showError ? intl.formatMessage({ id: meta.error }) : undefined,
-        type: 'is-danger',
-      }}
-    />
-  );
-});
-
 const renderDiscountField = injectIntl(({ input, meta, intl }: FieldRenderProps<string> & { intl: IntlShape }) => {
   const showError = meta.touched && meta.error;
 
@@ -296,7 +273,6 @@ export const Fields: React.SFC<IFieldsProps> = React.memo(
         <FinalFormField key="discount" name="discount" render={renderDiscountField} />
         <FinalFormField key="quantity" name="quantity" render={renderQuantityField} />
         <FinalFormField key="upc" name="upc" render={renderUPCField} />
-        <FinalFormField key="sku" name="sku" render={renderSKUField} />
         <FinalFormField
           key="product_type_id"
           name="product_type_id"

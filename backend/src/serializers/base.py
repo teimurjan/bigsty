@@ -8,14 +8,14 @@ class Serializer:
         self._only_fields = None
         self._ignore_fields = None
 
-    def _init_relation_safely(self, attr_name, obj, relation_name):
-        setattr(self, attr_name, self._get_relation_safely(obj, relation_name))
+    def _init_relation_safely(self, attr_name, obj, relation_name, default=None):
+        setattr(self, attr_name, self._get_relation_safely(obj, relation_name, default))
 
-    def _get_relation_safely(self, obj, relation_name):
+    def _get_relation_safely(self, obj, relation_name, default=None):
         try:
-            return getattr(obj, relation_name)
+            return getattr(obj, relation_name, default)
         except DetachedInstanceError:
-            return None
+            return default
 
     def only(self, only_fields):
         if only_fields:

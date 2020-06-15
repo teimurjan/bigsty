@@ -25,7 +25,6 @@ interface IFormValues {
   discount: string;
   price: string;
   upc?: string;
-  sku?: string;
   feature_values: string[];
   product_type_id: string;
   images: Array<string | File>;
@@ -71,7 +70,6 @@ export const AdminProductsEditPresenter: React.FC<IProps> = ({
       discount: yup.number().required('common.errors.field.empty'),
       price: yup.number().required('common.errors.field.empty'),
       upc: yup.string().nullable(true),
-      sku: yup.string().nullable(true),
       product_type_id: yup.number().required('common.errors.field.empty'),
       feature_values: yup
         .array()
@@ -155,7 +153,6 @@ export const AdminProductsEditPresenter: React.FC<IProps> = ({
               discount: product.discount.toString(),
               price: product.price.toString(),
               upc: product.upc,
-              sku: product.sku,
               feature_values: product.feature_values.map(id => id.toString()),
               product_type_id: product.product_type.id.toString(),
               images: product.images,

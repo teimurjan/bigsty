@@ -114,7 +114,6 @@
   "AdminProducts.price": "Price",
   "AdminProducts.discount": "Discount",
   "AdminProducts.upc": "UPC",
-  "AdminProducts.sku": "SKU",
   "common.productType": "Product Type",
   "AdminProductTypes.notFound": "Product type not found.",
   "AdminProducts.create.title": "Create product",
