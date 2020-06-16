@@ -1,7 +1,7 @@
 from sqlalchemy import Table, Column, String, Integer, ForeignKey, orm, Boolean
 from src.models.base import NonDeletableModel, BaseModel
 
-products_m2m_table = Table(
+ProductXPromoCodeTable = Table(
     'product_x_promo_code',
     BaseModel.metadata,
     Column('product_id', Integer, ForeignKey(
@@ -20,7 +20,7 @@ class PromoCode(NonDeletableModel):
     disable_on_use = Column(Boolean, nullable=False, default=True)
     products = orm.relationship(
         'Product',
-        secondary=products_m2m_table,
+        secondary=ProductXPromoCodeTable,
         lazy='select',
         backref=orm.backref('promo_codes')
     )

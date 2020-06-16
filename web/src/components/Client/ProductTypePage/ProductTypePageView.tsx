@@ -55,12 +55,21 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
     products.length > 0 ? products[0].feature_values.map(featureValue => featureValue.feature_type) : [];
 
   const allFeatureValuesGroupedByFeatureType = getAllFeatureValuesGroupedByType(products, allFeatureTypes);
-  const [chosenFeatureValues, setChosenFeatureValues] = React.useState<{ [key: string]: number }>(
-    Object.keys(allFeatureValuesGroupedByFeatureType).reduce((acc, featureTypeId) => {
-      const featueValues = allFeatureValuesGroupedByFeatureType[featureTypeId];
-      return { ...acc, [featureTypeId]: featueValues.length > 0 ? featueValues[0].id : undefined };
-    }, {}),
+  const initialFeatureValues = React.useMemo(
+    () =>
+      Object.keys(allFeatureValuesGroupedByFeatureType).reduce((acc, featureTypeId) => {
+        const featueValues = allFeatureValuesGroupedByFeatureType[featureTypeId];
+        return { ...acc, [featureTypeId]: featueValues.length > 0 ? featueValues[0].id : undefined };
+      }, {}),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    Object.keys(allFeatureValuesGroupedByFeatureType),
   );
+  const [chosenFeatureValues, setChosenFeatureValues] = React.useState<{ [key: string]: number }>(initialFeatureValues);
+
+  React.useEffect(() => {
+    setChosenFeatureValues(initialFeatureValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialFeatureValues]);
 
   const matchingProduct = products.find(product =>
     product.feature_values.every(featureValue => chosenFeatureValues[featureValue.feature_type.id] === featureValue.id),
@@ -183,7 +192,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
               >
                 {productType.name}
               </Title>
-              {matchingProduct && matchingProduct.quantity > 0 ? (
+              {matchingProduct && matchingProduct.quantity > 0 && (
                 <Subtitle
                   css={css`
                     color: ${theme.textColor};
@@ -197,7 +206,8 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
                 >
                   <PriceCrossedText price={matchingProduct.price} discount={matchingProduct.discount} />
                 </Subtitle>
-              ) : (
+              )}
+              {matchingProduct && matchingProduct.quantity === 0 && (
                 <Subtitle size={3}>{intl.formatMessage({ id: 'ProductPage.notInStock' })}</Subtitle>
               )}
             </div>
@@ -250,11 +260,11 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
               href="/categories/[id]/products"
               asPath={`/categories/${productType.category.slug}/products`}
             >
-              >{' '}
+              &gt; {' '}
               {intl.formatMessage({ id: 'ProductTypePage.findMoreForCategory' }, { value: productType.category.name })}
             </Anchor>
             <Anchor primary href="/how-it-works">
-              > {intl.formatMessage({ id: 'HowItWorks.help' })}
+              &gt; {intl.formatMessage({ id: 'HowItWorks.help' })}
             </Anchor>
           </div>
         </div>

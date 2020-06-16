@@ -1,12 +1,11 @@
 import * as React from 'react';
 
 import { useDependencies } from 'src/DI/DI';
-import { ICachedRates } from 'src/services/RatesService';
-import { getFormattedDateString } from 'src/utils/date';
+import { IGroupedRates } from 'src/services/RateService';
 
 export interface IContextValue {
   ratesState: {
-    rates: ICachedRates;
+    rates: IGroupedRates;
     isLoading: boolean;
     error?: string;
     fetchRates: (date?: string) => Promise<void>;
@@ -18,35 +17,27 @@ const Context = React.createContext<IContextValue | null>(null);
 interface IProviderProps {
   children: React.ReactNode;
   initialProps?: {
-    rates: ICachedRates;
+    rates: IGroupedRates;
     error?: string;
   };
 }
 
-const datesToFetch = new Set<string | undefined>();
-export const fixedRateDateStr = getFormattedDateString(new Date(2020, 6, 6));
 export const RatesStateProvider: React.SFC<IProviderProps> = ({ initialProps, children }) => {
   const {
     dependencies: {
-      services: { rates: ratesService },
+      services: { rate: rateService },
     },
   } = useDependencies();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(initialProps ? initialProps.error : undefined);
-  const [rates, setRates] = React.useState(initialProps ? initialProps.rates : ratesService.getAllCached());
+  const [rates, setRates] = React.useState(initialProps ? initialProps.rates : rateService.getAllCached());
 
-  const fetchRates = async (date?: string) => {
-    const date_ = fixedRateDateStr ? fixedRateDateStr : date;
-    if (datesToFetch.has(date_)) {
-      return;
-    }
-    datesToFetch.add(date_);
-
+  const fetchRates = async () => {
     setLoading(true);
     try {
-      await ratesService.getOne(date_);
+      setRates(await rateService.getAllGrouped());
     } catch (e) {
       setError(e);
     } finally {
@@ -55,8 +46,8 @@ export const RatesStateProvider: React.SFC<IProviderProps> = ({ initialProps, ch
   };
 
   React.useEffect(() => {
-    return ratesService.addChangeListener((_, rates) => setRates(rates as ICachedRates));
-  }, [ratesService]);
+    return rateService.addChangeListener((_, rates) => setRates(rates as IGroupedRates));
+  }, [rateService]);
 
   return (
     <Context.Provider

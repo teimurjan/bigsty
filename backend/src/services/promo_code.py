@@ -1,12 +1,14 @@
+from src.repos.order import OrderRepo
 from src.repos.product import ProductRepo
 from src.repos.promo_code import PromoCodeRepo
 from src.services.decorators import allow_roles
 
 
 class PromoCodeService:
-    def __init__(self, repo: PromoCodeRepo, product_repo: ProductRepo):
+    def __init__(self, repo: PromoCodeRepo, product_repo: ProductRepo, order_repo: OrderRepo):
         self._repo = repo
         self._product_repo = product_repo
+        self._order_repo = order_repo
 
     @allow_roles(['admin', 'manager'])
     def create(self, data, *args, **kwargs):
@@ -31,6 +33,9 @@ class PromoCodeService:
     def update(self, id_, data, *args, **kwargs):
         try:
             with self._repo.session() as s:
+                if self._order_repo.has_with_promo_code(id_, session=s):
+                    raise self.PromoCodeWithOrdersIsUntouchable()
+
                 products = self._product_repo.filter_by_ids(
                     data['products'],
                     session=s
@@ -70,10 +75,11 @@ class PromoCodeService:
     @allow_roles(['admin', 'manager'])
     def delete(self, id_, *args, **kwargs):
         try:
-            if self._order_repo.has_with_promo_code(id_):
-                raise self.PromoCodeWithOrdersIsUntouchable()
+            with self._repo.session() as s:
+                if self._order_repo.has_with_promo_code(id_, session=s):
+                    raise self.PromoCodeWithOrdersIsUntouchable()
 
-            return self._repo.delete(id_)
+                return self._repo.delete(id_, session=s)
         except self._repo.DoesNotExist:
             raise self.PromoCodeNotFound()
 

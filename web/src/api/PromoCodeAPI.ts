@@ -64,13 +64,19 @@ export interface IPromoCodeAPI {
 export const errors = {
   PromoCodeNotFound: class extends Error {
     constructor() {
-      super('Feature type not found');
+      super('Promo code not found');
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
   DuplicatedValueError: class extends Error {
     constructor() {
-      super('Feature type not found');
+      super('Promo code not found');
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
+  PromoCodeWithOrdersIsUntouchable: class extends Error {
+    constructor() {
+      super('Promo code with orders is untouchable');
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
@@ -106,6 +112,9 @@ export class PromoCodeAPI implements IPromoCodeAPI {
       if (e.response && e.response.status === 404) {
         throw new errors.PromoCodeNotFound();
       }
+      if (e.response && e.response.data.orders) {
+        throw new errors.PromoCodeWithOrdersIsUntouchable();
+      }
       throw e;
     }
   }
@@ -134,8 +143,11 @@ export class PromoCodeAPI implements IPromoCodeAPI {
       if (e.response && e.response.status === 404) {
         throw new errors.PromoCodeNotFound();
       }
-      if (e.response.data.value) {
+      if (e.response && e.response.data.value) {
         throw new errors.DuplicatedValueError();
+      }
+      if (e.response && e.response.data.orders) {
+        throw new errors.PromoCodeWithOrdersIsUntouchable();
       }
       throw e;
     }

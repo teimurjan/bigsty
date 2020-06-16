@@ -7,7 +7,7 @@ import { useAdminProductTypesState } from 'src/state/AdminProductTypesState';
 
 const getErrorMessageID = (e: Error) => {
   if (e instanceof productTypeService.errors.ProductTypeHasProducts) {
-    return 'errors.productTypeDeletion.hasProducts';
+    return 'AdminProductTypes.errors.hasProducts';
   }
 
   return 'errors.common';

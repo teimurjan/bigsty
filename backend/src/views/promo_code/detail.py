@@ -41,6 +41,8 @@ class PromoCodeDetailView(ValidatableView):
             return {'data': serialized_promo_code}, OK_CODE
         except self._service.PromoCodeNotFound:
             return {}, NOT_FOUND_CODE
+        except self._service.PromoCodeWithOrdersIsUntouchable:
+            raise InvalidEntityFormat({'orders': 'errors.hasOrders'})
         except self._service.ValueNotUnique:
             raise InvalidEntityFormat({'value': 'errors.alreadyExists'})
 

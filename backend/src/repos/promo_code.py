@@ -2,10 +2,10 @@ from sqlalchemy.orm.query import aliased
 from sqlalchemy.orm import joinedload
 
 from src.models import PromoCode
-from src.repos.base import Repo, with_session
+from src.repos.base import NonDeletableRepo, with_session
 
 
-class PromoCodeRepo(Repo):
+class PromoCodeRepo(NonDeletableRepo):
     def __init__(self, db_conn):
         super().__init__(db_conn, PromoCode)
 
@@ -44,7 +44,7 @@ class PromoCodeRepo(Repo):
 
     @with_session
     def get_by_value(self, value, join_products, session):
-        q = session.query(PromoCode)
+        q = self.get_non_deleted_query()
         if join_products:
             q = (
                 q

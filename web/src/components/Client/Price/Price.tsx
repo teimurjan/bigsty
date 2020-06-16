@@ -2,15 +2,14 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 
 import { useIntlState } from 'src/state/IntlState';
-import { useRatesState, fixedRateDateStr } from 'src/state/RatesState';
+import { useRatesState } from 'src/state/RatesState';
 import { USE_CEILED_PRICE } from 'src/utils/featureFlags';
 import { calculateDiscountedPrice, getCeiledPrice } from 'src/utils/number';
-import { getRatesDateKey } from 'src/utils/rates';
 
 interface IPriceProps {
   price: number;
   discount?: number | number[];
-  date?: string;
+  date?: Date;
   forceLocale?: string;
 }
 
@@ -18,37 +17,45 @@ interface IPriceRangeTextProps {
   range: IPriceProps[];
 }
 
+const useRateOnDate = ({ date, name }: { date?: Date; name: string }) => {
+  const {
+    ratesState: { rates, error },
+  } = useRatesState();
+
+  if (!rates[name]) {
+    return {};
+  }
+
+  const rate = date
+    ? rates[name].find(rate => new Date(rate.created_on).getTime() > date.getTime())
+    : rates[name][rates[name].length - 1];
+
+  return { rate, error };
+};
+
+export const KGS_TO_USD_RATE_NAME = 'kgs_to_usd'
+
 const useFormattedPrice = ({ price, discount, date, forceLocale }: IPriceProps) => {
   const {
     intlState: { locale },
   } = useIntlState();
-  const {
-    ratesState: { rates, fetchRates, error },
-  } = useRatesState();
 
-  const ratesOnDay = rates[fixedRateDateStr || getRatesDateKey(date)];
-  const kgsToUsdRate = ratesOnDay ? ratesOnDay.kgsToUsd : undefined;
-  React.useEffect(() => {
-    if (!kgsToUsdRate) {
-      fetchRates(date);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [!!kgsToUsdRate]);
+  const { rate, error } = useRateOnDate({ date, name: KGS_TO_USD_RATE_NAME });
 
   const calculatedPrice = calculateDiscountedPrice(price, discount || 0);
   const defaultFormattedPrice = React.useMemo(() => `$${calculatedPrice}`, [calculatedPrice]);
   const isEn = [locale, forceLocale].some(l => l === 'en');
   const formattedPrice = React.useMemo(() => {
-    if (!kgsToUsdRate) {
+    if (!rate) {
       return error ? defaultFormattedPrice : null;
     }
-    const kgsPrice = Math.round(calculatedPrice * kgsToUsdRate);
+    const kgsPrice = Math.round(calculatedPrice * rate.value);
     return (
       <>
         {USE_CEILED_PRICE ? getCeiledPrice(kgsPrice) : kgsPrice} {isEn ? 'KGS' : <u>с</u>}
       </>
     );
-  }, [calculatedPrice, kgsToUsdRate, isEn, defaultFormattedPrice, error]);
+  }, [calculatedPrice, rate, isEn, defaultFormattedPrice, error]);
 
   return formattedPrice;
 };

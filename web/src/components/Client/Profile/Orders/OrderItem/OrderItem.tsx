@@ -13,7 +13,6 @@ import { Tooltip } from 'src/components/client-ui/Tooltip/Tooltip';
 import { PriceText } from 'src/components/Client/Price/Price';
 import { useIntlState } from 'src/state/IntlState';
 import { mediaQueries } from 'src/styles/media';
-import { getFormattedDateString } from 'src/utils/date';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { isPromoCodeApplicableForProduct } from 'src/utils/promoCode';
 
@@ -61,9 +60,8 @@ export const OrderItem: React.FC<IProps> = ({ order, className }) => {
   const {
     intlState: { locale },
   } = useIntlState();
-
-  const total = order.items.reduce(
-    (acc, item) =>
+  const total = order.items.reduce((acc, item) => {
+    return (
       acc +
       calculateDiscountedPrice(item.product_price_per_item, [
         item.product_discount,
@@ -71,9 +69,9 @@ export const OrderItem: React.FC<IProps> = ({ order, className }) => {
           ? order.promo_code.discount || 0
           : 0,
       ]) *
-        item.quantity,
-    0,
-  );
+        item.quantity
+    );
+  }, 0);
 
   const orderCreatedOnDate = new Date(order.created_on);
 
@@ -101,7 +99,7 @@ export const OrderItem: React.FC<IProps> = ({ order, className }) => {
             text-transform: uppercase;
           `}
         >
-          {intl.formatMessage({ id: 'Order.orderPlaced' })}
+          {intl.formatMessage({ id: 'Order.orderPlaced' }, { id: order.id })}
           <br />
           {orderCreatedOnDate.toLocaleDateString(locale)}
         </div>
@@ -114,7 +112,7 @@ export const OrderItem: React.FC<IProps> = ({ order, className }) => {
           {intl.formatMessage({ id: 'Cart.total' })}:
           <br />
           <b>
-            <PriceText price={total} date={getFormattedDateString(orderCreatedOnDate)} />
+            <PriceText price={total} date={orderCreatedOnDate} />
           </b>
         </div>
       </div>

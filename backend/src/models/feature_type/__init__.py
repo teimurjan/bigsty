@@ -1,7 +1,7 @@
 from sqlalchemy import orm, Table, Integer, Column, ForeignKey
 from src.models.base import BaseModel
 
-product_types_m2m_table = Table(
+ProductTypeXFeatureTypeTable = Table(
     'product_type_x_feature_type',
     BaseModel.metadata,
     Column('product_type_id', Integer, ForeignKey(
@@ -27,7 +27,7 @@ class FeatureType(BaseModel):
     )
     product_types = orm.relationship(
         'ProductType',
-        secondary=product_types_m2m_table,
+        secondary=ProductTypeXFeatureTypeTable,
         lazy='select',
         backref=orm.backref('feature_types', lazy='joined')
     )

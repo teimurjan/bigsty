@@ -12,7 +12,7 @@ import * as orderAPI from 'src/api/OrderAPI';
 import * as productAPI from 'src/api/ProductAPI';
 import * as productTypeAPI from 'src/api/ProductTypeAPI';
 import * as promoCodeAPI from 'src/api/PromoCodeAPI';
-import * as ratesAPI from 'src/api/RatesAPI';
+import * as rateAPI from 'src/api/RateAPI';
 import * as searchAPI from 'src/api/SearchAPI';
 import { HeadersManager } from 'src/manager/HeadersManager';
 import * as authService from 'src/services/AuthService';
@@ -25,7 +25,7 @@ import * as orderService from 'src/services/OrderService';
 import * as productService from 'src/services/ProductService';
 import * as productTypeService from 'src/services/ProductTypeService';
 import * as promoCodeService from 'src/services/PromoCodeService';
-import * as ratesService from 'src/services/RatesService';
+import * as rateService from 'src/services/RateService';
 import * as searchService from 'src/services/SearchService';
 import * as authStorage from 'src/storage/AuthStorage';
 import * as cartStorage from 'src/storage/CartStorage';
@@ -50,7 +50,7 @@ export interface IAPIsContainer {
   banner: bannerAPI.IBannerAPI;
   order: orderAPI.IOrderAPI;
   promoCode: promoCodeAPI.IPromoCodeAPI;
-  rates: ratesAPI.IRatesAPI;
+  rate: rateAPI.IRateAPI;
 }
 
 export interface IServicesContainer {
@@ -65,7 +65,7 @@ export interface IServicesContainer {
   banner: bannerService.IBannerService;
   order: orderService.IOrderService;
   promoCode: promoCodeService.IPromoCodeService;
-  rates: ratesService.IRatesService;
+  rate: rateService.IRateService;
 }
 
 export interface IStoragesContainer {
@@ -164,7 +164,7 @@ export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {})
     banner: new bannerAPI.BannerAPI(APIClient, headersManager),
     order: new orderAPI.OrderAPI(APIClient, headersManager),
     promoCode: new promoCodeAPI.PromoCodeAPI(APIClient, headersManager),
-    rates: new ratesAPI.RatesAPI(APIClient, headersManager),
+    rate: new rateAPI.RateAPI(APIClient, headersManager),
   };
 
   const servicesContainer = {
@@ -179,7 +179,7 @@ export const dependenciesFactory = ({ req, res }: IDependenciesFactoryArgs = {})
     banner: new bannerService.BannerService(APIsContainer.banner),
     order: new orderService.OrderService(APIsContainer.order),
     promoCode: new promoCodeService.PromoCodeService(APIsContainer.promoCode),
-    rates: new ratesService.RatesService(APIsContainer.rates, storagesContainer.stateCache),
+    rate: new rateService.RateService(APIsContainer.rate, storagesContainer.stateCache),
   };
 
   APIClient.interceptors.response.use(

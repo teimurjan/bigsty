@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { IContextValue as UserStateContextValue } from 'src/state/UserState';
+import { IContextValue as UserStateContextValue, User } from 'src/state/UserState';
 
 export interface IProps extends UserStateContextValue {
   View: React.ComponentClass<IViewProps> | React.SFC<IViewProps>;
@@ -8,12 +8,13 @@ export interface IProps extends UserStateContextValue {
 
 export interface IViewProps {
   onLogOutClick: () => void;
+  user: User;
 }
 
-export const AdminMenuPresenter = ({ userState, View }: IProps) => {
+export const AdminMenuPresenter = ({ userState: { clearUser, user }, View }: IProps) => {
   const onLogoutClick = React.useCallback(() => {
-    userState.clearUser();
-  }, [userState]);
+    clearUser();
+  }, [clearUser]);
 
-  return <View onLogOutClick={onLogoutClick} />;
+  return <View onLogOutClick={onLogoutClick} user={user} />;
 };

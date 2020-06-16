@@ -16,7 +16,7 @@ class LanguageService:
         except self._repo.DoesNotExist:
             raise self.LanguageNotFound()
 
-    @allow_roles(['admin', 'manager'])
+    @allow_roles(['admin'])
     def delete(self, id_, *args, **kwargs):
         try:
             return self._repo.delete(id_)

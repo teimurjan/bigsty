@@ -1,6 +1,6 @@
 from src.models.group import Group
 from src.models.user import User
-from src.models.intl import Language
+from src.models.intl import Language, CurrencyRate
 from src.models.category import Category
 from src.models.category.name import CategoryName
 from src.models.feature_type import FeatureType

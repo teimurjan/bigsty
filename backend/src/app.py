@@ -20,6 +20,7 @@ from src.middleware.http.authorize import AuthorizeHttpMiddleware
 from src.middleware.http.language import LanguageHttpMiddleware
 from src.repos.banner import BannerRepo
 from src.repos.category import CategoryRepo
+from src.repos.currency_rate import CurrencyRateRepo
 from src.repos.feature_type import FeatureTypeRepo
 from src.repos.feature_value import FeatureValueRepo
 from src.repos.language import LanguageRepo
@@ -31,6 +32,7 @@ from src.repos.signup import SignupRepo
 from src.repos.user import UserRepo
 from src.serializers.banner import BannerSerializer
 from src.serializers.category import CategorySerializer
+from src.serializers.currency_rate import CurrencyRateSerializer
 from src.serializers.feature_type import FeatureTypeSerializer
 from src.serializers.feature_value import FeatureValueSerializer
 from src.serializers.language import LanguageSerializer
@@ -40,6 +42,7 @@ from src.serializers.product_type import ProductTypeSerializer
 from src.serializers.promo_code import PromoCodeSerializer
 from src.services.banner import BannerService
 from src.services.category import CategoryService
+from src.services.currency_rate import CurrencyRateService
 from src.services.feature_type import FeatureTypeService
 from src.services.feature_value import FeatureValueService
 from src.services.language import LanguageService
@@ -60,6 +63,8 @@ from src.validation_rules.category.update import \
     UPDATE_CATEGORY_VALIDATION_RULES
 from src.validation_rules.confirm_registration import \
     CONFIRM_REGISTRATION_VALIDATION_RULES
+from src.validation_rules.currency_rate.create import \
+    CREATE_CURRENCY_RATE_VALIDATION_RULES
 from src.validation_rules.feature_type.create import \
     CREATE_FEATURE_TYPE_VALIDATION_RULES
 from src.validation_rules.feature_type.update import \
@@ -89,7 +94,8 @@ from src.views.category.detail import CategoryDetailView
 from src.views.category.list import CategoryListView
 from src.views.category.slug import CategorySlugView
 from src.views.confirm_registration import ConfirmRegistrationView
-from src.views.currency_rates import get_currency_rates
+from src.views.currency_rate.detail import CurrencyRateDetailView
+from src.views.currency_rate.list import CurrencyRateListView
 from src.views.feature_type.detail import FeatureTypeDetailView
 from src.views.feature_type.list import FeatureTypeListView
 from src.views.feature_value.detail import FeatureValueDetailView
@@ -139,7 +145,6 @@ class App:
         self.__init_api_routes()
         self.__init_media_route()
         self.__init_sitemap_route()
-        self.__init_currency_rates_route()
 
     def __init_repos(self):
         self.__category_repo = CategoryRepo(self.__db_conn)
@@ -154,6 +159,7 @@ class App:
         self.__signup_repo = SignupRepo(self.__db_conn)
         self.__order_repo = OrderRepo(self.__db_conn)
         self.__promo_code_repo = PromoCodeRepo(self.__db_conn)
+        self.__currency_rate_repo = CurrencyRateRepo(self.__db_conn)
 
     def __init_services(self):
         self.__category_service = CategoryService(
@@ -178,7 +184,11 @@ class App:
         self.__order_service = OrderService(
             self.__order_repo, self.__product_repo, self.__promo_code_repo, self.mail)
         self.__promo_code_service = PromoCodeService(
-            self.__promo_code_repo, self.__product_repo)
+            self.__promo_code_repo, self.__product_repo, self.__order_repo
+        )
+        self.__currency_rate_service = CurrencyRateService(
+            self.__currency_rate_repo, self.__order_repo
+        )
 
     def __init_search(self):
         if not self.__es.indices.exists(index="category"):
@@ -507,19 +517,13 @@ class App:
         self.flask_app.add_url_rule(
             '/api/users/<int:user_id>/orders',
             view_func=(
-                self.cache.cached(
-                    60 * 60,
-                    key_prefix=make_user_orders_cache_key,
-                    response_filter=response_filter
-                )(
-                    AbstractView.as_view(
-                        'user_orders',
-                        concrete_view=OrderByUserView(
-                            self.__order_service,
-                            OrderSerializer
-                        ),
-                        middlewares=middlewares,
-                    )
+                AbstractView.as_view(
+                    'user_orders',
+                    concrete_view=OrderByUserView(
+                        self.__order_service,
+                        OrderSerializer
+                    ),
+                    middlewares=middlewares,
                 )
             ),
             methods=['GET', 'POST']
@@ -562,6 +566,31 @@ class App:
             ),
             methods=['GET']
         )
+        self.flask_app.add_url_rule(
+            '/api/currency_rates',
+            view_func=AbstractView.as_view(
+                'currency_rates',
+                concrete_view=CurrencyRateListView(
+                    Validator(CREATE_CURRENCY_RATE_VALIDATION_RULES),
+                    self.__currency_rate_service,
+                    CurrencyRateSerializer
+                ),
+                middlewares=middlewares
+            ),
+            methods=['GET', 'POST']
+        )
+        self.flask_app.add_url_rule(
+            '/api/currency_rates/<int:currency_rate_id>',
+            view_func=AbstractView.as_view(
+                'currency_rate',
+                concrete_view=CurrencyRateDetailView(
+                    self.__currency_rate_service,
+                    CurrencyRateSerializer
+                ),
+                middlewares=middlewares
+            ),
+            methods=['HEAD', 'DELETE']
+        )
 
     def __handle_media_request(self, path):
         abs_media_path = os.path.join(APP_ROOT_PATH, 'media')
@@ -590,13 +619,3 @@ class App:
                                   base_url=self.flask_app.config.get('HOST'))
 
             return Response(xml, mimetype='text/xml')
-
-    def __init_currency_rates_route(self):
-        memoized_get_currency_rates = self.cache.memoize(
-            timeout=60*60*24)(get_currency_rates)
-
-        @self.flask_app.route('/api/currency_rates')
-        def handle_currency_rates_request():
-            date = request.args.get('date')
-            rates = memoized_get_currency_rates(date)
-            return jsonify({'data': rates})

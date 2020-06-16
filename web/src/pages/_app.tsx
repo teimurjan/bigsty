@@ -17,10 +17,9 @@ import { DIProvider } from 'src/DI/DI';
 import { AppStateProvider } from 'src/state/AppState';
 import { CategoriesStateProvider } from 'src/state/CategoriesState';
 import { IntlStateProvider } from 'src/state/IntlState';
-import { RatesStateProvider, fixedRateDateStr } from 'src/state/RatesState';
+import { RatesStateProvider } from 'src/state/RatesState';
 import { UserStateProvider } from 'src/state/UserState';
 import { defaultTheme } from 'src/themes';
-import { getRatesDateKey } from 'src/utils/rates';
 
 import 'bulma/css/bulma.css';
 
@@ -84,19 +83,19 @@ const CustomNextApp = ({
 
 const getComponentsInitialProps = async (args: IDependenciesFactoryArgs) => {
   const {
-    services: { category: categoryService, intl: intlService, rates: ratesService },
+    services: { category: categoryService, intl: intlService, rate: rateService },
   } = dependenciesFactory(args);
   try {
     const { entities, result } = await categoryService.getAll();
     const availableLocales = await intlService.getAvailableLocales();
-    const ratesDateKey = fixedRateDateStr || getRatesDateKey()
-    const { data: todaysRate } = await ratesService.getOne(fixedRateDateStr);
+    const rates = await rateService.getAllGrouped();
     return {
       categoriesState: { categories: entities.categories, categoriesOrder: result },
       intlState: { availableLocales },
-      ratesState: { rates: { [ratesDateKey]: { kgsToUsd: todaysRate.kgs_to_usd } } },
+      ratesState: { rates },
     };
   } catch (e) {
+    console.log(e);
     return {
       categoriesState: { categories: {}, categoriesOrder: [], error: 'errors.common' },
       intlState: { availableLocales: [], error: 'errors.common' },

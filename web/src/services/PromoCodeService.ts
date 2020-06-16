@@ -15,6 +15,12 @@ export const errors = {
       Object.setPrototypeOf(this, new.target.prototype);
     }
   },
+  PromoCodeHasOrders: class extends Error {
+    constructor() {
+      super();
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  },
 };
 
 export interface IPromoCodeService {
@@ -66,6 +72,9 @@ export class PromoCodeService implements IPromoCodeService {
       if (e instanceof promoCodeAPI.errors.DuplicatedValueError) {
         throw new errors.ValueAlreadyExists();
       }
+      if (e instanceof promoCodeAPI.errors.PromoCodeWithOrdersIsUntouchable) {
+        throw new errors.PromoCodeHasOrders();
+      }
       throw e;
     }
   };
@@ -76,6 +85,9 @@ export class PromoCodeService implements IPromoCodeService {
     } catch (e) {
       if (e instanceof promoCodeAPI.errors.PromoCodeNotFound) {
         throw new errors.PromoCodeNotExists();
+      }
+      if (e instanceof promoCodeAPI.errors.PromoCodeWithOrdersIsUntouchable) {
+        throw new errors.PromoCodeHasOrders();
       }
       throw e;
     }

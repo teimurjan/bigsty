@@ -49,7 +49,7 @@ export interface IOrderListResponseData {
 // FOR USER
 export interface IOrderForUserResponseItem extends IOrderListResponseItem {
   promo_code: IOrderListResponseItem['promo_code'] & {
-    products: Array<{
+    products?: Array<{
       product_type: {
         id: number;
         name: string;

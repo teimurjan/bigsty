@@ -1,7 +1,7 @@
 from flask import current_app as app
 from flask import render_template
 
-from src.errors import AccessRoleError, InvalidEntityFormat
+from src.errors import InvalidEntityFormat
 from src.mail import Mail
 from src.policies.feature_values import FeatureValuesPolicy
 from src.repos.feature_value import FeatureValueRepo

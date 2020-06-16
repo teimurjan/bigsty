@@ -1,11 +1,26 @@
-import bcrypt
+from itertools import groupby
+from operator import itemgetter
 
-from sqlalchemy.orm import joinedload, defaultload
-from sqlalchemy import desc
+import bcrypt
+from sqlalchemy import desc, select
+from sqlalchemy.orm import defaultload, joinedload
 
 from src.models import Order, OrderItem, PromoCode
 from src.models.order import order_item
+from src.models.product import Product
+from src.models.product_type import ProductType
+from src.models.product_type.name import ProductTypeName
+from src.models.promo_code import ProductXPromoCodeTable
 from src.repos.base import NonDeletableRepo, with_session
+from src.utils.array import find_in_array
+
+
+def merge_products(old_product, new_product):
+    new_product.product_type.names = [
+        *old_product.product_type.names,
+        *new_product.product_type.names
+    ]
+    return new_product
 
 
 class OrderRepo(NonDeletableRepo):
@@ -19,14 +34,34 @@ class OrderRepo(NonDeletableRepo):
             .get_non_deleted_query(session=session)
             .filter(Order.user_id == user_id)
         )
-        return (
+        orders = (
             q
             .order_by(desc(Order.id))
             .offset(offset)
             .limit(limit)
-            .options(joinedload(Order.items), defaultload(Order.promo_code).subqueryload(PromoCode.products))
+            .options(joinedload(Order.items))
             .all()
-        ), q.count()
+        )
+        orders_count = q.count()
+
+        promo_codes = (
+            session
+            .query(PromoCode)
+            .filter(PromoCode.id.in_({
+                order.promo_code.id for order in orders if order.promo_code
+            }))
+            .options(joinedload(PromoCode.products))
+            .all()
+        )
+        for order in orders:
+            if order.promo_code:
+                _, promo_code = find_in_array(
+                    promo_codes, lambda promo_code: promo_code.id == order.promo_code.id
+                )
+                if promo_code:
+                    order.promo_code = promo_code
+
+        return orders, orders_count
 
     @with_session
     def get_by_id(self, id_, session) -> Order:
@@ -99,6 +134,29 @@ class OrderRepo(NonDeletableRepo):
         order.created_on
 
         return order
+
+    @with_session
+    def has_for_date_range(self, start_date, end_date=None, session=None):
+        q = (
+            self
+            .get_non_deleted_query(session=session)
+            .filter(Order.created_on >= start_date)
+        )
+
+        if end_date is not None:
+            q = q.filter(Order.created_on < end_date)
+
+        return q.count() > 0
+
+    @with_session
+    def has_with_promo_code(self, promo_code_id, session=None):
+        q = (
+            session
+            .query(Order)
+            .filter(Order.promo_code_id == promo_code_id)
+        )
+
+        return q.count() > 0
 
     class DoesNotExist(Exception):
         pass

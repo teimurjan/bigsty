@@ -44,6 +44,9 @@ export const getErrorMessageID = (e: Error) => {
   if (e instanceof promoCodeService.errors.ValueAlreadyExists) {
     return 'AdminPromoCodes.errors.valueAlreadyExists';
   }
+  if (e instanceof promoCodeService.errors.PromoCodeHasOrders) {
+    return 'AdminPromoCodes.errors.hasOrders';
+  }
 
   return 'errors.common';
 };

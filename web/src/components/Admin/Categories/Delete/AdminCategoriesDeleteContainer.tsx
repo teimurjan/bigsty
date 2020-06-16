@@ -7,10 +7,10 @@ import { useAdminCategoriesState } from 'src/state/AdminCategoriesState';
 
 const getErrorMessageID = (e: Error) => {
   if (e instanceof categoryService.errors.CategoryHasChildren) {
-    return 'errors.categoryDeletion.hasChildren';
+    return 'AdminCategories.errors.hasChildren';
   }
   if (e instanceof categoryService.errors.CategoryHasProductTypes) {
-    return 'errors.categoryDeletion.hasProductTypes';
+    return 'AdminCategories.errors.hasProductTypes';
   }
 
   return 'errors.common';

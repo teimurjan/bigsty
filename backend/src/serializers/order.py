@@ -1,5 +1,6 @@
 from src.models import User
 from src.models.order.order_item import OrderItem
+from src.models.product import Product
 from src.serializers.feature_value import FeatureValueSerializer
 from src.serializers.intl import IntlSerializer
 from src.serializers.product import ProductSerializer
@@ -31,7 +32,7 @@ class OrderSerializer(IntlSerializer):
                 'value': self._promo_code.value,
                 'id': self._promo_code.id,
                 'discount': self._promo_code.discount,
-                'products': self._get_relation_safely(self._promo_code, 'products'),
+                'products': self._serialize_products(),
             } if self._promo_code else None,
             'created_on': self._created_on,
         })
@@ -44,8 +45,13 @@ class OrderSerializer(IntlSerializer):
     def _serialize_user(self):
         return self._serialize_relation('_user', User)
 
+    def _serialize_products(self):
+        if (self._promo_code and self._promo_code.products):
+            return [product.id for product in self._promo_code.products]
+        return None
+
     def with_serialized_items(self):
-        items = getattr(self, '_items')
+        items = self._get_relation_safely(self, '_items')
         if items is None:
             return self
 

@@ -26,8 +26,9 @@ import { NewProductButton } from 'src/components/Admin/Products/List/AdminProduc
 import { AdminProductTypes } from 'src/components/Admin/ProductTypes/AdminProductTypes';
 import { NewProductTypeButton } from 'src/components/Admin/ProductTypes/List/AdminProductTypesListView';
 import { AdminPromoCodes } from 'src/components/Admin/PromoCodes/AdminPromoCodes';
+import { AdminRates } from 'src/components/Admin/Rates/AdminRates';
 import { Drawer } from 'src/components/client-ui/Drawer/Drawer';
-import { isUserAdmin, isUserNotSetYet } from 'src/helpers/user';
+import { basicAdminShowRule, basicAdminRedirectRule, fullAdminShowRule, fullAdminRedirectRule } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useMedia } from 'src/hooks/useMedia';
 import { useProtectedResource } from 'src/hooks/useProtectedResource';
@@ -39,7 +40,7 @@ import { AdminOrdersStateProvider } from 'src/state/AdminOrdersState';
 import { AdminProductsStateProvider } from 'src/state/AdminProductsState';
 import { AdminProductTypesStateProvider } from 'src/state/AdminProductTypesState';
 import { AdminPromoCodesStateProvider } from 'src/state/AdminPromoCodesState';
-import { User } from 'src/state/UserState';
+import { AdminRatesStateProvider } from 'src/state/AdminRatesState';
 import { mediaQueries } from 'src/styles/media';
 
 const arrowDivider = (
@@ -200,11 +201,9 @@ const Menu = () => {
   );
 };
 
-const showAdminRule = (user: User) => !isUserNotSetYet(user) && isUserAdmin(user);
-const redirectAdminRule = (user: User) => !isUserNotSetYet(user) && !isUserAdmin(user);
-
 export const Admin = () => {
-  const shouldShowAdmin = useProtectedResource(showAdminRule, redirectAdminRule);
+  const shouldShowAdmin = useProtectedResource(basicAdminShowRule, basicAdminRedirectRule);
+  const shouldShowFullAdmin = useProtectedResource(fullAdminShowRule, fullAdminRedirectRule);
 
   return shouldShowAdmin ? (
     <AdminBannersStateProvider>
@@ -215,35 +214,38 @@ export const Admin = () => {
               <AdminProductsStateProvider>
                 <AdminOrdersStateProvider>
                   <AdminPromoCodesStateProvider>
-                    <div
-                      css={css`
-                        align-items: flex-start;
-                        display: flex;
-                      `}
-                    >
-                      <Menu />
+                    <AdminRatesStateProvider>
                       <div
                         css={css`
-                          width: calc(100% - 350px);
-
-                          @media ${mediaQueries.maxWidth768} {
-                            width: 100%;
-                          }
+                          align-items: flex-start;
+                          display: flex;
                         `}
                       >
-                        <Switch>
-                          <Route path="/admin/categories" component={AdminCategories} />
-                          <Route path="/admin/featureTypes" component={AdminFeatureTypes} />
-                          <Route path="/admin/featureValues" component={AdminFeatureValues} />
-                          <Route path="/admin/productTypes" component={AdminProductTypes} />
-                          <Route path="/admin/products" component={AdminProducts} />
-                          <Route path="/admin/banners" component={AdminBanners} />
-                          <Route path="/admin/orders" component={AdminOrders} />
-                          <Route path="/admin/promoCodes" component={AdminPromoCodes} />
-                          <Route component={AdminHome} />
-                        </Switch>
+                        <Menu />
+                        <div
+                          css={css`
+                            width: calc(100% - 350px);
+
+                            @media ${mediaQueries.maxWidth768} {
+                              width: 100%;
+                            }
+                          `}
+                        >
+                          <Switch>
+                            <Route path="/admin/categories" component={AdminCategories} />
+                            <Route path="/admin/featureTypes" component={AdminFeatureTypes} />
+                            <Route path="/admin/featureValues" component={AdminFeatureValues} />
+                            <Route path="/admin/productTypes" component={AdminProductTypes} />
+                            <Route path="/admin/products" component={AdminProducts} />
+                            <Route path="/admin/banners" component={AdminBanners} />
+                            <Route path="/admin/orders" component={AdminOrders} />
+                            <Route path="/admin/promoCodes" component={AdminPromoCodes} />
+                            <Route path="/admin/rates" component={shouldShowFullAdmin ? AdminRates : () => null} />
+                            <Route component={AdminHome} />
+                          </Switch>
+                        </div>
                       </div>
-                    </div>
+                    </AdminRatesStateProvider>
                   </AdminPromoCodesStateProvider>
                 </AdminOrdersStateProvider>
               </AdminProductsStateProvider>

@@ -108,6 +108,7 @@ interface IProps<T> {
   onPageChange?: (newPage: number) => void;
   hideSubheader?: boolean;
   hideDelete?: boolean;
+  hideEdit?: boolean;
 }
 
 const defaultRenderer = new DefaultRenderer();
@@ -125,6 +126,7 @@ export const AdminTable = <T extends { id: number }>({
   onPageChange,
   hideSubheader = false,
   hideDelete = false,
+  hideEdit = false,
 }: IProps<T> & { intl: IntlShape }) => {
   if (isLoading) {
     return <LoaderLayout />;
@@ -180,20 +182,22 @@ export const AdminTable = <T extends { id: number }>({
                   width: 15%;
                 `}
               >
-                <ReactRouterLinkButton
-                  to={`${pathPrefix}/edit/${entity.id}`}
-                  css={css`
-                    margin-right: 0.5rem;
+                {!hideEdit && (
+                  <ReactRouterLinkButton
+                    to={`${pathPrefix}/edit/${entity.id}`}
+                    css={css`
+                      margin-right: 0.5rem;
 
-                    @media ${mediaQueries.maxWidth768} {
-                      margin-right: 0;
-                      margin-bottom: 0.25rem;
-                    }
-                  `}
-                  color="is-primary"
-                >
-                  <FontAwesomeIcon icon={faPencilAlt} />
-                </ReactRouterLinkButton>
+                      @media ${mediaQueries.maxWidth768} {
+                        margin-right: 0;
+                        margin-bottom: 0.25rem;
+                      }
+                    `}
+                    color="is-primary"
+                  >
+                    <FontAwesomeIcon icon={faPencilAlt} />
+                  </ReactRouterLinkButton>
+                )}
                 {!hideDelete && (
                   <ReactRouterLinkButton to={`${pathPrefix}/delete/${entity.id}`} color="is-danger">
                     <FontAwesomeIcon icon={faTrashAlt} />

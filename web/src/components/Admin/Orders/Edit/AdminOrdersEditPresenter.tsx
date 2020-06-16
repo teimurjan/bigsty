@@ -133,7 +133,7 @@ export const AdminOrdersEditPresenter: React.FC<IProps> = ({
               user_address: order.user_address,
               status: order.status,
               items: order.items,
-              promo_code: order.promo_code,
+              promo_code: order.promo_code ? order.promo_code.value : '',
             }
           : {}
       }
