@@ -62,7 +62,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
         return { ...acc, [featureTypeId]: featueValues.length > 0 ? featueValues[0].id : undefined };
       }, {}),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    Object.keys(allFeatureValuesGroupedByFeatureType),
+    [...Object.keys(allFeatureValuesGroupedByFeatureType), productType?.id],
   );
   const [chosenFeatureValues, setChosenFeatureValues] = React.useState<{ [key: string]: number }>(initialFeatureValues);
 
@@ -260,7 +260,7 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
               href="/categories/[id]/products"
               asPath={`/categories/${productType.category.slug}/products`}
             >
-              &gt; {' '}
+              &gt;{' '}
               {intl.formatMessage({ id: 'ProductTypePage.findMoreForCategory' }, { value: productType.category.name })}
             </Anchor>
             <Anchor primary href="/how-it-works">
