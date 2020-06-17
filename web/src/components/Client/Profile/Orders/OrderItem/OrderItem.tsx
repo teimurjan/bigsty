@@ -12,7 +12,6 @@ import { Tag } from 'src/components/client-ui/Tag/Tag';
 import { Tooltip } from 'src/components/client-ui/Tooltip/Tooltip';
 import { PriceText } from 'src/components/Client/Price/Price';
 import { useIntlState } from 'src/state/IntlState';
-import { mediaQueries } from 'src/styles/media';
 import { calculateDiscountedPrice } from 'src/utils/number';
 import { isPromoCodeApplicableForProduct } from 'src/utils/promoCode';
 
@@ -133,12 +132,8 @@ export const OrderItem: React.FC<IProps> = ({ order, className }) => {
                   size="sm"
                   css={css`
                     margin-left: 5px;
-                    display: none;
-
-                    @media ${mediaQueries.maxWidth768} {
-                      display: inline-block;
-                      vertical-align: baseline;
-                    }
+                    display: inline-block;
+                    vertical-align: baseline;
                   `}
                   icon={faExternalLinkAlt}
                 />

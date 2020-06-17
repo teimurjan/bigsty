@@ -8,6 +8,8 @@ export interface ICategoryListResponseItem {
   name: string;
   parent_category_id: number | null;
   slug: string;
+  created_on: string;
+  updated_on: string;
 }
 
 export interface ICategoryListRawIntlResponseItem {
@@ -17,6 +19,8 @@ export interface ICategoryListRawIntlResponseItem {
   };
   parent_category_id: number | null;
   slug: string;
+  created_on: string;
+  updated_on: string;
 }
 
 export interface ICategoryListResponseData {

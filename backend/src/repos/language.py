@@ -8,7 +8,7 @@ class LanguageRepo(Repo):
 
     @with_session
     def filter_by_name(self, name: str, session):
-        return session.query(Language).filter(Language.name == name).all()
+        return self.get_query(session=session).filter(Language.name == name).all()
 
     class DoesNotExist(Exception):
         pass

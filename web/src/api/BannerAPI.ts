@@ -14,6 +14,8 @@ export interface IBannerListResponseItem {
   text_left_offset: number | null;
   text_right_offset: number | null;
   text_bottom_offset: number | null;
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IBannerListRawIntlResponseItem {
@@ -31,6 +33,8 @@ export interface IBannerListRawIntlResponseItem {
   text_left_offset: number | null;
   text_right_offset: number | null;
   text_bottom_offset: number | null;
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IBannerListResponseData {

@@ -18,6 +18,8 @@ class OrderSerializer(IntlSerializer):
         self._promo_code = order.promo_code
         self._init_relation_safely('_items', order, 'items')
         self._created_on = order.created_on
+        self._updated_on = order.updated_on
+        self._is_deleted = order.is_deleted
 
     def serialize(self):
         return self._filter_fields({
@@ -35,6 +37,8 @@ class OrderSerializer(IntlSerializer):
                 'products': self._serialize_products(),
             } if self._promo_code else None,
             'created_on': self._created_on,
+            'updated_on': self._updated_on,
+            'is_deleted': self._is_deleted,
         })
 
     def with_serialized_user(self):
@@ -46,7 +50,7 @@ class OrderSerializer(IntlSerializer):
         return self._serialize_relation('_user', User)
 
     def _serialize_products(self):
-        if (self._promo_code and self._promo_code.products):
+        if (self._promo_code and self._get_relation_safely(self._promo_code, '_products')):
             return [product.id for product in self._promo_code.products]
         return None
 

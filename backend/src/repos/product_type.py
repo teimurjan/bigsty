@@ -105,6 +105,8 @@ class ProductTypeRepo(NonDeletableRepo):
                 .options(orm.joinedload(ProductType.products))
                 .outerjoin(ProductType.products)
                 .group_by(ProductType.id)
+                .group_by(Product.price)
+                .group_by(Product.discount)
             )
 
             if only_available:
@@ -126,15 +128,15 @@ class ProductTypeRepo(NonDeletableRepo):
 
     @with_session
     def has_with_category(self, id_, session):
-        return session.query(ProductType).filter(ProductType.category_id == id_).count() > 0
+        return self.get_non_deleted_query(session=session).filter(ProductType.category_id == id_).count() > 0
 
     @with_session
     def is_slug_used(self, slug, session):
-        return session.query(ProductType).filter(ProductType.slug == slug).count() > 0
+        return self.get_query(session).filter(ProductType.slug == slug).count() > 0
 
     @with_session
     def get_by_slug(self, slug, session):
-        return session.query(ProductType).filter(ProductType.slug == slug).first()
+        return self.get_non_deleted_query(session=session).filter(ProductType.slug == slug).first()
 
     @with_session
     def get_unique_slug(self, product_type, session):

@@ -105,7 +105,7 @@ export const usePriceRangeText = ({ range }: IPriceRangeTextProps) => {
   }, [range, intl, discounts]);
 
   if (calculatedRange.length === 0) {
-    return { price: intl.formatMessage({ id: 'common.notSpecified' }) };
+    return { price: null };
   }
 
   return {

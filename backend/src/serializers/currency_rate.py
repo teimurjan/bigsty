@@ -9,6 +9,7 @@ class CurrencyRateSerializer(Serializer):
         self._name = currency_rate.name
         self._value = currency_rate.value
         self._created_on = currency_rate.created_on
+        self._updated_on = currency_rate.updated_on
 
     def serialize(self):
         return self._filter_fields({
@@ -16,4 +17,5 @@ class CurrencyRateSerializer(Serializer):
             'name': self._name,
             'value': self._value,
             'created_on': self._created_on,
+            'updated_on': self._updated_on,
         })

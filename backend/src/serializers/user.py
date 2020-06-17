@@ -10,6 +10,9 @@ class UserSerializer(Serializer):
         self._email = user.email
         self._name = user.name
         self._group = user.group
+        self._created_on = user.created_on
+        self._updated_on = user.updated_on
+        self._is_deleted = user.is_deleted
 
     def serialize(self):
         return self._filter_fields({
@@ -17,6 +20,9 @@ class UserSerializer(Serializer):
             'email': self._email,
             'name': self._name,
             'group': self._serialize_group(),
+            'created_on': self._created_on,
+            'updated_on': self._updated_on,
+            'is_deleted': self._is_deleted,
         })
 
     def with_serialized_group(self):

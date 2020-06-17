@@ -208,6 +208,9 @@ export const ProductTypePageView = ({ productType, products, error, isLoading, a
                 </Subtitle>
               )}
               {matchingProduct && matchingProduct.quantity === 0 && (
+                <Subtitle size={3}>{intl.formatMessage({ id: 'ProductPage.sold' })}</Subtitle>
+              )}
+              {products.length === 0 && (
                 <Subtitle size={3}>{intl.formatMessage({ id: 'ProductPage.notInStock' })}</Subtitle>
               )}
             </div>

@@ -15,6 +15,9 @@ class ProductSerializer(IntlSerializer):
         self._init_relation_safely('_product_type', product, 'product_type', product.product_type_id)
         self._images = product.images
         self._feature_values = product.feature_values
+        self._created_on = product.created_on
+        self._updated_on = product.updated_on
+        self._is_deleted = product.is_deleted
 
     def serialize(self):
         return self._filter_fields({
@@ -26,6 +29,9 @@ class ProductSerializer(IntlSerializer):
             'product_type': self._serialize_product_type(),
             'images': self._serialize_images(),
             'feature_values': self._serialize_feature_values(),
+            'created_on': self._created_on,
+            'updated_on': self._updated_on,
+            'is_deleted': self._is_deleted,
         })
 
     def with_serialized_product_type(self):

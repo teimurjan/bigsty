@@ -8,7 +8,7 @@ import { Menu } from 'src/components/admin-ui/Menu/Menu';
 import { IViewProps as IProps } from 'src/components/Admin/Menu/AdminMenuPresenter';
 import { TriggerClickProps as PopoverTriggerProps } from 'src/components/client-ui/Popover/Popover';
 import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
-import { fullAdminShowRule } from 'src/helpers/user';
+import { isUserSetAsAdmin } from 'src/helpers/user';
 import { mediaQueries } from 'src/styles/media';
 
 const LanguageDrodownTrigger = React.forwardRef<any, PopoverTriggerProps>((props, ref) => {
@@ -106,7 +106,7 @@ export const AdminMenuView = ({ onLogOutClick, user }: IProps) => {
             {intl.formatMessage({ id: 'AdminMenu.promoCodesLinkText' })}
           </NavLink>
         </Menu.Item>
-        {fullAdminShowRule(user) && (
+        {isUserSetAsAdmin(user) && (
           <Menu.Item>
             <NavLink to="/admin/rates" activeClassName="is-active">
               {intl.formatMessage({ id: 'AdminMenu.ratesLinkText' })}

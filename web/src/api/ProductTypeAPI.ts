@@ -27,6 +27,9 @@ export interface IProductTypeListResponseItem {
     price: number;
     quantity: number;
   }>;
+  created_on: string;
+  updated_on: string;
+  is_deleted: boolean | null;
 }
 
 export interface IProductTypeListResponseData {
@@ -51,6 +54,9 @@ export interface IProductTypeDetailResponseItem {
     price: number;
     quantity: number;
   }>;
+  created_on: string;
+  updated_on: string;
+  is_deleted: boolean | null;
 }
 
 export interface IProductTypeDetailResponseItemData {
@@ -67,6 +73,9 @@ export interface IProductTypeListRawIntlResponseItem {
   category: number;
   feature_types: number[];
   slug: string;
+  created_on: string;
+  updated_on: string;
+  is_deleted: boolean | null;
 }
 
 export interface IProductTypeListRawIntlResponseData {
@@ -84,6 +93,9 @@ export interface IProductTypeDetailRawIntlResponseItem {
   category: { id: number };
   feature_types: number[];
   slug: string;
+  created_on: string;
+  updated_on: string;
+  is_deleted: boolean | null;
 }
 
 export interface IProductTypeRawIntlResponseData {
@@ -229,7 +241,7 @@ export class ProductTypeAPI implements IProductTypeAPI {
           page: 1,
           sort_by: queryValueOfSortingType[ProductTypeSortingType.RECENT],
           limit: 8,
-          available: 1
+          available: 1,
         })}`,
         {
           headers: this.headersManager.getHeaders(),

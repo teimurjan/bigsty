@@ -10,7 +10,7 @@ class CurrencyRateRepo(Repo):
 
     @with_session
     def exists_for_date(self, name, date, session):
-        return session.query(CurrencyRate).filter(CurrencyRate.name == name).filter(CurrencyRate.created_on+timedelta(days=1) > date).order_by(CurrencyRate.id).count() > 0
+        return self.get_query(session=session).filter(CurrencyRate.name == name).filter(CurrencyRate.created_on+timedelta(days=1) > date).order_by(CurrencyRate.id).count() > 0
 
     @with_session
     def add_currency_rate(self, name: str, value: int, session):
@@ -22,12 +22,13 @@ class CurrencyRateRepo(Repo):
         session.flush()
 
         currency_rate.created_on
+        currency_rate.updated_on
 
         return currency_rate
 
     @with_session
     def filter_by_name(self, name: str, session):
-        return session.query(CurrencyRate).filter(CurrencyRate.name == name).order_by(CurrencyRate.id).all()
+        return self.get_query(session=session).filter(CurrencyRate.name == name).order_by(CurrencyRate.id).all()
 
     class DoesNotExist(Exception):
         pass

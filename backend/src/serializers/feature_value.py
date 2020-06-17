@@ -9,12 +9,16 @@ class FeatureValueSerializer(IntlSerializer):
         self._id = feature_value.id
         self._names = feature_value.names
         self._feature_type = feature_value.feature_type
+        self._created_on = feature_value.created_on
+        self._updated_on = feature_value.updated_on
 
     def serialize(self):
         return self._filter_fields({
             'id': self._id,
             'name': self._serialize_name(),
             'feature_type': self._serialize_feature_type(),
+            'created_on': self._created_on,
+            'updated_on': self._updated_on,
         })
 
     def _serialize_name(self):

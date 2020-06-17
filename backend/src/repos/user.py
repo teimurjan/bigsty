@@ -1,18 +1,18 @@
-from src.repos.base import Repo, with_session
+from src.repos.base import NonDeletableRepo, with_session
 from src.models import User
 
 
-class UserRepo(Repo):
+class UserRepo(NonDeletableRepo):
     def __init__(self, db_conn):
         super().__init__(db_conn, User)
 
     @with_session
     def get_first_by_email(self, email, session):
-        return session.query(User).filter(User.email == email).first()
+        return self.get_query(session=session).filter(User.email == email).first()
 
     @with_session
     def is_email_used(self, email, session):
-        return session.query(User).filter(User.email == email).count() > 0
+        return self.get_non_deleted_query(session=session).filter(User.email == email).count() > 0
     
     @with_session
     def create_user(self, name, email, password, session):

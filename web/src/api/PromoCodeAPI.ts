@@ -9,6 +9,9 @@ export interface IPromoCodeListResponseItem {
   is_active: boolean;
   disable_on_use: boolean;
   products: number[];
+  created_on: string;
+  updated_on: string;
+  is_deleted: boolean | null;
 }
 
 export interface IPromoCodeListResponseData {
@@ -31,6 +34,9 @@ export interface IPromoCodeDetailResponseItem {
     price: number;
     quantity: number;
   }>;
+  created_on: string;
+  updated_on: string;
+  is_deleted: boolean | null;
 }
 
 export interface IPromoCodeDetailResponseData {

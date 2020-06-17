@@ -20,8 +20,8 @@ export const getUserPropertySafe = (user: User, property: keyof AuthorizedUser, 
   return defaultValue;
 };
 
-export const basicAdminShowRule = (user: User) => !isUserNotSetYet(user) && isUserAdminOrManager(user);
-export const basicAdminRedirectRule = (user: User) => !isUserNotSetYet(user) && !isUserAdminOrManager(user);
+export const isUserSetAsManagerOrAdmin = (user: User) => !isUserNotSetYet(user) && isUserAdminOrManager(user);
 
-export const fullAdminShowRule = (user: User) => !isUserNotSetYet(user) && isUserAdmin(user);
-export const fullAdminRedirectRule = (user: User) => !isUserNotSetYet(user) && !isUserAdmin(user);
+export const isUserSetAsClient = (user: User) => !isUserNotSetYet(user) && !isUserAdminOrManager(user);
+
+export const isUserSetAsAdmin = (user: User) => !isUserNotSetYet(user) && isUserAdmin(user);

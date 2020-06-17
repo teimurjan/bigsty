@@ -40,11 +40,19 @@ class PromoCodeRepo(NonDeletableRepo):
 
     @with_session
     def is_value_used(self, value, session):
-        return session.query(PromoCode).filter(PromoCode.value == value).count() > 0
+        return self.get_query(session=session).filter(PromoCode.value == value).count() > 0
 
     @with_session
-    def get_by_value(self, value, join_products, session):
-        q = self.get_non_deleted_query()
+    def get_by_value(self, value, join_products, session=None):
+        q = (
+            self
+            .get_non_deleted_query(session=session)
+            .filter(PromoCode.value == value)
+        )
+        count = q.count()
+        if count == 0:
+            raise self.DoesNotExist()
+
         if join_products:
             q = (
                 q
@@ -52,15 +60,19 @@ class PromoCodeRepo(NonDeletableRepo):
                 .outerjoin(PromoCode.products)
             )
 
-        objects = q.filter(PromoCode.value == value).all()
-        if len(objects) == 0:
-            raise self.DoesNotExist()
-
-        return objects[0]
+        return q.first()
 
     @with_session
-    def get_by_id(self, id_, join_products, session):
-        q = session.query(PromoCode)
+    def get_by_id(self, id_, join_products, session=None):
+        q = (
+            self
+            .get_non_deleted_query(session=session)
+            .filter(PromoCode.id == id_)
+        )
+        count = q.count()
+        if count == 0:
+            raise self.DoesNotExist()
+
         if join_products:
             q = (
                 q
@@ -68,11 +80,7 @@ class PromoCodeRepo(NonDeletableRepo):
                 .outerjoin(PromoCode.products)
             )
 
-        objects = q.filter(PromoCode.id == id_).all()
-        if len(objects) == 0:
-            raise self.DoesNotExist()
-
-        return objects[0]
+        return q.first()
 
     class DoesNotExist(Exception):
         pass

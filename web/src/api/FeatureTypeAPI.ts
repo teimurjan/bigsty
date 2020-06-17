@@ -6,6 +6,8 @@ import { buildQueryString } from 'src/utils/queryString';
 export interface IFeatureTypeListResponseItem {
   id: number;
   name: string;
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IFeatureTypeListRawIntlResponseItem {
@@ -13,6 +15,8 @@ export interface IFeatureTypeListRawIntlResponseItem {
   name: {
     [key: string]: string;
   };
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IFeatureTypeListResponseData {

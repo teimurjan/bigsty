@@ -8,6 +8,8 @@ export interface IFeatureValueListResponseItem {
   id: number;
   name: string;
   feature_type: IFeatureTypeListResponseItem;
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IFeatureValueListRawIntlResponseItem {
@@ -16,6 +18,8 @@ export interface IFeatureValueListRawIntlResponseItem {
     [key: string]: string;
   };
   feature_type: IFeatureTypeListRawIntlResponseItem;
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IFeatureValueListResponseData {

@@ -9,7 +9,7 @@ import { Popover, TriggerHoverProps as PopoverTriggerProps } from 'src/component
 import { WithIcon } from 'src/components/client-ui/WithIcon/WithIcon';
 import { LanguageDropdownContainer as LanguageDropdown } from 'src/components/Client/LanguageDropdown/LanguageDropdownContainer';
 import { IViewProps as IProps } from 'src/components/Client/UserDropdown/UserDropdownPresenter';
-import { isUserAuthorized, isUserAdmin } from 'src/helpers/user';
+import { isUserAuthorized, isUserAdminOrManager } from 'src/helpers/user';
 
 const Trigger = React.forwardRef<HTMLAnchorElement, PopoverTriggerProps>((props, ref) => {
   const intl = useIntl();
@@ -28,7 +28,7 @@ export const UserDropdownView = ({ user, onLogoutClick }: IProps) => {
 
   const items = [];
 
-  if (isUserAdmin(user)) {
+  if (isUserAdminOrManager(user)) {
     items.push(
       <Anchor key="adminPanel" href="/admin" thin>
         {intl.formatMessage({ id: 'Header.admin' })}

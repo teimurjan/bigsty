@@ -5,6 +5,8 @@ import { IHeadersManager } from 'src/manager/HeadersManager';
 export interface IIntlListResponseItem {
   id: number;
   name: string;
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IIntlListResponseData {

@@ -10,6 +10,8 @@ export interface IOrderListResponseItem {
   user_phone_number: string;
   user_address: string;
   created_on: string;
+  updated_on: string;
+  is_deleted: boolean | null;
   items: Array<{
     id: number;
     quantity: number;

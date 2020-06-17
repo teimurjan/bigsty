@@ -38,8 +38,8 @@ class CategoryRepo(Repo):
     @with_session
     def get_children(self, id_, session):
         category_recursive_query = (
-            session
-            .query(Category)
+            self
+            .get_query(session=session)
             .filter(Category.id == id_)
             .cte(recursive=True)
         )
@@ -58,15 +58,15 @@ class CategoryRepo(Repo):
 
     @with_session
     def has_children(self, id_, session):
-        return session.query(Category).filter(Category.parent_category_id == id_).count() > 0
+        return self.get_query(session=session).filter(Category.parent_category_id == id_).count() > 0
 
     @with_session
     def is_slug_used(self, slug, session):
-        return session.query(Category).filter(Category.slug == slug).count() > 0
+        return self.get_query(session=session).filter(Category.slug == slug).count() > 0
 
     @with_session
     def get_by_slug(self, slug, session):
-        return session.query(Category).filter(Category.slug == slug).first()
+        return self.get_query(session=session).filter(Category.slug == slug).first()
 
     @with_session
     def get_unique_slug(self, category, session):

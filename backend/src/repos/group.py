@@ -1,2 +1,0 @@
-class GroupRepo:
-    pass

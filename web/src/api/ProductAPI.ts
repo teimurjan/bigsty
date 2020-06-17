@@ -24,6 +24,8 @@ export interface IProductListResponseItem {
     name: string;
   }>;
   images: string[];
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IProductListResponseData {
@@ -45,6 +47,8 @@ export interface IProductResponseItem {
     name: string;
   }>;
   images: string[];
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IProductResponseData {
@@ -71,6 +75,8 @@ export interface IProductForProductTypeResponseItem {
   };
   quantity: number;
   upc?: string;
+  created_on: string;
+  updated_on: string;
 }
 
 export interface IProductForProductTypeResponseData {

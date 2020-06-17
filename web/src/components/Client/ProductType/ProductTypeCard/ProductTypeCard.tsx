@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
+import classNames from 'classnames';
 import { useTheme } from 'emotion-theming';
 import * as React from 'react';
 import { useIntl } from 'react-intl';
@@ -25,7 +26,21 @@ export const ProductTypeCard = ({ productType }: IProps) => {
   const asPath = `/products/${productType.slug}`;
   const ref = React.useRef<HTMLAnchorElement>(null);
   const { price, discount } = usePriceRangeText({ range: productType.products || [] });
-  const areProductsAvailable = productType.products?.some(product => product.quantity > 0);
+
+  const hasProducts = (productType.products?.length || 0) > 0;
+  const productInStock = productType.products?.some(product => product.quantity > 0);
+
+  const buttonTextIntlId = React.useMemo(() => {
+    if (productInStock) {
+      return 'common.buy';
+    }
+
+    if (!hasProducts) {
+      return 'ProductPage.notInStock';
+    }
+
+    return 'ProductPage.sold';
+  }, [hasProducts, productInStock]);
 
   return (
     <LinkPassingProps
@@ -37,7 +52,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
         display: flex;
         flex-direction: column;
       `}
-      className={areProductsAvailable ? '' : 'unavailable'}
+      className={classNames({ 'not-in-stock': !productInStock, 'price-unknown': !price })}
       href="/products/[slug]"
       as={asPath}
       passHref
@@ -88,16 +103,16 @@ export const ProductTypeCard = ({ productType }: IProps) => {
             align-items: center;
             padding: 0 15px;
 
+            .price-unknown & {
+              justify-content: center;
+            }
+
             @media ${mediaQueries.maxWidth768} {
               flex-direction: column;
             }
           `}
         >
-          <span>
-            {intl.formatMessage({
-              id: areProductsAvailable ? 'common.buy' : 'ProductPage.notInStock',
-            })}
-          </span>
+          <span>{intl.formatMessage({ id: buttonTextIntlId })}</span>
           {price && (
             <>
               <span
@@ -127,7 +142,7 @@ export const ProductTypeCard = ({ productType }: IProps) => {
                     color: inherit;
                   }
 
-                  &.unavailable {
+                  .not-in-stock & {
                     color: ${theme.textSecondaryColor};
                   }
 

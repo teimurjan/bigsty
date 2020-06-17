@@ -38,7 +38,6 @@ export const AdminPromoCodesListView = ({ promoCodes, isLoading, isDataLoaded }:
         entities={promoCodes}
         renderNoData={renderNoData}
         intl={intl}
-        hideDelete
       >
         <AdminTable.Col<PromoCode> key_="id" title={intl.formatMessage({ id: 'common.ID' })} />
         <AdminTable.Col<PromoCode> key_="value" title={intl.formatMessage({ id: 'AdminPromoCodes.value' })} />

@@ -99,15 +99,23 @@ class ProductTypeService:
         except self._feature_type_repo.DoesNotExist:
             raise self.FeatureTypesInvalid()
 
+    @allow_roles(['admin', 'manager'])
     def get_all(
         self,
         join_products: bool = False,
         only_available: bool = True,
         sorting_type: ProductTypeSortingType = None,
         offset: int=None,
-        limit: int=None
+        limit: int=None,
+        user=None
     ):
-        return self._repo.get_all(join_products=join_products, only_available=only_available, offset=offset, limit=limit, sorting_type=sorting_type)
+        return self._repo.get_all(
+            join_products=join_products,
+            only_available=only_available,
+            offset=offset,
+            limit=limit,
+            sorting_type=sorting_type
+        )
 
     def get_all_by_category(self, category_slug: str, sorting_type: ProductTypeSortingType, offset: int = None, limit: int = None):
         with self._repo.session() as s:

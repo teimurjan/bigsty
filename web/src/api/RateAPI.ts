@@ -7,6 +7,8 @@ export interface IRateListResponseItem {
   name: string;
   value: number;
   created_on: string;
+  updated_on: string;
+  is_deleted: boolean | null;
 }
 
 export interface IRateListResponseData {

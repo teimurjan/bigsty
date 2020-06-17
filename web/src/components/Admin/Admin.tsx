@@ -28,7 +28,7 @@ import { NewProductTypeButton } from 'src/components/Admin/ProductTypes/List/Adm
 import { AdminPromoCodes } from 'src/components/Admin/PromoCodes/AdminPromoCodes';
 import { AdminRates } from 'src/components/Admin/Rates/AdminRates';
 import { Drawer } from 'src/components/client-ui/Drawer/Drawer';
-import { basicAdminShowRule, basicAdminRedirectRule, fullAdminShowRule, fullAdminRedirectRule } from 'src/helpers/user';
+import { isUserSetAsManagerOrAdmin, isUserSetAsClient, isUserSetAsAdmin } from 'src/helpers/user';
 import { useBoolean } from 'src/hooks/useBoolean';
 import { useMedia } from 'src/hooks/useMedia';
 import { useProtectedResource } from 'src/hooks/useProtectedResource';
@@ -202,8 +202,8 @@ const Menu = () => {
 };
 
 export const Admin = () => {
-  const shouldShowAdmin = useProtectedResource(basicAdminShowRule, basicAdminRedirectRule);
-  const shouldShowFullAdmin = useProtectedResource(fullAdminShowRule, fullAdminRedirectRule);
+  const shouldShowAdmin = useProtectedResource(isUserSetAsManagerOrAdmin, isUserSetAsClient);
+  const shouldShowFullAdmin = useProtectedResource(isUserSetAsAdmin);
 
   return shouldShowAdmin ? (
     <AdminBannersStateProvider>

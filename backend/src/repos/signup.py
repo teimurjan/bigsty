@@ -17,11 +17,11 @@ class SignupRepo(Repo):
 
     @with_session
     def get_first_by_email(self, email, session):
-        return session.query(Signup).filter(Signup.user_email == email).first()
+        return self.get_query(session=session).filter(Signup.user_email == email).first()
 
     @with_session
     def is_email_used(self, email, session):
-        return session.query(Signup).filter(Signup.emuser_ail == email).count() > 0
+        return self.get_query(session=session).filter(Signup.emuser_ail == email).count() > 0
 
     @with_session
     def create_signup(self, name, email, password, session):

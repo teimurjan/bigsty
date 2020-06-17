@@ -87,17 +87,17 @@ class ProductRepo(NonDeletableRepo):
 
     @with_session
     def has_with_product_type(self, product_type_id, session):
-        return session.query(Product).filter(Product.product_type_id == product_type_id).count() > 0
+        return self.get_non_deleted_query(session=session).filter(Product.product_type_id == product_type_id).count() > 0
 
     @with_session
     def get_first_by_upc(self, upc, session):
-        return self.get_non_deleted_query(session=session).filter(Product.upc == upc).first()
+        return self.get_query(session=session).filter(Product.upc == upc).first()
 
     @with_session
-    def get_for_product_type(self, product_type_id, session):
+    def get_for_product_type(self, product_type_id, session=None):
         return (
             self
-            .get_non_deleted_query(session=session)
+            .get_query(session=session)
             .filter(Product.product_type_id == product_type_id)
             .order_by(Product.id)
             .all()

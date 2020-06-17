@@ -32,8 +32,8 @@ class FeatureTypeRepo(Repo):
     @with_session
     def filter_by_category(self, category, session):
         return (
-            session
-            .query(FeatureType)
+            self
+            .get_query(session=session)
             .filter(FeatureType.categories.any(Category.id == category.id))
             .all()
         )

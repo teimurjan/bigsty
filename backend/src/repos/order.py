@@ -14,15 +14,6 @@ from src.models.promo_code import ProductXPromoCodeTable
 from src.repos.base import NonDeletableRepo, with_session
 from src.utils.array import find_in_array
 
-
-def merge_products(old_product, new_product):
-    new_product.product_type.names = [
-        *old_product.product_type.names,
-        *new_product.product_type.names
-    ]
-    return new_product
-
-
 class OrderRepo(NonDeletableRepo):
     def __init__(self, db_conn):
         super().__init__(db_conn, Order)
@@ -103,6 +94,7 @@ class OrderRepo(NonDeletableRepo):
         session.flush()
 
         order.created_on
+        order.updated_on
 
         return order
 
@@ -132,6 +124,7 @@ class OrderRepo(NonDeletableRepo):
         session.flush()
 
         order.created_on
+        order.updated_on
 
         return order
 
@@ -151,8 +144,8 @@ class OrderRepo(NonDeletableRepo):
     @with_session
     def has_with_promo_code(self, promo_code_id, session=None):
         q = (
-            session
-            .query(Order)
+            self
+            .get_non_deleted_query(session=session)
             .filter(Order.promo_code_id == promo_code_id)
         )
 

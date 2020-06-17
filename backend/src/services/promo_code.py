@@ -57,8 +57,6 @@ class PromoCodeService:
     def get_one(self, id_):
         try:
             promo_code = self._repo.get_by_id(id_, True)
-            if not promo_code.is_active:
-                raise self.PromoCodeNotFound()
             return promo_code
         except self._repo.DoesNotExist:
             raise self.PromoCodeNotFound()

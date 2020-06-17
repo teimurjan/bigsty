@@ -15,6 +15,8 @@ class BannerSerializer(IntlSerializer):
         self._text_left_offset = banner.text_left_offset
         self._text_right_offset = banner.text_right_offset
         self._text_bottom_offset = banner.text_bottom_offset
+        self._created_on = banner.created_on
+        self._updated_on = banner.updated_on
 
     def serialize(self):
         return self._filter_fields({
@@ -28,6 +30,8 @@ class BannerSerializer(IntlSerializer):
             'text_left_offset': self._text_left_offset,
             'text_right_offset': self._text_right_offset,
             'text_bottom_offset': self._text_bottom_offset,
+            'created_on': self._created_on,
+            'updated_on': self._updated_on,
         })
 
     def _serialize_text(self):

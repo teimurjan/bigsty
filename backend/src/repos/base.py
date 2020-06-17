@@ -39,8 +39,12 @@ class Repo(Generic[T]):
             session.close()
 
     @with_session
+    def get_query(self, session=None):
+        return session.query(self._Model)
+
+    @with_session
     def get_by_id(self, id_, session) -> T:
-        obj = session.query(self._Model).get(id_)
+        obj = self.get_query(session=session).get(id_)
         if obj is None:
             raise self.DoesNotExist()
 
@@ -48,15 +52,15 @@ class Repo(Generic[T]):
 
     @with_session
     def get_all(self, offset=None, limit=None, session=None) -> List[T]:
-        return session.query(self._Model).order_by(self._Model.id).offset(offset).limit(limit).all()
+        return self.get_query(session=session).order_by(self._Model.id).offset(offset).limit(limit).all()
 
     @with_session
     def count_all(self, session=None) -> int:
-        return session.query(self._Model).count()
+        return self.get_query(session=session).count()
 
     @with_session
     def filter_by_ids(self, ids, session) -> List[T]:
-        return session.query(self._Model).filter(self._Model.id.in_(ids)).all()
+        return self.get_query(session=session).filter(self._Model.id.in_(ids)).all()
 
     @with_session
     def delete(self, id_, session) -> None:
@@ -64,14 +68,14 @@ class Repo(Generic[T]):
         return session.delete(obj)
 
     class DoesNotExist(Exception):
-        def __new__(type, *args, **kwargs):
+        def __new__(cls, *args, **kwargs):
             raise NotImplementedError
 
 
 class NonDeletableRepo(Repo[T]):
     def __init__(self, db_conn, Model: T):
         super().__init__(db_conn, Model)
-        
+
     @with_session
     def delete(self, id_, session):
         obj = self.get_by_id(id_, session=session)
@@ -79,12 +83,21 @@ class NonDeletableRepo(Repo[T]):
         return obj
 
     @with_session
+    def get_deleted_query(self, session=None):
+        return self.get_query(session=session).filter(self._Model.is_deleted == True)
+
+    @with_session
     def get_non_deleted_query(self, session=None):
-        return session.query(self._Model).filter((self._Model.is_deleted == None) | (self._Model.is_deleted == False))
+        return self.get_query(session=session).filter((self._Model.is_deleted == None) | (self._Model.is_deleted == False))
 
     @with_session
     def get_by_id(self, id_, session=None):
-        obj = self.get_non_deleted_query(session=session).filter(self._Model.id == id_).first()
+        obj = (
+            self
+            .get_non_deleted_query(session=session)
+            .filter(self._Model.id == id_)
+            .first()
+        )
         if obj is None:
             raise self.DoesNotExist()
 
@@ -99,7 +112,7 @@ class NonDeletableRepo(Repo[T]):
         return self.get_non_deleted_query(session=session).count()
 
     @with_session
-    def filter_by_ids(self, ids, session):
+    def filter_by_ids(self, ids, session=None):
         return self.get_non_deleted_query(session=session).filter(self._Model.id.in_(ids)).all()
 
 
