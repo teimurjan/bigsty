@@ -43,7 +43,7 @@ class PromoCodeRepo(NonDeletableRepo):
         return self.get_query(session=session).filter(PromoCode.value == value).count() > 0
 
     @with_session
-    def get_by_value(self, value, join_products, session=None):
+    def get_by_value(self, value, session=None):
         q = (
             self
             .get_non_deleted_query(session=session)
@@ -53,17 +53,16 @@ class PromoCodeRepo(NonDeletableRepo):
         if count == 0:
             raise self.DoesNotExist()
 
-        if join_products:
-            q = (
-                q
-                .options(joinedload(PromoCode.products))
-                .outerjoin(PromoCode.products)
-            )
+        q = (
+            q
+            .options(joinedload(PromoCode.products))
+            .outerjoin(PromoCode.products)
+        )
 
         return q.first()
 
     @with_session
-    def get_by_id(self, id_, join_products, session=None):
+    def get_by_id(self, id_, session=None):
         q = (
             self
             .get_non_deleted_query(session=session)
@@ -73,12 +72,11 @@ class PromoCodeRepo(NonDeletableRepo):
         if count == 0:
             raise self.DoesNotExist()
 
-        if join_products:
-            q = (
-                q
-                .options(joinedload(PromoCode.products))
-                .outerjoin(PromoCode.products)
-            )
+        q = (
+            q
+            .options(joinedload(PromoCode.products))
+            .outerjoin(PromoCode.products)
+        )
 
         return q.first()
 
