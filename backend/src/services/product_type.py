@@ -99,7 +99,6 @@ class ProductTypeService:
         except self._feature_type_repo.DoesNotExist:
             raise self.FeatureTypesInvalid()
 
-    @allow_roles(['admin', 'manager'])
     def get_all(
         self,
         join_products: bool = False,
@@ -107,7 +106,6 @@ class ProductTypeService:
         sorting_type: ProductTypeSortingType = None,
         offset: int=None,
         limit: int=None,
-        user=None
     ):
         return self._repo.get_all(
             join_products=join_products,

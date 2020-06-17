@@ -48,7 +48,6 @@ class ProductTypeListView(ValidatableView, PaginatableView):
                 sorting_type=sorting_type,
                 offset=pagination_data['offset'],
                 limit=pagination_data['limit'],
-                user=request.user
             )
             meta = self._get_meta(
                 count,
@@ -58,7 +57,6 @@ class ProductTypeListView(ValidatableView, PaginatableView):
         else:
             product_types, _ = self._service.get_all(
                 sorting_type=sorting_type,
-                user=request.user
             )
 
         should_get_raw_intl_field = request.args.get('raw_intl') == '1'
