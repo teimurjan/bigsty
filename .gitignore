@@ -5,3 +5,7 @@ __pycache__/
 .env*
 docker-compose.yml
 docker-compose.development.yml
+eye8-web
+eye8-backend
+web
+backend

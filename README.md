@@ -6,6 +6,13 @@
 The application is completely dockerized so you'll need to install [Docker](https://docs.docker.com/engine/installation/).
 
 ## Local Development
+Clone [eye8-web](https://github.com/teimurjan/eye8-web) and [eye8-backend](https://github.com/teimurjan/eye8-backend) into the root folder:
+```sh
+git clone git@github.com:teimurjan/eye8-web.git web
+git clone git@github.com:teimurjan/eye8-backend.git backend
+```
+
+
 Create docker-compose.development.yml based on [the example file](./docker-compose.development.example.yml) and run:
 ```sh
 docker-compose -f docker-compose.development.yml up -d    
