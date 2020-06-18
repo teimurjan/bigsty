@@ -1,5 +1,0 @@
-media
-virtualenv
-.env*
-.vscode
-__pycache__

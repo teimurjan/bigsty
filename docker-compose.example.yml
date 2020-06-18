@@ -22,8 +22,7 @@ services:
     ports:
       - 9200:9200
   backend:
-    build: 
-      context: ./backend
+    build: git@github.com:teimurjan/eye8-backend.git
     environment:
       - APP_SETTINGS=config.ProductionConfig
       - SECRET_KEY=secret_key
@@ -66,8 +65,7 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
   web:
-    build: 
-      context: ./web
+    build: git@github.com:teimurjan/eye8-web.git
     args: 
       - SENTRY_DSN=sentry_dsn
     ports:
