@@ -1,6 +1,8 @@
 import { Storage } from 'ttypes/storage';
 import Cookies, { CookieSetOptions } from 'universal-cookie';
 
+import { getCookieDomain } from 'src/utils/url';
+
 const cookies = new Cookies();
 
 export interface ICookieStorage extends Storage {
@@ -18,10 +20,12 @@ export class CookieStorage implements ICookieStorage {
     return Object.keys(cookies.getAll()).length;
   }
 
+  private getStaticOptions = () => ({ domain: getCookieDomain() });
+
   key = (i: number) => Object.keys(cookies.getAll())[i];
 
   removeItem = (key: string, options: CookieSetOptions = { path: '/' }) => {
-    cookies.remove(key, options);
+    cookies.remove(key, { ...this.getStaticOptions(), ...options });
   };
 
   clear = () => {
@@ -34,6 +38,6 @@ export class CookieStorage implements ICookieStorage {
   };
 
   setItem = (key: string, value: string, options: CookieSetOptions = { path: '/' }) => {
-    cookies.set(key, value, options);
+    cookies.set(key, value, { ...this.getStaticOptions(), ...options });
   };
 }

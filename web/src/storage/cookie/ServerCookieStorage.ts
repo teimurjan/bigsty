@@ -3,6 +3,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import Cookies, { CookieSetOptions } from 'universal-cookie';
 
 import { ICookieStorage } from 'src/storage/cookie/CookieStorage';
+import { getCookieDomain } from 'src/utils/url';
 
 export class ServerCookieStorage implements ICookieStorage {
   private res: ServerResponse;
@@ -29,8 +30,10 @@ export class ServerCookieStorage implements ICookieStorage {
     this.cookies.set(key, value, options);
     const expires = options.expires ? `Expires=${options.expires.toUTCString()}` : '';
     const path = options.path ? `Path=${options.path}` : '';
+    const cookieDomain = getCookieDomain();
+    const domain = cookieDomain ? `Domain=${cookieDomain}` : '';
     const currentCookieHeader = (this.res.getHeader('Set-Cookie') as string[]) || [];
-    const newCookieHeader = value ? [[`${key}=${value}`, path, expires].join('; ')] : [];
+    const newCookieHeader = value ? [[`${key}=${value}`, path, domain, expires].join('; ')] : [];
     const finalCookieHeader = [...currentCookieHeader, ...newCookieHeader];
     const finalCookieHeaderWithoutDuplicates = finalCookieHeader.filter(
       (cookie, i) => finalCookieHeader.indexOf(cookie) === i,
