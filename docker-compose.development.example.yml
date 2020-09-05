@@ -35,10 +35,8 @@ services:
     restart: on-failure
     depends_on:
       - db
-      - es
     links:
       - db
-      - es
   web:
     build:
       context: ./web

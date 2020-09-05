@@ -36,10 +36,8 @@ services:
       - 8080:8080
     depends_on:
       - db
-      - es
     links:
       - db
-      - es
   nginx:
     image: nginx:alpine
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
