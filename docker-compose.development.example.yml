@@ -11,16 +11,6 @@ services:
       - "5432:5432"
     volumes:
       - ./db:/var/lib/postgresql/data
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
-    environment:
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - discovery.type=single-node
-    volumes:
-      - ./es:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
   backend:
     build: 
       context: ./backend
@@ -35,7 +25,6 @@ services:
       - DB_URL=postgresql://db_user_name:db_password@db:5432/db_name
       - ADMIN_EMAILS=test1@test.com,test2@test.com
       - ADMIN_PASSWORDS=admin_password1,admin_password2
-      - ELASTICSEARCH_URL=es:9200
       - AWS_ACCESS_KEY_ID=aws_access_key_id
       - AWS_SECRET_ACCESS_KEY=aws_secret_access_key
       - AWS_BUCKET_NAME=aws_bucket_name

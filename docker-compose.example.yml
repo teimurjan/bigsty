@@ -11,16 +11,6 @@ services:
       - "5432:5432"
     volumes:
       - ./db:/var/lib/postgresql/data
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
-    environment:
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - discovery.type=single-node
-    volumes:
-      - ./es:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
   backend:
     build: git@github.com:teimurjan/eye8-backend.git
     environment:
@@ -29,7 +19,6 @@ services:
       - DB_URL=postgresql://db_user:db_password@db:5432/db_name
       - ADMIN_EMAIL=admin@example.com,admin2@example.com,
       - ADMIN_PASSWORD=admin_password1,admin_password2
-      - ELASTICSEARCH_URL=es:9200
       - ALLOWED_ORIGINS=http://www.allowed.origin,http://allowed.origin
       - AWS_ACCESS_KEY_ID=aws_access_key_id
       - AWS_SECRET_ACCESS_KEY=aws_secret_access_key
