@@ -42,9 +42,18 @@ services:
       context: ./web
       dockerfile: Dockerfile.dev
     volumes:
-      - ./web:/app
-      - /app/node_modules
-      - /app/.next
+      - ./web/packages/admin/node_modules /app/packages/admin/node_modules
+      - ./web/packages/admin/node_modules-ui /app/packages/admin-ui/node_modules
+      - ./web/packages/api/node_modules /app/packages/api/node_modules
+      - ./web/packages/app/node_modules /app/packages/app/node_modules
+      - ./web/packages/client/node_modules /app/packages/client/node_modules
+      - ./web/packages/client/node_modules-ui /app/packages/client-ui/node_modules
+      - ./web/packages/di/node_modules /app/packages/di/node_modules
+      - ./web/packages/manager/node_modules /app/packages/manager/node_modules
+      - ./web/packages/service/node_modules /app/packages/service/node_modules
+      - ./web/packages/shared/node_modules /app/packages/shared/node_modules
+      - ./web/packages/storage/node_modules /app/packages/storage/node_modules
+      - ./web/packages/app/.next /app/packages/app/.next
     ports:
       - 3000:3000
     depends_on:
